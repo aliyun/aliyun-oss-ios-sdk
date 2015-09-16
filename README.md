@@ -27,8 +27,6 @@ SDK依赖了以下三方库：
 
 需要引入OSS iOS SDK 和 Bolts 两个framework。
 
-clone工程到本地，执行./release.sh，即可得到OSS-iOS-SDK.Framework。
-
 选中您的工程 -> TARGETS -> 您的项目 -> General -> Linked Frameworks and Libraries -> 点击"+" -> add other -> framework所在的目录 -> 选中framework文件 -> open
 
 ### Pod依赖
@@ -41,6 +39,35 @@ clone工程到本地，执行./release.sh，即可得到OSS-iOS-SDK.Framework。
 #import <AliyunOSSiOS/OSSService.h>
 ```
 
+## 对于BFTask的一些说明
+
+SDK主要使用了Bolts库中的BFTask。所有调用api的操作，都会立即获得一个BFTask，如：
+
+```
+BFTask * task = [client getObject:get];
+```
+
+可以为这个Task设置一个延续(continution)，以实现异步回调，如：
+
+```
+[task continueWithBlock: ^(BFTask *task) {
+	// do something
+	...
+
+	return nil;
+}];
+```
+
+也可以等待这个Task完成，以实现同步等待，如：
+
+```
+[task waitUntilFinished];
+
+...
+```
+
+更多用法参考：[Bolts](https://github.com/BoltsFramework/Bolts-iOS)
+
 ## 快速入门
 
 以下演示了上传、下载文件的基本流程。
@@ -50,7 +77,7 @@ clone工程到本地，执行./release.sh，即可得到OSS-iOS-SDK.Framework。
 初始化主要完成Endpoint设置、鉴权方式设置、Client参数设置。其中，鉴权方式包含明文设置模式、自签名模式、Federation鉴权模式。
 
 ```
-NSString *endpoint = "oss-cn-hangzhou.aliyuncs.com";
+NSString *endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
 
 // 明文设置secret的方式建议只在测试时使用，更多鉴权模式请参考后面的`OSSClient`章节
 id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"<your accesskey"
@@ -216,7 +243,7 @@ id<OSSCredentialProvider> credential = [[OSSFederationCredentialProvider alloc] 
 ```
 OSSClientConfiguration * conf = [OSSClientConfiguration new];
 conf.maxRetryCount = 3;
-conf.enableBackgroundTransmitService = true;
+conf.enableBackgroundTransmitService = NO;
 conf.timeoutIntervalForRequest = 15;
 conf.timeoutIntervalForResource = 24 * 60 * 60;
 
@@ -245,7 +272,7 @@ BFTask * createTask = [client createBucket:create];
 }];
 ```
 
-### 罗列bucket
+### 罗列bucket中的文件
 
 ```
 OSSGetBucketRequest * getBucket = [OSSGetBucketRequest new];
@@ -288,35 +315,6 @@ BFTask * deleteTask = [client deleteBucket:delete];
 	return nil;
 }];
 ```
-
-## 对于BFTask的一些说明
-
-SDK主要使用了Bolts库中的BFTask。所有调用api的操作，都会立即获得一个BFTask，如：
-
-```
-BFTask * task = [client getObject:get];
-```
-
-可以为这个Task设置一个延续(continution)，以实现异步回调，如：
-
-```
-[task continueWithBlock: ^(BFTask *task) {
-	// do something
-	...
-
-	return nil;
-}];
-```
-
-也可以等待这个Task完成，以实现同步等待，如：
-
-```
-[task waitUntilFinished];
-
-...
-```
-
-更多用法参考：[Bolts](https://github.com/BoltsFramework/Bolts-iOS)
 
 
 ## Object
