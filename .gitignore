@@ -30,3 +30,5 @@ builtFramework
 # Stuff that can't be committed #
 ######################
 Documentation
+
+Pods/

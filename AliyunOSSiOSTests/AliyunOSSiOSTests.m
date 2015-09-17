@@ -110,7 +110,7 @@ static dispatch_queue_t test_queue;
     // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
     // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
     id<OSSCredentialProvider> credential2 = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
-        NSURL * url = [NSURL URLWithString:@"http://10.1.39.15:8080/distribute-token.json"];
+        NSURL * url = [NSURL URLWithString:@"http://localhost:8080/distribute-token.json"];
         NSURLRequest * request = [NSURLRequest requestWithURL:url];
         BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
         NSURLSession * session = [NSURLSession sharedSession];
@@ -148,7 +148,7 @@ static dispatch_queue_t test_queue;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential2 clientConfiguration:conf];
 }
 
 - (void)tearDown {
@@ -388,6 +388,11 @@ static dispatch_queue_t test_queue;
 - (void)testGetBucket {
     OSSGetBucketRequest * request = [OSSGetBucketRequest new];
     request.bucketName = TEST_BUCKET;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 1000;
+    request.prefix = @"";
+
     BFTask * task = [client getBucket:request];
     [[task continueWithBlock:^id(BFTask *task) {
         XCTAssertTrue([task isCompleted]);
