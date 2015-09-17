@@ -180,7 +180,7 @@ BFTask * getTask = [client getObject:request];
 	if (!task.error) {
 		NSLog(@"download object success!");
 		OSSGetObjectResult * getResult = task.result; // 如果设置下载到文件这里result.downloadedData会为nil
-		NSLog(@"download result: %@", getResult.dowloadedData);
+		NSLog(@"download result: %@", getResult.downloadedData);
 	} else {
 		NSLog(@"download object failed, error: %@" ,task.error);
 	}
@@ -521,7 +521,7 @@ BFTask * abortTask = [client abortMultipartUpload:abort];
 [abortTask waitUntilFinished];
 
 if (!abortTask.error) {
-	OSSInitMultipartUploadResult * result = abortTask.result;
+	OSSAbortMultipartUploadResult * result = abortTask.result;
 	uploadId = result.uploadId;
 } else {
 	NSLog(@"multipart upload failed, error: %@", abortTask.error);

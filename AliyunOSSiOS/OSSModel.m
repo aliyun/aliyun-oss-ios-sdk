@@ -511,7 +511,7 @@ static volatile uint64_t tag = 0;
         [querys setObject:self.marker forKey:@"marker"];
     }
     if (self.maxKeys) {
-        [querys setObject:@(self.maxKeys) forKey:@"max-keys"];
+        [querys setObject:[@(self.maxKeys) stringValue] forKey:@"max-keys"];
     }
     return querys;
 }
