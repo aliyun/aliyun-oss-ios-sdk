@@ -133,10 +133,6 @@ BFTask * putTask = [client putObject:put];
 ```
 OSSGetBucketRequest * getBucket = [OSSGetBucketRequest new];
 getBucket.bucketName = @"<bucketName>";
-getBucket.marker = @"";
-getBucket.prefix = @"";
-getBucket.delimiter = @"";
-getBucket.maxKeys = 100;
 
 BFTask * getBucketTask = [client getBucket:getBucket];
 
@@ -282,7 +278,6 @@ getBucket.bucketName = @"<bucketName>";
 // getBucket.marker = @"";
 // getBucket.prefix = @"";
 // getBucket.delimiter = @"";
-// getBucket.maxKeys = 100;
 
 BFTask * getBucketTask = [client getBucket:getBucket];
 
@@ -427,6 +422,29 @@ BFTask * deleteTask = [client deleteObject:delete];
 // [deleteTask waitUntilFinished];
 ```
 
+### 获取文件meta信息
+
+```
+OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
+head.bucketName = @"<bucketName>";
+head.objectKey = @"<objectKey>";
+
+BFTask * headTask = [client headObject:head];
+
+[headTask continueWithBlock:^id(BFTask *task) {
+	if (!task.error) {
+		OSSHeadObjectResult * headResult = task.result;
+		NSLog(@"all response header: %@", headResult.httpResponseHeaderFields);
+
+		// some object properties include the 'x-oss-meta-*'s
+		NSLog(@"head object result: %@", headResult.objectMeta);
+	} else {
+		NSLog(@"head object error: %@", task.error);
+	}
+	return nil;
+}];
+```
+
 ## 分块上传
 
 下面演示通过分块上传文件的整个流程：
@@ -527,6 +545,30 @@ if (!abortTask.error) {
 	NSLog(@"multipart upload failed, error: %@", abortTask.error);
 	return;
 }
+```
+
+### 罗列分块
+
+```
+OSSListPartsRequest * listParts = [OSSListPartsRequest new];
+listParts.bucketName = @"<bucketName>";
+listParts.objectKey = @"<objectkey>";
+listParts.uploadId = @"<uploadid>";
+
+BFTask * listPartTask = [client listParts:listParts];
+
+[listPartTask continueWithBlock:^id(BFTask *task) {
+	if (!task.error) {
+		NSLog(@"list part result success!");
+		OSSListPartsResult * listPartResult = task.result;
+		for (NSDictionary * partInfo in listPartResult.parts) {
+			NSLog(@"each part: %@", partInfo);
+		}
+	} else {
+		NSLog(@"list part result error: %@", task.error);
+	}
+	return nil;
+}];
 ```
 
 ## 异常响应
