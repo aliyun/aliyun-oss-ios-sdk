@@ -159,11 +159,9 @@ BFTask * getBucketTask = [client getBucket:getBucket];
 
 ```
 OSSGetObjectRequest * request = [OSSGetObjectRequest new];
-// required
 request.bucketName = @"<bucketName>";
 request.objectKey = @"<objectKey>";
 
-//optional
 request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
 	NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 };
@@ -338,17 +336,19 @@ OSSPutObjectRequest * put = [OSSPutObjectRequest new];
 // required fields
 put.bucketName = @"<bucketName>";
 put.objectKey = @"<objectKey>";
-NSString * docDir = [self getDocumentDirectory];
-put.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+
+put.uploadingFileURL = [NSURL fileURLWithPath:@"<filepath>"];
+// put.uploadingData = <NSData *>; // 直接上传NSData
 
 // optional fields
 put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+    // 当前上传段长度、当前已经上传总长度、一共需要上传的总长度
 	NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
 };
-put.contentType = @"";
-put.contentMd5 = @"";
-put.contentEncoding = @"";
-put.contentDisposition = @"";
+// put.contentType = @"";
+// put.contentMd5 = @"";
+// put.contentEncoding = @"";
+// put.contentDisposition = @"";
 
 BFTask * putTask = [client putObject:put];
 
@@ -378,9 +378,10 @@ request.objectKey = @"<objectKey>";
 
 //optional
 request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+	// 当前下载段长度、当前已经下载总长度、一共需要下载的总长度
 	NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 };
-
+// request.range = [[OSSRange alloc] initWithStart:0 withEnd:99]; // bytes=0-99
 // request.downloadToFileURL = [NSURL fileURLWithPath:@"<filepath>"];
 
 BFTask * getTask = [client getObject:request];
@@ -461,7 +462,8 @@ NSString * uploadObjectkey = @"<objectKey>";
 OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
 init.bucketName = uploadToBucket;
 init.objectKey = uploadObjectkey;
-init.contentType = @"application/octet-stream";
+
+// init.contentType = @"application/octet-stream";
 
 BFTask * initTask = [client multipartUploadInit:init];
 
@@ -486,8 +488,8 @@ for (int i = 1; i <= 3; i++) {
 	uploadPart.uploadId = uploadId;
 	uploadPart.partNumber = i; // part number start from 1
 
-	NSString * docDir = [self getDocumentDirectory];
-	uploadPart.uploadPartFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+	uploadPart.uploadPartFileURL = [NSURL URLWithString:@"<filepath>"];
+	// uploadPart.uploadPartData = <NSData *>;
 
 	BFTask * uploadPartTask = [client uploadPart:uploadPart];
 
@@ -569,6 +571,107 @@ BFTask * listPartTask = [client listParts:listParts];
 	}
 	return nil;
 }];
+```
+
+## 兼容旧版本
+
+当前版本SDK对旧版本SDK进行了完全的重构，变成RESTful风格的调用方式，逻辑更清晰，也贴合OSS的其他SDK使用方式。对于已经使用了旧版本对象存取风格的用户，旧有接口将完全不再提供，建议迁移到新版本SDK的用法。但同时SDK也提供了一些妥协的接口，便于迁移。
+
+需要额外引入:
+
+```
+#import <AliyunOSSiOS/OSSCompat.h>
+```
+
+### 上传文件
+
+```
+NSDictionary * objectMeta = @{@"x-oss-meta-name1": @"value1"};
+OSSTaskHandler * tk = [client uploadFile:@<filepath>"
+						 withContentType:@"application/octet-stream"
+						  withObjectMeta:objectMeta
+							toBucketName:@"<bucketName>"
+							 toObjectKey:@"<objectKey>"
+							 onCompleted:^(BOOL isSuccess, NSError * error) {
+								   if (error) {
+									   NSLog(@"upload object failed, erorr: %@", error);
+								   } else {
+									   NSLog(@"upload object success!");
+								   }
+							 } onProgress:^(float progress) {
+								 NSLog(@"progress: %f", progress);
+							 }];
+
+// [tk cancel];
+```
+
+或者从`NSData *`上传:
+
+```
+[client uploadData:(NSData *)
+   withContentType:@"application/octect-stream"
+	withObjectMeta:nil
+	  toBucketName:@"<bucketName>"
+	   toObjectKey:@"<objectKey>"
+	   onCompleted:^(BOOL isSuccess, NSError * error) {
+		   // code
+	   } onProgress:^(float progress) {
+		   // code
+	   }];
+
+```
+
+### 下载文件
+
+```
+OSSTaskHandler * tk = [client downloadToDataFromBucket:@"<bucketName>"
+											 objectKey:@"<objectkey>"
+										   onCompleted:^(NSData * data, NSError * error) {
+											   if (error) {
+												   NSLog(@"download object failed, erorr: %@", error);
+											   } else {
+												   NSLog(@"download object success, data length: %ld", [data length]);
+											   }
+										   } onProgress:^(float progress) {
+											   NSLog(@"progress: %f", progress);
+										   }];
+
+// [tk cancel];
+```
+
+或者直接下载到文件:
+
+```
+[client downloadToFileFromBucket:@"<bucketName>"
+					   objectKey:@"<objectKey>"
+						  toFile:@"<filepath>"
+					 onCompleted:^(BOOL isSuccess, NSError * error) {
+						 // code
+					 } onProgress:^(float progress) {
+						 // code
+					 }];
+```
+
+### 断点上传
+
+如果一次任务失败或者被取消，下次调用这个接口，只要文件、bucketName和objectKey保持和之前一致，上传就会继续从上次失败的地方开始：
+
+```
+OSSTaskHandler * tk = [client resumableUploadFile:@"<filepath>"
+								  withContentType:@"application/octet-stream"
+								   withObjectMeta:nil
+									 toBucketName:@"<bucketName>"
+									  toObjectKey:@"<objectKey>"
+									  onCompleted:^(BOOL isSuccess, NSError * error) {
+										  if (error) {
+											  NSLog(@"resumable upload object failed, erorr: %@", error);
+										  } else {
+											  NSLog(@"resumable upload object success!");
+										  }
+									  } onProgress:^(float progress) {
+										  NSLog(@"progress: %f", progress);
+									  }];
+//[tk cancel];
 ```
 
 ## 异常响应
