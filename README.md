@@ -1,3 +1,7 @@
+## 简介
+
+本文档主要介绍OSS iOS SDK的安装和使用。本文档假设您已经开通了阿里云OSS 服务，并创建了Access Key ID 和Access Key Secret。文中的ID 指的是Access Key ID，KEY 指的是Access Key Secret。如果您还没有开通或者还不了解OSS，请登录OSS产品主页获取更多的帮助。
+
 阿里云计算开放服务软件开发工具包iOS版
 Aliyun Open Services SDK for iOS
 
@@ -12,11 +16,7 @@ http://www.aliyun.com
 - iOS系统版本：iOS 7.0以上
 - 必须注册有Aliyun.com用户账户，并开通相应的服务（如OTS、OSS等）。
 
-
-## 简介
-
-本文档主要介绍OSS iOS SDK的安装和使用。本文档假设您已经开通了阿里云OSS 服务，并创建了Access Key ID 和Access Key Secret。文中的ID 指的是Access Key ID，KEY 指的是Access Key Secret。如果您还没有开通或者还不了解OSS，请登录OSS产品主页获取更多的帮助。
-
+-----
 ## 安装
 
 SDK依赖了以下三方库：
@@ -35,13 +35,13 @@ SDK依赖了以下三方库：
 pod 'AliyunOSSiOS', '~> 1.4.0'
 ```
 
-## 工程中引入头文件
+### 工程中引入头文件
 
 ```
 #import <AliyunOSSiOS/OSSService.h>
 ```
 
-## 对于BFTask的一些说明
+### 对于BFTask的一些说明
 
 SDK主要使用了Bolts库中的BFTask。所有调用api的操作，都会立即获得一个BFTask，如：
 
@@ -70,9 +70,10 @@ BFTask * task = [client getObject:get];
 
 更多用法参考：[Bolts](https://github.com/BoltsFramework/Bolts-iOS)
 
+-----
 ## 快速入门
 
-以下演示了上传、下载文件的基本流程。
+以下演示了上传、下载文件的基本流程。更多细节用法可以参考本工程的[test](https://github.com/aliyun/AliyunOSSiOS/tree/master/AliyunOSSiOSTests)或者[demo](https://github.com/alibaba/dpa-demo-ios)。
 
 ### STEP-1. 初始化OSSClient
 
@@ -188,6 +189,7 @@ BFTask * getTask = [client getObject:request];
 // [request cancel];
 ```
 
+-----
 ## OSSClient
 
 OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。
@@ -246,6 +248,7 @@ conf.timeoutIntervalForResource = 24 * 60 * 60;
 client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential clientConfiguration:conf];
 ```
 
+-----
 ## Bucket
 
 ### 创建bucket
@@ -311,9 +314,8 @@ BFTask * deleteTask = [client deleteBucket:delete];
 }];
 ```
 
-
+-----
 ## Object
-
 
 在OSS中，用户操作的基本数据单元是Object。单个Object最大允许大小根据上传数据方式不同而不同,Put Object方式最大不能超过5GB, 使用multipart上传方式object大小不能超过48.8TB。Object包含key、meta和data。其中，key是Object的名字；meta是用户对该object的描述，由一系列name-value对组成；data是Object的数据。
 
@@ -446,6 +448,7 @@ BFTask * headTask = [client headObject:head];
 }];
 ```
 
+-----
 ## 分块上传
 
 下面演示通过分块上传文件的整个流程：
@@ -573,6 +576,7 @@ BFTask * listPartTask = [client listParts:listParts];
 }];
 ```
 
+-----
 ## 兼容旧版本
 
 当前版本SDK对旧版本SDK进行了完全的重构，变成RESTful风格的调用方式，逻辑更清晰，也贴合OSS的其他SDK使用方式。对于已经使用了旧版本对象存取风格的用户，旧有接口将完全不再提供，建议迁移到新版本SDK的用法。但同时SDK也提供了一些妥协的接口，便于迁移。
@@ -674,6 +678,7 @@ OSSTaskHandler * tk = [client resumableUploadFile:@"<filepath>"
 //[tk cancel];
 ```
 
+-----
 ## 异常响应
 
 SDK中发生的异常分为两类：ClientError和ServerError。其中前者指的是参数错误、网络错误等，后者指OSS Server返回的异常响应。
@@ -689,6 +694,7 @@ SDK中发生的异常分为两类：ClientError和ServerError。其中前者指�
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeTaskCancelled|任务被取消|
 |ServerError|com.aliyun.oss.serverError|(-1 * httpResponseCode)|解析响应XML得到的Dictionary|
 
+-----
 ## License
 
 Copyright (c) 2015 zhouzhuo Aliyun inc.
