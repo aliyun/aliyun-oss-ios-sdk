@@ -296,7 +296,7 @@ BFExecutor * executor;
         if (error) {
             return [BFTask taskWithError:error];
         }
-        int blockNum = (int)(uploadFileSize / OSSMultipartUploadDefaultBlockSize) + (uploadFileSize % OSSMultipartUploadDefaultBlockSize == 0);
+        int blockNum = (int)(uploadFileSize / OSSMultipartUploadDefaultBlockSize) + (uploadFileSize % OSSMultipartUploadDefaultBlockSize != 0);
 
         NSMutableArray * alreadyUpload = [NSMutableArray new];
         NSMutableArray * alreadyUploadPartIndex = [NSMutableArray new];

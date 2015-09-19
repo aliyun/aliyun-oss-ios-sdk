@@ -340,9 +340,10 @@ static dispatch_queue_t test_queue;
         }
         OSSPutObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        NSLog(@"Result - requestId: %@, headerFields: %@",
+        NSLog(@"Result - requestId: %@, headerFields: %@, servercallback: %@",
               result.requestId,
-              result.httpResponseHeaderFields);
+              result.httpResponseHeaderFields,
+              result.serverReturnJsonString);
         return nil;
     }] waitUntilFinished];
 }
