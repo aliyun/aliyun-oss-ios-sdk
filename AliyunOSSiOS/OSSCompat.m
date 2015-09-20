@@ -21,15 +21,15 @@ BFExecutor * executor;
     executor = [BFExecutor executorWithOperationQueue:queue];
 }
 
-- (BFCancellationTokenSource *)uploadData:(NSData *)data
-                          withContentType:(NSString *)contentType
-                           withObjectMeta:(NSDictionary *)meta
-                             toBucketName:(NSString *)bucketName
-                              toObjectKey:(NSString *)objectKey
-                              onCompleted:(void(^)(BOOL, NSError *))onCompleted
-                               onProgress:(void(^)(float progress))onProgress {
+- (OSSTaskHandler *)uploadData:(NSData *)data
+               withContentType:(NSString *)contentType
+                withObjectMeta:(NSDictionary *)meta
+                  toBucketName:(NSString *)bucketName
+                   toObjectKey:(NSString *)objectKey
+                   onCompleted:(void(^)(BOOL, NSError *))onCompleted
+                    onProgress:(void(^)(float progress))onProgress {
 
-    BFCancellationTokenSource * bcts = [BFCancellationTokenSource cancellationTokenSource];
+    OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
     [[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
@@ -64,12 +64,12 @@ BFExecutor * executor;
     return bcts;
 }
 
-- (BFCancellationTokenSource *)downloadToDataFromBucket:(NSString *)bucketName
+- (OSSTaskHandler *)downloadToDataFromBucket:(NSString *)bucketName
                                  objectKey:(NSString *)objectKey
                                onCompleted:(void (^)(NSData *, NSError *))onCompleted
                                 onProgress:(void (^)(float))onProgress {
 
-    BFCancellationTokenSource * bcts = [BFCancellationTokenSource cancellationTokenSource];
+    OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
     [[[BFTask taskWithResult:nil] continueWithExecutor:executor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
@@ -103,13 +103,13 @@ BFExecutor * executor;
     return bcts;
 }
 
-- (BFCancellationTokenSource *)downloadToFileFromBucket:(NSString *)bucketName
+- (OSSTaskHandler *)downloadToFileFromBucket:(NSString *)bucketName
                                  objectKey:(NSString *)objectKey
                                     toFile:(NSString *)filePath
                                onCompleted:(void (^)(BOOL, NSError *))onCompleted
                                 onProgress:(void (^)(float))onProgress {
 
-    BFCancellationTokenSource * bcts = [BFCancellationTokenSource cancellationTokenSource];
+    OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
     [[[BFTask taskWithResult:nil] continueWithExecutor:executor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
@@ -165,7 +165,7 @@ BFExecutor * executor;
     }];
 }
 
-- (BFCancellationTokenSource *)uploadFile:(NSString *)filePath
+- (OSSTaskHandler *)uploadFile:(NSString *)filePath
                           withContentType:(NSString *)contentType
                            withObjectMeta:(NSDictionary *)meta
                              toBucketName:(NSString *)bucketName
@@ -173,7 +173,7 @@ BFExecutor * executor;
                               onCompleted:(void (^)(BOOL, NSError *))onCompleted
                                onProgress:(void (^)(float))onProgress {
 
-    BFCancellationTokenSource * bcts = [BFCancellationTokenSource cancellationTokenSource];
+    OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
     [[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
@@ -208,7 +208,7 @@ BFExecutor * executor;
     return bcts;
 }
 
-- (BFCancellationTokenSource *)resumableUploadFile:(NSString *)filePath
+- (OSSTaskHandler *)resumableUploadFile:(NSString *)filePath
                             withContentType:(NSString *)contentType
                              withObjectMeta:(NSDictionary *)meta
                                toBucketName:(NSString *)bucketName
@@ -219,7 +219,7 @@ BFExecutor * executor;
     __block NSString * recordKey;
     __block int64_t uploadedLength = 0;
     __block int64_t expectedUploadLength = 0;
-    BFCancellationTokenSource * bcts = [BFCancellationTokenSource cancellationTokenSource];
+    OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
     [[[[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];

@@ -91,6 +91,7 @@
 - (void)reset {
     self.isHttpRequestNotSuccessResponse = NO;
     self.error = nil;
+    self.payloadTotalBytesWritten = 0;
     [self.responseParser reset];
 }
 
@@ -508,8 +509,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(task.taskIdentifier)];
     if (delegate.uploadProgress) {
-        delegate.payloadTotalBytesSent += bytesSent;
-        delegate.uploadProgress(bytesSent, delegate.payloadTotalBytesSent, totalBytesExpectedToSend);
+        delegate.uploadProgress(bytesSent, totalBytesSent, totalBytesExpectedToSend);
     }
 }
 

@@ -69,7 +69,6 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, strong) NSURL * uploadingFileURL;
 
 @property (nonatomic, assign) int64_t payloadTotalBytesWritten;
-@property (nonatomic, assign) int64_t payloadTotalBytesSent;
 
 @property (nonatomic, assign) BOOL isBackgroundUploadTask;
 
