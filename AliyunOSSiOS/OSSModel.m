@@ -42,7 +42,7 @@ NSString * const OSSServerErrorDomain = @"com.aliyun.oss.serverError";
 NSString * const OSSErrorMessageTOKEN = @"ErrorMessage";
 
 NSString * const OSSUAPrefix = @"MBAAS_OSS_IOS";
-NSString * const OSSSDKVersion = @"1.4.0";
+NSString * const OSSSDKVersion = @"2.0.0";
 
 NSString * const OSSHttpHeaderContentDisposition = @"Content-Disposition";
 NSString * const OSSHttpHeaderContentEncoding = @"Content-Encoding";
