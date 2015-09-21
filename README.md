@@ -32,7 +32,7 @@ SDK依赖了以下三方库：
 ### Pod依赖
 
 ```
-pod 'AliyunOSSiOS', '~> 1.4.0'
+pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/AliyunOSSiOS.git'
 ```
 
 ### 工程中引入头文件
