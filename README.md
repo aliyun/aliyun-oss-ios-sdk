@@ -41,18 +41,18 @@ pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/AliyunOSSiOS.git'
 #import <AliyunOSSiOS/OSSService.h>
 ```
 
-### 对于BFTask的一些说明
+### 对于OSSTask的一些说明
 
-SDK主要使用了Bolts库中的BFTask。所有调用api的操作，都会立即获得一个BFTask，如：
+所有调用api的操作，都会立即获得一个OSSTask，如：
 
 ```
-BFTask * task = [client getObject:get];
+OSSTask * task = [client getObject:get];
 ```
 
 可以为这个Task设置一个延续(continution)，以实现异步回调，如：
 
 ```
-[task continueWithBlock: ^(BFTask *task) {
+[task continueWithBlock: ^(OSSTask *task) {
 	// do something
 	...
 
@@ -67,8 +67,6 @@ BFTask * task = [client getObject:get];
 
 ...
 ```
-
-更多用法参考：[Bolts](https://github.com/BoltsFramework/Bolts-iOS)
 
 -----
 ## 快速入门
@@ -92,7 +90,7 @@ client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credent
 
 ### STEP-2. 上传文件
 
-这里假设您已经在控制台上拥有自己的bucket。SDK的所有操作，都会返回一个`BFTask`，您可以为这个task设置一个延续动作，等待其异步完成，也可以通过调用`waitUntilFinished`阻塞等待其完成。
+这里假设您已经在控制台上拥有自己的bucket。SDK的所有操作，都会返回一个`OSSTask`，您可以为这个task设置一个延续动作，等待其异步完成，也可以通过调用`waitUntilFinished`阻塞等待其完成。
 
 ```
 OSSPutObjectRequest * put = [OSSPutObjectRequest new];
@@ -109,9 +107,9 @@ put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBy
 	NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
 };
 
-BFTask * putTask = [client putObject:put];
+OSSTask * putTask = [client putObject:put];
 
-[putTask continueWithBlock:^id(BFTask *task) {
+[putTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"upload object success!");
 	} else {
@@ -135,9 +133,9 @@ BFTask * putTask = [client putObject:put];
 OSSGetBucketRequest * getBucket = [OSSGetBucketRequest new];
 getBucket.bucketName = @"<bucketName>";
 
-BFTask * getBucketTask = [client getBucket:getBucket];
+OSSTask * getBucketTask = [client getBucket:getBucket];
 
-[getBucketTask continueWithBlock:^id(BFTask *task) {
+[getBucketTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		OSSGetBucketResult * result = task.result;
 		NSLog(@"get bucket success!");
@@ -169,9 +167,9 @@ request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, in
 
 // request.downloadToFileURL = [NSURL fileURLWithPath:@"<filepath>"];
 
-BFTask * getTask = [client getObject:request];
+OSSTask * getTask = [client getObject:request];
 
-[getTask continueWithBlock:^id(BFTask *task) {
+[getTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"download object success!");
 		OSSGetObjectResult * getResult = task.result; // 如果设置下载到文件这里result.downloadedData会为nil
@@ -259,9 +257,9 @@ create.bucketName = @"<bucketName>";
 create.xOssACL = @"public-read";
 create.location = @"oss-cn-hangzhou";
 
-BFTask * createTask = [client createBucket:create];
+OSSTask * createTask = [client createBucket:create];
 
-[createTask continueWithBlock:^id(BFTask *task) {
+[createTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"create bucket success!");
 	} else {
@@ -280,9 +278,9 @@ getBucket.bucketName = @"<bucketName>";
 // getBucket.prefix = @"";
 // getBucket.delimiter = @"";
 
-BFTask * getBucketTask = [client getBucket:getBucket];
+OSSTask * getBucketTask = [client getBucket:getBucket];
 
-[getBucketTask continueWithBlock:^id(BFTask *task) {
+[getBucketTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		OSSGetBucketResult * result = task.result;
 		NSLog(@"get bucket success!");
@@ -302,9 +300,9 @@ BFTask * getBucketTask = [client getBucket:getBucket];
 OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
 delete.bucketName = @"<bucketName>";
 
-BFTask * deleteTask = [client deleteBucket:delete];
+OSSTask * deleteTask = [client deleteBucket:delete];
 
-[deleteTask continueWithBlock:^id(BFTask *task) {
+[deleteTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"delete bucket success!");
 	} else {
@@ -352,9 +350,9 @@ put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBy
 // put.contentEncoding = @"";
 // put.contentDisposition = @"";
 
-BFTask * putTask = [client putObject:put];
+OSSTask * putTask = [client putObject:put];
 
-[putTask continueWithBlock:^id(BFTask *task) {
+[putTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"upload object success!");
 	} else {
@@ -386,9 +384,9 @@ request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, in
 // request.range = [[OSSRange alloc] initWithStart:0 withEnd:99]; // bytes=0-99
 // request.downloadToFileURL = [NSURL fileURLWithPath:@"<filepath>"];
 
-BFTask * getTask = [client getObject:request];
+OSSTask * getTask = [client getObject:request];
 
-[getTask continueWithBlock:^id(BFTask *task) {
+[getTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"download object success!");
 		OSSGetObjectResult * getResult = task.result;
@@ -413,9 +411,9 @@ OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
 delete.bucketName = @"<bucketName>";
 delete.objectKey = @"<objectKey>";
 
-BFTask * deleteTask = [client deleteObject:delete];
+OSSTask * deleteTask = [client deleteObject:delete];
 
-[deleteTask continueWithBlock:^id(BFTask *task) {
+[deleteTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		// ...
 	}
@@ -432,9 +430,9 @@ OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
 head.bucketName = @"<bucketName>";
 head.objectKey = @"<objectKey>";
 
-BFTask * headTask = [client headObject:head];
+OSSTask * headTask = [client headObject:head];
 
-[headTask continueWithBlock:^id(BFTask *task) {
+[headTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		OSSHeadObjectResult * headResult = task.result;
 		NSLog(@"all response header: %@", headResult.httpResponseHeaderFields);
@@ -468,7 +466,7 @@ init.objectKey = uploadObjectkey;
 
 // init.contentType = @"application/octet-stream";
 
-BFTask * initTask = [client multipartUploadInit:init];
+OSSTask * initTask = [client multipartUploadInit:init];
 
 [initTask waitUntilFinished];
 
@@ -494,7 +492,7 @@ for (int i = 1; i <= 3; i++) {
 	uploadPart.uploadPartFileURL = [NSURL URLWithString:@"<filepath>"];
 	// uploadPart.uploadPartData = <NSData *>;
 
-	BFTask * uploadPartTask = [client uploadPart:uploadPart];
+	OSSTask * uploadPartTask = [client uploadPart:uploadPart];
 
 	[uploadPartTask waitUntilFinished];
 
@@ -518,9 +516,9 @@ complete.objectKey = uploadObjectkey;
 complete.uploadId = uploadId;
 complete.partInfos = partInfos;
 
-BFTask * completeTask = [client completeMultipartUpload:complete];
+OSSTask * completeTask = [client completeMultipartUpload:complete];
 
-[[completeTask continueWithBlock:^id(BFTask *task) {
+[[completeTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		OSSCompleteMultipartUploadResult * result = task.result;
 		// ...
@@ -539,7 +537,7 @@ abort.bucketName = @"<bucketName>";
 abort.objectKey = @"<objectKey>";
 abort.uploadId = uploadId;
 
-BFTask * abortTask = [client abortMultipartUpload:abort];
+OSSTask * abortTask = [client abortMultipartUpload:abort];
 
 [abortTask waitUntilFinished];
 
@@ -560,9 +558,9 @@ listParts.bucketName = @"<bucketName>";
 listParts.objectKey = @"<objectkey>";
 listParts.uploadId = @"<uploadid>";
 
-BFTask * listPartTask = [client listParts:listParts];
+OSSTask * listPartTask = [client listParts:listParts];
 
-[listPartTask continueWithBlock:^id(BFTask *task) {
+[listPartTask continueWithBlock:^id(OSSTask *task) {
 	if (!task.error) {
 		NSLog(@"list part result success!");
 		OSSListPartsResult * listPartResult = task.result;
@@ -697,7 +695,7 @@ SDK中发生的异常分为两类：ClientError和ServerError。其中前者指�
 -----
 ## License
 
-Copyright (c) 2015 zhouzhuo Aliyun inc.
+Copyright (c) 2015 Aliyun.Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 

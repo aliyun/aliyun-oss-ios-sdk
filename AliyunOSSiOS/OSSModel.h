@@ -13,6 +13,8 @@
 @class OSSFederationToken;
 @class BFTask;
 
+typedef BFTask OSSTask;
+
 
 extern NSString * const OSSListBucketResultXMLTOKEN;
 extern NSString * const OSSNameXMLTOKEN;
@@ -184,7 +186,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  * define interceptor protocal for intercept request message
  */
 @protocol OSSRequestInterceptor <NSObject>
-- (BFTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request;
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request;
 @end
 
 /**
@@ -542,7 +544,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 
 - (instancetype)initForOperationType:(OSSOperationType)operationType;
 - (void)consumeHttpResponse:(NSHTTPURLResponse *)response;
-- (BFTask *)consumeHttpResponseBody:(NSData *)data;
+- (OSSTask *)consumeHttpResponseBody:(NSData *)data;
 - (id)constructResultObject;
 - (void)reset;
 @end

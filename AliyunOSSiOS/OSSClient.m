@@ -48,7 +48,7 @@
     return self;
 }
 
-- (BFTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
+- (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
     request.retryHandler.maxRetryCount = self.clientConfiguration.maxRetryCount;
 
     id<OSSRequestInterceptor> uaSetting = [OSSUASettingInterceptor new];
@@ -65,7 +65,7 @@
 
 #pragma implement restful apis
 
-- (BFTask *)createBucket:(OSSCreateBucketRequest *)request {
+- (OSSTask *)createBucket:(OSSCreateBucketRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = nil;
     if (request.xOssACL) {
@@ -91,7 +91,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)deleteBucket:(OSSDeleteObjectRequest *)request {
+- (OSSTask *)deleteBucket:(OSSDeleteObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteBucket];
@@ -110,7 +110,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)getBucket:(OSSGetBucketRequest *)request {
+- (OSSTask *)getBucket:(OSSGetBucketRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucket];
@@ -129,7 +129,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)headObject:(OSSHeadObjectRequest *)request {
+- (OSSTask *)headObject:(OSSHeadObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeHeadObject];
@@ -148,7 +148,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)getObject:(OSSGetObjectRequest *)request {
+- (OSSTask *)getObject:(OSSGetObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     NSString * rangeString = nil;
@@ -178,7 +178,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)putObject:(OSSPutObjectRequest *)request {
+- (OSSTask *)putObject:(OSSPutObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
 
@@ -219,7 +219,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)appendObject:(OSSAppendObjectRequest *)request {
+- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
 
@@ -262,7 +262,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)deleteObject:(OSSDeleteObjectRequest *)request {
+- (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObject];
@@ -281,7 +281,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)copyObject:(OSSCopyObjectRequest *)request {
+- (OSSTask *)copyObject:(OSSCopyObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
 
@@ -304,7 +304,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request {
+- (OSSTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
 
@@ -337,7 +337,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)uploadPart:(OSSUploadPartRequest *)request {
+- (OSSTask *)uploadPart:(OSSUploadPartRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:[@(request.partNumber) stringValue], @"partNumber",
@@ -367,7 +367,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request {
+- (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     if (request.partInfos) {
@@ -390,7 +390,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)listParts:(OSSListPartsRequest *)request {
+- (OSSTask *)listParts:(OSSListPartsRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
@@ -410,7 +410,7 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request {
+- (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
@@ -430,11 +430,11 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (BFTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
-                                withObjectKey:(NSString *)objectKey
-                       withExpirationInterval:(NSTimeInterval)interval {
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval {
 
-    return [[BFTask taskWithResult:nil] continueWithBlock:^id(BFTask *task) {
+    return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
         OSSFederationToken * token = nil;
@@ -442,20 +442,20 @@
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
             if (error) {
-                return [BFTask taskWithError:error];
+                return [OSSTask taskWithError:error];
             }
             resource = [NSString stringWithFormat:@"%@?security-token=%@", resource, token.tToken];
         }
         NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
         NSString * wholeSign = [self.credentialProvider sign:string2sign error:&error];
         if (error) {
-            return [BFTask taskWithError:error];
+            return [OSSTask taskWithError:error];
         }
         OSSLogDebug(@"string: %@, signature: %@", string2sign, wholeSign);
         NSArray * splitResult = [wholeSign componentsSeparatedByString:@":"];
         if ([splitResult count] != 2
             || ![((NSString *)[splitResult objectAtIndex:0]) hasPrefix:@"OSS "]) {
-            return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                              code:OSSClientErrorCodeSignFailed
                                                          userInfo:@{OSSErrorMessageTOKEN: @"the returned signature is invalid"}]];
         }
@@ -473,25 +473,25 @@
                                 [OSSUtil encodeURL:signature]];
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             if (error) {
-                return [BFTask taskWithError:error];
+                return [OSSTask taskWithError:error];
             }
             stringURL = [NSString stringWithFormat:@"%@&security-token=%@", stringURL, [OSSUtil encodeURL:token.tToken]];
         }
-        return [BFTask taskWithResult:stringURL];
+        return [OSSTask taskWithResult:stringURL];
     }];
 }
 
-- (BFTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                            withiObjectKey:(NSString *)objectKey {
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                             withiObjectKey:(NSString *)objectKey {
 
-    return [[BFTask taskWithResult:nil] continueWithBlock:^id(BFTask *task) {
+    return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
         NSString * stringURL = [NSString stringWithFormat:@"%@://%@.%@/%@",
                                 endpointURL.scheme,
                                 bucketName,
                                 endpointURL.host,
                                 [OSSUtil encodeURL:objectKey]];
-        return [BFTask taskWithResult:stringURL];
+        return [OSSTask taskWithResult:stringURL];
     }];
 }
 

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "OSSService.h"
+#import "OSSModel.h"
 #import "OSSCompat.h"
 
 @interface oss_ios_sdk_newTests : XCTestCase
@@ -167,7 +168,7 @@ static dispatch_queue_t test_queue;
     create.xOssACL = @"public-read";
     create.location = @"oss-cn-hangzhou";
 
-    [[[client createBucket:create] continueWithBlock:^id(BFTask *task) {
+    [[[client createBucket:create] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
@@ -180,7 +181,7 @@ static dispatch_queue_t test_queue;
     OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
     delete.bucketName = @"create-zhouzhuo-bucket";
 
-    [[[client deleteBucket:delete] continueWithBlock:^id(BFTask *task) {
+    [[[client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         NSLog(@"error: %@", task.error);
         OSSDeleteBucketResult * result = task.result;
@@ -201,8 +202,8 @@ static dispatch_queue_t test_queue;
             NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         };
 
-        BFTask * task = [client putObject:request];
-        [[task continueWithBlock:^id(BFTask *task) {
+        OSSTask * task = [client putObject:request];
+        [[task continueWithBlock:^id(OSSTask *task) {
             XCTAssertNil(task.error);
             if (task.error) {
                 OSSLogError(@"%@", task.error);
@@ -233,8 +234,8 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -251,7 +252,7 @@ static dispatch_queue_t test_queue;
     head.bucketName = TEST_BUCKET;
     head.objectKey = @"file1m";
 
-    [[[client headObject:head] continueWithBlock:^id(BFTask *task) {
+    [[[client headObject:head] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSHeadObjectResult * headResult = task.result;
         XCTAssertEqualObjects([headResult.objectMeta objectForKey:@"Content-Type"], @"application/special");
@@ -274,8 +275,8 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -304,8 +305,8 @@ static dispatch_queue_t test_queue;
             NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         };
 
-        BFTask * task = [client putObject:request];
-        [[task continueWithBlock:^id(BFTask *task) {
+        OSSTask * task = [client putObject:request];
+        [[task continueWithBlock:^id(OSSTask *task) {
             XCTAssertNil(task.error);
             if (task.error) {
                 OSSLogError(@"%@", task.error);
@@ -332,8 +333,8 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -352,8 +353,8 @@ static dispatch_queue_t test_queue;
     OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
     delete.bucketName = TEST_BUCKET;
     delete.objectKey = @"appendObject";
-    BFTask * task = [client deleteObject:delete];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client deleteObject:delete];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSDeleteObjectResult * result = task.result;
         XCTAssertEqual(204, result.httpResponseCode);
@@ -371,7 +372,7 @@ static dispatch_queue_t test_queue;
     };
 
     task = [client appendObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -394,8 +395,8 @@ static dispatch_queue_t test_queue;
     request.maxKeys = 1000;
     request.prefix = @"";
 
-    BFTask * task = [client getBucket:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertTrue([task isCompleted]);
         XCTAssertNil(task.error);
         OSSGetBucketResult * result = task.result;
@@ -417,7 +418,7 @@ static dispatch_queue_t test_queue;
     request.delimiter = @"/";
 
     task = [client getBucket:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         if (task.error) {
             NSLog(@"GetBucketError: %@", task.error);
         }
@@ -440,9 +441,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
@@ -468,9 +469,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(206, result.httpResponseCode);
@@ -495,9 +496,9 @@ static dispatch_queue_t test_queue;
         [recieveData appendData:data];
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
@@ -523,9 +524,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
@@ -547,8 +548,8 @@ static dispatch_queue_t test_queue;
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
 
-    BFTask * task = [client headObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client headObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSHeadObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
@@ -564,8 +565,8 @@ static dispatch_queue_t test_queue;
     OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
     head.bucketName = TEST_BUCKET;
     head.objectKey = @"file1m_copyTo";
-    BFTask * task = [client headObject:head];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client headObject:head];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(-404, task.error.code);
         NSLog(@"404 error: %@", task.error);
@@ -577,7 +578,7 @@ static dispatch_queue_t test_queue;
     copy.objectKey = @"file1m_copyTo";
     copy.sourceCopyFrom = [NSString stringWithFormat:@"/%@/%@", TEST_BUCKET, @"file1m"];
     task = [client copyObject:copy];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSCopyObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
@@ -591,7 +592,7 @@ static dispatch_queue_t test_queue;
     delete.bucketName = TEST_BUCKET;
     delete.objectKey = @"file1m_copyTo";
     task = [client deleteObject:delete];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSDeleteObjectResult * result = task.result;
         XCTAssertEqual(204, result.httpResponseCode);
@@ -607,8 +608,8 @@ static dispatch_queue_t test_queue;
     init.objectKey = MultipartUploadObjectKey;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    BFTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -627,7 +628,7 @@ static dispatch_queue_t test_queue;
         uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:uploadPart.uploadPartFileURL.absoluteString error:nil] fileSize];
         OSSLogError(@"filesize: %llu", fileSize);
         task = [client uploadPart:uploadPart];
-        [[task continueWithBlock:^id(BFTask *task) {
+        [[task continueWithBlock:^id(OSSTask *task) {
             XCTAssertNil(task.error);
             OSSUploadPartResult * result = task.result;
             XCTAssertNotNil(result.eTag);
@@ -642,7 +643,7 @@ static dispatch_queue_t test_queue;
     complete.uploadId = uploadId;
     complete.partInfos = partInfos;
     task = [client completeMultipartUpload:complete];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSCompleteMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.location);
@@ -653,7 +654,7 @@ static dispatch_queue_t test_queue;
     head.bucketName = TEST_BUCKET;
     head.objectKey = MultipartUploadObjectKey;
     task = [client headObject:head];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSHeadObjectResult * result = task.result;
         __block BOOL exist = false;
@@ -677,8 +678,8 @@ static dispatch_queue_t test_queue;
     init.objectKey = MultipartUploadObjectKey;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    BFTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -691,7 +692,7 @@ static dispatch_queue_t test_queue;
     abort.objectKey = MultipartUploadObjectKey;
     abort.uploadId = uploadId;
 
-    BFTask * abortTask = [client abortMultipartUpload:abort];
+    OSSTask * abortTask = [client abortMultipartUpload:abort];
 
     [abortTask waitUntilFinished];
 
@@ -711,9 +712,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
@@ -735,8 +736,8 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -767,8 +768,8 @@ static dispatch_queue_t test_queue;
         // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
             OSSLogError(@"%@", task.error);
@@ -804,16 +805,16 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [testProxyClient getObject:request];
+    OSSTask * task = [testProxyClient getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
 }
 
 - (void)testPresignConstrainURL {
-    BFTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
+    OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
                                                  withObjectKey:@"file1k"
                                         withExpirationInterval:30 * 60];
     XCTAssertNil(tk.error);
@@ -836,7 +837,7 @@ static dispatch_queue_t test_queue;
 }
 
 - (void)testPresignPublicURL {
-    BFTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withiObjectKey:@"file1k"];
+    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withiObjectKey:@"file1k"];
     XCTAssertNil(task.error);
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
     NSURLSession * session = [NSURLSession sharedSession];
@@ -870,8 +871,8 @@ static dispatch_queue_t test_queue;
     };
 
     __block BOOL completed = NO;
-    BFTask * task = [client putObject:request];
-    [task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         OSSLogError(@"error should be raised:%@", task.error);
         XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
@@ -895,9 +896,9 @@ static dispatch_queue_t test_queue;
     };
 
     __block BOOL completed = NO;
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [task continueWithBlock:^id(BFTask *task) {
+    [task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         OSSLogError(@"error should be raise: %@", task.error);
         XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
@@ -928,8 +929,8 @@ static dispatch_queue_t test_queue;
                 NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
             };
 
-            BFTask * task = [client putObject:request];
-            [[task continueWithBlock:^id(BFTask *task) {
+            OSSTask * task = [client putObject:request];
+            [[task continueWithBlock:^id(OSSTask *task) {
                 XCTAssertNil(task.error);
                 if (task.error) {
                     OSSLogError(@"%@", task.error);
@@ -961,8 +962,8 @@ static dispatch_queue_t test_queue;
             request.bucketName = TEST_BUCKET;
             request.objectKey = @"file10m";
 
-            BFTask * task = [client getObject:request];
-            [[task continueWithBlock:^id(BFTask *task) {
+            OSSTask * task = [client getObject:request];
+            [[task continueWithBlock:^id(OSSTask *task) {
                 XCTAssertNil(task.error);
                 OSSGetObjectResult * result = task.result;
                 XCTAssertEqual(200, result.httpResponseCode);
@@ -1026,9 +1027,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSServerErrorDomain);
         XCTAssertEqual(-1 * 404, task.error.code);
@@ -1044,9 +1045,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSServerErrorDomain);
         XCTAssertEqual(-1 * 404, task.error.code);
@@ -1063,9 +1064,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSServerErrorDomain);
         XCTAssertEqual(-1 * 403, task.error.code);
@@ -1090,8 +1091,8 @@ static dispatch_queue_t test_queue;
         // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(-1 * 400, task.error.code);
         return nil;
@@ -1106,9 +1107,9 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
     };
 
-    BFTask * task = [client getObject:request];
+    OSSTask * task = [client getObject:request];
 
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSClientErrorDomain);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
@@ -1126,8 +1127,8 @@ static dispatch_queue_t test_queue;
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
-    BFTask * task = [client putObject:request];
-    [[task continueWithBlock:^id(BFTask *task) {
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSClientErrorDomain);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
@@ -1282,7 +1283,7 @@ static dispatch_queue_t test_queue;
     copy.bucketName = TEST_BUCKET;
     copy.objectKey = @"file1m_copy";
     copy.sourceCopyFrom = [NSString stringWithFormat:@"/%@/%@", TEST_BUCKET, @"file1m"];
-    [[[client copyObject:copy] continueWithBlock:^id(BFTask *task) {
+    [[[client copyObject:copy] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
@@ -1291,7 +1292,7 @@ static dispatch_queue_t test_queue;
     head.bucketName = TEST_BUCKET;
     head.objectKey = @"file1m_copy";
 
-    [[[client headObject:head] continueWithBlock:^id(BFTask *task) {
+    [[[client headObject:head] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
@@ -1310,7 +1311,7 @@ static dispatch_queue_t test_queue;
     head.bucketName = TEST_BUCKET;
     head.objectKey = @"file1m_copy";
     
-    [[[client headObject:head] continueWithBlock:^id(BFTask *task) {
+    [[[client headObject:head] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(-404, task.error.code);
         return nil;

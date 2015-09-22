@@ -28,6 +28,7 @@
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
 
+typedef BFTask OSSTask;
 
 /**
  * a oss client to interact with a region-specified oss service
@@ -55,84 +56,84 @@
 /**
  * corresponding to restful api: putBucket
  */
-- (BFTask *)createBucket:(OSSCreateBucketRequest *)request;
+- (OSSTask *)createBucket:(OSSCreateBucketRequest *)request;
 
 /**
  * corresponding to restful api: deleteBucket
  */
-- (BFTask *)deleteBucket:(OSSDeleteBucketRequest *)request;
+- (OSSTask *)deleteBucket:(OSSDeleteBucketRequest *)request;
 
 /**
  * corresponding to restful api: getBucket
  */
-- (BFTask *)getBucket:(OSSGetBucketRequest *)request;
+- (OSSTask *)getBucket:(OSSGetBucketRequest *)request;
 
 /**
  * corresponding to restful api: headObject
  */
-- (BFTask *)headObject:(OSSHeadObjectRequest *)request;
+- (OSSTask *)headObject:(OSSHeadObjectRequest *)request;
 
 /**
  * corresponding to restful api: getObjct
  */
-- (BFTask *)getObject:(OSSGetObjectRequest *)request;
+- (OSSTask *)getObject:(OSSGetObjectRequest *)request;
 
 /**
  * corresponding to restful api: putObject
  */
-- (BFTask *)putObject:(OSSPutObjectRequest *)request;
+- (OSSTask *)putObject:(OSSPutObjectRequest *)request;
 
 /**
  * corresponding to restful api: appendObject
  */
-- (BFTask *)appendObject:(OSSAppendObjectRequest *)request;
+- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request;
 
 /**
  * corresponding to restful api: copyObject
  */
-- (BFTask *)copyObject:(OSSCopyObjectRequest *)request;
+- (OSSTask *)copyObject:(OSSCopyObjectRequest *)request;
 
 /**
  * corresponding to restful api: deleteObject
  */
-- (BFTask *)deleteObject:(OSSDeleteObjectRequest *)request;
+- (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request;
 
 /**
  * corresponding to restful api: initMultipartUpload
  */
-- (BFTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request;
+- (OSSTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request;
 
 /**
  * corresponding to restful api: uploadPart
  */
-- (BFTask *)uploadPart:(OSSUploadPartRequest *)request;
+- (OSSTask *)uploadPart:(OSSUploadPartRequest *)request;
 
 /**
  * corresponding to restful api: completeMultipartUpload
  */
-- (BFTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request;
+- (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request;
 
 /**
  * corresponding to restful api: listParts
  */
-- (BFTask *)listParts:(OSSListPartsRequest *)request;
+- (OSSTask *)listParts:(OSSListPartsRequest *)request;
 
 /**
  * corresponding to restful api: abortMultipartUpload
  */
-- (BFTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
+- (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
 /**
  * presigned constrain URL for third-party to get Object
  */
-- (BFTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
                                 withObjectKey:(NSString *)objectKey
                        withExpirationInterval:(NSTimeInterval)interval;
 
 /**
  * generate public URL for third-party to get Object
  */
-- (BFTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
                             withiObjectKey:(NSString *)objectKey;
 
 @end
