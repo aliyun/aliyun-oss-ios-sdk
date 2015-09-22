@@ -9,6 +9,7 @@
 #import "OSSClient.h"
 #import "OSSModel.h"
 #import "OSSUtil.h"
+#import "OSSLog.h"
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 
@@ -427,6 +428,71 @@
     requestDelegate.operType = OSSOperationTypeAbortMultipartUpload;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (BFTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                withObjectKey:(NSString *)objectKey
+                       withExpirationInterval:(NSTimeInterval)interval {
+
+    return [[BFTask taskWithResult:nil] continueWithBlock:^id(BFTask *task) {
+        NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
+        NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
+        OSSFederationToken * token = nil;
+        NSError * error = nil;
+        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
+            token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
+            if (error) {
+                return [BFTask taskWithError:error];
+            }
+            resource = [NSString stringWithFormat:@"%@?security-token=%@", resource, token.tToken];
+        }
+        NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+        NSString * wholeSign = [self.credentialProvider sign:string2sign error:&error];
+        if (error) {
+            return [BFTask taskWithError:error];
+        }
+        OSSLogDebug(@"string: %@, signature: %@", string2sign, wholeSign);
+        NSArray * splitResult = [wholeSign componentsSeparatedByString:@":"];
+        if ([splitResult count] != 2
+            || ![((NSString *)[splitResult objectAtIndex:0]) hasPrefix:@"OSS "]) {
+            return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                             code:OSSClientErrorCodeSignFailed
+                                                         userInfo:@{OSSErrorMessageTOKEN: @"the returned signature is invalid"}]];
+        }
+        NSString * accessKey = [(NSString *)[splitResult objectAtIndex:0] substringFromIndex:4];
+        NSString * signature = [splitResult objectAtIndex:1];
+
+        NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@.%@/%@?OSSAccessKeyId=%@&Expires=%@&Signature=%@",
+                                endpointURL.scheme,
+                                bucketName,
+                                endpointURL.host,
+                                [OSSUtil encodeURL:objectKey],
+                                [OSSUtil encodeURL:accessKey],
+                                expires,
+                                [OSSUtil encodeURL:signature]];
+        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
+            if (error) {
+                return [BFTask taskWithError:error];
+            }
+            stringURL = [NSString stringWithFormat:@"%@&security-token=%@", stringURL, [OSSUtil encodeURL:token.tToken]];
+        }
+        return [BFTask taskWithResult:stringURL];
+    }];
+}
+
+- (BFTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                            withiObjectKey:(NSString *)objectKey {
+
+    return [[BFTask taskWithResult:nil] continueWithBlock:^id(BFTask *task) {
+        NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@.%@/%@",
+                                endpointURL.scheme,
+                                bucketName,
+                                endpointURL.host,
+                                [OSSUtil encodeURL:objectKey]];
+        return [BFTask taskWithResult:stringURL];
+    }];
 }
 
 @end

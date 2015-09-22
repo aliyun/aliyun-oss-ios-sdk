@@ -90,7 +90,7 @@ static dispatch_queue_t test_queue;
 
     // 自实现签名，可以用本地签名也可以远程加签
     id<OSSCredentialProvider> credential1 = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-        NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:@"<your secret key>"];
+        NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:g_SK];
         if (signature != nil) {
             *error = nil;
         } else {
@@ -98,7 +98,7 @@ static dispatch_queue_t test_queue;
             *error = [NSError errorWithDomain:@"<your error domain>" code:OSSClientErrorCodeSignFailed userInfo:nil];
             return nil;
         }
-        return [NSString stringWithFormat:@"OSS %@:%@", @"<your access key>", signature];
+        return [NSString stringWithFormat:@"OSS %@:%@", g_AK, signature];
     }];
 
     // Federation鉴权，建议通过访问远程业务服务器获取签名
@@ -810,6 +810,45 @@ static dispatch_queue_t test_queue;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+}
+
+- (void)testPresignConstrainURL {
+    BFTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
+                                                 withObjectKey:@"file1k"
+                                        withExpirationInterval:30 * 60];
+    XCTAssertNil(tk.error);
+    if (tk.error) {
+        NSLog(@"error: %@", tk.error);
+    } else {
+        NSLog(@"url: %@", (NSString *)tk.result);
+    }
+    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:tk.result]];
+    NSURLSession * session = [NSURLSession sharedSession];
+    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        XCTAssertNil(error);
+        XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
+        XCTAssertEqual(1024, [data length]);
+        [tcs setResult:nil];
+    }];
+    [dataTask resume];
+    [tcs.task waitUntilFinished];
+}
+
+- (void)testPresignPublicURL {
+    BFTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withiObjectKey:@"file1k"];
+    XCTAssertNil(task.error);
+    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
+    NSURLSession * session = [NSURLSession sharedSession];
+    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        XCTAssertNil(error);
+        XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
+        XCTAssertEqual(1024, [data length]);
+        [tcs setResult:nil];
+    }];
+    [dataTask resume];
+    [tcs.task waitUntilFinished];
 }
 
 #pragma mark cancel

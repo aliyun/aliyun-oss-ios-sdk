@@ -122,4 +122,17 @@
  */
 - (BFTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
+/**
+ * presigned constrain URL for third-party to get Object
+ */
+- (BFTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                withObjectKey:(NSString *)objectKey
+                       withExpirationInterval:(NSTimeInterval)interval;
+
+/**
+ * generate public URL for third-party to get Object
+ */
+- (BFTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                            withiObjectKey:(NSString *)objectKey;
+
 @end
