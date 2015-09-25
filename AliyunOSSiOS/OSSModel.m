@@ -239,7 +239,9 @@ static volatile uint64_t tag = 0;
         if (interval < 15) {
             OSSLogDebug(@"get federation token, but after %lf second it would be expired", interval);
             if (isNewlyGotten) {
-                self.cachedToken.expirationTimeInMilliSecond += (30 * 1000);
+                /* if the newly gotten token is expired already, we can't abort it which will lead to a dead loop */
+                /* we use it for 30s */
+                self.cachedToken.expirationTimeInMilliSecond += [[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] * 1000 + (15 + 30) * 1000;
                 isNewlyGotten = NO;
             } else {
                 self.cachedToken = self.federationTokenGetter();
