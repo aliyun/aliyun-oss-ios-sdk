@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, assign) BOOL isHttpRequestNotSuccessResponse;
 @property (nonatomic, strong) NSMutableData * httpRequestNotSuccessResponseBody;
 
-@property (atomic, strong) NSURLSessionDataTask * holdDataTask;
+@property (atomic, strong) NSURLSessionDataTask * currentSessionTask;
 
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 @property (nonatomic, copy) OSSNetworkingDownloadProgressBlock downloadProgress;
@@ -125,11 +125,13 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  * represent a networking client which manager all the networking operations for an ossclient
  */
 @interface OSSNetworking : NSObject <NSURLSessionDelegate>
-@property (nonatomic, strong) NSURLSession * session;
+@property (nonatomic, strong) NSURLSession * dataSession;
+@property (nonatomic, strong) NSURLSession * uploadSession;
 @property (nonatomic, assign) BOOL isUsingBackgroundSession;
 @property (nonatomic, strong) OSSSyncMutableDictionary * sessionDelagateManager;
 @property (nonatomic, strong) OSSNetworkingConfiguration * configuration;
 @property (nonatomic, strong) BFExecutor * taskExecutor;
+@property (atomic, copy) void (^backgroundSessionCompletionHandler)();
 
 - (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration;
 - (OSSTask *)sendRequest:(OSSNetworkingRequestDelegate *)request;

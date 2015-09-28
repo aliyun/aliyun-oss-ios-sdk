@@ -63,6 +63,10 @@
     return [_networking sendRequest:request];
 }
 
+- (void)setBackgroundSessionCompletionHandler:(void(^)())completeHandler {
+    self.networking.backgroundSessionCompletionHandler = completeHandler;
+}
+
 #pragma implement restful apis
 
 - (OSSTask *)createBucket:(OSSCreateBucketRequest *)request {

@@ -96,9 +96,9 @@
 }
 
 - (void)cancel {
-    if (self.holdDataTask) {
+    if (self.currentSessionTask) {
         OSSLogDebug(@"this task is cancelled now!");
-        [self.holdDataTask cancel];
+        [self.currentSessionTask cancel];
     }
 }
 
@@ -108,6 +108,10 @@
     if ((self.operType == OSSOperationTypeAppendObject || self.operType == OSSOperationTypePutObject || self.operType == OSSOperationTypeUploadPart)
         && !self.uploadingData && !self.uploadingFileURL) {
         errorMessage = @"This operation need data or file to upload but none is set";
+    }
+
+    if (self.uploadingFileURL && ![[NSFileManager defaultManager] fileExistsAtPath:[self.uploadingFileURL path]]) {
+        errorMessage = @"File doesn't exist";
     }
 
     if (errorMessage) {
@@ -278,24 +282,30 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         NSOperationQueue * operationQueue = [NSOperationQueue new];
         operationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
 
-        NSURLSessionConfiguration * sessionConfig = nil;
+        NSURLSessionConfiguration * dataSessionConfig = nil;
+        NSURLSessionConfiguration * uploadSessionConfig = nil;
+
         if (configuration.enableBackgroundTransmitService) {
             if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-                sessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_IDENTIFIER];
+                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_IDENTIFIER];
             } else {
-                sessionConfig = [NSURLSessionConfiguration backgroundSessionConfiguration:BACKGROUND_SESSION_IDENTIFIER];
+                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfiguration:BACKGROUND_SESSION_IDENTIFIER];
             }
         } else {
-            sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-
-            if (configuration.timeoutIntervalForRequest > 0) {
-                sessionConfig.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
-            }
-            if (configuration.timeoutIntervalForResource > 0) {
-                sessionConfig.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
-            }
+            uploadSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         }
-        sessionConfig.URLCache = nil;
+        dataSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+
+        if (configuration.timeoutIntervalForRequest > 0) {
+            uploadSessionConfig.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
+            dataSessionConfig.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
+        }
+        if (configuration.timeoutIntervalForResource > 0) {
+            uploadSessionConfig.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
+            dataSessionConfig.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
+        }
+        dataSessionConfig.URLCache = nil;
+        uploadSessionConfig.URLCache = nil;
         if (configuration.proxyHost && configuration.proxyPort) {
             // Create an NSURLSessionConfiguration that uses the proxy
             NSDictionary *proxyDict = @{
@@ -307,12 +317,17 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                                         (NSString *)kCFStreamPropertyHTTPSProxyHost : configuration.proxyHost,
                                         (NSString *)kCFStreamPropertyHTTPSProxyPort : configuration.proxyPort,
                                         };
-            sessionConfig.connectionProxyDictionary = proxyDict;
+            dataSessionConfig.connectionProxyDictionary = proxyDict;
+            uploadSessionConfig.connectionProxyDictionary = proxyDict;
         }
 
-        _session = [NSURLSession sessionWithConfiguration:sessionConfig
+        _dataSession = [NSURLSession sessionWithConfiguration:dataSessionConfig
                                                  delegate:self
                                             delegateQueue:operationQueue];
+        _uploadSession = [NSURLSession sessionWithConfiguration:uploadSessionConfig
+                                                       delegate:self
+                                                  delegateQueue:operationQueue];
+
         self.isUsingBackgroundSession = configuration.enableBackgroundTransmitService;
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
 
@@ -365,26 +380,21 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         if (requestDelegate.uploadingData) {
             if (self.isUsingBackgroundSession) {
                 [requestDelegate.internalRequest setHTTPBody:requestDelegate.uploadingData];
-                sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
+                sessionTask = [_uploadSession dataTaskWithRequest:requestDelegate.internalRequest];
             } else {
-                sessionTask = [_session uploadTaskWithRequest:requestDelegate.internalRequest fromData:requestDelegate.uploadingData];
+                sessionTask = [_uploadSession uploadTaskWithRequest:requestDelegate.internalRequest fromData:requestDelegate.uploadingData];
             }
         } else if (requestDelegate.uploadingFileURL) {
-            if (![requestDelegate.uploadingFileURL.absoluteString hasPrefix:@"file://"]) {
-                /* in case of some user passing the incomplete filepath to fileURL */
-                requestDelegate.uploadingFileURL = [NSURL fileURLWithPath:requestDelegate.uploadingFileURL.absoluteString];
-            }
-
-            sessionTask = [_session uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
-        } else {
-            sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
+            sessionTask = [_uploadSession uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
+        } else { // not upload request
+            sessionTask = [_dataSession dataTaskWithRequest:requestDelegate.internalRequest];
         }
 
         if (self.isUsingBackgroundSession && [sessionTask isKindOfClass:[NSURLSessionUploadTask class]]) {
             requestDelegate.isBackgroundUploadTask = YES;
         }
 
-        requestDelegate.holdDataTask = sessionTask;
+        requestDelegate.currentSessionTask = sessionTask;
         requestDelegate.httpRequestNotSuccessResponseBody = [NSMutableData new];
         [self.sessionDelagateManager setObject:requestDelegate forKey:@(sessionTask.taskIdentifier)];
         [sessionTask resume];
@@ -581,4 +591,15 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         delegate.downloadProgress(bytesWritten, delegate.payloadTotalBytesWritten, totalBytesExpectedToWrite);
     }
 }
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+    OSSLogVerbose(@"%s - ", __PRETTY_FUNCTION__);
+    if (self.backgroundSessionCompletionHandler) {
+        void (^completeHandler)() = self.backgroundSessionCompletionHandler;
+        self.backgroundSessionCompletionHandler = nil;
+        OSSLogDebug(@"%s - call the complete handler.", __PRETTY_FUNCTION__);
+        completeHandler();
+    }
+}
+
 @end

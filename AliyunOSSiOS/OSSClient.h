@@ -52,6 +52,12 @@ typedef BFTask OSSTask;
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
              clientConfiguration:(OSSClientConfiguration *)conf;
 
+/**
+ * Store the completion handler.
+ * The completion handler is invoked by the networking delegate
+ * method (if all the background tasks have been completed).
+ */
+- (void)setBackgroundSessionCompletionHandler:(void(^)())completeHandler;
 
 /**
  * corresponding to restful api: putBucket

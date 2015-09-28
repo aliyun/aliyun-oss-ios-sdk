@@ -145,7 +145,7 @@ static dispatch_queue_t test_queue;
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 3;
-    conf.enableBackgroundTransmitService = NO;
+    conf.enableBackgroundTransmitService = YES;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
@@ -196,7 +196,7 @@ static dispatch_queue_t test_queue;
         request.bucketName = TEST_BUCKET;
         request.objectKey = [fileNameArray objectAtIndex:i];
         NSString * docDir = [self getDocumentDirectory];
-        request.uploadingFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
+        request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
             NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
@@ -224,7 +224,7 @@ static dispatch_queue_t test_queue;
     request.objectKey = @"file1m";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
     NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
 
     request.uploadingData = [readFile readDataToEndOfFile];
@@ -266,7 +266,7 @@ static dispatch_queue_t test_queue;
     request.objectKey = @"file1m";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
     NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
 
     request.uploadingData = [readFile readDataToEndOfFile];
@@ -297,7 +297,7 @@ static dispatch_queue_t test_queue;
         request.isAuthenticationRequired = NO;
         request.objectKey = [fileNameArray objectAtIndex:i];
         NSString * docDir = [self getDocumentDirectory];
-        NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
+        NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
         NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
         request.uploadingData = [readFile readDataToEndOfFile];
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
@@ -326,7 +326,7 @@ static dispatch_queue_t test_queue;
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file100k";
     NSString * docDir = [self getDocumentDirectory];
-    request.uploadingFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file100k"]];
+    request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file100k"]];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1",
                           @"eyJjYWxsYmFja1VybCI6IjExMC43NS44Mi4xMDYvbWJhYXMvY2FsbGJhY2siLCAiY2FsbGJhY2tCb2R5IjoidGVzdCJ9", @"x-oss-callback", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
@@ -366,7 +366,7 @@ static dispatch_queue_t test_queue;
     request.objectKey = @"appendObject";
     request.appendPosition = 0;
     NSString * docDir = [self getDocumentDirectory];
-    request.uploadingFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file100k"]];
+    request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file100k"]];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
@@ -624,7 +624,7 @@ static dispatch_queue_t test_queue;
         uploadPart.uploadId = uploadId;
         uploadPart.partNumber = i; // part number start from 1
         NSString * docDir = [self getDocumentDirectory];
-        uploadPart.uploadPartFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+        uploadPart.uploadPartFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
         uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:uploadPart.uploadPartFileURL.absoluteString error:nil] fileSize];
         OSSLogError(@"filesize: %llu", fileSize);
         task = [client uploadPart:uploadPart];
@@ -726,7 +726,7 @@ static dispatch_queue_t test_queue;
     request.objectKey = @"file1m";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
     NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
 
     request.uploadingData = [readFile readDataToEndOfFile];
@@ -759,7 +759,7 @@ static dispatch_queue_t test_queue;
     request.contentType = @"application/octet-stream";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
 
     request.uploadingFileURL = fileURL;
     request.contentMd5 = [OSSUtil base64Md5ForFilePath:fileURL.path];
@@ -826,7 +826,7 @@ static dispatch_queue_t test_queue;
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:tk.result]];
     NSURLSession * session = [NSURLSession sharedSession];
     BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
-    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         XCTAssertNil(error);
         XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
         XCTAssertEqual(1024, [data length]);
@@ -842,7 +842,7 @@ static dispatch_queue_t test_queue;
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
     NSURLSession * session = [NSURLSession sharedSession];
     BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
-    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         XCTAssertNil(error);
         XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
         XCTAssertEqual(1024, [data length]);
@@ -860,7 +860,7 @@ static dispatch_queue_t test_queue;
     request.objectKey = @"file10m";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file10m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
     request.uploadingData = [readFile readDataToEndOfFile];
 
@@ -923,7 +923,7 @@ static dispatch_queue_t test_queue;
             request.bucketName = TEST_BUCKET;
             request.objectKey = [fileNameArray objectAtIndex:i];
             NSString * docDir = [self getDocumentDirectory];
-            request.uploadingFileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
+            request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
             request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
             request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
                 NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
@@ -1082,7 +1082,7 @@ static dispatch_queue_t test_queue;
     request.contentType = @"application/octet-stream";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSURL * fileURL = [NSURL URLWithString:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
 
     request.uploadingFileURL = fileURL;
     request.contentMd5 = @"invliadmd5valuetotest";
