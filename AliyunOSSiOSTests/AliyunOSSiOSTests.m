@@ -145,7 +145,7 @@ static dispatch_queue_t test_queue;
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 3;
-    conf.enableBackgroundTransmitService = YES;
+    conf.enableBackgroundTransmitService = NO;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
