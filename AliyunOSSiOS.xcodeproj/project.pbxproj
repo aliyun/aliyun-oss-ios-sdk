@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		21028BC21BA9ABF500C2A6BA /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BC11BA9ABF500C2A6BA /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
 		21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */; };
 		21028BF01BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BD91BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h */; };
@@ -50,7 +49,6 @@
 /* Begin PBXFileReference section */
 		21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21028BC01BA9ABF500C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		21028BC11BA9ABF500C2A6BA /* AliyunOSSiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 		21028BC71BA9ABF600C2A6BA /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21028BCD1BA9ABF600C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
@@ -146,6 +144,7 @@
 				21028C071BA9AC3C00C2A6BA /* ThirdParty */,
 				21028BD81BA9AC3600C2A6BA /* httpdns */,
 				21028BE11BA9AC3600C2A6BA /* OSSClient.h */,
+				21028BEB1BA9AC3600C2A6BA /* OSSService.h */,
 				21028BE21BA9AC3600C2A6BA /* OSSClient.m */,
 				21028BE31BA9AC3600C2A6BA /* OSSCompat.h */,
 				21028BE41BA9AC3600C2A6BA /* OSSCompat.m */,
@@ -155,10 +154,8 @@
 				21028BE81BA9AC3600C2A6BA /* OSSModel.m */,
 				21028BE91BA9AC3600C2A6BA /* OSSNetworking.h */,
 				21028BEA1BA9AC3600C2A6BA /* OSSNetworking.m */,
-				21028BEB1BA9AC3600C2A6BA /* OSSService.h */,
 				21028BEC1BA9AC3600C2A6BA /* OSSUtil.h */,
 				21028BED1BA9AC3600C2A6BA /* OSSUtil.m */,
-				21028BC11BA9ABF500C2A6BA /* AliyunOSSiOS.h */,
 				21028BBF1BA9ABF500C2A6BA /* Supporting Files */,
 			);
 			path = AliyunOSSiOS;
@@ -232,7 +229,6 @@
 				21028BF61BA9AC3600C2A6BA /* OSSHTTPDNSTools.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
 				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
-				21028BC21BA9ABF500C2A6BA /* AliyunOSSiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +549,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -574,6 +571,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
