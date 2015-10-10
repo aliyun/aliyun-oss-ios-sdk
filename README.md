@@ -677,6 +677,28 @@ OSSTaskHandler * tk = [client resumableUploadFile:@"<filepath>"
 ```
 
 -----
+## 签名URL
+
+SDK支持签名出特定有效时长或者公开的URL，用于转给第三方实现授权访问。
+
+### 签名私有资源的指定有效时长的访问URL
+
+```
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval;
+```
+
+在初始化OSSClient以后，就可以调用这个接口生成指定bucketName下指定objectKey的访问URL了，其中，interval是生成URL的有效时长，单位是秒。
+
+### 签名公开的访问URL
+
+```
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                              withObjectKey:(NSString *)objectKey;
+```
+
+-----
 ## 异常响应
 
 SDK中发生的异常分为两类：ClientError和ServerError。其中前者指的是参数错误、网络错误等，后者指OSS Server返回的异常响应。
