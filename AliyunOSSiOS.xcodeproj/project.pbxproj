@@ -32,8 +32,7 @@
 		21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BED1BA9AC3600C2A6BA /* OSSUtil.m */; };
 		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; };
 		21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */; };
-		4829AE3FEE3CBA60987C0FA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2B55A95276B7CB86587418E /* libPods.a */; };
-		E89E48968F75E2309CD5A8D7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2B55A95276B7CB86587418E /* libPods.a */; };
+		218177F21BC8A7D500B26499 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 218177F11BC8A7D500B26499 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +74,7 @@
 		21028BED1BA9AC3600C2A6BA /* OSSUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSUtil.m; sourceTree = "<group>"; };
 		21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSXMLDictionary.h; sourceTree = "<group>"; };
 		21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionary.m; sourceTree = "<group>"; };
+		218177F11BC8A7D500B26499 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		B2B55A95276B7CB86587418E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91D0319CAF03B23EA231EF3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FC5BBF8C2D87831D07328CC3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4829AE3FEE3CBA60987C0FA2 /* libPods.a in Frameworks */,
+				218177F21BC8A7D500B26499 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +94,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */,
-				E89E48968F75E2309CD5A8D7 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +112,7 @@
 		124FC752CC2150C34DBACDBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				218177F11BC8A7D500B26499 /* libPods.a */,
 				B2B55A95276B7CB86587418E /* libPods.a */,
 			);
 			name = Frameworks;
@@ -549,6 +549,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -571,6 +575,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

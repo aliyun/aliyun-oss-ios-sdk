@@ -486,7 +486,7 @@
 }
 
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                             withiObjectKey:(NSString *)objectKey {
+                             withObjectKey:(NSString *)objectKey {
 
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];

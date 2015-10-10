@@ -1,15 +1,15 @@
 PODS:
-  - Bolts (1.2.2):
-    - Bolts/AppLinks (= 1.2.2)
-    - Bolts/Tasks (= 1.2.2)
-  - Bolts/AppLinks (1.2.2):
+  - Bolts (1.3.0):
+    - Bolts/AppLinks (= 1.3.0)
+    - Bolts/Tasks (= 1.3.0)
+  - Bolts/AppLinks (1.3.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.2)
+  - Bolts/Tasks (1.3.0)
 
 DEPENDENCIES:
   - Bolts
 
 SPEC CHECKSUMS:
-  Bolts: 20a2bd788273360cb1e31530dc19b8544eef2544
+  Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
 
-COCOAPODS: 0.39.0.beta.4
+COCOAPODS: 0.39.0

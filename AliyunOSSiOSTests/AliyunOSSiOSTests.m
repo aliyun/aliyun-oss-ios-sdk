@@ -837,7 +837,7 @@ static dispatch_queue_t test_queue;
 }
 
 - (void)testPresignPublicURL {
-    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withiObjectKey:@"file1k"];
+    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1k"];
     XCTAssertNil(task.error);
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
     NSURLSession * session = [NSURLSession sharedSession];

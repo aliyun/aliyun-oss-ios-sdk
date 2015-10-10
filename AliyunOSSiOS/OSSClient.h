@@ -140,6 +140,6 @@ typedef BFTask OSSTask;
  * generate public URL for third-party to get Object
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                            withiObjectKey:(NSString *)objectKey;
+                            withObjectKey:(NSString *)objectKey;
 
 @end
