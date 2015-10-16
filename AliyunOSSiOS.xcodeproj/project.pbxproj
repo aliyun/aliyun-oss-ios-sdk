@@ -9,28 +9,28 @@
 /* Begin PBXBuildFile section */
 		21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
 		21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */; };
-		21028BF01BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BD91BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h */; };
+		21028BF01BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BD91BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF11BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BDA1BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.m */; };
-		21028BF21BA9AC3600C2A6BA /* OSSHTTPDNSMini.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDB1BA9AC3600C2A6BA /* OSSHTTPDNSMini.h */; };
+		21028BF21BA9AC3600C2A6BA /* OSSHTTPDNSMini.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDB1BA9AC3600C2A6BA /* OSSHTTPDNSMini.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF31BA9AC3600C2A6BA /* OSSHTTPDNSMini.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BDC1BA9AC3600C2A6BA /* OSSHTTPDNSMini.m */; };
-		21028BF41BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDD1BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.h */; };
+		21028BF41BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDD1BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF51BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BDE1BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.m */; };
-		21028BF61BA9AC3600C2A6BA /* OSSHTTPDNSTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDF1BA9AC3600C2A6BA /* OSSHTTPDNSTools.h */; };
+		21028BF61BA9AC3600C2A6BA /* OSSHTTPDNSTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BDF1BA9AC3600C2A6BA /* OSSHTTPDNSTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF71BA9AC3600C2A6BA /* OSSHTTPDNSTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE01BA9AC3600C2A6BA /* OSSHTTPDNSTools.m */; };
-		21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE11BA9AC3600C2A6BA /* OSSClient.h */; };
+		21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE11BA9AC3600C2A6BA /* OSSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE21BA9AC3600C2A6BA /* OSSClient.m */; };
-		21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE31BA9AC3600C2A6BA /* OSSCompat.h */; };
+		21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE31BA9AC3600C2A6BA /* OSSCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BFB1BA9AC3600C2A6BA /* OSSCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE41BA9AC3600C2A6BA /* OSSCompat.m */; };
-		21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE51BA9AC3600C2A6BA /* OSSLog.h */; };
+		21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE51BA9AC3600C2A6BA /* OSSLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BFD1BA9AC3600C2A6BA /* OSSLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE61BA9AC3600C2A6BA /* OSSLog.m */; };
-		21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE71BA9AC3600C2A6BA /* OSSModel.h */; };
+		21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE71BA9AC3600C2A6BA /* OSSModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BFF1BA9AC3600C2A6BA /* OSSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE81BA9AC3600C2A6BA /* OSSModel.m */; };
-		21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE91BA9AC3600C2A6BA /* OSSNetworking.h */; };
+		21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE91BA9AC3600C2A6BA /* OSSNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C011BA9AC3600C2A6BA /* OSSNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEA1BA9AC3600C2A6BA /* OSSNetworking.m */; };
-		21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEB1BA9AC3600C2A6BA /* OSSService.h */; };
-		21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEC1BA9AC3600C2A6BA /* OSSUtil.h */; };
+		21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEB1BA9AC3600C2A6BA /* OSSService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEC1BA9AC3600C2A6BA /* OSSUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BED1BA9AC3600C2A6BA /* OSSUtil.m */; };
-		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; };
+		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */; };
 		218177F21BC8A7D500B26499 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 218177F11BC8A7D500B26499 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -537,6 +537,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC5BBF8C2D87831D07328CC3 /* Pods.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -563,6 +564,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E91D0319CAF03B23EA231EF3 /* Pods.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

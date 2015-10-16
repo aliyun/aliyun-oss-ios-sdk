@@ -166,12 +166,12 @@ BFExecutor * executor;
 }
 
 - (OSSTaskHandler *)uploadFile:(NSString *)filePath
-                          withContentType:(NSString *)contentType
-                           withObjectMeta:(NSDictionary *)meta
-                             toBucketName:(NSString *)bucketName
-                              toObjectKey:(NSString *)objectKey
-                              onCompleted:(void (^)(BOOL, NSError *))onCompleted
-                               onProgress:(void (^)(float))onProgress {
+               withContentType:(NSString *)contentType
+                withObjectMeta:(NSDictionary *)meta
+                  toBucketName:(NSString *)bucketName
+                   toObjectKey:(NSString *)objectKey
+                   onCompleted:(void (^)(BOOL, NSError *))onCompleted
+                    onProgress:(void (^)(float))onProgress {
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
@@ -209,12 +209,12 @@ BFExecutor * executor;
 }
 
 - (OSSTaskHandler *)resumableUploadFile:(NSString *)filePath
-                            withContentType:(NSString *)contentType
-                             withObjectMeta:(NSDictionary *)meta
-                               toBucketName:(NSString *)bucketName
-                                toObjectKey:(NSString *)objectKey
-                                onCompleted:(void(^)(BOOL, NSError *))onComplete
-                                 onProgress:(void(^)(float progress))onProgress {
+                        withContentType:(NSString *)contentType
+                         withObjectMeta:(NSDictionary *)meta
+                           toBucketName:(NSString *)bucketName
+                            toObjectKey:(NSString *)objectKey
+                            onCompleted:(void(^)(BOOL, NSError *))onComplete
+                             onProgress:(void(^)(float progress))onProgress {
 
     __block NSString * recordKey;
     __block int64_t uploadedLength = 0;
