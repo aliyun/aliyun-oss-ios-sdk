@@ -12,7 +12,10 @@
 @class BFTask;
 @class OSSSyncMutableDictionary;
 
+#ifndef OSSTASK_DEFINED
+#define OSSTASK_DEFINED
 typedef BFTask OSSTask;
+#endif
 
 /**
  * enum request retry type
@@ -45,13 +48,13 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  * networking configuration
  */
 @interface OSSNetworkingConfiguration : NSObject
+@property (nonatomic, assign) uint32_t maxRetryCount;
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
+@property (nonatomic, strong) NSString * backgroundSessionIdentifier;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
-
-+ (instancetype)defaultConfiguration;
 @end
 
 /**

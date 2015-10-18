@@ -35,11 +35,13 @@
         self.endpoint = endpoint;
         self.credentialProvider = credentialProvider;
 
-        OSSNetworkingConfiguration * netConf = [OSSNetworkingConfiguration defaultConfiguration];
+        OSSNetworkingConfiguration * netConf = [OSSNetworkingConfiguration new];
         if (conf) {
+            netConf.maxRetryCount = conf.maxRetryCount;
             netConf.timeoutIntervalForRequest = conf.timeoutIntervalForRequest;
             netConf.timeoutIntervalForResource = conf.timeoutIntervalForResource;
             netConf.enableBackgroundTransmitService = conf.enableBackgroundTransmitService;
+            netConf.backgroundSessionIdentifier = conf.backgroundSesseionIdentifier;
             netConf.proxyHost = conf.proxyHost;
             netConf.proxyPort = conf.proxyPort;
         }

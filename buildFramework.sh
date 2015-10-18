@@ -7,6 +7,9 @@ WORKSPACE='AliyunOSSiOS.xcworkspace'
 DERIVEDDATAPATH='DERIVEDDATA'
 SRCROOT='.'
 
+# delete product foler
+rm -rf ${SRCROOT}/Products
+
 # Sets the target folders and the final framework product.
 FMK_NAME=${PROJECT_NAME}
 

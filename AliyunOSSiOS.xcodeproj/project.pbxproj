@@ -555,6 +555,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -582,6 +583,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

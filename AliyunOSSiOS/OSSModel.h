@@ -13,7 +13,10 @@
 @class OSSFederationToken;
 @class BFTask;
 
+#ifndef OSSTASK_DEFINED
+#define OSSTASK_DEFINED
 typedef BFTask OSSTask;
+#endif
 
 
 extern NSString * const OSSListBucketResultXMLTOKEN;
@@ -176,6 +179,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @interface OSSClientConfiguration : NSObject
 @property (nonatomic, assign) uint32_t maxRetryCount;
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
+@property (nonatomic, strong) NSString * backgroundSesseionIdentifier;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 @property (nonatomic, strong) NSString * proxyHost;

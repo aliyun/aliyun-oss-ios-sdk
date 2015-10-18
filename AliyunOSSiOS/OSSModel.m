@@ -271,7 +271,21 @@ static volatile uint64_t tag = 0;
 
 @end
 
+NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsession";
+
 @implementation OSSClientConfiguration
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.maxRetryCount = 3;
+        self.enableBackgroundTransmitService = NO;
+        self.backgroundSesseionIdentifier = BACKGROUND_SESSION_IDENTIFIER;
+        self.timeoutIntervalForRequest = 15;
+        self.timeoutIntervalForResource = 7 * 24 * 60 * 60;
+    }
+    return self;
+}
+
 @end
 
 @implementation OSSSignerInterceptor

@@ -28,6 +28,8 @@ static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
+id<OSSCredentialProvider> credential1, credential2, credential3;
+
 @implementation oss_ios_sdk_newTests
 
 - (void)setUp {
@@ -86,11 +88,11 @@ static dispatch_queue_t test_queue;
 - (void)initWithAKSK {
     [OSSLog enableLog];
 
-    id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
+    credential1 = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
                                                                                                             secretKey:g_SK];
 
     // 自实现签名，可以用本地签名也可以远程加签
-    id<OSSCredentialProvider> credential1 = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
+    credential2 = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
         NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:g_SK];
         if (signature != nil) {
             *error = nil;
@@ -110,7 +112,7 @@ static dispatch_queue_t test_queue;
     // "federatedUser":"335450541522398178:alice-001",
     // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
     // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
-    id<OSSCredentialProvider> credential2 = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
+    credential3 = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:@"http://localhost:8080/distribute-token.json"];
         NSURLRequest * request = [NSURLRequest requestWithURL:url];
         BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
@@ -145,11 +147,11 @@ static dispatch_queue_t test_queue;
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 3;
-    conf.enableBackgroundTransmitService = NO;
+    conf.enableBackgroundTransmitService = YES;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential2 clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
 }
 
 - (void)tearDown {
@@ -850,6 +852,82 @@ static dispatch_queue_t test_queue;
     }];
     [dataTask resume];
     [tcs.task waitUntilFinished];
+}
+
+- (void)testMultiClientInstance {
+    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    conf.maxRetryCount = 3;
+    conf.enableBackgroundTransmitService = NO;
+    conf.timeoutIntervalForRequest = 15;
+    conf.timeoutIntervalForResource = 24 * 60 * 60;
+
+    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"http://oss-cn-hangzhou.aliyuncs.com"
+                                           credentialProvider:credential3
+                                          clientConfiguration:conf];
+
+    conf = [OSSClientConfiguration new];
+    conf.maxRetryCount = 3;
+    conf.enableBackgroundTransmitService = YES;
+    conf.backgroundSesseionIdentifier = @"test_other_backgroundservice-enbaled_client";
+    conf.timeoutIntervalForRequest = 15;
+    conf.timeoutIntervalForResource = 24 * 60 * 60;
+    OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:@"http://oss-cn-hangzhou.aliyuncs.com"
+                                           credentialProvider:credential3
+                                          clientConfiguration:conf];
+
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"1 -------------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [client1 putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+
+    request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"2 --------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    task = [client2 putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
 }
 
 #pragma mark cancel

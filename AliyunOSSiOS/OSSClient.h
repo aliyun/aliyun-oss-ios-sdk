@@ -28,7 +28,10 @@
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
 
+#ifndef OSSTASK_DEFINED
+#define OSSTASK_DEFINED
 typedef BFTask OSSTask;
+#endif
 
 /**
  * a oss client to interact with a region-specified oss service

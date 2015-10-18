@@ -67,15 +67,6 @@
 @end
 
 @implementation OSSNetworkingConfiguration
-
-+ (instancetype)defaultConfiguration {
-    OSSNetworkingConfiguration * conf = [OSSNetworkingConfiguration new];
-
-    conf.timeoutIntervalForRequest = 15;
-    conf.timeoutIntervalForResource = 36 * 60 * 60;
-    return conf;
-}
-
 @end
 
 @implementation OSSNetworkingRequestDelegate
@@ -271,8 +262,6 @@
 
 @end
 
-NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsession";
-
 @implementation OSSNetworking
 
 - (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration {
@@ -287,9 +276,9 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
         if (configuration.enableBackgroundTransmitService) {
             if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_IDENTIFIER];
+                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.configuration.backgroundSessionIdentifier];
             } else {
-                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfiguration:BACKGROUND_SESSION_IDENTIFIER];
+                uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfiguration:self.configuration.backgroundSessionIdentifier];
             }
         } else {
             uploadSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -342,6 +331,9 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     if (self.configuration.proxyHost && self.configuration.proxyPort) {
         request.isAccessViaProxy = YES;
     }
+
+    /* set maximum retry */
+    request.retryHandler.maxRetryCount = self.configuration.maxRetryCount;
 
     BFTaskCompletionSource * taskCompletionSource = [BFTaskCompletionSource taskCompletionSource];
 
