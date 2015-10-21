@@ -161,6 +161,7 @@ OSSGetObjectRequest * request = [OSSGetObjectRequest new];
 request.bucketName = @"<bucketName>";
 request.objectKey = @"<objectKey>";
 
+// 进度回调
 request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
 	NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 };
@@ -219,6 +220,14 @@ id<OSSCredentialProvider> credential = [[OSSCustomSignerCredentialProvider alloc
 ### Federation鉴权模式
 
 Federation鉴权模式是指，您需要实现一个回调，这个回调通过您实现的方式去获取一个Federation Token，然后返回。SDK会利用这个Token来进行加签处理，并在需要更新时主动调用这个回调获取Token。
+
+使用这种模式授权需要先开通阿里云RAM服务:[RAM](http://www.aliyun.com/product/ram)
+
+RAM相关文档：[https://docs.aliyun.com/#/pub/ram](https://docs.aliyun.com/#/pub/ram)
+
+STS使用手册：[https://docs.aliyun.com/#/pub/ram/sts-sdk/sts_java_sdk&preface](https://docs.aliyun.com/#/pub/ram/sts-sdk/sts_java_sdk&preface)
+
+OSS授权策略配置：[https://docs.aliyun.com/#/pub/oss/product-documentation/acl&policy-configure](https://docs.aliyun.com/#/pub/oss/product-documentation/acl&policy-configure)
 
 ```
 id<OSSCredentialProvider> credential = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
@@ -342,9 +351,11 @@ put.uploadingFileURL = [NSURL fileURLWithPath:@"<filepath>"];
 
 // optional fields
 put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-    // 当前上传段长度、当前已经上传总长度、一共需要上传的总长度
+    // 进度回调，当前上传段长度、当前已经上传总长度、一共需要上传的总长度
 	NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
 };
+
+// 这些配置参数都是可选的，具体含义参见 https://docs.aliyun.com/#/pub/oss/api-reference/object&PutObject
 // put.contentType = @"";
 // put.contentMd5 = @"";
 // put.contentEncoding = @"";
@@ -584,6 +595,8 @@ OSSTask * listPartTask = [client listParts:listParts];
 ```
 #import <AliyunOSSiOS/OSSCompat.h>
 ```
+
+另外，需要在工程`build settings`的`other linker flag`加上`-ObjC`。
 
 ### 上传文件
 
