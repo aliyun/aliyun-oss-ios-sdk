@@ -640,6 +640,22 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         }] waitUntilFinished];
     }
 
+    OSSListPartsRequest * listParts = [OSSListPartsRequest new];
+    listParts.bucketName = TEST_BUCKET;
+    listParts.objectKey = MultipartUploadObjectKey;
+    listParts.uploadId = uploadId;
+    task = [client listParts:listParts];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSListPartsResult * result = task.result;
+        XCTAssertNotNil(result);
+        [result.parts enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            XCTAssertNotNil(obj);
+            NSLog(@"part: %@", obj);
+        }];
+        return nil;
+    }] waitUntilFinished];
+
     OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
     complete.bucketName = TEST_BUCKET;
     complete.objectKey = MultipartUploadObjectKey;

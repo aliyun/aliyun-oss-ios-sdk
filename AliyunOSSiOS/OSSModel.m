@@ -802,12 +802,30 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                     getBucketResult.maxKeys = (int32_t)[[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] integerValue];
                     getBucketResult.delimiter = [parsedDict objectForKey:OSSDelimiterXMLTOKEN];
                     getBucketResult.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
-                    getBucketResult.contents = [parsedDict objectForKey:OSSContentXMLTOKEN];
-                    NSMutableArray * commentPrefixes = [NSMutableArray new];
-                    for (NSDictionary * prefix in [parsedDict objectForKey:OSSCommonPrefixesXMLTOKEN]) {
-                        [commentPrefixes addObject:[prefix objectForKey:@"Prefix"]];
+
+                    id contentObject = [parsedDict objectForKey:OSSContentXMLTOKEN];
+                    if ([contentObject isKindOfClass:[NSArray class]]) {
+                        getBucketResult.contents = contentObject;
+                    } else if ([contentObject isKindOfClass:[NSDictionary class]]) {
+                        NSArray * arr = [NSArray arrayWithObject:contentObject];
+                        getBucketResult.contents = arr;
+                    } else {
+                        getBucketResult.contents = nil;
                     }
-                    getBucketResult.commentPrefixes = commentPrefixes;
+
+                    NSMutableArray * commentPrefixesArr = [NSMutableArray new];
+                    id commentPrefixes = [parsedDict objectForKey:OSSCommonPrefixesXMLTOKEN];
+                    if ([commentPrefixes isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary * prefix in commentPrefixes) {
+                            [commentPrefixesArr addObject:[prefix objectForKey:@"Prefix"]];
+                        }
+                    } else if ([commentPrefixes isKindOfClass:[NSDictionary class]]) {
+                        [commentPrefixesArr addObject:[(NSDictionary *)commentPrefixes objectForKey:@"Prefix"]];
+                    } else {
+                        commentPrefixesArr = nil;
+                    }
+
+                    getBucketResult.commentPrefixes = commentPrefixesArr;
                 }
             }
             return getBucketResult;
@@ -952,7 +970,16 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                     listPartsReuslt.nextPartNumberMarker = [[parsedDict objectForKey:OSSNextPartNumberMarkerXMLTOKEN] intValue];
                     listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] intValue];
                     listPartsReuslt.isTruncate = [[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] boolValue];
-                    listPartsReuslt.parts = [parsedDict objectForKey:OSSPartXMLTOKEN];
+
+                    id partsObject = [parsedDict objectForKey:OSSPartXMLTOKEN];
+                    if ([partsObject isKindOfClass:[NSArray class]]) {
+                        listPartsReuslt.parts = partsObject;
+                    } else if ([partsObject isKindOfClass:[NSDictionary class]]) {
+                        NSArray * arr = [NSArray arrayWithObject:partsObject];
+                        listPartsReuslt.parts = arr;
+                    } else {
+                        listPartsReuslt.parts = nil;
+                    }
                 }
             }
             return listPartsReuslt;
