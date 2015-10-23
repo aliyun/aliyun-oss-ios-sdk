@@ -1246,7 +1246,8 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
                                                    toObjectKey:objectKey
                                                    onCompleted:^(BOOL isSuccess, NSError *error) {
                                                        NSLog(@"1. error: %@", error);
-                                                       XCTAssertTrue(isSuccess);
+                                                       XCTAssertFalse(isSuccess);
+                                                       XCTAssertEqual(error.code, OSSClientErrorCodeTaskCancelled);
                                                    } onProgress:^(float progress) {
                                                        NSLog(@"1. progress: %f", progress);
                                                        progValue = progress;

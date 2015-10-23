@@ -377,7 +377,11 @@ BFExecutor * executor;
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:recordKey];
         return [BFTask taskWithResult:nil];
     }] continueWithBlock:^id(BFTask *task) {
-        if (task.error) {
+        if (task.cancelled) {
+            onComplete(NO, [NSError errorWithDomain:OSSClientErrorDomain
+                                               code:OSSClientErrorCodeTaskCancelled
+                                           userInfo:@{OSSErrorMessageTOKEN: @"Task is cancelled"}]);
+        } else if (task.error || task.faulted) {
             onComplete(NO, task.error);
         } else {
             onComplete(YES, nil);
