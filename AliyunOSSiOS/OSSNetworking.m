@@ -133,7 +133,7 @@
         }
     }
 
-    NSURL * tempURL = [NSURL URLWithString:urlString];
+    NSURL * tempURL = (urlString == nil ? endPointURL : [NSURL URLWithString:urlString]);
     NSString * originHost = tempURL.host;
     if (!self.isAccessViaProxy) {
         NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:originHost];

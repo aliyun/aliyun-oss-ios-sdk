@@ -19,6 +19,7 @@
 NSString * const g_AK = @"<your access key>";
 NSString * const g_SK = @"<your secret key>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
+NSString * const BUGFIX_BUCKET = @"bugfix-test";
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
