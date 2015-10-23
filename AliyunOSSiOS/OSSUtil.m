@@ -201,4 +201,10 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return [data base64EncodedStringWithOptions:0];
 }
 
++ (NSString *)getRelativePath:(NSString *)fullPath {
+    NSString * userName = NSUserName();
+    NSString * rootPath = NSHomeDirectoryForUser(userName);
+    return [fullPath stringByReplacingOccurrencesOfString:rootPath withString:@""];
+}
+
 @end

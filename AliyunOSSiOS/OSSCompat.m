@@ -229,7 +229,7 @@ BFExecutor * executor;
         if (error) {
             return [BFTask taskWithError:error];
         }
-        recordKey = [NSString stringWithFormat:@"%@-%@-%@-%@", bucketName, objectKey, filePath, lastModified];
+        recordKey = [NSString stringWithFormat:@"%@-%@-%@-%@", bucketName, objectKey, [OSSUtil getRelativePath:filePath], lastModified];
         NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
         NSString * uploadId;
         NSMutableDictionary * initResult = [NSMutableDictionary new];

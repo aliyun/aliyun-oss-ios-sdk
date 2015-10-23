@@ -24,4 +24,5 @@
 + (NSString *)base64Md5ForData:(NSData *)data;
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath;
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL;
++ (NSString *)getRelativePath:(NSString *)fullPath;
 @end
