@@ -191,7 +191,7 @@ OSSTask * getTask = [client getObject:request];
 -----
 ## OSSClient
 
-OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。
+OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。一般来说，全局内只需要保持一个OSSClient，用来调用各种操作。
 
 在`快速入门`章节中，初始化OSSClient使用了明文设置密码的方式，这种方式安全性极差，是不适合线上环境的。因此SDK提供了另外两种鉴权方式：自实现签名和Federation鉴权。
 
@@ -249,6 +249,19 @@ id<OSSCredentialProvider> credential = [[OSSFederationCredentialProvider alloc] 
 OSSClientConfiguration * conf = [OSSClientConfiguration new];
 conf.maxRetryCount = 3;
 conf.enableBackgroundTransmitService = NO;
+conf.timeoutIntervalForRequest = 15;
+conf.timeoutIntervalForResource = 24 * 60 * 60;
+
+client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential clientConfiguration:conf];
+```
+
+如果需要支持后台传输，将`conf.enableBackgroundTransmitService`赋值为`YES`后，还需要设置每个OSSClient全局唯一的`backgroundSessionIdentifier`，否则无法构造多个OSSClient实例，会遇到`A background URLSession with identifier com.aliyun.oss.backgroundsession already exists!`异常。
+
+```
+OSSClientConfiguration * conf = [OSSClientConfiguration new];
+conf.maxRetryCount = 3;
+conf.enableBackgroundTransmitService = YES;
+conf.backgroundSessionIdentifier = @"global_unique_string_key_1";
 conf.timeoutIntervalForRequest = 15;
 conf.timeoutIntervalForResource = 24 * 60 * 60;
 
@@ -688,6 +701,8 @@ OSSTaskHandler * tk = [client resumableUploadFile:@"<filepath>"
 									  }];
 //[tk cancel];
 ```
+
+这个接口是为了兼容旧版本提供的，封装了较多细节，现在，更建议您通过分块上传的`multipartUploadInit`/`uploadPart`/`listParts`/`completeMultipartUpload`/`abortMultipartUpload`这几个接口，来实现您的断点续传。
 
 -----
 ## 签名URL
