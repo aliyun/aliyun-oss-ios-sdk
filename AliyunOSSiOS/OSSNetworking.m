@@ -558,8 +558,6 @@
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
-    OSSLogVerbose(@"recieve data: %ld", (long)[data length]);
-
     /* background upload task will not call back didRecieveResponse */
     if (delegate.isHttpRequestNotSuccessResponse || delegate.isBackgroundUploadTask) {
         [delegate.httpRequestNotSuccessResponseBody appendData:data];

@@ -649,6 +649,24 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSListPartsResult
 @end
 
+@implementation OSSResumableUploadRequest
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.partSize = 256 * 1024;
+    }
+    return self;
+}
+
+- (void)cancel {
+    self.isCancelled = YES;
+}
+
+@end
+
+@implementation OSSResumableUploadResult
+@end
+
 #pragma mark response parser
 
 
@@ -694,7 +712,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
                     return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                      code:OSSClientErrorCodeFileCantWrite
-                                                                 userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't write to %@", [self.downloadingFileURL path]]}]];
+                                                                 userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create new file %@", [self.downloadingFileURL path]]}]];
                 }
             }
             _fileHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadingFileURL error:&error];
@@ -705,7 +723,6 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             }
             [_fileHandle writeData:data];
         } else {
-            OSSLogVerbose(@"write data: %lld", (int64_t)[data length]);
             @try {
                 [_fileHandle writeData:data];
             }

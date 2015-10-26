@@ -78,7 +78,8 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
     OSSClientErrorCodeInvalidArgument,
     OSSClientErrorCodeNilUploadid,
     OSSClientErrorCodeTaskCancelled,
-    OSSClientErrorCodeNetworkError
+    OSSClientErrorCodeNetworkError,
+    OSSClientErrorCodeCannotResumeUpload
 };
 
 typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
@@ -537,6 +538,27 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  * abort multipart upload result
  */
 @interface OSSAbortMultipartUploadResult : OSSResult
+@end
+
+/**
+ * resumable upload request
+ */
+@interface OSSResumableUploadRequest : OSSRequest
+@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, strong) NSURL * uploadingFileURL;
+@property (nonatomic, assign) int64_t partSize;
+@property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
+@property (atomic, assign) BOOL isCancelled;
+
+- (void)cancel;
+@end
+
+/**
+ * resumable upload result
+ */
+@interface OSSResumableUploadResult : OSSResult
 @end
 
 /**

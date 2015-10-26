@@ -22,7 +22,9 @@
 @class OSSListPartsRequest;
 @class OSSAbortMultipartUploadRequest;
 @class OSSAppendObjectRequest;
+@class OSSResumableUploadRequest;
 @class BFTask;
+@class BFExecutor;
 
 @class OSSNetworking;
 @class OSSClientConfiguration;
@@ -32,6 +34,8 @@
 #define OSSTASK_DEFINED
 typedef BFTask OSSTask;
 #endif
+
+static BFExecutor * ossOperationExecutor;
 
 /**
  * a oss client to interact with a region-specified oss service
@@ -61,6 +65,8 @@ typedef BFTask OSSTask;
  * method (if all the background tasks have been completed).
  */
 - (void)setBackgroundSessionCompletionHandler:(void(^)())completeHandler;
+
+#pragma mark restful-api
 
 /**
  * corresponding to restful api: putBucket
@@ -132,6 +138,8 @@ typedef BFTask OSSTask;
  */
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
+#pragma mark extention method
+
 /**
  * presigned constrain URL for third-party to get Object
  */
@@ -144,5 +152,10 @@ typedef BFTask OSSTask;
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
                             withObjectKey:(NSString *)objectKey;
+
+/**
+ * resumable upload object
+ */
+- (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request;
 
 @end

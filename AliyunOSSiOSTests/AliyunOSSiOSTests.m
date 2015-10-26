@@ -63,12 +63,12 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * mainDir = [self getDocumentDirectory];
 
     NSMutableData * basePart = [NSMutableData dataWithCapacity:1024];
-    for (int i = 0; i < 1024/4; i++) {
-        u_int32_t randomBit = i; // arc4random();
-        [basePart appendBytes:(void*)&randomBit length:4];
-    }
 
     for (int i = 0; i < [fileNameArray count]; i++) {
+        for (int i = 0; i < 1024/4; i++) {
+            u_int32_t randomBit = i; // arc4random();
+            [basePart appendBytes:(void*)&randomBit length:4];
+        }
         NSString * name = [fileNameArray objectAtIndex:i];
         long size = [[fileSizeArray objectAtIndex:i] longValue];
         NSString * newFilePath = [mainDir stringByAppendingPathComponent:name];
@@ -261,6 +261,9 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertEqualObjects([headResult.objectMeta objectForKey:@"Content-Type"], @"application/special");
         return nil;
     }] waitUntilFinished];
+
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:@"file1m" equalsToLocalFile:fileURL.path];
+    XCTAssertTrue(isEqual);
 }
 
 - (void)testA_putObjectFromNSData {
@@ -947,6 +950,79 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
+- (void)testResumableUpload_normal {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
+    XCTAssertTrue(isEqual);
+}
+
+- (void)testResumableUpload_small_file {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1k"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(BFTask *task) {
+        NSLog(@"error: %@", task.error);
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
+    XCTAssertTrue(isEqual);
+}
+
 #pragma mark cancel
 
 - (void)testCancelPutObejct {
@@ -1413,6 +1489,28 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         return nil;
     }] waitUntilFinished];
     
+}
+
+#pragma mark testutil
+
+- (BOOL)isFileOnOSSBucket:(NSString *)bucketName objectKey:(NSString *)objectKey equalsToLocalFile:(NSString *)filePath {
+    NSString * docDir = [self getDocumentDirectory];
+    NSString * tempFile = [docDir stringByAppendingPathComponent:@"tempfile_for_check"];
+
+    OSSGetObjectRequest * get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    get.downloadToFileURL = [NSURL fileURLWithPath:tempFile];
+    [[[client getObject:get] continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+
+    NSString * remoteMD5 = [OSSUtil fileMD5String:tempFile];
+    NSString * localMD5 = [OSSUtil fileMD5String:filePath];
+    NSLog(@"%s - tempfile path: %@", __func__, tempFile);
+    NSLog(@"%s - remote md5: %@ local md5: %@", __func__, remoteMD5, localMD5);
+    return [remoteMD5 isEqualToString:localMD5];
 }
 
 @end

@@ -11,15 +11,7 @@
 
 int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
 
-BFExecutor * executor;
-
 @implementation OSSClient (Compat)
-
-+ (void)initialize {
-    NSOperationQueue * queue = [NSOperationQueue new];
-    queue.maxConcurrentOperationCount = 5;
-    executor = [BFExecutor executorWithOperationQueue:queue];
-}
 
 - (OSSTaskHandler *)uploadData:(NSData *)data
                withContentType:(NSString *)contentType
@@ -31,7 +23,7 @@ BFExecutor * executor;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
         put.bucketName = bucketName;
         put.objectKey = objectKey;
@@ -71,7 +63,7 @@ BFExecutor * executor;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:executor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
         get.bucketName = bucketName;
         get.objectKey = objectKey;
@@ -111,7 +103,7 @@ BFExecutor * executor;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:executor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
         get.bucketName = bucketName;
         get.objectKey = objectKey;
@@ -147,7 +139,7 @@ BFExecutor * executor;
                    objectKey:(NSString *)objectKey
                  onCompleted:(void (^)(BOOL, NSError *))onCompleted {
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:executor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
         delete.bucketName = bucketName;
         delete.objectKey = objectKey;
@@ -175,7 +167,7 @@ BFExecutor * executor;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
         put.bucketName = bucketName;
         put.objectKey = objectKey;
@@ -221,7 +213,7 @@ BFExecutor * executor;
     __block int64_t expectedUploadLength = 0;
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[[[BFTask taskWithResult:nil] continueWithExecutor:executor withSuccessBlock:^id(BFTask *task) {
+    [[[[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];
         NSDate * lastModified;
         NSError * error;
