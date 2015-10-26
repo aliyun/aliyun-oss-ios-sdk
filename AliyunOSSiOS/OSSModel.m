@@ -689,13 +689,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     if (self.downloadingFileURL) {
         if (!_fileHandle) {
             NSFileManager * fm = [NSFileManager defaultManager];
+            [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
             if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
-                [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
-                if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
-                    return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                                     code:OSSClientErrorCodeFileCantWrite
-                                                                 userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't write to %@", [self.downloadingFileURL path]]}]];
-                }
+                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                 code:OSSClientErrorCodeFileCantWrite
+                                                             userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create file at %@", [self.downloadingFileURL path]]}]];
             }
             _fileHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadingFileURL error:&error];
             if (error) {
