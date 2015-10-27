@@ -62,11 +62,11 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSFileManager * fm = [NSFileManager defaultManager];
     NSString * mainDir = [self getDocumentDirectory];
 
-    NSMutableData * basePart = [NSMutableData dataWithCapacity:1024];
 
     for (int i = 0; i < [fileNameArray count]; i++) {
-        for (int i = 0; i < 1024/4; i++) {
-            u_int32_t randomBit = i; // arc4random();
+        NSMutableData * basePart = [NSMutableData dataWithCapacity:1024];
+        for (int j = 0; j < 1024/4; j++) {
+            u_int32_t randomBit = j;// arc4random();
             [basePart appendBytes:(void*)&randomBit length:4];
         }
         NSString * name = [fileNameArray objectAtIndex:i];
@@ -549,6 +549,55 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
+- (void)testGetObjectOverwriteOldFile {
+    NSString * docDir = [self getDocumentDirectory];
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    request.downloadToFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"tempfile"]];
+
+    OSSTask * task = [client getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertNil(result.downloadedData);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+
+    uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:request.downloadToFileURL.path error:nil] fileSize];
+    XCTAssertEqual(1024 * 1000, fileSize);
+    XCTAssertTrue([self isFileOnOSSBucket:TEST_BUCKET objectKey:@"file1m" equalsToLocalFile:request.downloadToFileURL.path]);
+
+    request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file100k";
+    request.downloadToFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"tempfile"]];
+
+    task = [client getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertNil(result.downloadedData);
+        XCTAssertEqualObjects(@"102400", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+
+    fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:request.downloadToFileURL.path error:nil] fileSize];
+    XCTAssertEqual(1024 * 100, fileSize);
+    XCTAssertTrue([self isFileOnOSSBucket:TEST_BUCKET objectKey:@"file100k" equalsToLocalFile:request.downloadToFileURL.path]);
+}
+
 - (void)testHeadObject {
     OSSHeadObjectRequest * request = [OSSHeadObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1023,6 +1072,66 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     XCTAssertTrue(isEqual);
 }
 
+- (void)testResumableUpload_resume_upload {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    __weak OSSResumableUploadRequest * upload = resumableUpload;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        if (totalByteSent > totalBytesExpectedToSend / 2) {
+            [upload cancel];
+        }
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(BFTask *task) {
+        NSLog(@"error: %@", task.error);
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
+        return nil;
+    }] waitUntilFinished];
+
+    resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 2);
+    };
+    resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(BFTask *task) {
+        NSLog(@"error: %@", task.error);
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+
+
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
+    XCTAssertTrue(isEqual);
+}
+
 #pragma mark cancel
 
 - (void)testCancelPutObejct {
@@ -1304,6 +1413,50 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertEqual(task.error.domain, OSSClientErrorDomain);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
         NSLog(@"ErrorMessage: %@", [task.error.userInfo objectForKey:OSSErrorMessageTOKEN]);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testResumableUpload_invalid_partSize {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(BFTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
+        NSLog(@"task.error: %@", task.error);
+        return nil;
+    }] waitUntilFinished];
+
+    OSSAbortMultipartUploadRequest * abort = [OSSAbortMultipartUploadRequest new];
+    abort.bucketName = TEST_BUCKET;
+    abort.objectKey = MultipartUploadObjectKey;
+    abort.uploadId = uploadId;
+    [[[client abortMultipartUpload:abort] continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
 }
