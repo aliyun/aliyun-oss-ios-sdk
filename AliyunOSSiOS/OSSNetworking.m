@@ -378,12 +378,12 @@
             }
         } else if (requestDelegate.uploadingFileURL) {
             sessionTask = [_uploadSession uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
+
+            if (self.isUsingBackgroundSession) {
+                requestDelegate.isBackgroundUploadFileTask = YES;
+            }
         } else { // not upload request
             sessionTask = [_dataSession dataTaskWithRequest:requestDelegate.internalRequest];
-        }
-
-        if (self.isUsingBackgroundSession && [sessionTask isKindOfClass:[NSURLSessionUploadTask class]]) {
-            requestDelegate.isBackgroundUploadTask = YES;
         }
 
         requestDelegate.currentSessionTask = sessionTask;
@@ -414,7 +414,7 @@
     }
 
     /* background upload task will not call back didRecieveResponse */
-    if (delegate.isBackgroundUploadTask) {
+    if (delegate.isBackgroundUploadFileTask) {
         OSSLogVerbose(@"backgroud upload task did recieve response: %@", httpResponse);
         if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             [delegate.responseParser consumeHttpResponse:httpResponse];
@@ -560,8 +560,10 @@
 
     OSSLogVerbose(@"recieve data: %ld", (long)[data length]);
 
-    /* background upload task will not call back didRecieveResponse */
-    if (delegate.isHttpRequestNotSuccessResponse || delegate.isBackgroundUploadTask) {
+    /* background upload task will not call back didRecieveResponse.
+       so if we recieve response data after background uploading file,
+       we consider it as error response message since a successful uploading request will not response any data */
+    if (delegate.isHttpRequestNotSuccessResponse || delegate.isBackgroundUploadFileTask) {
         [delegate.httpRequestNotSuccessResponseBody appendData:data];
     } else {
         if (delegate.onRecieveData) {
