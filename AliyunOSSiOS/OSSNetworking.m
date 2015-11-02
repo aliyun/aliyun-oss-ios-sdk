@@ -558,8 +558,6 @@
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
-    OSSLogVerbose(@"recieve data: %ld", (long)[data length]);
-
     /* background upload task will not call back didRecieveResponse.
        so if we recieve response data after background uploading file,
        we consider it as error response message since a successful uploading request will not response any data */

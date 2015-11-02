@@ -193,6 +193,24 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return digestResult;
 }
 
++ (NSString *)convertMd5Bytes2String:(unsigned char *)md5Bytes {
+    return [NSString stringWithFormat:
+            @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+            md5Bytes[0], md5Bytes[1], md5Bytes[2], md5Bytes[3],
+            md5Bytes[4], md5Bytes[5], md5Bytes[6], md5Bytes[7],
+            md5Bytes[8], md5Bytes[9], md5Bytes[10], md5Bytes[11],
+            md5Bytes[12], md5Bytes[13], md5Bytes[14], md5Bytes[15]
+            ];
+}
+
++ (NSString *)dataMD5String:(NSData *)data {
+    return [self convertMd5Bytes2String:[self dataMD5:data]];
+}
+
++ (NSString *)fileMD5String:(NSString *)path {
+    return [self convertMd5Bytes2String:[self fileMD5:path]];
+}
+
 + (NSString*)base64ForData:(uint8_t *)input length:(int32_t)length {
     if (input == nil) {
         return nil;

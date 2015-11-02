@@ -649,6 +649,24 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSListPartsResult
 @end
 
+@implementation OSSResumableUploadRequest
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.partSize = 256 * 1024;
+    }
+    return self;
+}
+
+- (void)cancel {
+    self.isCancelled = YES;
+}
+
+@end
+
+@implementation OSSResumableUploadResult
+@end
+
 #pragma mark response parser
 
 
@@ -703,7 +721,6 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             }
             [_fileHandle writeData:data];
         } else {
-            OSSLogVerbose(@"write data: %lld", (int64_t)[data length]);
             @try {
                 [_fileHandle writeData:data];
             }

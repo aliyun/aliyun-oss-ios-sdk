@@ -24,6 +24,12 @@
 
 @implementation OSSClient
 
++ (void)initialize {
+    NSOperationQueue * queue = [NSOperationQueue new];
+    queue.maxConcurrentOperationCount = 5;
+    ossOperationExecutor = [BFExecutor executorWithOperationQueue:queue];
+}
+
 - (instancetype)initWithEndpoint:(NSString *)endpoint credentialProvider:(id<OSSCredentialProvider>)credentialProvider {
     return [self initWithEndpoint:endpoint credentialProvider:credentialProvider clientConfiguration:nil];
 }
@@ -498,6 +504,161 @@
                                 endpointURL.host,
                                 [OSSUtil encodeURL:objectKey]];
         return [OSSTask taskWithResult:stringURL];
+    }];
+}
+
+- (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request {
+
+    __block int64_t uploadedLength = 0;
+    __block int64_t expectedUploadLength = 0;
+    __block int partCount;
+
+    return [[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
+        if (!request.uploadId || !request.objectKey || !request.bucketName || !request.uploadingFileURL) {
+            return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                             code:OSSClientErrorCodeInvalidArgument
+                                                         userInfo:@{@"ErrorMessage": @"ResumableUpload requires uploadId/bucketName/objectKey/uploadingFile."}]];
+        }
+        if (request.partSize < 100 * 1024) {
+            return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                             code:OSSClientErrorCodeInvalidArgument
+                                                         userInfo:@{@"ErrorMessage": @"Part size must be set bigger than 100KB"}]];
+        }
+
+        static dispatch_once_t onceToken;
+        static NSError * cancelError;
+        dispatch_once(&onceToken, ^{
+            cancelError = [NSError errorWithDomain:OSSClientErrorDomain
+                                              code:OSSClientErrorCodeTaskCancelled
+                                          userInfo:@{@"ErrorMessage": @"This task is cancelled!"}];
+        });
+
+        NSFileManager * fm = [NSFileManager defaultManager];
+        NSError * error = nil;;
+        int64_t uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] longLongValue];
+        expectedUploadLength = uploadFileSize;
+        if (error) {
+            return [BFTask taskWithError:error];
+        }
+        partCount = (int)(expectedUploadLength / request.partSize) + (expectedUploadLength % request.partSize != 0);
+        NSArray * uploadedPart = nil;
+
+        OSSListPartsRequest * listParts = [OSSListPartsRequest new];
+        listParts.bucketName = request.bucketName;
+        listParts.objectKey = request.objectKey;
+        listParts.uploadId = request.uploadId;
+        BFTask * listPartsTask = [self listParts:listParts];
+        [listPartsTask waitUntilFinished];
+
+        if (listPartsTask.error) {
+            if (listPartsTask.error.domain == OSSServerErrorDomain && listPartsTask.error.code == -1 * 404) {
+                OSSLogVerbose(@"local record existes but the remote record is deleted");
+                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                 code:OSSClientErrorCodeCannotResumeUpload
+                                                             userInfo:@{@"ErrorMessage": @"This uploadid is no long exist on server side, can not resume"}]];
+            } else {
+                return listPartsTask;
+            }
+        } else {
+            OSSListPartsResult * result = listPartsTask.result;
+            uploadedPart = result.parts;
+            __block int64_t firstPartSize = -1;
+            [uploadedPart enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSDictionary * part = obj;
+                uploadedLength += [[part objectForKey:OSSSizeXMLTOKEN] longLongValue];
+                if (idx == 0) {
+                    firstPartSize = [[part objectForKey:OSSSizeXMLTOKEN] longLongValue];
+                }
+            }];
+            if (expectedUploadLength < uploadedLength) {
+                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                 code:OSSClientErrorCodeCannotResumeUpload
+                                                             userInfo:@{@"ErrorMessage": @"The uploading file is inconsistent with before"}]];
+            } else if (firstPartSize != -1 && firstPartSize != request.partSize && expectedUploadLength != firstPartSize) {
+                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                 code:OSSClientErrorCodeCannotResumeUpload
+                                                             userInfo:@{@"ErrorMessage": @"The part size setting is inconsistent with before"}]];
+            }
+        }
+
+        if (request.isCancelled) {
+            return [BFTask taskWithError:cancelError];
+        }
+
+        NSMutableArray * alreadyUploadPart = [NSMutableArray new];
+        NSMutableArray * alreadyUploadIndex = [NSMutableArray new];
+        [uploadedPart enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSDictionary * part = obj;
+            OSSPartInfo * partInfo = [OSSPartInfo partInfoWithPartNum:[[part objectForKey:OSSPartNumberXMLTOKEN] intValue]
+                                                                 eTag:[part objectForKey:OSSETagXMLTOKEN]
+                                                                 size:[[part objectForKey:OSSSizeXMLTOKEN] longLongValue]];
+            [alreadyUploadPart addObject:partInfo];
+            [alreadyUploadIndex addObject:@(partInfo.partNum)];
+        }];
+
+        NSFileHandle * handle = [NSFileHandle fileHandleForReadingAtPath:[request.uploadingFileURL path]];
+
+        if (request.uploadProgress && expectedUploadLength) {
+            request.uploadProgress(0, uploadedLength, expectedUploadLength);
+        }
+
+        for (int i = 1; i <= partCount; i++) {
+            if ([alreadyUploadIndex containsObject:@(i)]) {
+                continue;
+            }
+
+            [handle seekToFileOffset:uploadedLength];
+            int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
+
+            OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+            uploadPart.bucketName = request.bucketName;
+            uploadPart.objectkey = request.objectKey;
+            uploadPart.partNumber = i;
+            uploadPart.uploadId = request.uploadId;
+            uploadPart.uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
+            BFTask * uploadPartTask = [self uploadPart:uploadPart];
+            [uploadPartTask waitUntilFinished];
+            if (uploadPartTask.error) {
+                return uploadPartTask;
+            } else {
+                OSSUploadPartResult * result = uploadPartTask.result;
+                OSSPartInfo * partInfo = [OSSPartInfo new];
+                partInfo.partNum = i;
+                partInfo.eTag = result.eTag;
+                [alreadyUploadPart addObject:partInfo];
+
+                uploadedLength += readLength;
+                if (request.uploadProgress && expectedUploadLength) {
+                    request.uploadProgress(readLength, uploadedLength, expectedUploadLength);
+                }
+            }
+
+            if (request.isCancelled) {
+                [handle closeFile];
+                return [BFTask taskWithError:cancelError];
+            }
+        }
+
+        [handle closeFile];
+
+        OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
+        complete.bucketName = request.bucketName;
+        complete.objectKey = request.objectKey;
+        complete.uploadId = request.uploadId;
+        complete.partInfos = alreadyUploadPart;
+        BFTask * completeTask = [self completeMultipartUpload:complete];
+        [completeTask waitUntilFinished];
+
+        if (completeTask.error) {
+            return completeTask;
+        } else {
+            OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
+            OSSResumableUploadResult * result = [OSSResumableUploadResult new];
+            result.requestId = completeResult.requestId;
+            result.httpResponseCode = completeResult.httpResponseCode;
+            result.httpResponseHeaderFields = completeResult.httpResponseHeaderFields;
+            return [BFTask taskWithResult:result];
+        }
     }];
 }
 
