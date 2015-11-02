@@ -1621,7 +1621,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
-    
+
     BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
     [client deleteObjectInBucket:TEST_BUCKET
                        objectKey:@"file1m_copy"
@@ -1629,9 +1629,9 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
                          XCTAssertTrue(isSuccess);
                          [tcs setResult:nil];
                      }];
-    
+
     [tcs.task waitUntilFinished];
-    
+
     head = [OSSHeadObjectRequest new];
     head.bucketName = TEST_BUCKET;
     head.objectKey = @"file1m_copy";

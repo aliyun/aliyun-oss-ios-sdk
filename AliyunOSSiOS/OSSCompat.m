@@ -23,7 +23,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
         put.bucketName = bucketName;
         put.objectKey = objectKey;
@@ -63,7 +63,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
         get.bucketName = bucketName;
         get.objectKey = objectKey;
@@ -103,7 +103,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSGetObjectRequest * get = [OSSGetObjectRequest new];
         get.bucketName = bucketName;
         get.objectKey = objectKey;
@@ -139,7 +139,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
                    objectKey:(NSString *)objectKey
                  onCompleted:(void (^)(BOOL, NSError *))onCompleted {
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(BFTask *task) {
         OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
         delete.bucketName = bucketName;
         delete.objectKey = objectKey;
@@ -167,7 +167,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
 
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
+    [[[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
         OSSPutObjectRequest * put = [OSSPutObjectRequest new];
         put.bucketName = bucketName;
         put.objectKey = objectKey;
@@ -209,11 +209,9 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
                              onProgress:(void(^)(float progress))onProgress {
 
     __block NSString * recordKey;
-    __block int64_t uploadedLength = 0;
-    __block int64_t expectedUploadLength = 0;
     OSSTaskHandler * bcts = [BFCancellationTokenSource cancellationTokenSource];
 
-    [[[[[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withSuccessBlock:^id(BFTask *task) {
+    [[[[[[BFTask taskWithResult:nil] continueWithBlock:^id(BFTask *task) {
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];
         NSDate * lastModified;
         NSError * error;
@@ -223,151 +221,60 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
         }
         recordKey = [NSString stringWithFormat:@"%@-%@-%@-%@", bucketName, objectKey, [OSSUtil getRelativePath:filePath], lastModified];
         NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
-        NSString * uploadId;
-        NSMutableDictionary * initResult = [NSMutableDictionary new];
+        return [BFTask taskWithResult:[userDefault objectForKey:recordKey]];
+    }] continueWithSuccessBlock:^id(BFTask *task) {
+        if (!task.result) {
+            // new upload task
+            OSSInitMultipartUploadRequest * initMultipart = [OSSInitMultipartUploadRequest new];
+            initMultipart.bucketName = bucketName;
+            initMultipart.objectKey = objectKey;
+            initMultipart.contentType = contentType;
+            initMultipart.objectMeta = meta;
+            return [self multipartUploadInit:initMultipart];
+        }
+        OSSLogVerbose(@"An resumable task for uploadid: %@", task.result);
+        return task;
+    }] continueWithSuccessBlock:^id(BFTask *task) {
+        NSString * uploadId = nil;
 
-        if ((uploadId = [userDefault objectForKey:recordKey])) {
-            OSSLogVerbose(@"old record found, try to recover the task");
-            OSSListPartsRequest * listParts = [OSSListPartsRequest new];
-            listParts.bucketName = bucketName;
-            listParts.objectKey = objectKey;
-            listParts.uploadId = uploadId;
-            BFTask * listTask = [self listParts:listParts];
-            [listTask waitUntilFinished];
-            if (listTask.error) {
-                if(listTask.error.domain == OSSServerErrorDomain && listTask.error.code == -1 * 404) {
-                    OSSLogVerbose(@"local record existes but the remote record is deleted");
-                    [userDefault removeObjectForKey:recordKey];
-                    uploadId = nil;
-                } else {
-                    return listTask;
-                }
-            } else {
-                OSSListPartsResult * result = listTask.result;
-                [initResult setObject:uploadId forKey:@"uploadId"];
-                [initResult setObject:result.parts forKey:@"parts"];
-                [result.parts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    NSDictionary * dict = obj;
-                    uploadedLength += [[dict objectForKey:OSSSizeXMLTOKEN] longLongValue];
-                }];
-                return [BFTask taskWithResult:initResult];
-            }
+        if (bcts.token.isCancellationRequested || bcts.isCancellationRequested) {
+            return [BFTask cancelledTask];
         }
 
-        // uploadId is nil
-        OSSInitMultipartUploadRequest * initMultipart = [OSSInitMultipartUploadRequest new];
-        initMultipart.bucketName = bucketName;
-        initMultipart.objectKey = objectKey;
-        initMultipart.contentType = contentType;
-        initMultipart.objectMeta = meta;
-        BFTask * initTask = [self multipartUploadInit:initMultipart];
-        [initTask waitUntilFinished];
-        if (initTask.error) {
-            return initTask;
+        if (task.error) {
+            return task;
         }
 
-        uploadId = ((OSSInitMultipartUploadResult *)initTask.result).uploadId;
+        if ([task.result isKindOfClass:[OSSInitMultipartUploadResult class]]) {
+            uploadId = ((OSSInitMultipartUploadResult *)task.result).uploadId;
+        } else {
+            uploadId = task.result;
+        }
+
         if (!uploadId) {
             return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                              code:OSSClientErrorCodeNilUploadid
                                                          userInfo:@{OSSErrorMessageTOKEN: @"Can't get an upload id"}]];
         }
-        [initResult setObject:uploadId forKey:@"uploadId"];
+        NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
         [userDefault setObject:uploadId forKey:recordKey];
         [userDefault synchronize];
-        return [BFTask taskWithResult:initResult];
+        return [BFTask taskWithResult:uploadId];
     }] continueWithSuccessBlock:^id(BFTask *task) {
-        NSDictionary * initResult = task.result;
-        NSString * uploadId = [initResult objectForKey:@"uploadId"];
-        NSMutableArray * uploadedParts = [NSMutableArray arrayWithArray:[initResult objectForKey:@"parts"]];
-        NSFileManager * fm = [NSFileManager defaultManager];
-        NSError * error;
-
-        int64_t uploadFileSize = [[[fm attributesOfItemAtPath:filePath error:&error] objectForKey:NSFileSize] longLongValue];
-        expectedUploadLength = uploadFileSize;
-        if (error) {
-            return [BFTask taskWithError:error];
-        }
-        int blockNum = (int)(uploadFileSize / OSSMultipartUploadDefaultBlockSize) + (uploadFileSize % OSSMultipartUploadDefaultBlockSize != 0);
-
-        NSMutableArray * alreadyUpload = [NSMutableArray new];
-        NSMutableArray * alreadyUploadPartIndex = [NSMutableArray new];
-        [uploadedParts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSDictionary * dict = obj;
-            OSSPartInfo * part = [OSSPartInfo partInfoWithPartNum:[[dict objectForKey:OSSPartNumberXMLTOKEN] intValue]
-                                                             eTag:[dict objectForKey:OSSETagXMLTOKEN]
-                                                             size:[[dict objectForKey:OSSSizeXMLTOKEN] longLongValue]];
-            [alreadyUploadPartIndex addObject:@(part.partNum)];
-            [alreadyUpload addObject:part];
-        }];
-
-        NSFileHandle * handle = [NSFileHandle fileHandleForReadingAtPath:filePath];
-
-        if (expectedUploadLength) {
-            onProgress((float)uploadedLength/expectedUploadLength);
-        }
-
-        for (int i = 1; i <= blockNum; i++) {
-            if ([alreadyUploadPartIndex containsObject:@(i)]) {
-                continue; // this block is already uploaded
+        OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+        resumableUpload.bucketName = bucketName;
+        resumableUpload.objectKey = objectKey;
+        resumableUpload.uploadId = task.result;
+        resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+        __weak OSSResumableUploadRequest * weakRef = resumableUpload;
+        resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+            onProgress((float)totalBytesSent/totalBytesExpectedToSend);
+            if (bcts.token.isCancellationRequested || bcts.isCancellationRequested) {
+                [weakRef cancel];
             }
-
-            if (bcts.isCancellationRequested) {
-                return [BFTask cancelledTask];
-            }
-            OSSLogDebug(@"Upload Thread: %@", [NSThread currentThread]);
-
-            [handle seekToFileOffset:OSSMultipartUploadDefaultBlockSize * (i-1)];
-            int64_t readLength = MIN(OSSMultipartUploadDefaultBlockSize, uploadFileSize - (OSSMultipartUploadDefaultBlockSize * (i-1)));
-
-            OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
-            uploadPart.bucketName = bucketName;
-            uploadPart.objectkey = objectKey;
-            uploadPart.partNumber = i;
-            uploadPart.uploadId = uploadId;
-            uploadPart.uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
-            BFTask * uploadPartTask = [self uploadPart:uploadPart];
-            [uploadPartTask waitUntilFinished];
-            if (uploadPartTask.error) {
-                return uploadPartTask;
-            }
-            OSSUploadPartResult * result = uploadPartTask.result;
-            OSSPartInfo * partInfo = [OSSPartInfo new];
-            partInfo.partNum = i;
-            partInfo.eTag = result.eTag;
-            [alreadyUpload addObject:partInfo];
-
-            uploadedLength += readLength;
-            if (expectedUploadLength) {
-                onProgress((float)uploadedLength/expectedUploadLength);
-            }
-        }
-        [handle closeFile];
-        NSDictionary * uploadPartsResult = [NSDictionary dictionaryWithObjectsAndKeys:uploadId, @"uploadId",
-                                            alreadyUpload, @"parts", nil];
-        return [BFTask taskWithResult:uploadPartsResult];
-    }] continueWithSuccessBlock:^id(BFTask *task) {
-        NSDictionary * uploadPartsResult = task.result;
-        NSString * uploadId = [uploadPartsResult objectForKey:@"uploadId"];
-        NSArray * alreadyUploadParts = [uploadPartsResult objectForKey:@"parts"];
-
-        if (bcts.token.isCancellationRequested) {
-            return [BFTask cancelledTask];
-        }
-
-        OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
-        complete.bucketName = bucketName;
-        complete.objectKey = objectKey;
-        complete.uploadId = uploadId;
-        complete.partInfos = alreadyUploadParts;
-        BFTask * completeTask = [self completeMultipartUpload:complete];
-        [completeTask waitUntilFinished];
-        if (completeTask.error) {
-            return completeTask;
-        }
-        onProgress(1.0f);
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:recordKey];
-        return [BFTask taskWithResult:nil];
+            NSLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        };
+        return [self resumableUpload:resumableUpload];
     }] continueWithBlock:^id(BFTask *task) {
         if (task.cancelled) {
             onComplete(NO, [NSError errorWithDomain:OSSClientErrorDomain

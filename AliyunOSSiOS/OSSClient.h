@@ -35,8 +35,6 @@
 typedef BFTask OSSTask;
 #endif
 
-static BFExecutor * ossOperationExecutor;
-
 /**
  * a oss client to interact with a region-specified oss service
  */
@@ -45,6 +43,7 @@ static BFExecutor * ossOperationExecutor;
 @property (nonatomic, strong) OSSNetworking * networking;
 @property (nonatomic, strong) id<OSSCredentialProvider> credentialProvider;
 @property (nonatomic, strong) OSSClientConfiguration * clientConfiguration;
+@property (nonatomic, strong, readonly) BFExecutor * ossOperationExecutor;
 
 /**
  * init with endpoint, credentialprovider and default configuration

@@ -24,12 +24,6 @@
 
 @implementation OSSClient
 
-+ (void)initialize {
-    NSOperationQueue * queue = [NSOperationQueue new];
-    queue.maxConcurrentOperationCount = 5;
-    ossOperationExecutor = [BFExecutor executorWithOperationQueue:queue];
-}
-
 - (instancetype)initWithEndpoint:(NSString *)endpoint credentialProvider:(id<OSSCredentialProvider>)credentialProvider {
     return [self initWithEndpoint:endpoint credentialProvider:credentialProvider clientConfiguration:nil];
 }
@@ -38,6 +32,9 @@
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
              clientConfiguration:(OSSClientConfiguration *)conf {
     if (self = [super init]) {
+        NSOperationQueue * queue = [NSOperationQueue new];
+        queue.maxConcurrentOperationCount = 5;
+        _ossOperationExecutor = [BFExecutor executorWithOperationQueue:queue];
         self.endpoint = endpoint;
         self.credentialProvider = credentialProvider;
 
@@ -513,7 +510,7 @@
     __block int64_t expectedUploadLength = 0;
     __block int partCount;
 
-    return [[BFTask taskWithResult:nil] continueWithExecutor:ossOperationExecutor withBlock:^id(BFTask *task) {
+    return [[BFTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(BFTask *task) {
         if (!request.uploadId || !request.objectKey || !request.bucketName || !request.uploadingFileURL) {
             return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                              code:OSSClientErrorCodeInvalidArgument
