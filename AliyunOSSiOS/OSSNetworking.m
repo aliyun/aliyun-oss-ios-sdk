@@ -313,7 +313,7 @@
         _dataSession = [NSURLSession sessionWithConfiguration:dataSessionConfig
                                                  delegate:self
                                             delegateQueue:operationQueue];
-        _uploadSession = [NSURLSession sessionWithConfiguration:uploadSessionConfig
+        _uploadFileSession = [NSURLSession sessionWithConfiguration:uploadSessionConfig
                                                        delegate:self
                                                   delegateQueue:operationQueue];
 
@@ -370,14 +370,10 @@
         }
 
         if (requestDelegate.uploadingData) {
-            if (self.isUsingBackgroundSession) {
-                [requestDelegate.internalRequest setHTTPBody:requestDelegate.uploadingData];
-                sessionTask = [_uploadSession dataTaskWithRequest:requestDelegate.internalRequest];
-            } else {
-                sessionTask = [_uploadSession uploadTaskWithRequest:requestDelegate.internalRequest fromData:requestDelegate.uploadingData];
-            }
+            [requestDelegate.internalRequest setHTTPBody:requestDelegate.uploadingData];
+            sessionTask = [_dataSession dataTaskWithRequest:requestDelegate.internalRequest];
         } else if (requestDelegate.uploadingFileURL) {
-            sessionTask = [_uploadSession uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
+            sessionTask = [_uploadFileSession uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
 
             if (self.isUsingBackgroundSession) {
                 requestDelegate.isBackgroundUploadFileTask = YES;
@@ -395,6 +391,10 @@
     }] continueWithBlock:^id(BFTask *task) {
         if (task.error) {
             requestDelegate.completionHandler(nil, task.error);
+        } else if (task.isFaulted) {
+            requestDelegate.completionHandler(nil, [NSError errorWithDomain:OSSClientErrorDomain
+                                                                       code:OSSClientErrorCodeExcpetionCatched
+                                                                   userInfo:@{@"ErrorMessage": [NSString stringWithFormat:@"Catch exception - %@", task.exception]}]);
         }
         return nil;
     }];

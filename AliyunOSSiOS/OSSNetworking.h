@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  */
 @interface OSSNetworking : NSObject <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession * dataSession;
-@property (nonatomic, strong) NSURLSession * uploadSession;
+@property (nonatomic, strong) NSURLSession * uploadFileSession;
 @property (nonatomic, assign) BOOL isUsingBackgroundSession;
 @property (nonatomic, strong) OSSSyncMutableDictionary * sessionDelagateManager;
 @property (nonatomic, strong) OSSNetworkingConfiguration * configuration;

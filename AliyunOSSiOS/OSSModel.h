@@ -78,7 +78,9 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
     OSSClientErrorCodeInvalidArgument,
     OSSClientErrorCodeNilUploadid,
     OSSClientErrorCodeTaskCancelled,
-    OSSClientErrorCodeNetworkError
+    OSSClientErrorCodeNetworkError,
+    OSSClientErrorCodeExcpetionCatched,
+    OSSClientErrorCodeNotKnown
 };
 
 typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
