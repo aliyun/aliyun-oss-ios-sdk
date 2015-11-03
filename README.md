@@ -291,6 +291,42 @@ OSSTask * createTask = [client createBucket:create];
 }];
 ```
 
+### 罗列所有bucket
+
+```
+OSSGetServiceRequest * getService = [OSSGetServiceRequest new];
+OSSTask * getServiceTask = [client getService:getService];
+[getServiceTask continueWithBlock:^id(OSSTask *task) {
+    if (!task.error) {
+        OSSGetServiceResult * result = task.result;
+        NSLog(@"buckets: %@", result.buckets);
+        NSLog(@"owner: %@, %@", result.ownerId, result.ownerDispName);
+        [result.buckets enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSDictionary * bucketInfo = obj;
+            NSLog(@"BucketName: %@", [bucketInfo objectForKey:@"Name"]);
+            NSLog(@"CreationDate: %@", [bucketInfo objectForKey:@"CreationDate"]);
+            NSLog(@"Location: %@", [bucketInfo objectForKey:@"Location"]);
+        }];
+    }
+    return nil;
+}];
+```
+
+### 获取Bucket ACL
+
+```
+OSSGetBucketACLRequest * getBucketACL = [OSSGetBucketACLRequest new];
+getBucketACL.bucketName = <bucketName>;
+OSSTask * getBucketACLTask = [client getBucketACL:getBucketACL];
+[getBucketACLTask continueWithBlock:^id(OSSTask *task) {
+    if (!task.error) {
+        OSSGetBucketACLResult * result = task.result;
+        NSLog(@"bucket acl: %@", result.aclGranted);
+    }
+    return nil;
+}];
+```
+
 ### 罗列bucket中的文件
 
 ```
@@ -599,6 +635,65 @@ OSSTask * listPartTask = [client listParts:listParts];
 ```
 
 -----
+## 断点上传
+
+在无线网络下，上传比较大的文件持续时间长，可能会遇到因为网络条件差、用户切换网络等原因导致上传中途失败，整个文件需要重新上传。为此，SDK提供了断点上传功能。
+
+这个功能依赖OSS的分块上传接口实现，它不会在本地保存任何信息。在上传大文件前，您需要调用分块上传的初始化接口获得`UploadId`，然后持有这个`UploadId`调用断点上传接口，将文件上传。如果上传异常中断，那么，持有同一个`UploadId`，继续调用这个接口上传该文件，上传会自动从上次中断的地方继续进行。
+
+如果上传已经成功，`UploadId`会失效，如果继续拿着这个`UploadId`上传文件，会遇到Domain为`OSSClientErrorDomain`，Code为`OSSClientErrorCodeCannotResumeUpload`的NSError，这时，需要重新获取新的`UploadId`上传文件。
+
+也就是说，您需要自行保存和管理与您文件对应的`UploadId`。
+
+```
+__block NSString * uploadId = nil;
+
+OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+init.bucketName = <bucketName>;
+init.objectKey = <objectKey>;
+init.contentType = @"application/octet-stream";
+init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+
+OSSTask * task = [client multipartUploadInit:init];
+[[task continueWithBlock:^id(OSSTask *task) {
+    if (!task.error) {
+        OSSInitMultipartUploadResult * result = task.result;
+        uploadId = result.uploadId;
+    } else {
+        NSLog(@"init uploadid failed, error: %@", task.error);
+    }
+    return nil;
+}] waitUntilFinished];
+
+OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+resumableUpload.bucketName = <bucketName>;
+resumableUpload.objectKey = <objectKey>;
+resumableUpload.uploadId = uploadId;
+resumableUpload.partSize = 1024 * 1024;
+resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+    NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+};
+
+resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:<your file path>];
+OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+[resumeTask continueWithBlock:^id(OSSTask *task) {
+    if (task.error) {
+        NSLog(@"error: %@", task.error);
+        if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+            // 该任务无法续传，需要获取新的uploadId重新上传
+        }
+    } else {
+        NSLog(@"Upload file success");
+    }
+    return nil;
+}];
+
+// [resumeTask waitUntilFinished];
+
+// [resumableUpload cancel];
+```
+
+-----
 ## 兼容旧版本
 
 当前版本SDK对旧版本SDK进行了完全的重构，变成RESTful风格的调用方式，逻辑更清晰，也贴合OSS的其他SDK使用方式。对于已经使用了旧版本对象存取风格的用户，旧有接口将完全不再提供，建议迁移到新版本SDK的用法。但同时SDK也提供了一些妥协的接口，便于迁移。
@@ -738,8 +833,11 @@ SDK中发生的异常分为两类：ClientError和ServerError。其中前者指�
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeFileCantWrite|文件无法写入|
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeInvalidArgument|参数非法|
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNilUploadid|断点续传任务未获取到uploadId|
-|ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNetworkError|网络异常|
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeTaskCancelled|任务被取消|
+|ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNetworkError|网络异常|
+|ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeCannotResumeUpload|断点上传失败，无法继续上传|
+|ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNetworkError|本地系统异常|
+|ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNotKnown|未知异常|
 |ServerError|com.aliyun.oss.serverError|(-1 * httpResponseCode)|解析响应XML得到的Dictionary|
 
 -----

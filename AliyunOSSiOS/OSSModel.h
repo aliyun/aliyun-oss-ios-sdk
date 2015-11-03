@@ -25,7 +25,7 @@ extern NSString * const OSSDelimiterXMLTOKEN;
 extern NSString * const OSSMarkerXMLTOKEN;
 extern NSString * const OSSMaxKeysXMLTOKEN;
 extern NSString * const OSSIsTruncatedXMLTOKEN;
-extern NSString * const OSSContentXMLTOKEN;
+extern NSString * const OSSContentsXMLTOKEN;
 extern NSString * const OSSKeyXMLTOKEN;
 extern NSString * const OSSLastModifiedXMLTOKEN;
 extern NSString * const OSSETagXMLTOKEN;
@@ -371,7 +371,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, strong) NSString * nextMarker;
 
 /**
- 保存bucket信息的容器，结构上是一个数组，数组每个元素是一个字典，字典的key有 ["Name", "CreateDate", "Location" ]
+ 保存bucket信息的容器，结构上是一个数组，数组每个元素是一个字典，字典的key有 ["Name", "CreationDate", "Location" ]
  */
 @property (nonatomic, strong) NSArray * buckets;
 @end

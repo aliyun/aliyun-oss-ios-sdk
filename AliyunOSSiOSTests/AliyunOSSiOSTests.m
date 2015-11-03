@@ -167,11 +167,17 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         return; // we need the account owner's ak/sk to create bucket; federation token can't do this
     }
     OSSGetServiceRequest * getService = [OSSGetServiceRequest new];
-    getService.maxKeys = 10;
-    [[[client getService:getService] continueWithBlock:^id(BFTask *task) {
+    OSSTask * getServiceTask = [client getService:getService];
+    [[getServiceTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetServiceResult * result = task.result;
         NSLog(@"buckets: %@", result.buckets);
+        [result.buckets enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSDictionary * bucketInfo = obj;
+            NSLog(@"BucketName: %@", [bucketInfo objectForKey:@"Name"]);
+            NSLog(@"CreationDate: %@", [bucketInfo objectForKey:@"CreationDate"]);
+            NSLog(@"Location: %@", [bucketInfo objectForKey:@"Location"]);
+        }];
         NSLog(@"owner: %@, %@", result.ownerId, result.ownerDispName);
         return nil;
     }] waitUntilFinished];
@@ -179,7 +185,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     getService = [OSSGetServiceRequest new];
     getService.maxKeys = 10;
     getService.prefix = @"android";
-    [[[client getService:getService] continueWithBlock:^id(BFTask *task) {
+    [[[client getService:getService] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetServiceResult * result = task.result;
         XCTAssertEqual(1, [result.buckets count]);
@@ -192,7 +198,8 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)testGetBucketACL {
     OSSGetBucketACLRequest * getBucketACL = [OSSGetBucketACLRequest new];
     getBucketACL.bucketName = TEST_BUCKET;
-    [[[client getBucketACL:getBucketACL] continueWithBlock:^id(BFTask *task) {
+    OSSTask * getBucketACLTask = [client getBucketACL:getBucketACL];
+    [[getBucketACLTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetBucketACLResult * result = task.result;
         XCTAssertEqualObjects(@"private", result.aclGranted);
@@ -1045,7 +1052,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     OSSTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -1064,13 +1071,59 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(BFTask *task) {
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+            if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // 该任务无法续传，需要获取新的uploadId重新上传
+            }
+        } else {
+            NSLog(@"Upload file success");
+        }
         return nil;
     }] waitUntilFinished];
 
     BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
+}
+
+- (void)testResumbleUpload_cancel {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [resumeTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"error: %@", task.error);
+        XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
+        return nil;
+    }];
+
+    [resumableUpload cancel];
+    [NSThread sleepForTimeInterval:1];
 }
 
 - (void)testResumableUpload_small_file {
@@ -1081,7 +1134,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     OSSTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -1100,7 +1153,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1k"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(BFTask *task) {
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
         NSLog(@"error: %@", task.error);
         XCTAssertNil(task.error);
         return nil;
@@ -1118,7 +1171,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     OSSTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -1141,7 +1194,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(BFTask *task) {
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
         NSLog(@"error: %@", task.error);
         XCTAssertNotNil(task.error);
         XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
@@ -1159,7 +1212,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 2);
     };
     resumeTask = [client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(BFTask *task) {
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
         NSLog(@"error: %@", task.error);
         XCTAssertNil(task.error);
         return nil;
@@ -1463,7 +1516,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     init.contentType = @"application/octet-stream";
     init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     OSSTask * task = [client multipartUploadInit:init];
-    [[task continueWithBlock:^id(BFTask *task) {
+    [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSInitMultipartUploadResult * result = task.result;
         XCTAssertNotNil(result.uploadId);
@@ -1482,7 +1535,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(BFTask *task) {
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
         NSLog(@"task.error: %@", task.error);
@@ -1493,7 +1546,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     abort.bucketName = TEST_BUCKET;
     abort.objectKey = MultipartUploadObjectKey;
     abort.uploadId = uploadId;
-    [[[client abortMultipartUpload:abort] continueWithBlock:^id(BFTask *task) {
+    [[[client abortMultipartUpload:abort] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
@@ -1692,7 +1745,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     get.bucketName = bucketName;
     get.objectKey = objectKey;
     get.downloadToFileURL = [NSURL fileURLWithPath:tempFile];
-    [[[client getObject:get] continueWithBlock:^id(BFTask *task) {
+    [[[client getObject:get] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];

@@ -20,7 +20,7 @@ NSString * const OSSDelimiterXMLTOKEN = @"Delimiter";
 NSString * const OSSMarkerXMLTOKEN = @"Marker";
 NSString * const OSSMaxKeysXMLTOKEN = @"MaxKeys";
 NSString * const OSSIsTruncatedXMLTOKEN = @"IsTruncated";
-NSString * const OSSContentXMLTOKEN = @"Contents";
+NSString * const OSSContentsXMLTOKEN = @"Contents";
 NSString * const OSSKeyXMLTOKEN = @"Key";
 NSString * const OSSLastModifiedXMLTOKEN = @"LastModified";
 NSString * const OSSETagXMLTOKEN = @"ETag";
@@ -833,7 +833,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                     getServiceResult.maxKeys = [[parseDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
                     getServiceResult.isTruncated = [[parseDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
 
-                    id bucketObject = [parseDict objectForKey:OSSBucketsXMLTOKEN];
+                    id bucketObject = [[parseDict objectForKey:OSSBucketsXMLTOKEN] objectForKey:OSSBucketXMLTOKEN];
                     if ([bucketObject isKindOfClass:[NSArray class]]) {
                         getServiceResult.buckets = bucketObject;
                     } else if ([bucketObject isKindOfClass:[NSDictionary class]]) {
@@ -901,7 +901,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                     getBucketResult.delimiter = [parsedDict objectForKey:OSSDelimiterXMLTOKEN];
                     getBucketResult.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
 
-                    id contentObject = [parsedDict objectForKey:OSSContentXMLTOKEN];
+                    id contentObject = [parsedDict objectForKey:OSSContentsXMLTOKEN];
                     if ([contentObject isKindOfClass:[NSArray class]]) {
                         getBucketResult.contents = contentObject;
                     } else if ([contentObject isKindOfClass:[NSDictionary class]]) {
