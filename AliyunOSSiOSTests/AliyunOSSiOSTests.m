@@ -16,8 +16,8 @@
 
 @end
 
-NSString * const g_AK = @"<your access key>";
-NSString * const g_SK = @"<your secret key>";
+NSString * const g_AK = @"<your access key id>";
+NSString * const g_SK = @"<your access key secret";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 NSString * const BUGFIX_BUCKET = @"bugfix-test";
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
@@ -90,7 +90,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     [OSSLog enableLog];
 
     credential1 = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
-                                                                                                            secretKey:g_SK];
+                                                                                   secretKey:g_SK];
 
     // 自实现签名，可以用本地签名也可以远程加签
     credential2 = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
@@ -161,6 +161,44 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 #pragma mark normal_test
+
+- (void)testGetServcie {
+    if ([client.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
+        return; // we need the account owner's ak/sk to create bucket; federation token can't do this
+    }
+    OSSGetServiceRequest * getService = [OSSGetServiceRequest new];
+    getService.maxKeys = 10;
+    [[[client getService:getService] continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetServiceResult * result = task.result;
+        NSLog(@"buckets: %@", result.buckets);
+        NSLog(@"owner: %@, %@", result.ownerId, result.ownerDispName);
+        return nil;
+    }] waitUntilFinished];
+
+    getService = [OSSGetServiceRequest new];
+    getService.maxKeys = 10;
+    getService.prefix = @"android";
+    [[[client getService:getService] continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetServiceResult * result = task.result;
+        XCTAssertEqual(1, [result.buckets count]);
+        NSLog(@"buckets: %@", result.buckets);
+        NSLog(@"owner: %@, %@", result.ownerId, result.ownerDispName);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testGetBucketACL {
+    OSSGetBucketACLRequest * getBucketACL = [OSSGetBucketACLRequest new];
+    getBucketACL.bucketName = TEST_BUCKET;
+    [[[client getBucketACL:getBucketACL] continueWithBlock:^id(BFTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketACLResult * result = task.result;
+        XCTAssertEqualObjects(@"private", result.aclGranted);
+        return nil;
+    }] waitUntilFinished];
+}
 
 - (void)testCreateBucket {
     if ([client.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {

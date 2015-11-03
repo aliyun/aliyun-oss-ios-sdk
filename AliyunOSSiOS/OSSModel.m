@@ -18,7 +18,7 @@ NSString * const OSSListBucketResultXMLTOKEN = @"ListBucketResult";
 NSString * const OSSNameXMLTOKEN = @"Name";
 NSString * const OSSDelimiterXMLTOKEN = @"Delimiter";
 NSString * const OSSMarkerXMLTOKEN = @"Marker";
-NSString * const OSSMaxKeyXMLTOKEN = @"MaxKeys";
+NSString * const OSSMaxKeysXMLTOKEN = @"MaxKeys";
 NSString * const OSSIsTruncatedXMLTOKEN = @"IsTruncated";
 NSString * const OSSContentXMLTOKEN = @"Contents";
 NSString * const OSSKeyXMLTOKEN = @"Key";
@@ -28,6 +28,14 @@ NSString * const OSSTypeXMLTOKEN = @"Type";
 NSString * const OSSSizeXMLTOKEN = @"Size";
 NSString * const OSSStorageClassXMLTOKEN = @"StorageClass";
 NSString * const OSSCommonPrefixesXMLTOKEN = @"CommonPrefixes";
+NSString * const OSSOwnerXMLTOKEN = @"Owner";
+NSString * const OSSAccessControlListXMLTOKEN = @"AccessControlList";
+NSString * const OSSGrantXMLTOKEN = @"Grant";
+NSString * const OSSIDXMLTOKEN = @"ID";
+NSString * const OSSDisplayNameXMLTOKEN = @"DisplayName";
+NSString * const OSSBucketsXMLTOKEN = @"Buckets";
+NSString * const OSSBucketXMLTOKEN = @"Bucket";
+NSString * const OSSCreationDate = @"CreationDate";
 NSString * const OSSPrefixXMLTOKEN = @"Prefix";
 NSString * const OSSUploadIdXMLTOKEN = @"UploadId";
 NSString * const OSSLocationXMLTOKEN = @"Location";
@@ -355,7 +363,10 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     }
 
     /* construct CanonicalizedResource */
-    resource = [NSString stringWithFormat:@"/%@/", requestMessage.bucketName];
+    resource = @"/";
+    if (requestMessage.bucketName) {
+        resource = [NSString stringWithFormat:@"/%@/", requestMessage.bucketName];
+    }
     if (requestMessage.objectKey) {
         resource = [resource oss_stringByAppendingPathComponentForURL:requestMessage.objectKey];
     }
@@ -501,6 +512,27 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSResult
 @end
 
+@implementation OSSGetServiceRequest
+
+- (NSDictionary *)getQueryDict {
+    NSMutableDictionary * querys = [NSMutableDictionary new];
+    if (self.prefix) {
+        [querys setObject:self.prefix forKey:@"prefix"];
+    }
+    if (self.marker) {
+        [querys setObject:self.marker forKey:@"marker"];
+    }
+    if (self.maxKeys) {
+        [querys setObject:[@(self.maxKeys) stringValue] forKey:@"max-keys"];
+    }
+    return querys;
+}
+
+@end
+
+@implementation OSSGetServiceResult
+@end
+
 @implementation OSSCreateBucketRequest
 @end
 
@@ -535,6 +567,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @end
 
 @implementation OSSGetBucketResult
+@end
+
+@implementation OSSGetBucketACLRequest
+@end
+
+@implementation OSSGetBucketACLResult
 @end
 
 @implementation OSSHeadObjectRequest
@@ -779,6 +817,36 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
     switch (_operationTypeForThisParser) {
 
+        case OSSOperationTypeGetService: {
+            OSSGetServiceResult * getServiceResult = [OSSGetServiceResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getServiceResult];
+            }
+            if (_collectingData) {
+                NSDictionary * parseDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get service dict: %@", parseDict);
+                if (parseDict) {
+                    getServiceResult.ownerId = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSIDXMLTOKEN];
+                    getServiceResult.ownerDispName = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSDisplayNameXMLTOKEN];
+                    getServiceResult.prefix = [parseDict objectForKey:OSSPrefixXMLTOKEN];
+                    getServiceResult.marker = [parseDict objectForKey:OSSMarkerXMLTOKEN];
+                    getServiceResult.maxKeys = [[parseDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
+                    getServiceResult.isTruncated = [[parseDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
+
+                    id bucketObject = [parseDict objectForKey:OSSBucketsXMLTOKEN];
+                    if ([bucketObject isKindOfClass:[NSArray class]]) {
+                        getServiceResult.buckets = bucketObject;
+                    } else if ([bucketObject isKindOfClass:[NSDictionary class]]) {
+                        NSArray * arr = [NSArray arrayWithObject:bucketObject];
+                        getServiceResult.buckets = arr;
+                    } else {
+                        getServiceResult.buckets = nil;
+                    }
+                }
+            }
+            return getServiceResult;
+        }
+
         case OSSOperationTypeCreateBucket: {
             OSSCreateBucketResult * createBucketResult = [OSSCreateBucketResult new];
             if (_response) {
@@ -791,6 +859,21 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 }];
             }
             return createBucketResult;
+        }
+
+        case OSSOperationTypeGetBucketACL: {
+            OSSGetBucketACLResult * getBucketACLResult = [OSSGetBucketACLResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketACLResult];
+            }
+            if (_collectingData) {
+                NSDictionary * parseDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get service dict: %@", parseDict);
+                if (parseDict) {
+                    getBucketACLResult.aclGranted = [[parseDict objectForKey:OSSAccessControlListXMLTOKEN] objectForKey:OSSGrantXMLTOKEN];
+                }
+            }
+            return getBucketACLResult;
         }
 
         case OSSOperationTypeDeleteBucket: {
@@ -807,14 +890,14 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:getBucketResult];
             }
             if (_collectingData) {
-                OSSLogVerbose(@"Get bucket dict: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
                 NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket dict: %@", parsedDict);
 
                 if (parsedDict) {
                     getBucketResult.bucketName = [parsedDict objectForKey:OSSNameXMLTOKEN];
                     getBucketResult.prefix = [parsedDict objectForKey:OSSPrefixXMLTOKEN];
                     getBucketResult.marker = [parsedDict objectForKey:OSSMarkerXMLTOKEN];
-                    getBucketResult.maxKeys = (int32_t)[[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] integerValue];
+                    getBucketResult.maxKeys = (int32_t)[[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] integerValue];
                     getBucketResult.delimiter = [parsedDict objectForKey:OSSDelimiterXMLTOKEN];
                     getBucketResult.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
 
@@ -983,8 +1066,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
                 if (parsedDict) {
                     listPartsReuslt.nextPartNumberMarker = [[parsedDict objectForKey:OSSNextPartNumberMarkerXMLTOKEN] intValue];
-                    listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] intValue];
-                    listPartsReuslt.isTruncate = [[parsedDict objectForKey:OSSMaxKeyXMLTOKEN] boolValue];
+                    listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
+                    listPartsReuslt.isTruncated = [[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] boolValue];
 
                     id partsObject = [parsedDict objectForKey:OSSPartXMLTOKEN];
                     if ([partsObject isKindOfClass:[NSArray class]]) {

@@ -74,6 +74,25 @@
 
 #pragma implement restful apis
 
+- (OSSTask *)getService:(OSSGetServiceRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetService];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                httpMethod:@"GET"
+                                                bucketName:nil
+                                                 objectKey:nil
+                                                      type:nil
+                                                       md5:nil
+                                                     range:nil
+                                                      date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
+                                              headerParams:nil
+                                                    querys:[request getQueryDict]];
+    requestDelegate.operType = OSSOperationTypeGetService;
+
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 - (OSSTask *)createBucket:(OSSCreateBucketRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = nil;
@@ -134,6 +153,26 @@
                                               headerParams:nil
                                                     querys:[request getQueryDict]];
     requestDelegate.operType = OSSOperationTypeGetBucket;
+
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+
+    NSMutableDictionary * query = [NSMutableDictionary dictionaryWithObject:@"" forKey:@"acl"];
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketACL];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                httpMethod:@"GET"
+                                                bucketName:request.bucketName
+                                                 objectKey:nil
+                                                      type:nil
+                                                       md5:nil
+                                                     range:nil
+                                                      date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
+                                              headerParams:nil
+                                                    querys:query];
+    requestDelegate.operType = OSSOperationTypeGetBucketACL;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -514,12 +553,12 @@
         if (!request.uploadId || !request.objectKey || !request.bucketName || !request.uploadingFileURL) {
             return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                              code:OSSClientErrorCodeInvalidArgument
-                                                         userInfo:@{@"ErrorMessage": @"ResumableUpload requires uploadId/bucketName/objectKey/uploadingFile."}]];
+                                                         userInfo:@{OSSErrorMessageTOKEN: @"ResumableUpload requires uploadId/bucketName/objectKey/uploadingFile."}]];
         }
         if (request.partSize < 100 * 1024) {
             return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                              code:OSSClientErrorCodeInvalidArgument
-                                                         userInfo:@{@"ErrorMessage": @"Part size must be set bigger than 100KB"}]];
+                                                         userInfo:@{OSSErrorMessageTOKEN: @"Part size must be set bigger than 100KB"}]];
         }
 
         static dispatch_once_t onceToken;
@@ -527,7 +566,7 @@
         dispatch_once(&onceToken, ^{
             cancelError = [NSError errorWithDomain:OSSClientErrorDomain
                                               code:OSSClientErrorCodeTaskCancelled
-                                          userInfo:@{@"ErrorMessage": @"This task is cancelled!"}];
+                                          userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled!"}];
         });
 
         NSFileManager * fm = [NSFileManager defaultManager];
@@ -552,7 +591,7 @@
                 OSSLogVerbose(@"local record existes but the remote record is deleted");
                 return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeCannotResumeUpload
-                                                             userInfo:@{@"ErrorMessage": @"This uploadid is no long exist on server side, can not resume"}]];
+                                                             userInfo:@{OSSErrorMessageTOKEN: @"This uploadid is no long exist on server side, can not resume"}]];
             } else {
                 return listPartsTask;
             }
@@ -570,11 +609,11 @@
             if (expectedUploadLength < uploadedLength) {
                 return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeCannotResumeUpload
-                                                             userInfo:@{@"ErrorMessage": @"The uploading file is inconsistent with before"}]];
+                                                             userInfo:@{OSSErrorMessageTOKEN: @"The uploading file is inconsistent with before"}]];
             } else if (firstPartSize != -1 && firstPartSize != request.partSize && expectedUploadLength != firstPartSize) {
                 return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeCannotResumeUpload
-                                                             userInfo:@{@"ErrorMessage": @"The part size setting is inconsistent with before"}]];
+                                                             userInfo:@{OSSErrorMessageTOKEN: @"The part size setting is inconsistent with before"}]];
             }
         }
 

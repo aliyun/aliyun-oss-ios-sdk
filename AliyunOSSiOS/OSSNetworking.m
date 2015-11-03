@@ -43,7 +43,6 @@
             break;
     }
 
-    // TODO  federation token access denied
     return OSSNetworkingRetryTypeShouldNotRetry;
 }
 
@@ -242,12 +241,14 @@
         errorMessage = @"Endpoint should not be nil";
     }
 
-    if (!self.bucketName) {
+    if (!self.bucketName && operType != OSSOperationTypeGetService) {
         errorMessage = @"Bucket name should not be nil";
     }
 
     if (!self.objectKey &&
-        (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket && operType != OSSOperationTypeDeleteBucket)) {
+        (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
+         && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
+         && operType != OSSOperationTypeGetBucketACL)) {
         errorMessage = @"Object key should not be nil";
     }
 
@@ -394,7 +395,7 @@
         } else if (task.isFaulted) {
             requestDelegate.completionHandler(nil, [NSError errorWithDomain:OSSClientErrorDomain
                                                                        code:OSSClientErrorCodeExcpetionCatched
-                                                                   userInfo:@{@"ErrorMessage": [NSString stringWithFormat:@"Catch exception - %@", task.exception]}]);
+                                                                   userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", task.exception]}]);
         }
         return nil;
     }];

@@ -18,7 +18,7 @@ typedef BFTask OSSTask;
 #endif
 
 /**
- * enum request retry type
+ 定义重试类型
  */
 typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
     OSSNetworkingRetryTypeUnknown,
@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 };
 
 /**
- * define request retry handler
+ 重试处理器
  */
 @interface OSSURLRequestRetryHandler : NSObject
 @property (nonatomic, assign) uint32_t maxRetryCount;
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @end
 
 /**
- * networking configuration
+ 网络参数设置
  */
 @interface OSSNetworkingConfiguration : NSObject
 @property (nonatomic, assign) uint32_t maxRetryCount;
@@ -58,7 +58,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @end
 
 /**
- * one delegate for one request session
+ 对操作发起的每一次请求构造一个信息代理
  */
 @interface OSSNetworkingRequestDelegate : NSObject
 
@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @end
 
 /**
- * contail all necessary message to send request to oss server
+ 包含一次网络请求所需的所有信息
  */
 @interface OSSAllRequestNeededMessage : NSObject
 @property (nonatomic, strong) NSString * endpoint;
@@ -125,7 +125,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @end
 
 /**
- * represent a networking client which manager all the networking operations for an ossclient
+ 每个OSSClient持有一个OSSNetworking用以收发网络请求
  */
 @interface OSSNetworking : NSObject <NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession * dataSession;

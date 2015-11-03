@@ -13,6 +13,10 @@ typedef BFCancellationTokenSource OSSTaskHandler;
 
 @interface OSSClient (Compat)
 
+/**
+ 兼容老版本用法的上传数据接口
+ 建议更换使用：putObject
+ */
 - (OSSTaskHandler *)uploadData:(NSData *)data
                withContentType:(NSString *)contentType
                 withObjectMeta:(NSDictionary *)meta
@@ -21,11 +25,19 @@ typedef BFCancellationTokenSource OSSTaskHandler;
                    onCompleted:(void(^)(BOOL, NSError *))onCompleted
                     onProgress:(void(^)(float progress))onProgress;
 
+/**
+ 兼容老版本用法的下载数据接口
+ 建议更换使用：getObject
+ */
 - (OSSTaskHandler *)downloadToDataFromBucket:(NSString *)bucketName
                    objectKey:(NSString *)objectKey
                  onCompleted:(void(^)(NSData *, NSError *))onCompleted
                   onProgress:(void(^)(float progress))onProgress;
 
+/**
+ 兼容老版本用法的上传文件接口
+ 建议更换使用：putObject
+ */
 - (OSSTaskHandler *)uploadFile:(NSString *)filePath
                 withContentType:(NSString *)contentType
                  withObjectMeta:(NSDictionary *)meta
@@ -34,6 +46,10 @@ typedef BFCancellationTokenSource OSSTaskHandler;
                     onCompleted:(void(^)(BOOL, NSError *))onCompleted
                      onProgress:(void(^)(float progress))onProgress;
 
+/**
+ 兼容老版本用法的下载文件接口
+ 建议更换使用：getObject
+ */
 - (OSSTaskHandler *)downloadToFileFromBucket:(NSString *)bucketName
                   objectKey:(NSString *)objectKey
                      toFile:(NSString *)filePath
@@ -41,6 +57,10 @@ typedef BFCancellationTokenSource OSSTaskHandler;
                  onProgress:(void(^)(float progress))onProgress;
 
 
+/**
+ 兼容老版本用法的断点上传文件接口
+ 建议更换使用：resumableUpload
+ */
 - (OSSTaskHandler *)resumableUploadFile:(NSString *)filePath
           withContentType:(NSString *)contentType
            withObjectMeta:(NSDictionary *)meta
@@ -49,6 +69,10 @@ typedef BFCancellationTokenSource OSSTaskHandler;
               onCompleted:(void(^)(BOOL, NSError *))onCompleted
                onProgress:(void(^)(float progress))onProgress;
 
+/**
+ 兼容老版本用法的删除Object接口
+ 建议更换使用：deleteObject
+ */
 - (void)deleteObjectInBucket:(NSString *)bucketName
                    objectKey:(NSString *)objectKey
                  onCompleted:(void(^)(BOOL, NSError *))onCompleted;

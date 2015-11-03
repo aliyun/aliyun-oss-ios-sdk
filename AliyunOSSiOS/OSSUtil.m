@@ -15,7 +15,7 @@
 #import "OSSHTTPDNSMini.h"
 
 NSString * const ALIYUN_HOST_SUFFIX = @".aliyuncs.com";
-NSString * const ALIYUN_OSS_TEST_ENDPOINT = @"oss-test.aliyun-inc.com";
+NSString * const ALIYUN_OSS_TEST_ENDPOINT = @".aliyun-inc.com";
 int32_t const CHUNK_SIZE = 8 * 1024;
 
 @implementation OSSUtil

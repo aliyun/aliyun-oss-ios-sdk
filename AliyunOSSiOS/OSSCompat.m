@@ -279,9 +279,13 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
         if (task.cancelled) {
             onComplete(NO, [NSError errorWithDomain:OSSClientErrorDomain
                                                code:OSSClientErrorCodeTaskCancelled
-                                           userInfo:@{OSSErrorMessageTOKEN: @"Task is cancelled"}]);
-        } else if (task.error || task.faulted) {
+                                           userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled"}]);
+        } else if (task.error) {
             onComplete(NO, task.error);
+        } else if (task.faulted) {
+            onComplete(NO, [NSError errorWithDomain:OSSClientErrorDomain
+                                               code:OSSClientErrorCodeExcpetionCatched
+                                           userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", task.exception]}]);
         } else {
             onComplete(YES, nil);
         }
