@@ -239,6 +239,14 @@ static volatile uint64_t tag = 0;
             tag ++;
         }
 
+        if (self.cachedToken.expirationTimeInGMTFormat) {
+            NSDateFormatter * fm = [NSDateFormatter new];
+            [fm setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+            self.cachedToken.expirationTimeInMilliSecond = [[fm dateFromString:self.cachedToken.expirationTimeInGMTFormat] timeIntervalSince1970] * 1000;
+            self.cachedToken.expirationTimeInGMTFormat = nil;
+            OSSLogVerbose(@"Transform GMT date to expirationTimeInMilliSecond: %lld", self.cachedToken.expirationTimeInMilliSecond);
+        }
+
         NSDate * expirationDate = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)(self.cachedToken.expirationTimeInMilliSecond / 1000)];
         NSTimeInterval interval = [expirationDate timeIntervalSinceDate:[NSDate oss_clockSkewFixedDate]];
         // OSSLogVerbose(@"get federation token, after %lf second it would be expired", interval);
@@ -250,6 +258,7 @@ static volatile uint64_t tag = 0;
                 /* if the newly gotten token is expired already, we can't abort it which will lead to a dead loop */
                 /* we use it for 30s */
                 self.cachedToken.expirationTimeInMilliSecond += [[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] * 1000 + (15 + 30) * 1000;
+                self.cachedToken.expirationTimeInGMTFormat = nil;
                 isNewlyGotten = NO;
             } else {
                 self.cachedToken = self.federationTokenGetter();

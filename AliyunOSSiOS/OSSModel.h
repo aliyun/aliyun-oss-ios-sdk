@@ -139,9 +139,15 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, strong) NSString * tSecretKey;
 @property (nonatomic, strong) NSString * tToken;
 
-/* linux time milli second from 1970s(Epoch) which is exactly the time when this token become expired. */
-/* it's directly returned from STS server so we don't need to transform it to other format. */
-@property (nonatomic, assign) int64_t expirationTimeInMilliSecond;
+/**
+ 指明Token的失效时间，为linux时间对应的毫秒数，即自UTC时间1970年1月1日经过的毫秒数
+ */
+@property (atomic, assign) int64_t expirationTimeInMilliSecond;
+
+/**
+ 指明Token的失效时间，格式为GMT字符串，如: "2015-11-03T08:51:05Z"
+ */
+@property (atomic, strong) NSString * expirationTimeInGMTFormat;
 @end
 
 /**
