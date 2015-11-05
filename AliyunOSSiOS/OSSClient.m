@@ -56,6 +56,16 @@
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
     request.retryHandler.maxRetryCount = self.clientConfiguration.maxRetryCount;
 
+    /* if content-type haven't been set, we set one */
+    if ((!request.allNeededMessage.contentType
+         || [[request.allNeededMessage.contentType stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
+                                                                                                        isEqualToString:@""])
+        && ([request.allNeededMessage.httpMethod isEqualToString:@"POST"] || [request.allNeededMessage.httpMethod isEqualToString:@"PUT"])) {
+
+        request.allNeededMessage.contentType = [OSSUtil detemineMimeTypeForFilePath:request.uploadingFileURL.path
+                                                                         uploadName:request.allNeededMessage.objectKey];
+    }
+
     id<OSSRequestInterceptor> uaSetting = [OSSUASettingInterceptor new];
     [request.interceptors addObject:uaSetting];
 

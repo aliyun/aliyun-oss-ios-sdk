@@ -27,4 +27,5 @@
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath;
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL;
 + (NSString *)getRelativePath:(NSString *)fullPath;
++ (NSString *)detemineMimeTypeForFilePath:(NSString *)filePath uploadName:(NSString *)uploadName;
 @end

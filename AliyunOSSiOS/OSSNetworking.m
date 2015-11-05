@@ -175,9 +175,6 @@
     }
     if (self.allNeededMessage.contentType) {
         [self.internalRequest setValue:self.allNeededMessage.contentType forHTTPHeaderField:@"Content-Type"];
-    } else if ([self.allNeededMessage.httpMethod isEqualToString:@"POST"] || [self.allNeededMessage.httpMethod isEqualToString:@"PUT"]) {
-        // set empty content-type to override the automatic-setup content-type
-        [self.internalRequest setValue:@"" forHTTPHeaderField:@"Content-Type"];
     }
     if (self.allNeededMessage.contentMd5) {
         [self.internalRequest setValue:self.allNeededMessage.contentMd5 forHTTPHeaderField:@"Content-MD5"];

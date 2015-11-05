@@ -244,6 +244,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         NSString * docDir = [self getDocumentDirectory];
         request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+        request.contentType = @"";
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
             NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         };
@@ -1733,7 +1734,26 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     
 }
 
-#pragma mark testutil
+#pragma mark test UtilFunction
+
+- (void)testDetemineMimeTypeFunction {
+    NSString * filePath1 = @"/a/b/c/d/aaa.txt";
+    NSString * uploadName1 = @"aaa";
+    NSString * mimeType1 = [OSSUtil detemineMimeTypeForFilePath:filePath1 uploadName:uploadName1];
+    XCTAssertEqualObjects(@"text/plain", mimeType1);
+
+    NSString * filePath2 = @"/a/b/c/d/aaa";
+    NSString * uploadName2 = @"aaa.txt";
+    NSString * mimeType2 = [OSSUtil detemineMimeTypeForFilePath:filePath2 uploadName:uploadName2];
+    XCTAssertEqualObjects(@"text/plain", mimeType2);
+
+    NSString * filePath3 = @"/a/b/c/d/aaa";
+    NSString * uploadName3 = @"aaa";
+    NSString * mimeType3 = [OSSUtil detemineMimeTypeForFilePath:filePath3 uploadName:uploadName3];
+    XCTAssertEqualObjects(@"application/octet-stream", mimeType3);
+}
+
+#pragma mark util
 
 - (BOOL)isFileOnOSSBucket:(NSString *)bucketName objectKey:(NSString *)objectKey equalsToLocalFile:(NSString *)filePath {
     NSString * docDir = [self getDocumentDirectory];
