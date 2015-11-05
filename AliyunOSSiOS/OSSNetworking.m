@@ -6,8 +6,9 @@
 //  Copyright (c) 2015 aliyun.com. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "OSSNetworking.h"
-#import <Bolts/Bolts.h>
+#import "OSSBolts.h"
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
@@ -92,7 +93,7 @@
     }
 }
 
-- (BFTask *)validateRequestParams {
+- (OSSTask *)validateRequestParams {
     NSString * errorMessage = nil;
 
     if ((self.operType == OSSOperationTypeAppendObject || self.operType == OSSOperationTypePutObject || self.operType == OSSOperationTypeUploadPart)
@@ -105,7 +106,7 @@
     }
 
     if (errorMessage) {
-        return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+        return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                          code:OSSClientErrorCodeInvalidArgument
                                                      userInfo:@{OSSErrorMessageTOKEN: errorMessage}]];
     } else {
@@ -113,9 +114,9 @@
     }
 }
 
-- (BFTask *)buildInternalHttpRequest {
+- (OSSTask *)buildInternalHttpRequest {
 
-    BFTask * validateParam = [self validateRequestParams];
+    OSSTask * validateParam = [self validateRequestParams];
     if (validateParam.error) {
         return validateParam;
     }
@@ -196,7 +197,7 @@
                   self.internalRequest.URL, self.internalRequest.allHTTPHeaderFields);
 
 #undef URLENCODE//(a)
-    return [BFTask taskWithResult:nil];
+    return [OSSTask taskWithResult:nil];
 }
 @end
 
@@ -234,7 +235,7 @@
     return self;
 }
 
-- (BFTask *)validateRequestParamsInOperationType:(OSSOperationType)operType {
+- (OSSTask *)validateRequestParamsInOperationType:(OSSOperationType)operType {
     NSString * errorMessage = nil;
 
     if (!self.endpoint) {
@@ -253,11 +254,11 @@
     }
 
     if (errorMessage) {
-        return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+        return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                          code:OSSClientErrorCodeInvalidArgument
                                                      userInfo:@{OSSErrorMessageTOKEN: errorMessage}]];
     } else {
-        return [BFTask taskWithResult:nil];
+        return [OSSTask taskWithResult:nil];
     }
 }
 
@@ -322,12 +323,12 @@
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
 
         NSOperationQueue * queue = [NSOperationQueue new];
-        self.taskExecutor = [BFExecutor executorWithOperationQueue:queue];
+        self.taskExecutor = [OSSExecutor executorWithOperationQueue:queue];
     }
     return self;
 }
 
-- (BFTask *)sendRequest:(OSSNetworkingRequestDelegate *)request {
+- (OSSTask *)sendRequest:(OSSNetworkingRequestDelegate *)request {
     OSSLogVerbose(@"send request --------");
     if (self.configuration.proxyHost && self.configuration.proxyPort) {
         request.isAccessViaProxy = YES;
@@ -336,7 +337,7 @@
     /* set maximum retry */
     request.retryHandler.maxRetryCount = self.configuration.maxRetryCount;
 
-    BFTaskCompletionSource * taskCompletionSource = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * taskCompletionSource = [OSSTaskCompletionSource taskCompletionSource];
 
     request.completionHandler = ^(id responseObject, NSError * error) {
         if (!error) {
@@ -352,7 +353,7 @@
 
 - (void)dataTaskWithDelegate:(OSSNetworkingRequestDelegate *)requestDelegate {
 
-    [[[[[BFTask taskWithResult:nil] continueWithExecutor:self.taskExecutor withSuccessBlock:^id(BFTask *task) {
+    [[[[[OSSTask taskWithResult:nil] continueWithExecutor:self.taskExecutor withSuccessBlock:^id(OSSTask *task) {
         OSSLogVerbose(@"start to intercept request");
         for (id<OSSRequestInterceptor> interceptor in requestDelegate.interceptors) {
             task = [interceptor interceptRequestMessage:requestDelegate.allNeededMessage];
@@ -361,9 +362,9 @@
             }
         }
         return task;
-    }] continueWithSuccessBlock:^id(BFTask *task) {
+    }] continueWithSuccessBlock:^id(OSSTask *task) {
         return [requestDelegate buildInternalHttpRequest];
-    }] continueWithSuccessBlock:^id(BFTask *task) {
+    }] continueWithSuccessBlock:^id(OSSTask *task) {
         NSURLSessionDataTask * sessionTask = nil;
 
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 && self.configuration.timeoutIntervalForRequest > 0) {
@@ -389,7 +390,7 @@
         [sessionTask resume];
 
         return task;
-    }] continueWithBlock:^id(BFTask *task) {
+    }] continueWithBlock:^id(OSSTask *task) {
         if (task.error) {
             requestDelegate.completionHandler(nil, task.error);
         } else if (task.isFaulted) {
@@ -424,29 +425,29 @@
         }
     }
 
-    [[[[BFTask taskWithResult:nil] continueWithSuccessBlock:^id(BFTask * task) {
+    [[[[OSSTask taskWithResult:nil] continueWithSuccessBlock:^id(OSSTask * task) {
         if (!delegate.error) {
             delegate.error = error;
         }
         if (delegate.error) {
             OSSLogDebug(@"networking request completed with error: %@", error);
             if ([delegate.error.domain isEqualToString:NSURLErrorDomain] && delegate.error.code == NSURLErrorCancelled) {
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeTaskCancelled
                                                              userInfo:[error userInfo]]];
             } else {
                 NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:[error userInfo]];
                 [userInfo setObject:[NSString stringWithFormat:@"%ld", (long)error.code] forKey:@"OriginErrorCode"];
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeNetworkError
                                                              userInfo:userInfo]];
             }
         }
         return task;
-    }] continueWithSuccessBlock:^id(BFTask *task) {
+    }] continueWithSuccessBlock:^id(OSSTask *task) {
         if (delegate.isHttpRequestNotSuccessResponse) {
             if (httpResponse.statusCode == 0) {
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeNetworkingFailWithResponseCode0
                                                              userInfo:@{OSSErrorMessageTOKEN: @"Request failed, response code 0"}]];
             }
@@ -454,12 +455,12 @@
             OSSLogError(@"http error response: %@", notSuccessResponseBody);
             NSDictionary * dict = [NSDictionary dictionaryWithXMLString:notSuccessResponseBody];
 
-            return [BFTask taskWithError:[NSError errorWithDomain:OSSServerErrorDomain
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSServerErrorDomain
                                                              code:(-1 * httpResponse.statusCode)
                                                          userInfo:dict]];
         }
         return task;
-    }] continueWithBlock:^id(BFTask *task) {
+    }] continueWithBlock:^id(OSSTask *task) {
         if (task.error) {
             OSSNetworkingRetryType retryType = [delegate.retryHandler shouldRetry:delegate.currentRetryCount
                                                                          response:httpResponse
@@ -568,7 +569,7 @@
         if (delegate.onRecieveData) {
             delegate.onRecieveData(data);
         } else {
-            BFTask * consumeTask = [delegate.responseParser consumeHttpResponseBody:data];
+            OSSTask * consumeTask = [delegate.responseParser consumeHttpResponseBody:data];
             if (consumeTask.error) {
                 OSSLogError("consume data error: %@", consumeTask.error);
                 delegate.error = consumeTask.error;

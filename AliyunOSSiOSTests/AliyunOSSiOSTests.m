@@ -116,7 +116,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     credential3 = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:@"http://localhost:8080/distribute-token.json"];
         NSURLRequest * request = [NSURLRequest requestWithURL:url];
-        BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+        OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
         NSURLSession * session = [NSURLSession sharedSession];
         NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
                                                     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -939,7 +939,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:tk.result]];
     NSURLSession * session = [NSURLSession sharedSession];
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         XCTAssertNil(error);
         XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
@@ -955,7 +955,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     XCTAssertNil(task.error);
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
     NSURLSession * session = [NSURLSession sharedSession];
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         XCTAssertNil(error);
         XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
@@ -1284,7 +1284,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 #pragma mark concurrent
 
 - (void)testConcurrentPutObject {
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     __block int counter = 0;
     for (int i = 0; i < [fileNameArray count]; i++) {
         dispatch_async(test_queue, ^{
@@ -1323,7 +1323,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 - (void)testConcurrentGetObject {
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     __block int counter = 0;
     for (int i = 0; i < 5; i++) {
         dispatch_async(test_queue, ^{
@@ -1356,7 +1356,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 - (void)testConcurrentCompatResumableUpload {
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     static int counter = 0;
     for (int i = 0; i < 5; i++) {
         dispatch_async(test_queue, ^{
@@ -1579,7 +1579,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     [taskHandler cancel];
 
     OSSLogDebug(@"XCTest-------------cancelled!");
-    BFTaskCompletionSource * bcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * bcs = [OSSTaskCompletionSource taskCompletionSource];
     [client resumableUploadFile:fileToUpload
                 withContentType:@"application/octet-stream"
                  withObjectMeta:nil
@@ -1605,7 +1605,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     NSString * fileToUpload = [NSString stringWithFormat:@"%@/%@", docDir, @"file10m"];
     __block float progValue = 0;
 
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
 
     [client uploadFile:fileToUpload
        withContentType:@"application/octet-stream"
@@ -1633,7 +1633,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
     __block float progValue = 0;
 
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
 
     [client uploadData:dataToUpload
        withContentType:@"application/octet-stream"
@@ -1652,7 +1652,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 - (void)testCompatDownload {
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
 
     [client downloadToDataFromBucket:TEST_BUCKET
                            objectKey:@"file1m"
@@ -1672,7 +1672,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
     NSString * saveToFile = [NSString stringWithFormat:@"%@/%@", docDir, @"compatDownloadFile"];
 
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
 
     [client downloadToFileFromBucket:TEST_BUCKET
                            objectKey:@"file1m"
@@ -1711,7 +1711,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         return nil;
     }] waitUntilFinished];
 
-    BFTaskCompletionSource * tcs = [BFTaskCompletionSource taskCompletionSource];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     [client deleteObjectInBucket:TEST_BUCKET
                        objectKey:@"file1m_copy"
                      onCompleted:^(BOOL isSuccess, NSError *error) {

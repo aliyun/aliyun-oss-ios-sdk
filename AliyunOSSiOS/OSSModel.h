@@ -7,17 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Bolts/Bolts.h>
+#import "OSSBolts.h"
 
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
-@class BFTask;
-
-#ifndef OSSTASK_DEFINED
-#define OSSTASK_DEFINED
-typedef BFTask OSSTask;
-#endif
-
 
 extern NSString * const OSSListBucketResultXMLTOKEN;
 extern NSString * const OSSNameXMLTOKEN;
@@ -39,7 +32,8 @@ extern NSString * const OSSDisplayNameXMLTOKEN;
 extern NSString * const OSSBucketsXMLTOKEN;
 extern NSString * const OSSAccessControlListXMLTOKEN;
 extern NSString * const OSSGrantXMLTOKEN;
-extern NSString * const OSSIDXMLTOKEN;
+extern NSString * const OSSBucketXMLTOKEN;
+extern NSString * const OSSCreationDate;
 extern NSString * const OSSPrefixXMLTOKEN;
 extern NSString * const OSSUploadIdXMLTOKEN;
 extern NSString * const OSSLocationXMLTOKEN;

@@ -22,8 +22,6 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '7.0'
 
-  s.source_files = 'AliyunOSSiOS/*.{h,m}', 'AliyunOSSiOS/httpdns/*.{h,m}'
-
-  s.dependency 'Bolts'
+  s.source_files = 'AliyunOSSiOS/*.{h,m}', 'AliyunOSSiOS/httpdns/*.{h,m}', 'AliyunOSSiOS/OSSTask/*.{h,m}'
 
 end

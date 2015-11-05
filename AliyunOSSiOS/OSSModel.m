@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Bolts/Bolts.h>
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSNetworking.h"
@@ -314,7 +313,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return self;
 }
 
-- (BFTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)requestMessage {
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)requestMessage {
     OSSLogVerbose(@"signing intercepting - ");
     NSError * error = nil;
 
@@ -350,7 +349,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         startTagNumber = [((OSSFederationCredentialProvider *)self.credentialProvider) currentTagNumber];
         federationToken = [((OSSFederationCredentialProvider *)self.credentialProvider) getToken:&error];
         if (error) {
-            return [BFTask taskWithError:error];
+            return [OSSTask taskWithError:error];
         }
         [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
     }
@@ -408,7 +407,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     if ([self.credentialProvider respondsToSelector:@selector(getToken:)]) {
         NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
         if (error) {
-            return [BFTask taskWithError:error];
+            return [OSSTask taskWithError:error];
         }
         uint64_t endTagNumber = [((OSSFederationCredentialProvider *)self.credentialProvider) currentTagNumber];
         if (endTagNumber == startTagNumber) {
@@ -421,11 +420,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     } else { // now we only have two type of credential provider
         NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
         if (error) {
-            return [BFTask taskWithError:error];
+            return [OSSTask taskWithError:error];
         }
         [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
     }
-    return [BFTask taskWithResult:nil];
+    return [OSSTask taskWithResult:nil];
 }
 
 @end
@@ -444,19 +443,19 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return _userAgent;
 }
 
-- (BFTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
     NSString * userAgent = [self getUserAgent];
     [request.headerParams setObject:userAgent forKey:@"User-Agent"];
-    return [BFTask taskWithResult:nil];
+    return [OSSTask taskWithResult:nil];
 }
 
 @end
 
 @implementation OSSTimeSkewedFixingInterceptor
 
-- (BFTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
     request.date = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
-    return [BFTask taskWithResult:nil];
+    return [OSSTask taskWithResult:nil];
 }
 
 @end
@@ -743,11 +742,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     _response = response;
 }
 
-- (BFTask *)consumeHttpResponseBody:(NSData *)data {
+- (OSSTask *)consumeHttpResponseBody:(NSData *)data {
 
     if (self.onRecieveBlock) {
         self.onRecieveBlock(data);
-        return [BFTask taskWithResult:nil];
+        return [OSSTask taskWithResult:nil];
     }
 
     NSError * error;
@@ -756,13 +755,13 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             NSFileManager * fm = [NSFileManager defaultManager];
             [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
             if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create file at %@", [self.downloadingFileURL path]]}]];
             }
             _fileHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadingFileURL error:&error];
             if (error) {
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:[error userInfo]]];
             }
@@ -772,7 +771,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [_fileHandle writeData:data];
             }
             @catch (NSException *exception) {
-                return [BFTask taskWithError:[NSError errorWithDomain:OSSServerErrorDomain
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSServerErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [exception description]}]];
             }
@@ -784,7 +783,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             [_collectingData appendData:data];
         }
     }
-    return [BFTask taskWithResult:nil];
+    return [OSSTask taskWithResult:nil];
 }
 
 - (void)parseResponseHeader:(NSHTTPURLResponse *)response toResultObject:(OSSResult *)result {

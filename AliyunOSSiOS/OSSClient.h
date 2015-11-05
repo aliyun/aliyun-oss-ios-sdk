@@ -25,17 +25,12 @@
 @class OSSAbortMultipartUploadRequest;
 @class OSSAppendObjectRequest;
 @class OSSResumableUploadRequest;
-@class BFTask;
-@class BFExecutor;
+@class OSSTask;
+@class OSSExecutor;
 
 @class OSSNetworking;
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
-
-#ifndef OSSTASK_DEFINED
-#define OSSTASK_DEFINED
-typedef BFTask OSSTask;
-#endif
 
 /**
  OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。
@@ -66,7 +61,7 @@ typedef BFTask OSSTask;
 /**
  任务队列
  */
-@property (nonatomic, strong, readonly) BFExecutor * ossOperationExecutor;
+@property (nonatomic, strong, readonly) OSSExecutor * ossOperationExecutor;
 
 /**
  初始化OSSClient，使用默认的本地设置

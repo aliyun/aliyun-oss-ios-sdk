@@ -9,13 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OSSModel.h"
 
-@class BFTask;
 @class OSSSyncMutableDictionary;
-
-#ifndef OSSTASK_DEFINED
-#define OSSTASK_DEFINED
-typedef BFTask OSSTask;
-#endif
 
 /**
  定义重试类型
@@ -133,7 +127,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, assign) BOOL isUsingBackgroundSession;
 @property (nonatomic, strong) OSSSyncMutableDictionary * sessionDelagateManager;
 @property (nonatomic, strong) OSSNetworkingConfiguration * configuration;
-@property (nonatomic, strong) BFExecutor * taskExecutor;
+@property (nonatomic, strong) OSSExecutor * taskExecutor;
 @property (atomic, copy) void (^backgroundSessionCompletionHandler)();
 
 - (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration;

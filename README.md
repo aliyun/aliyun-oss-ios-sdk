@@ -19,13 +19,9 @@ http://www.aliyun.com
 -----
 ## 安装
 
-SDK依赖了以下三方库：
-
-* [Bolts](https://github.com/BoltsFramework/Bolts-iOS)
-
 ### 直接引入Framework
 
-需要引入OSS iOS SDK 和 Bolts 两个framework。
+需要引入OSS iOS SDK framework。
 
 选中您的工程 -> TARGETS -> 您的项目 -> General -> Linked Frameworks and Libraries -> 点击"+" -> add other -> framework所在的目录 -> 选中framework文件 -> open
 
@@ -40,6 +36,8 @@ pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/aliyun-oss-ios-sdk.git'
 ```
 #import <AliyunOSSiOS/OSSService.h>
 ```
+
+注意，引入Framework后，需要在工程`Build Settings`的`Other Linker Flags`中加入`-ObjC`。如果工程此前已经设置过`-force_load`选项，那么，需要加入`-force_load <framework path>/AliyunOSSiOS`。
 
 ### 对于OSSTask的一些说明
 
@@ -71,7 +69,7 @@ OSSTask * task = [client getObject:get];
 -----
 ## 快速入门
 
-以下演示了上传、下载文件的基本流程。更多细节用法可以参考本工程的[test](https://github.com/aliyun/AliyunOSSiOS/tree/master/AliyunOSSiOSTests)或者[demo](https://github.com/alibaba/dpa-demo-ios)。
+以下演示了上传、下载文件的基本流程。更多细节用法可以参考本工程的[test](https://github.com/aliyun/AliyunOSSiOS/tree/master/AliyunOSSiOSTests)或者[demo](https://github.com/alibaba/alicloud-ios-demo)。
 
 ### STEP-1. 初始化OSSClient
 
@@ -703,8 +701,6 @@ OSSTask * resumeTask = [client resumableUpload:resumableUpload];
 ```
 #import <AliyunOSSiOS/OSSCompat.h>
 ```
-
-另外，需要在工程`build settings`的`other linker flag`加上`-ObjC`。
 
 ### 上传文件
 

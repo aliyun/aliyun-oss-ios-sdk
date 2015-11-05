@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OSSService.h"
 
-typedef BFCancellationTokenSource OSSTaskHandler;
+typedef OSSCancellationTokenSource OSSTaskHandler;
 
 @interface OSSClient (Compat)
 
