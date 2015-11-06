@@ -407,7 +407,7 @@
         requestDelegate.uploadingFileURL = request.uploadPartFileURL;
     }
     if (request.uploadPartProgress) {
-        request.uploadPartProgress = request.uploadPartProgress;
+        requestDelegate.uploadProgress = request.uploadPartProgress;
     }
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeUploadPart];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint

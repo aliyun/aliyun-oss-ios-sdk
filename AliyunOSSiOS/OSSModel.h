@@ -967,7 +967,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 /**
  上传进度回调
  */
-@property (nonatomic, copy) OSSNetworkingDownloadProgressBlock uploadPartProgress;
+@property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadPartProgress;
 @end
 
 /**
