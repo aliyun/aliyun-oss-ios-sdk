@@ -135,6 +135,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
                                                                     options:kNilOptions
                                                                       error:nil];
             OSSFederationToken * token = [OSSFederationToken new];
+            // 四个值缺一不可
             token.tAccessKey = [object objectForKey:@"accessKeyId"];
             token.tSecretKey = [object objectForKey:@"accessKeySecret"];
             token.tToken = [object objectForKey:@"securityToken"];

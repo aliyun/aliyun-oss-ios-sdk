@@ -28,7 +28,7 @@ http://www.aliyun.com
 ### Pod依赖
 
 ```
-pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/aliyun-oss-ios-sdk.git'
+pod 'AliyunOSSiOS', '~> 2.1.0'
 ```
 
 ### 工程中引入头文件
@@ -258,7 +258,7 @@ client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credent
 ```
 OSSClientConfiguration * conf = [OSSClientConfiguration new];
 conf.maxRetryCount = 3;
-conf.enableBackgroundTransmitService = YES;
+conf.enableBackgroundTransmitService = YES; // 只在上传本地文件时有效
 conf.backgroundSessionIdentifier = @"global_unique_string_key_1";
 conf.timeoutIntervalForRequest = 15;
 conf.timeoutIntervalForResource = 24 * 60 * 60;
