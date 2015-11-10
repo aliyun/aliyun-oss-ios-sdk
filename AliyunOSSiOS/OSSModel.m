@@ -48,7 +48,7 @@ NSString * const OSSServerErrorDomain = @"com.aliyun.oss.serverError";
 
 NSString * const OSSErrorMessageTOKEN = @"ErrorMessage";
 
-NSString * const OSSUAPrefix = @"MBAAS_OSS_IOS";
+NSString * const OSSUAPrefix = @"aliyun-sdk-ios";
 NSString * const OSSSDKVersion = @"2.0.2";
 
 NSString * const OSSHttpHeaderContentDisposition = @"Content-Disposition";
@@ -438,7 +438,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
         NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
         NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-        _userAgent = [NSString stringWithFormat:@"%@_%@_%@_%@_%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+        _userAgent = [NSString stringWithFormat:@"%@/%@/%@/%@/%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
     });
     return _userAgent;
 }
