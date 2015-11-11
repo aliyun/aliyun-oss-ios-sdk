@@ -1,20 +1,10 @@
 ## 简介
 
-本文档主要介绍OSS iOS SDK的安装和使用。本文档假设您已经开通了阿里云OSS 服务，并创建了Access Key ID 和Access Key Secret。文中的ID 指的是Access Key ID，KEY 指的是Access Key Secret。如果您还没有开通或者还不了解OSS，请登录OSS产品主页获取更多的帮助。
+阿里云对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全、低成本、高可靠的云存储服务。用户可以通过调用API，在任何应用、任何时间、任何地点上传和下载数据，也可以通过用户Web控制台对数据进行简单的管理。OSS适合存放任意文件类型，适合各种网站、开发企业及开发者使用。
 
-阿里云计算开放服务软件开发工具包iOS版
-Aliyun Open Services SDK for iOS
-
-版权所有 （C）阿里云计算有限公司
-
-Copyright (C) Alibaba Cloud Computing
-All rights reserved.
-
-http://www.aliyun.com
-
-环境要求：
+OSS iOS SDK环境要求：
 - iOS系统版本：iOS 7.0以上
-- 必须注册有Aliyun.com用户账户，并开通相应的服务（如OTS、OSS等）。
+- 必须注册有Aliyun.com用户账户，并开通OSS服务。
 
 -----
 ## 安装
@@ -26,6 +16,8 @@ http://www.aliyun.com
 选中您的工程 -> TARGETS -> 您的项目 -> General -> Linked Frameworks and Libraries -> 点击"+" -> add other -> framework所在的目录 -> 选中framework文件 -> open
 
 ### Pod依赖
+
+如果工程是通过pod管理依赖，那么加入以下依赖即可，不需要再导入framework：
 
 ```
 pod 'AliyunOSSiOS', '~> 2.1.0'
@@ -439,7 +431,7 @@ request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, in
 	// 当前下载段长度、当前已经下载总长度、一共需要下载的总长度
 	NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 };
-// request.range = [[OSSRange alloc] initWithStart:0 withEnd:99]; // bytes=0-99
+// request.range = [[OSSRange alloc] initWithStart:0 withEnd:99]; // bytes=0-99，指定范围下载
 // request.downloadToFileURL = [NSURL fileURLWithPath:@"<filepath>"];
 
 OSSTask * getTask = [client getObject:request];
@@ -649,6 +641,8 @@ __block NSString * uploadId = nil;
 OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
 init.bucketName = <bucketName>;
 init.objectKey = <objectKey>;
+
+// 可选参数
 init.contentType = @"application/octet-stream";
 init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
 
@@ -689,6 +683,28 @@ OSSTask * resumeTask = [client resumableUpload:resumableUpload];
 // [resumeTask waitUntilFinished];
 
 // [resumableUpload cancel];
+```
+
+-----
+## 签名URL
+
+SDK支持签名出特定有效时长或者公开的URL，用于转给第三方实现授权访问。
+
+### 签名私有资源的指定有效时长的访问URL
+
+```
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval;
+```
+
+在初始化OSSClient以后，就可以调用这个接口生成指定bucketName下指定objectKey的访问URL了，其中，interval是生成URL的有效时长，单位是秒。
+
+### 签名公开的访问URL
+
+```
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                              withObjectKey:(NSString *)objectKey;
 ```
 
 -----
@@ -796,28 +812,6 @@ OSSTaskHandler * tk = [client resumableUploadFile:@"<filepath>"
 这个接口是为了兼容旧版本提供的，封装了较多细节，现在，更建议您通过分块上传的`multipartUploadInit`/`uploadPart`/`listParts`/`completeMultipartUpload`/`abortMultipartUpload`这几个接口，来实现您的断点续传。
 
 -----
-## 签名URL
-
-SDK支持签名出特定有效时长或者公开的URL，用于转给第三方实现授权访问。
-
-### 签名私有资源的指定有效时长的访问URL
-
-```
-- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
-                                 withObjectKey:(NSString *)objectKey
-                        withExpirationInterval:(NSTimeInterval)interval;
-```
-
-在初始化OSSClient以后，就可以调用这个接口生成指定bucketName下指定objectKey的访问URL了，其中，interval是生成URL的有效时长，单位是秒。
-
-### 签名公开的访问URL
-
-```
-- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                              withObjectKey:(NSString *)objectKey;
-```
-
------
 ## 异常响应
 
 SDK中发生的异常分为两类：ClientError和ServerError。其中前者指的是参数错误、网络错误等，后者指OSS Server返回的异常响应。
@@ -835,6 +829,14 @@ SDK中发生的异常分为两类：ClientError和ServerError。其中前者指�
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNetworkError|本地系统异常|
 |ClientError|com.aliyun.oss.clientError|OSSClientErrorCodeNotKnown|未知异常|
 |ServerError|com.aliyun.oss.serverError|(-1 * httpResponseCode)|解析响应XML得到的Dictionary|
+
+-----
+## 联系我们
+
+* 阿里云OSS官方网站：http://oss.aliyun.com
+* 阿里云OSS官方论坛：http://bbs.aliyun.com
+* 阿里云OSS官方文档中心：http://www.aliyun.com/product/oss#Docs
+* 阿里云官方技术支持 登录OSS控制台 https://home.console.aliyun.com -> 点击"工单系统"
 
 -----
 ## License
