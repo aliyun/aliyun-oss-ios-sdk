@@ -207,9 +207,9 @@ id<OSSCredentialProvider> credential = [[OSSCustomSignerCredentialProvider alloc
 ```
 
 
-### Federation鉴权模式
+### STS鉴权模式
 
-Federation鉴权模式是指，您需要实现一个回调，这个回调通过您实现的方式去获取一个Federation Token，然后返回。SDK会利用这个Token来进行加签处理，并在需要更新时主动调用这个回调获取Token。
+STS鉴权模式是指，您需要实现一个回调，这个回调通过您实现的方式去获取一个Federation Token，然后返回。SDK会利用这个Token来进行加签处理，并在需要更新时主动调用这个回调获取Token。
 
 使用这种模式授权需要先开通阿里云RAM服务:[RAM](http://www.aliyun.com/product/ram)
 
@@ -237,22 +237,8 @@ id<OSSCredentialProvider> credential = [[OSSFederationCredentialProvider alloc] 
 
 ```
 OSSClientConfiguration * conf = [OSSClientConfiguration new];
-conf.maxRetryCount = 3;
-conf.enableBackgroundTransmitService = NO;
-conf.timeoutIntervalForRequest = 15;
-conf.timeoutIntervalForResource = 24 * 60 * 60;
-
-client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential clientConfiguration:conf];
-```
-
-如果需要支持后台传输，将`conf.enableBackgroundTransmitService`赋值为`YES`后，还需要设置每个OSSClient全局唯一的`backgroundSessionIdentifier`，否则无法构造多个OSSClient实例，会遇到`A background URLSession with identifier com.aliyun.oss.backgroundsession already exists!`异常。
-
-```
-OSSClientConfiguration * conf = [OSSClientConfiguration new];
-conf.maxRetryCount = 3;
-conf.enableBackgroundTransmitService = YES; // 只在上传本地文件时有效
-conf.backgroundSessionIdentifier = @"global_unique_string_key_1";
-conf.timeoutIntervalForRequest = 15;
+conf.maxRetryCount = 2;
+conf.timeoutIntervalForRequest = 30;
 conf.timeoutIntervalForResource = 24 * 60 * 60;
 
 client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential clientConfiguration:conf];

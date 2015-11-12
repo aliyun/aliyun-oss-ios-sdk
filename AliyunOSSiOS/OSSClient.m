@@ -25,7 +25,7 @@
 @implementation OSSClient
 
 - (instancetype)initWithEndpoint:(NSString *)endpoint credentialProvider:(id<OSSCredentialProvider>)credentialProvider {
-    return [self initWithEndpoint:endpoint credentialProvider:credentialProvider clientConfiguration:nil];
+    return [self initWithEndpoint:endpoint credentialProvider:credentialProvider clientConfiguration:[OSSClientConfiguration new]];
 }
 
 - (instancetype)initWithEndpoint:(NSString *)endpoint
@@ -54,8 +54,6 @@
 }
 
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
-    request.retryHandler.maxRetryCount = self.clientConfiguration.maxRetryCount;
-
     /* if content-type haven't been set, we set one */
     if ((!request.allNeededMessage.contentType
          || [[request.allNeededMessage.contentType stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]

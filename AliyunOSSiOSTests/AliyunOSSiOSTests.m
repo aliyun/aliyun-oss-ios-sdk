@@ -146,9 +146,8 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
-    conf.maxRetryCount = 3;
-    conf.enableBackgroundTransmitService = YES;
-    conf.timeoutIntervalForRequest = 15;
+    conf.maxRetryCount = 2;
+    conf.timeoutIntervalForRequest = 30;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
     client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
@@ -971,7 +970,6 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)testMultiClientInstance {
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 3;
-    conf.enableBackgroundTransmitService = NO;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 

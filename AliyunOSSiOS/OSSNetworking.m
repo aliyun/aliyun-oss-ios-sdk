@@ -21,7 +21,7 @@
                              response:(NSHTTPURLResponse *)response
                                 error:(NSError *)error {
 
-    if (currentRetryCount > self.maxRetryCount) {
+    if (currentRetryCount >= self.maxRetryCount) {
         return OSSNetworkingRetryTypeShouldNotRetry;
     }
 
@@ -165,7 +165,7 @@
     OSSLogDebug(@"built full url: %@", urlString);
 
     // set header fields
-    self.internalRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
+    self.internalRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 
     // override default host
     [self.internalRequest setValue:originHost forHTTPHeaderField:@"Host"];
