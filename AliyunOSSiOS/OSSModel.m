@@ -52,6 +52,8 @@ NSString * const OSSUAPrefix = @"aliyun-sdk-ios";
 NSString * const OSSSDKVersion = @"2.0.2";
 
 NSString * const OSSHttpHeaderContentDisposition = @"Content-Disposition";
+NSString * const OSSHttpHeaderXOSSCallback = @"x-oss-callback";
+NSString * const OSSHttpHeaderXOSSCallbackVar = @"x-oss-callback-var";
 NSString * const OSSHttpHeaderContentEncoding = @"Content-Encoding";
 NSString * const OSSHttpHeaderContentType = @"Content-Type";
 NSString * const OSSHttpHeaderContentMD5 = @"Content-MD5";
@@ -65,6 +67,25 @@ NSString * const OSSHttpHeaderExpires = @"Expires";
         return [NSString stringWithFormat:@"%@%@", self, aString];
     } else {
         return [NSString stringWithFormat:@"%@/%@", self, aString];
+    }
+}
+
+@end
+
+@implementation NSDictionary (OSS)
+
+- (NSString *)base64JsonString {
+    NSError * error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:self
+                                                        options:0
+                                                          error:&error];
+
+    if (!jsonData) {
+        return @"e30="; // base64("{}");
+    } else {
+        NSString * jsonStr = [[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+        NSLog(@"callback json - %@", jsonStr);
+        return [[jsonStr dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
     }
 }
 

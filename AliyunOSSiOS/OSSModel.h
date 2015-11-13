@@ -48,6 +48,8 @@ extern NSString * const OSSServerErrorDomain;
 extern NSString * const OSSErrorMessageTOKEN;
 
 extern NSString * const OSSHttpHeaderContentDisposition;
+extern NSString * const OSSHttpHeaderXOSSCallback;
+extern NSString * const OSSHttpHeaderXOSSCallbackVar;
 extern NSString * const OSSHttpHeaderContentEncoding;
 extern NSString * const OSSHttpHeaderContentType;
 extern NSString * const OSSHttpHeaderContentMD5;
@@ -96,14 +98,21 @@ typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSErr
 typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 
 /**
- * 扩展NSString
+ 扩展NSString
  */
 @interface NSString (OSS)
 - (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
 @end
 
 /**
- * 扩展NSDate
+ 扩展NSDictionary
+ */
+@interface NSDictionary (OSS)
+- (NSString *)base64JsonString;
+@end
+
+/**
+ 扩展NSDate
  */
 @interface NSDate (OSS)
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
@@ -633,6 +642,16 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  从文件上传时，通过这个字段设置
  */
 @property (nonatomic, strong) NSURL * uploadingFileURL;
+
+/**
+ server回调参数设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackParam;
+
+/**
+ server回调变量设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
  设置文件类型
@@ -1183,6 +1202,8 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  */
 @interface OSSResumableUploadResult : OSSResult
 @end
+
+#pragma mark 其他
 
 /**
  HTTP响应内容解析器

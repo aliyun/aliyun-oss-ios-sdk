@@ -415,7 +415,7 @@
     /* background upload task will not call back didRecieveResponse */
     if (delegate.isBackgroundUploadFileTask) {
         OSSLogVerbose(@"backgroud upload task did recieve response: %@", httpResponse);
-        if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+        if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 && httpResponse.statusCode != 203) {
             [delegate.responseParser consumeHttpResponse:httpResponse];
         } else {
             delegate.isHttpRequestNotSuccessResponse = YES;
@@ -520,7 +520,7 @@
     /* background upload task will not call back didRecieveResponse */
     OSSLogVerbose(@"did receive response: %@", response);
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
-    if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+    if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 && httpResponse.statusCode != 203) {
         [delegate.responseParser consumeHttpResponse:httpResponse];
     } else {
         delegate.isHttpRequestNotSuccessResponse = YES;

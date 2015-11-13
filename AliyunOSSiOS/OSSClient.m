@@ -244,6 +244,12 @@
     if (request.uploadingFileURL) {
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
     }
+    if (request.callbackParam) {
+        [headerParams setObject:[request.callbackParam base64JsonString] forKey:OSSHttpHeaderXOSSCallback];
+    }
+    if (request.callbackVar) {
+        [headerParams setObject:[request.callbackVar base64JsonString] forKey:OSSHttpHeaderXOSSCallbackVar];
+    }
     if (request.uploadProgress) {
         requestDelegate.uploadProgress = request.uploadProgress;
     }
