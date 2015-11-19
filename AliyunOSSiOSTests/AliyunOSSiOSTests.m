@@ -604,7 +604,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     request.objectKey = @"file1m";
 
     NSString * docDir = [self getDocumentDirectory];
-    NSString * saveToFilePath = [docDir stringByAppendingPathComponent:@"downloadFromPublicBucket"];
+    NSString * saveToFilePath = [docDir stringByAppendingPathComponent:@"downloadDir/temp/file1m"];
     request.downloadToFileURL = [NSURL fileURLWithPath:saveToFilePath];
 
     request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {

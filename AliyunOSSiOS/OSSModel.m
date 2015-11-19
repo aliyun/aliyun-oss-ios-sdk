@@ -774,6 +774,15 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     if (self.downloadingFileURL) {
         if (!_fileHandle) {
             NSFileManager * fm = [NSFileManager defaultManager];
+            NSString * dirName = [[self.downloadingFileURL path] stringByDeletingLastPathComponent];
+            if (![fm fileExistsAtPath:dirName]) {
+                [fm createDirectoryAtPath:dirName withIntermediateDirectories:YES attributes:nil error:&error];
+            }
+            if (![fm fileExistsAtPath:dirName] || error) {
+                return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                 code:OSSClientErrorCodeFileCantWrite
+                                                             userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create dir at %@", dirName]}]];
+            }
             [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
             if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
