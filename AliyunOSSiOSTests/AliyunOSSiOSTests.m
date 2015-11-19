@@ -244,7 +244,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         NSString * docDir = [self getDocumentDirectory];
         request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:[fileNameArray objectAtIndex:i]]];
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-        request.contentType = @"";
+        // request.contentType = @"";
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
             NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         };
@@ -377,8 +377,15 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     request.objectKey = @"file100k";
     NSString * docDir = [self getDocumentDirectory];
     request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file100k"]];
-    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1",
-                          @"eyJjYWxsYmFja1VybCI6IjExMC43NS44Mi4xMDYvbWJhYXMvY2FsbGJhY2siLCAiY2FsbGJhY2tCb2R5IjoidGVzdCJ9", @"x-oss-callback", nil];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.callbackParam = @{
+                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackBody": @"test"
+                              };
+    request.callbackVar = @{
+                            @"var1": @"value1",
+                            @"var2": @"value2"
+                            };
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
@@ -498,6 +505,36 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
         XCTAssertEqual(1024000, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testGetObjectByBlocks {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    request.onRecieveData = ^(NSData * data) {
+        NSLog(@"onRecieveData: %lu", [data length]);
+    };
+
+    OSSTask * task = [client getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+
+        // if onRecieveData is setting, it will not return whole data
+        XCTAssertEqual(0, [result.downloadedData length]);
         XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
@@ -651,11 +688,12 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSHeadObjectResult * result = task.result;
-        XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqualObjects(@"1024000", [result.httpResponseHeaderFields objectForKey:@"Content-Length"]);
+        NSLog(@"header fields: %@", result.httpResponseHeaderFields);
         for (NSString * key in result.objectMeta) {
             NSLog(@"ObjectMeta: %@ - %@", key, [result.objectMeta objectForKey:key]);
         }
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertEqualObjects(@"1024000", [result.httpResponseHeaderFields objectForKey:@"Content-Length"]);
         return nil;
     }] waitUntilFinished];
 }
@@ -1219,6 +1257,65 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
     BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
+}
+
+- (void)testCnamePutObject {
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+                                          credentialProvider:credential3];
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [tClient putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testCnameGetObejct {
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+                                          credentialProvider:credential3];
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+
+    OSSTask * task = [tClient getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertEqual(1024000, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
 }
 
 #pragma mark cancel
