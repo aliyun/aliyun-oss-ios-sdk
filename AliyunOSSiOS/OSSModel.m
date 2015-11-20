@@ -49,7 +49,7 @@ NSString * const OSSServerErrorDomain = @"com.aliyun.oss.serverError";
 NSString * const OSSErrorMessageTOKEN = @"ErrorMessage";
 
 NSString * const OSSUAPrefix = @"aliyun-sdk-ios";
-NSString * const OSSSDKVersion = @"2.0.2";
+NSString * const OSSSDKVersion = @"2.1.1";
 
 NSString * const OSSHttpHeaderContentDisposition = @"Content-Disposition";
 NSString * const OSSHttpHeaderXOSSCallback = @"x-oss-callback";

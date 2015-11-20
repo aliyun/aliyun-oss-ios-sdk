@@ -10,10 +10,20 @@ http://www.aliyun.com
 
 环境要求：
 - iOS系统版本：iOS 7.0以上
-- 必须注册有Aliyun.com用户账户，并开通相应的服务（如OTS、OSS等）。
+- 必须注册有Aliyun.com用户账户，并开通相应的服务（OSS等）。
 
 
 更新日志:
+
+2015/11/19
+- 发布 2.1.1 版本
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.1'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
+- putObject支持servercallback
+- 重试策略调整
 
 2015/11/10
 - 发布 2.1.0 版本
