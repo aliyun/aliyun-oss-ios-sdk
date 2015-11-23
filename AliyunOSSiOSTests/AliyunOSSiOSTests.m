@@ -992,6 +992,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)testPresignPublicURL {
     OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1k"];
     XCTAssertNil(task.error);
+    NSLog(@"url: %@", task.result);
     NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
     NSURLSession * session = [NSURLSession sharedSession];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];

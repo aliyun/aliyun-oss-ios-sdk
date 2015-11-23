@@ -525,10 +525,13 @@
         NSString * signature = [splitResult objectAtIndex:1];
 
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
-        NSString * stringURL = [NSString stringWithFormat:@"%@://%@.%@/%@?OSSAccessKeyId=%@&Expires=%@&Signature=%@",
+        NSString * host = endpointURL.host;
+        if ([OSSUtil isOssOriginBucketHost:host]) {
+            host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+        }
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?OSSAccessKeyId=%@&Expires=%@&Signature=%@",
                                 endpointURL.scheme,
-                                bucketName,
-                                endpointURL.host,
+                                host,
                                 [OSSUtil encodeURL:objectKey],
                                 [OSSUtil encodeURL:accessKey],
                                 expires,
@@ -548,10 +551,13 @@
 
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
-        NSString * stringURL = [NSString stringWithFormat:@"%@://%@.%@/%@",
+        NSString * host = endpointURL.host;
+        if ([OSSUtil isOssOriginBucketHost:host]) {
+            host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+        }
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@",
                                 endpointURL.scheme,
-                                bucketName,
-                                endpointURL.host,
+                                host,
                                 [OSSUtil encodeURL:objectKey]];
         return [OSSTask taskWithResult:stringURL];
     }];
