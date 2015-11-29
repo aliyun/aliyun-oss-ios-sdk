@@ -340,6 +340,39 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
+- (void)testTokenUpdate {
+    for (int i = 0; i < 20; i++) {
+        OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+        request.bucketName = TEST_BUCKET;
+        request.objectKey = @"file1m";
+
+        NSString * docDir = [self getDocumentDirectory];
+        NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+        NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+
+        request.uploadingData = [readFile readDataToEndOfFile];
+        request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+        request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+            // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        };
+
+        OSSTask * task = [client putObject:request];
+        [[task continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            if (task.error) {
+                OSSLogError(@"%@", task.error);
+            }
+            OSSPutObjectResult * result = task.result;
+            XCTAssertEqual(200, result.httpResponseCode);
+            NSLog(@"Result - requestId: %@, headerFields: %@",
+                  result.requestId,
+                  result.httpResponseHeaderFields);
+            return nil;
+        }] waitUntilFinished];
+        [NSThread sleepForTimeInterval:60];
+    }
+}
+
 - (void)testA_putObjectToPublicBucket {
     for (int i = 0; i < [fileNameArray count]; i++) {
         OSSPutObjectRequest * request = [OSSPutObjectRequest new];
@@ -1537,6 +1570,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertNotNil(task.error);
         XCTAssertEqual(task.error.domain, OSSServerErrorDomain);
         XCTAssertEqual(-1 * 403, task.error.code);
+        NSLog(@"error: %@", task.error);
         return nil;
     }] waitUntilFinished];
 }

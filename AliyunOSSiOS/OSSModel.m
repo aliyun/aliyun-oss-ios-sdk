@@ -285,6 +285,8 @@ static volatile uint64_t tag = 0;
                 isNewlyGotten = YES;
                 tag ++;
             }
+        } else {
+            isNewlyGotten = NO;
         }
 
         validToken = self.cachedToken;
