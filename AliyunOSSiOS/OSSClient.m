@@ -35,6 +35,9 @@
         NSOperationQueue * queue = [NSOperationQueue new];
         queue.maxConcurrentOperationCount = 5;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
+        if (![endpoint containsString:@"://"]) {
+            endpoint = [@"http://" stringByAppendingString:endpoint];
+        }
         self.endpoint = endpoint;
         self.credentialProvider = credentialProvider;
 

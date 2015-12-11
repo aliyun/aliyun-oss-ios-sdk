@@ -18,8 +18,7 @@
 
 NSString * const g_AK = @"<your access key id>";
 NSString * const g_SK = @"<your access key secret";
-NSString * const TEST_BUCKET = @"mbaas-test1";
-NSString * const BUGFIX_BUCKET = @"bugfix-test";
+NSString * const TEST_BUCKET = @"android-test";
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
@@ -140,6 +139,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
             token.tSecretKey = [object objectForKey:@"accessKeySecret"];
             token.tToken = [object objectForKey:@"securityToken"];
             token.expirationTimeInGMTFormat = [object objectForKey:@"expiration"];
+            OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"expiration"]);
             return token;
         }
     }];
@@ -1100,6 +1100,46 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     };
 
     task = [client2 putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testClientInitWithNoneSchemeEndpoint {
+    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    conf.maxRetryCount = 3;
+    conf.timeoutIntervalForRequest = 15;
+    conf.timeoutIntervalForResource = 24 * 60 * 60;
+
+    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"oss-cn-hangzhou.aliyuncs.com"
+                                           credentialProvider:credential3
+                                          clientConfiguration:conf];
+
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"1 -------------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [client1 putObject:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
