@@ -15,6 +15,16 @@ http://www.aliyun.com
 
 更新日志:
 
+2015/12/11
+- 发布 2.1.2 版本
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.2'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
+- 修正token过期时更新的策略；
+- 支持不带scheme的endpoint设置如oss-cn-hangzhou.aliyuncs.com；
+
 2015/11/19
 - 发布 2.1.1 版本
 
