@@ -614,6 +614,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
     request.onRecieveData = ^(NSData * data) {
         [recieveData appendData:data];
+        NSLog(@"%ld", [data length]);
     };
 
     OSSTask * task = [client getObject:request];
@@ -1366,7 +1367,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 - (void)testCnameGetObejct {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"osstest.xxyycc.com"
                                           credentialProvider:credential3];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;

@@ -35,7 +35,7 @@
         NSOperationQueue * queue = [NSOperationQueue new];
         queue.maxConcurrentOperationCount = 5;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
-        if (![endpoint containsString:@"://"]) {
+        if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
             endpoint = [@"http://" stringByAppendingString:endpoint];
         }
         self.endpoint = endpoint;
