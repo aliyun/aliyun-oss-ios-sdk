@@ -18,13 +18,22 @@
 @implementation OSSURLRequestRetryHandler
 
 - (OSSNetworkingRetryType)shouldRetry:(uint32_t)currentRetryCount
+                      requestDelegate:(OSSNetworkingRequestDelegate *)delegate
                              response:(NSHTTPURLResponse *)response
                                 error:(NSError *)error {
 
     if (currentRetryCount >= self.maxRetryCount) {
         return OSSNetworkingRetryTypeShouldNotRetry;
     }
-
+    
+    /**
+     设置onRecieveData回调时，在回调处理数据时无法获知重试事件
+     出错时，禁止重试
+     */
+    if (delegate.onRecieveData != nil) {
+        return OSSNetworkingRetryTypeShouldNotRetry;
+    }
+    
     if ([error.domain isEqualToString:OSSClientErrorDomain]) {
         if (error.code == OSSClientErrorCodeTaskCancelled) {
             return OSSNetworkingRetryTypeShouldNotRetry;
@@ -406,7 +415,6 @@
     [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
 
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)sessionTask.response;
-
     if (delegate == nil) {
         OSSLogVerbose(@"delegate: %@", delegate);
         /* if the background transfer service is enable, may recieve the previous task complete callback */
@@ -462,6 +470,7 @@
     }] continueWithBlock:^id(OSSTask *task) {
         if (task.error) {
             OSSNetworkingRetryType retryType = [delegate.retryHandler shouldRetry:delegate.currentRetryCount
+                                                                  requestDelegate:delegate
                                                                          response:httpResponse
                                                                             error:task.error];
             OSSLogVerbose(@"current retry count: %u, retry type: %d", delegate.currentRetryCount, (int)retryType);

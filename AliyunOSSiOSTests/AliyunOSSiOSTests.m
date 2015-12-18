@@ -16,6 +16,7 @@
 
 @end
 
+
 NSString * const g_AK = @"<your access key id>";
 NSString * const g_SK = @"<your access key secret";
 NSString * const TEST_BUCKET = @"mbaas-test1";
@@ -36,7 +37,6 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"fileDirA/", @"fileDirB/"];
@@ -548,7 +548,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
-- (void)testGetObjectByBlocks {
+- (void)testGetObjectWithRecieveDataBlock {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
@@ -574,6 +574,26 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
               result.requestId,
               result.httpResponseHeaderFields,
               (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testGetObjectWithRecieveDataBlockAndNoRetry {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"wrong-key";
+    
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    request.onRecieveData = ^(NSData * data) {
+        NSLog(@"onRecieveData: %lu", [data length]);
+    };
+    
+    OSSTask * task = [client getObject:request];
+    
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
         return nil;
     }] waitUntilFinished];
 }

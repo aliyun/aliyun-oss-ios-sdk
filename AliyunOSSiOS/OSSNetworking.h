@@ -10,6 +10,7 @@
 #import "OSSModel.h"
 
 @class OSSSyncMutableDictionary;
+@class OSSNetworkingRequestDelegate;
 
 /**
  定义重试类型
@@ -29,6 +30,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, assign) uint32_t maxRetryCount;
 
 - (OSSNetworkingRetryType)shouldRetry:(uint32_t)currentRetryCount
+                      requestDelegate:(OSSNetworkingRequestDelegate *)delegate
                              response:(NSHTTPURLResponse *)response
                                 error:(NSError *)error;
 
