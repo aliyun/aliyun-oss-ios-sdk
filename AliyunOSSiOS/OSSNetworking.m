@@ -403,6 +403,8 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(sessionTask.taskIdentifier)];
+    [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
+
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)sessionTask.response;
 
     if (delegate == nil) {
@@ -493,7 +495,6 @@
 
             /* now, should retry */
             NSTimeInterval suspendTime = [delegate.retryHandler timeIntervalForRetry:delegate.currentRetryCount retryType:retryType];
-            [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
             delegate.currentRetryCount++;
             [NSThread sleepForTimeInterval:suspendTime];
 

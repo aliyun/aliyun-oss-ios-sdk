@@ -662,44 +662,45 @@
         }
 
         for (int i = 1; i <= partCount; i++) {
-            if ([alreadyUploadIndex containsObject:@(i)]) {
-                continue;
-            }
-
-            [handle seekToFileOffset:uploadedLength];
-            int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
-
-            OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
-            uploadPart.bucketName = request.bucketName;
-            uploadPart.objectkey = request.objectKey;
-            uploadPart.partNumber = i;
-            uploadPart.uploadId = request.uploadId;
-            uploadPart.uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
-            OSSTask * uploadPartTask = [self uploadPart:uploadPart];
-            [uploadPartTask waitUntilFinished];
-            if (uploadPartTask.error) {
-                return uploadPartTask;
-            } else {
-                OSSUploadPartResult * result = uploadPartTask.result;
-                OSSPartInfo * partInfo = [OSSPartInfo new];
-                partInfo.partNum = i;
-                partInfo.eTag = result.eTag;
-                [alreadyUploadPart addObject:partInfo];
-
-                uploadedLength += readLength;
-                if (request.uploadProgress && expectedUploadLength) {
-                    request.uploadProgress(readLength, uploadedLength, expectedUploadLength);
+            @autoreleasepool {
+                if ([alreadyUploadIndex containsObject:@(i)]) {
+                    continue;
                 }
-            }
 
-            if (request.isCancelled) {
-                [handle closeFile];
-                return [OSSTask taskWithError:cancelError];
+                [handle seekToFileOffset:uploadedLength];
+                int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
+
+                OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+                uploadPart.bucketName = request.bucketName;
+                uploadPart.objectkey = request.objectKey;
+                uploadPart.partNumber = i;
+                uploadPart.uploadId = request.uploadId;
+                uploadPart.uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
+                OSSTask * uploadPartTask = [self uploadPart:uploadPart];
+                [uploadPartTask waitUntilFinished];
+                if (uploadPartTask.error) {
+                    return uploadPartTask;
+                } else {
+                    OSSUploadPartResult * result = uploadPartTask.result;
+                    OSSPartInfo * partInfo = [OSSPartInfo new];
+                    partInfo.partNum = i;
+                    partInfo.eTag = result.eTag;
+                    [alreadyUploadPart addObject:partInfo];
+
+                    uploadedLength += readLength;
+                    if (request.uploadProgress && expectedUploadLength) {
+                        request.uploadProgress(readLength, uploadedLength, expectedUploadLength);
+                    }
+                }
+
+                if (request.isCancelled) {
+                    [handle closeFile];
+                    return [OSSTask taskWithError:cancelError];
+                }
             }
         }
 
         [handle closeFile];
-
         OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
         complete.bucketName = request.bucketName;
         complete.objectKey = request.objectKey;
