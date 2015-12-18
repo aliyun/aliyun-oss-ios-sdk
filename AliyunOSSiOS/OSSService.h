@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define OSS_IOS_SDK_VERSION 2.1.3
+
 #import "OSSNetworking.h"
 #import "OSSClient.h"
 #import "OSSModel.h"
