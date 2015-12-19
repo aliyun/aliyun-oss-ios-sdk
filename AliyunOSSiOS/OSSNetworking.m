@@ -578,7 +578,7 @@
         } else {
             OSSTask * consumeTask = [delegate.responseParser consumeHttpResponseBody:data];
             if (consumeTask.error) {
-                OSSLogError("consume data error: %@", consumeTask.error);
+                OSSLogError(@"consume data error: %@", consumeTask.error);
                 delegate.error = consumeTask.error;
                 [dataTask cancel];
             }

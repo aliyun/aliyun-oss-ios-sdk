@@ -56,7 +56,6 @@ extern NSString * const OSSHttpHeaderContentMD5;
 extern NSString * const OSSHttpHeaderCacheControl;
 extern NSString * const OSSHttpHeaderExpires;
 
-
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
     OSSOperationTypeCreateBucket,
@@ -1051,6 +1050,16 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  各个分块的信息
  */
 @property (nonatomic, strong) NSArray * partInfos;
+
+/**
+ server回调参数设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackParam;
+
+/**
+ server回调变量设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackVar;
 @end
 
 /**
@@ -1068,6 +1077,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  Complete Multipart Upload请求创建的Object，ETag值是其内容的UUID。ETag值可以用于检查Object内容是否发生变化。.
  */
 @property (nonatomic, strong) NSString * eTag;
+
+/**
+ 如果设置了server回调，回调的响应内容
+ */
+@property (nonatomic, strong) NSString * serverReturnJsonString;
 @end
 
 /**
@@ -1194,6 +1208,16 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  */
 @property (atomic, assign) BOOL isCancelled;
 
+/**
+ server回调参数设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackParam;
+
+/**
+ server回调变量设置
+ */
+@property (nonatomic, strong) NSDictionary * callbackVar;
+
 - (void)cancel;
 @end
 
@@ -1201,6 +1225,10 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  断点续传的结果
  */
 @interface OSSResumableUploadResult : OSSResult
+/**
+ 如果设置了server回调，回调的响应内容
+ */
+@property (nonatomic, strong) NSString * serverReturnJsonString;
 @end
 
 #pragma mark 其他

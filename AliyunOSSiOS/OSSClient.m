@@ -434,9 +434,15 @@
 
 - (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
-
+    NSMutableDictionary * headerParams = [NSMutableDictionary dictionary];
     if (request.partInfos) {
         requestDelegate.uploadingData = [OSSUtil constructHttpBodyFromPartInfos:request.partInfos];
+    }
+    if (request.callbackParam) {
+        [headerParams setObject:[request.callbackParam base64JsonString] forKey:OSSHttpHeaderXOSSCallback];
+    }
+    if (request.callbackVar) {
+        [headerParams setObject:[request.callbackVar base64JsonString] forKey:OSSHttpHeaderXOSSCallbackVar];
     }
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCompleteMultipartUpload];
@@ -448,7 +454,7 @@
                                                        md5:request.contentMd5
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
-                                              headerParams:nil
+                                              headerParams:headerParams
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeCompleteMultipartUpload;
 
@@ -671,12 +677,14 @@
                 int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
 
                 OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+                NSData * uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
                 uploadPart.bucketName = request.bucketName;
                 uploadPart.objectkey = request.objectKey;
                 uploadPart.partNumber = i;
                 uploadPart.uploadId = request.uploadId;
-                uploadPart.uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
                 OSSTask * uploadPartTask = [self uploadPart:uploadPart];
+                uploadPart.uploadPartData = uploadPartData;
+                uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
                 [uploadPartTask waitUntilFinished];
                 if (uploadPartTask.error) {
                     return uploadPartTask;
@@ -706,6 +714,12 @@
         complete.objectKey = request.objectKey;
         complete.uploadId = request.uploadId;
         complete.partInfos = alreadyUploadPart;
+        if (request.callbackParam != nil) {
+            complete.callbackParam = request.callbackParam;
+        }
+        if (request.callbackVar != nil) {
+            complete.callbackVar = request.callbackVar;
+        }
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
 
@@ -717,9 +731,30 @@
             result.requestId = completeResult.requestId;
             result.httpResponseCode = completeResult.httpResponseCode;
             result.httpResponseHeaderFields = completeResult.httpResponseHeaderFields;
+            result.serverReturnJsonString = completeResult.serverReturnJsonString;
             return [OSSTask taskWithResult:result];
         }
     }];
 }
 
+- (BOOL)doesObjectExist:(NSString *)bucketName
+          withObjectKey:(NSString *)objectKey
+              withError:(const NSError **)error {
+    OSSHeadObjectRequest * headRequest = [OSSHeadObjectRequest new];
+    headRequest.bucketName = bucketName;
+    headRequest.objectKey = objectKey;
+    OSSTask * headTask = [self headObject:headRequest];
+    [headTask waitUntilFinished];
+    NSError * headError = headTask.error;
+    if (!headError) {
+        return YES;
+    } else {
+        if (headError.code == -404) {
+            return NO;
+        } else {
+            *error = headError;
+            return NO;
+        }
+    }
+}
 @end

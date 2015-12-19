@@ -19,17 +19,17 @@
 
 #define OSSLogVerbose(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-NSLog((XCODE_COLORS_ESCAPE @"fg0,0,255;" frmt XCODE_COLORS_RESET), ##__VA_ARGS__);\
+NSLog(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogDebug(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-NSLog((XCODE_COLORS_ESCAPE @"fg0,255,0;" frmt XCODE_COLORS_RESET), ##__VA_ARGS__);\
+NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogError(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-NSLog((XCODE_COLORS_ESCAPE @"fg255,0,0;" frmt XCODE_COLORS_RESET), ##__VA_ARGS__);\
+NSLog(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 static BOOL isEnable;
 

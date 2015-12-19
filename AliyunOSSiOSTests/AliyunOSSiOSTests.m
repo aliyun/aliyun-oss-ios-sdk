@@ -16,9 +16,8 @@
 
 @end
 
-
 NSString * const g_AK = @"<your access key id>";
-NSString * const g_SK = @"<your access key secret";
+NSString * const g_SK = @"<your access key secret>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
@@ -37,6 +36,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"fileDirA/", @"fileDirB/"];
@@ -753,6 +753,29 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
+- (void)testDoesObjectExistWithExistObject {
+    NSError * error = nil;
+    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"file1m" withError:&error];
+    XCTAssertEqual(isExist, YES);
+    XCTAssertNil(error);
+}
+
+- (void)testDoesObjectExistWithNoExistObject {
+    NSError * error = nil;
+    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"wrong-key" withError:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNil(error);
+}
+
+- (void)testDoesObjectExistWithError {
+    NSError * error = nil;
+    // invalid credentialProvider
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3];
+    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"file1m" withError:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNotNil(error);
+}
+
 - (void)testCopyAndDeleteObject {
     OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
     head.bucketName = TEST_BUCKET;
@@ -875,6 +898,63 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
             }
         }];
         XCTAssertTrue(exist);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testMultipartUploadWithServerCallback {
+    __block NSString * uploadId = nil;
+    __block NSMutableArray * partInfos = [NSMutableArray new];
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+    uploadPart.bucketName = TEST_BUCKET;
+    uploadPart.objectkey = MultipartUploadObjectKey;
+    uploadPart.uploadId = uploadId;
+    uploadPart.partNumber = 1;
+    NSString * docDir = [self getDocumentDirectory];
+    uploadPart.uploadPartFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:uploadPart.uploadPartFileURL.absoluteString error:nil] fileSize];
+    OSSLogError(@"filesize: %llu", fileSize);
+    task = [client uploadPart:uploadPart];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSUploadPartResult * result = task.result;
+        XCTAssertNotNil(result.eTag);
+        [partInfos addObject:[OSSPartInfo partInfoWithPartNum:1 eTag:result.eTag size:fileSize]];
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
+    complete.bucketName = TEST_BUCKET;
+    complete.objectKey = MultipartUploadObjectKey;
+    complete.uploadId = uploadId;
+    complete.partInfos = partInfos;
+    complete.callbackParam = @{
+                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackBody": @"test"
+                              };
+    complete.callbackVar = @{
+                            @"var1": @"value1",
+                            @"var2": @"value2"
+                            };
+    task = [client completeMultipartUpload:complete];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSCompleteMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.serverReturnJsonString);
         return nil;
     }] waitUntilFinished];
 }
@@ -1219,6 +1299,61 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
 }
+
+- (void)testResumableUpload_serverCallback {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.callbackParam = @{
+                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackBody": @"test"
+                              };
+    resumableUpload.callbackVar = @{
+                            @"var1": @"value1",
+                            @"var2": @"value2"
+                            };
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSResumableUploadResult * resumableUploadResult = task.result;
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+            if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // 该任务无法续传，需要获取新的uploadId重新上传
+            }
+        } else {
+            NSLog(@"Upload file success");
+            XCTAssertNotNil(resumableUploadResult);
+            XCTAssertNotNil(resumableUploadResult.serverReturnJsonString);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+}
+
+
 
 - (void)testResumbleUpload_cancel {
     __block NSString * uploadId = nil;

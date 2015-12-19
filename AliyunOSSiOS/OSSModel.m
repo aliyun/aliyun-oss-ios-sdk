@@ -1086,11 +1086,15 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:completeMultipartUploadResult];
             }
             if (_collectingData) {
-                OSSLogVerbose(@"complete multipart upload result: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
-                NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
-                if (parsedDict) {
-                    completeMultipartUploadResult.location = [parsedDict objectForKey:OSSLocationXMLTOKEN];
-                    completeMultipartUploadResult.eTag = [parsedDict objectForKey:OSSETagXMLTOKEN];
+                if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/xml"]) {
+                    OSSLogVerbose(@"complete multipart upload result: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
+                    NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                    if (parsedDict) {
+                        completeMultipartUploadResult.location = [parsedDict objectForKey:OSSLocationXMLTOKEN];
+                        completeMultipartUploadResult.eTag = [parsedDict objectForKey:OSSETagXMLTOKEN];
+                    }
+                } else {
+                    completeMultipartUploadResult.serverReturnJsonString = [[NSString alloc] initWithData:_collectingData encoding:NSUTF8StringEncoding];
                 }
             }
             return completeMultipartUploadResult;
