@@ -204,6 +204,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, assign) uint32_t maxRetryCount;
 
 /**
+ 最大并发请求数
+ */
+@property (nonatomic, assign) uint32_t maxConcurrentRequestCount;
+
+/**
  是否开启后台传输服务
  注意：只在上传文件时有效
  */

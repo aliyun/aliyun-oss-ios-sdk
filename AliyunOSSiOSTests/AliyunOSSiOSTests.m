@@ -150,7 +150,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
-
+    conf.maxConcurrentRequestCount = 5;
     client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
 }
 
@@ -1659,6 +1659,45 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
             request.bucketName = TEST_BUCKET;
             request.objectKey = @"file10m";
 
+            OSSTask * task = [client getObject:request];
+            [[task continueWithBlock:^id(OSSTask *task) {
+                XCTAssertNil(task.error);
+                OSSGetObjectResult * result = task.result;
+                XCTAssertEqual(200, result.httpResponseCode);
+                XCTAssertEqual(10240000, [result.downloadedData length]);
+                XCTAssertEqualObjects(@"10240000", [result.objectMeta objectForKey:@"Content-Length"]);
+                NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+                      result.requestId,
+                      result.httpResponseHeaderFields,
+                      (unsigned long)[result.downloadedData length]);
+                return nil;
+            }] waitUntilFinished];
+            @synchronized(self) {
+                counter ++;
+                if (counter == 5) {
+                    [tcs setResult:nil];
+                }
+            }
+        });
+    }
+    [tcs.task waitUntilFinished];
+}
+
+- (void)testSerialGetObjectWithConfiguration {
+    OSSClientConfiguration * configuration = [OSSClientConfiguration new];
+    configuration.maxRetryCount = 2;
+    configuration.timeoutIntervalForRequest = 30;
+    configuration.timeoutIntervalForResource = 24 * 60 * 60;
+    configuration.maxConcurrentRequestCount = 1;
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:TEST_BUCKET credentialProvider:credential3 clientConfiguration:configuration];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    __block int counter = 0;
+    for (int i = 0; i < 5; i++) {
+        dispatch_async(test_queue, ^{
+            OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+            request.bucketName = TEST_BUCKET;
+            request.objectKey = @"file10m";
+            
             OSSTask * task = [client getObject:request];
             [[task continueWithBlock:^id(OSSTask *task) {
                 XCTAssertNil(task.error);
