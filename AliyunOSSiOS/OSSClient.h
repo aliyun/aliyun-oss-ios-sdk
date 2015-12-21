@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 @class OSSGetServiceRequest;
 @class OSSCreateBucketRequest;
 @class OSSDeleteBucketRequest;
@@ -232,4 +231,16 @@
  */
 - (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request;
 
+/**
+ 查看某个Object是否存在
+ @bucketName Object所在的Bucket名称
+ @objectKey Object名称
+ 
+ return YES                     Object存在
+ return NO && *error = nil      Object不存在
+ return NO && *error != nil     发生错误
+ */
+- (BOOL)doesObjectExist:(NSString *)bucketName
+          withObjectKey:(NSString *)objcetKey
+              withError:(const NSError **)error;
 @end
