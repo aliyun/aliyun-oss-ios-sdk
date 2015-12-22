@@ -240,7 +240,7 @@
  return NO && *error = nil      Object不存在
  return NO && *error != nil     发生错误
  */
-- (BOOL)doesObjectExist:(NSString *)bucketName
-          withObjectKey:(NSString *)objcetKey
-              withError:(const NSError **)error;
+- (BOOL)doesObjectExistInBucket:(NSString *)bucketName
+                      objectKey:(NSString *)objectKey
+                          error:(const NSError **)error;
 @end

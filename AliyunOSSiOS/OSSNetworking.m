@@ -277,11 +277,6 @@
         self.configuration = configuration;
 
         NSOperationQueue * operationQueue = [NSOperationQueue new];
-        if (configuration.maxConcurrentRequestCount) {
-            operationQueue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
-        } else {
-            operationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-        }
         NSURLSessionConfiguration * dataSessionConfig = nil;
         NSURLSessionConfiguration * uploadSessionConfig = nil;
 

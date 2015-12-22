@@ -341,7 +341,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     }] waitUntilFinished];
 }
 
-- (void)testTokenUpdate {
+- (void)testZZZTokenUpdate {
     for (int i = 0; i < 20; i++) {
         OSSPutObjectRequest * request = [OSSPutObjectRequest new];
         request.bucketName = TEST_BUCKET;
@@ -755,14 +755,14 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 
 - (void)testDoesObjectExistWithExistObject {
     NSError * error = nil;
-    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"file1m" withError:&error];
+    BOOL isExist = [client doesObjectExistInBucket:TEST_BUCKET objectKey:@"file1m" error:&error];
     XCTAssertEqual(isExist, YES);
     XCTAssertNil(error);
 }
 
 - (void)testDoesObjectExistWithNoExistObject {
     NSError * error = nil;
-    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"wrong-key" withError:&error];
+    BOOL isExist = [client doesObjectExistInBucket:TEST_BUCKET objectKey:@"wrong-key" error:&error];
     XCTAssertEqual(isExist, NO);
     XCTAssertNil(error);
 }
@@ -770,8 +770,9 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)testDoesObjectExistWithError {
     NSError * error = nil;
     // invalid credentialProvider
-    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3];
-    BOOL isExist = [client doesObjectExist:TEST_BUCKET withObjectKey:@"file1m" withError:&error];
+    id<OSSCredentialProvider> c = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"" secretKey:@""];
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:c];
+    BOOL isExist = [client doesObjectExistInBucket:TEST_BUCKET objectKey:@"file1m" error:&error];
     XCTAssertEqual(isExist, NO);
     XCTAssertNotNil(error);
 }
@@ -1689,7 +1690,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     configuration.timeoutIntervalForRequest = 30;
     configuration.timeoutIntervalForResource = 24 * 60 * 60;
     configuration.maxConcurrentRequestCount = 1;
-    OSSClient * client = [[OSSClient alloc] initWithEndpoint:TEST_BUCKET credentialProvider:credential3 clientConfiguration:configuration];
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:configuration];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     __block int counter = 0;
     for (int i = 0; i < 5; i++) {

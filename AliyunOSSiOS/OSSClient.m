@@ -684,9 +684,9 @@
                 uploadPart.objectkey = request.objectKey;
                 uploadPart.partNumber = i;
                 uploadPart.uploadId = request.uploadId;
-                OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                 uploadPart.uploadPartData = uploadPartData;
                 uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
+                OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                 [uploadPartTask waitUntilFinished];
                 if (uploadPartTask.error) {
                     return uploadPartTask;
@@ -739,9 +739,10 @@
     }];
 }
 
-- (BOOL)doesObjectExist:(NSString *)bucketName
-          withObjectKey:(NSString *)objectKey
-              withError:(const NSError **)error {
+- (BOOL)doesObjectExistInBucket:(NSString *)bucketName
+                      objectKey:(NSString *)objectKey
+                          error:(const NSError **)error {
+
     OSSHeadObjectRequest * headRequest = [OSSHeadObjectRequest new];
     headRequest.bucketName = bucketName;
     headRequest.objectKey = objectKey;
@@ -751,7 +752,7 @@
     if (!headError) {
         return YES;
     } else {
-        if (headError.code == -404) {
+        if (headError.domain == OSSServerErrorDomain && headError.code == -404) {
             return NO;
         } else {
             *error = headError;
