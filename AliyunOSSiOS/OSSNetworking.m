@@ -277,8 +277,11 @@
         self.configuration = configuration;
 
         NSOperationQueue * operationQueue = [NSOperationQueue new];
-        operationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-
+        if (configuration.maxConcurrentRequestCount) {
+            operationQueue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
+        } else {
+            operationQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+        }
         NSURLSessionConfiguration * dataSessionConfig = nil;
         NSURLSessionConfiguration * uploadSessionConfig = nil;
 
@@ -329,6 +332,9 @@
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
 
         NSOperationQueue * queue = [NSOperationQueue new];
+        if (configuration.maxConcurrentRequestCount) {
+            queue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
+        }
         self.taskExecutor = [OSSExecutor executorWithOperationQueue:queue];
     }
     return self;

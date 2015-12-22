@@ -45,6 +45,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  */
 @interface OSSNetworkingConfiguration : NSObject
 @property (nonatomic, assign) uint32_t maxRetryCount;
+@property (nonatomic, assign) uint32_t maxConcurrentRequestCount;
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
 @property (nonatomic, strong) NSString * backgroundSessionIdentifier;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;

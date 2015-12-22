@@ -317,6 +317,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 - (instancetype)init {
     if (self = [super init]) {
         self.maxRetryCount = 3;
+        self.maxConcurrentRequestCount = 5;
         self.enableBackgroundTransmitService = NO;
         self.backgroundSesseionIdentifier = BACKGROUND_SESSION_IDENTIFIER;
         self.timeoutIntervalForRequest = 15;

@@ -33,7 +33,8 @@
              clientConfiguration:(OSSClientConfiguration *)conf {
     if (self = [super init]) {
         NSOperationQueue * queue = [NSOperationQueue new];
-        queue.maxConcurrentOperationCount = 5;
+        // using for resumable upload and compat old interface
+        queue.maxConcurrentOperationCount = 3;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
         if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
             endpoint = [@"http://" stringByAppendingString:endpoint];
@@ -50,6 +51,7 @@
             netConf.backgroundSessionIdentifier = conf.backgroundSesseionIdentifier;
             netConf.proxyHost = conf.proxyHost;
             netConf.proxyPort = conf.proxyPort;
+            netConf.maxConcurrentRequestCount = conf.maxConcurrentRequestCount;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
     }
