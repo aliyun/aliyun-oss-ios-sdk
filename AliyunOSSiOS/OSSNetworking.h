@@ -65,6 +65,8 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, assign) OSSOperationType operType;
 @property (nonatomic, assign) BOOL isAccessViaProxy;
 
+@property (nonatomic, assign) BOOL isRequestCancelled;
+
 @property (nonatomic, strong) OSSHttpResponseParser * responseParser;
 
 @property (nonatomic, strong) NSData * uploadingData;
