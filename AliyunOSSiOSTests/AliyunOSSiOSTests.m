@@ -19,6 +19,7 @@
 NSString * const g_AK = @"<your access key id>";
 NSString * const g_SK = @"<your access key secret>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
+
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
@@ -1608,6 +1609,41 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     [request cancel];
     [NSThread sleepForTimeInterval:1];
     XCTAssertTrue(completed);
+}
+
+- (void)testCancelGetObjectWithNoSessionTask {
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
+    getRequest.bucketName = TEST_BUCKET;
+    getRequest.objectKey = @"file10m";
+    OSSTask * getTask = [client getObject:getRequest];
+    [getTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(task.error.code, OSSClientErrorCodeTaskCancelled);
+        [tcs setResult:nil];
+        return nil;
+    }];
+    [getRequest cancel];
+    [tcs.task waitUntilFinished];
+}
+
+- (void)testCancelGetObjectAndContinue {
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
+    getRequest.bucketName = TEST_BUCKET;
+    getRequest.objectKey = @"file10m";
+    OSSTask * getTask = [client getObject:getRequest];
+    [getTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(task.error.code, OSSClientErrorCodeTaskCancelled);
+        [tcs setResult:nil];
+        return nil;
+    }];
+    [getRequest cancel];
+    [tcs.task waitUntilFinished];
+    OSSTask * getTaskAgain = [client getObject:getRequest];
+    [getTaskAgain waitUntilFinished];
+    XCTAssertNil(getTaskAgain.error);
 }
 
 #pragma mark concurrent

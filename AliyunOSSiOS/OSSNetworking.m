@@ -92,10 +92,12 @@
     self.isHttpRequestNotSuccessResponse = NO;
     self.error = nil;
     self.payloadTotalBytesWritten = 0;
+    self.isRequestCancelled = NO;
     [self.responseParser reset];
 }
 
 - (void)cancel {
+    self.isRequestCancelled = YES;
     if (self.currentSessionTask) {
         OSSLogDebug(@"this task is cancelled now!");
         [self.currentSessionTask cancel];
@@ -346,7 +348,10 @@
 
     OSSTaskCompletionSource * taskCompletionSource = [OSSTaskCompletionSource taskCompletionSource];
 
+    __weak OSSNetworkingRequestDelegate * ref = request;
     request.completionHandler = ^(id responseObject, NSError * error) {
+
+        [ref reset];
         if (!error) {
             [taskCompletionSource setResult:responseObject];
         } else {
@@ -354,7 +359,6 @@
         }
     };
     [self dataTaskWithDelegate:request];
-
     return taskCompletionSource.task;
 }
 
@@ -373,7 +377,6 @@
         return [requestDelegate buildInternalHttpRequest];
     }] continueWithSuccessBlock:^id(OSSTask *task) {
         NSURLSessionDataTask * sessionTask = nil;
-
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0 && self.configuration.timeoutIntervalForRequest > 0) {
             requestDelegate.internalRequest.timeoutInterval = self.configuration.timeoutIntervalForRequest;
         }
@@ -394,10 +397,17 @@
         requestDelegate.currentSessionTask = sessionTask;
         requestDelegate.httpRequestNotSuccessResponseBody = [NSMutableData new];
         [self.sessionDelagateManager setObject:requestDelegate forKey:@(sessionTask.taskIdentifier)];
+        if (requestDelegate.isRequestCancelled) {
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                              code:OSSClientErrorCodeTaskCancelled
+                                                          userInfo:nil]];
+        }
         [sessionTask resume];
 
         return task;
     }] continueWithBlock:^id(OSSTask *task) {
+
+        // if error occurs before created sessionTask
         if (task.error) {
             requestDelegate.completionHandler(nil, task.error);
         } else if (task.isFaulted) {
