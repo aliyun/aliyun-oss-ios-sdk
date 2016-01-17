@@ -26,7 +26,7 @@ then
     rm -rf "${INSTALL_DIR}"
 fi
 
-#mkdir -p "${INSTALL_DIR}"
+mkdir -p ${SRCROOT}/Products
 
 cp -R "${DEVICE_DIR}" "${INSTALL_DIR}"
 
