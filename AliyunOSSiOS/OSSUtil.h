@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class OSSFederationToken;
+
 @interface OSSUtil : NSObject
 
 + (NSString *)calBase64Sha1WithData:(NSString *)data withSecret:(NSString *)key;
@@ -26,6 +28,7 @@
 + (NSString *)base64Md5ForData:(NSData *)data;
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath;
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL;
++ (NSString *)sign:(NSString *)content withToken:(OSSFederationToken *)token;
 + (NSString *)getRelativePath:(NSString *)fullPath;
 + (NSString *)detemineMimeTypeForFilePath:(NSString *)filePath uploadName:(NSString *)uploadName;
 @end

@@ -227,26 +227,11 @@ static NSTimeInterval _clockSkew = 0.0;
 
 @implementation OSSFederationCredentialProvider
 
-static volatile uint64_t tag = 0;
-
 - (instancetype)initWithFederationTokenGetter:(OSSGetFederationTokenBlock)federationTokenGetter {
     if (self = [super init]) {
         self.federationTokenGetter = federationTokenGetter;
     }
     return self;
-}
-
-- (NSString *)sign:(NSString *)content error:(NSError **)error {
-    OSSFederationToken * token = [self getToken:error];
-    if (!token) {
-        *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                     code:OSSClientErrorCodeSignFailed
-                                 userInfo:@{OSSErrorMessageTOKEN: @"Can't get a federation token"}];
-        return nil;
-    }
-
-    NSString * sign = [OSSUtil calBase64Sha1WithData:content withSecret:token.tSecretKey];
-    return [NSString stringWithFormat:@"OSS %@:%@", token.tAccessKey, sign];
 }
 
 - (OSSFederationToken *)getToken:(NSError **)error {
@@ -256,7 +241,6 @@ static volatile uint64_t tag = 0;
         if (!self.cachedToken) {
             self.cachedToken = self.federationTokenGetter();
             isNewlyGotten = YES;
-            tag ++;
         }
 
         if (self.cachedToken.expirationTimeInGMTFormat) {
@@ -283,7 +267,6 @@ static volatile uint64_t tag = 0;
             } else {
                 self.cachedToken = self.federationTokenGetter();
                 isNewlyGotten = YES;
-                tag ++;
             }
         } else {
             isNewlyGotten = NO;
@@ -300,12 +283,31 @@ static volatile uint64_t tag = 0;
     return validToken;
 }
 
-- (uint64_t)currentTagNumber {
-    uint64_t currenTagNum = 0;
-    @synchronized(self) {
-        currenTagNum = tag;
+@end
+
+@implementation OSSStsTokenCredentialProvider
+
+- (OSSFederationToken *)getToken {
+    OSSFederationToken * token = [OSSFederationToken new];
+    token.tAccessKey = self.accessKeyId;
+    token.tSecretKey = self.secretKeyId;
+    token.tToken = self.securityToken;
+    token.expirationTimeInMilliSecond = NSIntegerMax;
+    return token;
+}
+
+- (instancetype)initWithAccessKeyId:(NSString *)accessKeyId secretKeyId:(NSString *)secretKeyId securityToken:(NSString *)securityToken {
+    if (self = [super init]) {
+        self.accessKeyId = accessKeyId;
+        self.secretKeyId = secretKeyId;
+        self.securityToken = securityToken;
     }
-    return currenTagNum;
+    return self;
+}
+
+- (NSString *)sign:(NSString *)content error:(NSError **)error {
+    NSString * sign = [OSSUtil calBase64Sha1WithData:content withSecret:self.secretKeyId];
+    return [NSString stringWithFormat:@"OSS %@:%@", self.accessKeyId, sign];
 }
 
 @end
@@ -359,7 +361,6 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     NSString * resource = @"";
 
     OSSFederationToken * federationToken = nil;
-    uint64_t startTagNumber = 0;
 
     if (requestMessage.contentType) {
         contentType = requestMessage.contentType;
@@ -369,12 +370,14 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     }
 
     /* if credential provider is a federation token provider, it need to specially handle */
-    if ([self.credentialProvider respondsToSelector:@selector(getToken:)]) {
-        startTagNumber = [((OSSFederationCredentialProvider *)self.credentialProvider) currentTagNumber];
-        federationToken = [((OSSFederationCredentialProvider *)self.credentialProvider) getToken:&error];
+    if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
+        federationToken = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
         if (error) {
             return [OSSTask taskWithError:error];
         }
+        [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
+    } else if ([self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
+        federationToken = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
         [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
     }
 
@@ -428,19 +431,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     /* now, join every part of content and sign */
     NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, contentMd5, contentType, date, xossHeader, resource];
     OSSLogDebug(@"string to sign: %@", stringToSign);
-    if ([self.credentialProvider respondsToSelector:@selector(getToken:)]) {
-        NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
-        if (error) {
-            return [OSSTask taskWithError:error];
-        }
-        uint64_t endTagNumber = [((OSSFederationCredentialProvider *)self.credentialProvider) currentTagNumber];
-        if (endTagNumber == startTagNumber) {
-            [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
-        } else {
-            /* if the former is inconsistent with latter, do it again */
-            OSSLogDebug(@"get sts token, former tag: %llu, latter tag: %llu", startTagNumber, endTagNumber);
-            [self interceptRequestMessage:requestMessage];
-        }
+    if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
+        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
+
+        NSString * signature = [OSSUtil sign:stringToSign withToken:federationToken];
+        [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
     } else { // now we only have two type of credential provider
         NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
         if (error) {

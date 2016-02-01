@@ -510,21 +510,32 @@
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
+        NSString * wholeSign = nil;
         OSSFederationToken * token = nil;
         NSError * error = nil;
+
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
             if (error) {
                 return [OSSTask taskWithError:error];
             }
+        } else if ([self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
+            token = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
+        }
+
+        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
+            || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
             resource = [NSString stringWithFormat:@"%@?security-token=%@", resource, token.tToken];
+            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            wholeSign = [OSSUtil sign:string2sign withToken:token];
+        } else {
+            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            wholeSign = [self.credentialProvider sign:string2sign error:&error];
+            if (error) {
+                return [OSSTask taskWithError:error];
+            }
         }
-        NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
-        NSString * wholeSign = [self.credentialProvider sign:string2sign error:&error];
-        if (error) {
-            return [OSSTask taskWithError:error];
-        }
-        OSSLogDebug(@"string: %@, signature: %@", string2sign, wholeSign);
+
         NSArray * splitResult = [wholeSign componentsSeparatedByString:@":"];
         if ([splitResult count] != 2
             || ![((NSString *)[splitResult objectAtIndex:0]) hasPrefix:@"OSS "]) {
@@ -547,10 +558,9 @@
                                 [OSSUtil encodeURL:accessKey],
                                 expires,
                                 [OSSUtil encodeURL:signature]];
-        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
-            if (error) {
-                return [OSSTask taskWithError:error];
-            }
+
+        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
+            || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
             stringURL = [NSString stringWithFormat:@"%@&security-token=%@", stringURL, [OSSUtil encodeURL:token.tToken]];
         }
         return [OSSTask taskWithResult:stringURL];

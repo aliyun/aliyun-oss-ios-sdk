@@ -156,7 +156,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  CredentialProvider协议，要求实现加签接口
  */
 @protocol OSSCredentialProvider <NSObject>
-@required
+@optional
 - (NSString *)sign:(NSString *)content error:(NSError **)error;
 @end
 
@@ -188,9 +188,18 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)();
 
 - (instancetype)initWithFederationTokenGetter:(OSSGetFederationTokenBlock)federationTokenGetter;
-
 - (OSSFederationToken *)getToken:(NSError **)error;
-- (uint64_t)currentTagNumber;
+@end
+
+@interface OSSStsTokenCredentialProvider : NSObject <OSSCredentialProvider>
+@property (nonatomic, strong) NSString * accessKeyId;
+@property (nonatomic, strong) NSString * secretKeyId;
+@property (nonatomic, strong) NSString * securityToken;
+
+- (OSSFederationToken *)getToken;
+- (instancetype)initWithAccessKeyId:(NSString *)accessKeyId
+                        secretKeyId:(NSString *)secretKeyId
+                      securityToken:(NSString *)securityToken;
 @end
 
 /**
