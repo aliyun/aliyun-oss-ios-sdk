@@ -16,8 +16,8 @@
 
 @end
 
-NSString * const g_AK = @"<your access key id>";
-NSString * const g_SK = @"<your access key secret>";
+NSString * const g_AK = @"<your accessKeyId>";
+NSString * const g_SK = @"<your secretKeyId>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
@@ -30,7 +30,7 @@ static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
-id<OSSCredentialProvider> credential1, credential2, credential3;
+id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 
 @implementation oss_ios_sdk_newTests
 
@@ -90,11 +90,29 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 - (void)initWithAKSK {
     [OSSLog enableLog];
 
-    credential1 = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
-                                                                                   secretKey:g_SK];
+    credential1 = [self newPlainAKSKCredentialProvider];
+    credential2 = [self newCustomSignerCredentialProvider];
+    credential3 = [self newFederationCredentialProvider];
+    credential4 = [self newStsTokenCredentialProvider];
 
+    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    conf.maxRetryCount = 2;
+    conf.timeoutIntervalForRequest = 30;
+    conf.timeoutIntervalForResource = 24 * 60 * 60;
+    conf.maxConcurrentRequestCount = 5;
+
+    // 更换不同的credentialProvider测试
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential1 clientConfiguration:conf];
+}
+
+- (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
+    return [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
+                                                                            secretKey:g_SK];
+}
+
+- (id<OSSCredentialProvider>)newCustomSignerCredentialProvider {
     // 自实现签名，可以用本地签名也可以远程加签
-    credential2 = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
+    return [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
         NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:g_SK];
         if (signature != nil) {
             *error = nil;
@@ -105,7 +123,9 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         }
         return [NSString stringWithFormat:@"OSS %@:%@", g_AK, signature];
     }];
+}
 
+- (id<OSSCredentialProvider>)newFederationCredentialProvider {
     // Federation鉴权，建议通过访问远程业务服务器获取签名
     // 假设访问业务服务器的获取token服务时，返回的数据格式如下：
     // {"accessKeyId":"STS.iA645eTOXEqP3cg3VeHf",
@@ -114,7 +134,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
     // "federatedUser":"335450541522398178:alice-001",
     // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
     // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
-    credential3 = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
+    return [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:StsTokenURL];
         NSURLRequest * request = [NSURLRequest requestWithURL:url];
         OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
@@ -146,13 +166,51 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         }
     }];
 
+}
 
-    OSSClientConfiguration * conf = [OSSClientConfiguration new];
-    conf.maxRetryCount = 2;
-    conf.timeoutIntervalForRequest = 30;
-    conf.timeoutIntervalForResource = 24 * 60 * 60;
-    conf.maxConcurrentRequestCount = 5;
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
+// 用获取到的STS Token直接初始化OSSClient，这种设置下，OSSClient不会自动管理更新token，需要用户自行判断token是否失效并重新设置新的token。
+// 如果token过期仍未更新，后续的请求将无法通过鉴权。
+- (id<OSSCredentialProvider>)newStsTokenCredentialProvider {
+
+    // 假设访问业务服务器的获取token服务时，返回的数据格式如下：
+    // {"accessKeyId":"STS.iA645eTOXEqP3cg3VeHf",
+    // "accessKeySecret":"rV3VQrpFQ4BsyHSAvi5NVLpPIVffDJv4LojUBZCf",
+    // "expiration":"2015-11-03T09:52:59Z[;",
+    // "federatedUser":"335450541522398178:alice-001",
+    // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
+    // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
+    NSURL * url = [NSURL URLWithString:StsTokenURL];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                    if (error) {
+                                                        [tcs setError:error];
+                                                        return;
+                                                    }
+                                                    [tcs setResult:data];
+                                                }];
+    [sessionTask resume];
+    [tcs.task waitUntilFinished];
+    if (tcs.task.error) {
+        // 如果拿不到token，建议重试直到获取。如果一直拿不到，应该放弃任务，或者返回空。
+        NSLog(@"Cant't init credential4, error: %@", tcs.task.error);
+        return nil;
+    } else {
+        NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
+                                                                options:kNilOptions
+                                                                  error:nil];
+        NSString * accessKey = [object objectForKey:@"accessKeyId"];
+        NSString * secretKey = [object objectForKey:@"accessKeySecret"];
+        NSString * token = [object objectForKey:@"securityToken"];
+        OSSLogDebug(@"token: %@ %@ %@", accessKey, secretKey, token);
+
+        return [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:accessKey secretKeyId:secretKey securityToken:token];
+    }
+}
+
+- (void)initCredential4 {
 }
 
 - (void)tearDown {
@@ -343,6 +401,10 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
 }
 
 - (void)testZZZTokenUpdate {
+    if (![client.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
+        return;
+    }
+
     for (int i = 0; i < 20; i++) {
         OSSPutObjectRequest * request = [OSSPutObjectRequest new];
         request.bucketName = TEST_BUCKET;
@@ -1953,6 +2015,36 @@ id<OSSCredentialProvider> credential1, credential2, credential3;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+}
+
+- (void)testNilCredentialProvier {
+    OSSClient * tempClient = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:nil];
+
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [tempClient putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        return nil;
+        XCTAssertEqualObjects(OSSClientErrorDomain, task.error.domain);
+    }] waitUntilFinished];
+
+    task = [tempClient presignConstrainURLWithBucketName:TEST_BUCKET withObjectKey:@"file1m" withExpirationInterval:3600];
+    [task waitUntilFinished];
+    XCTAssertEqual(OSSClientErrorDomain, task.error.domain);
+    NSLog(@"error: %@", task.error);
 }
 
 #pragma mark compat_test
