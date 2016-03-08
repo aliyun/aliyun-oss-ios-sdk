@@ -803,6 +803,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             @"gif": @"image/gif",
             @"ief": @"image/ief",
             @"jpeg": @"image/jpeg",
+            @"jpg" : @"image/jpeg",
             @"ktx": @"image/ktx",
             @"png": @"image/png",
             @"btif": @"image/prs.btif",
