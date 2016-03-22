@@ -101,6 +101,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  */
 @interface NSString (OSS)
 - (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
+- (NSString *)oss_trim;
 @end
 
 /**

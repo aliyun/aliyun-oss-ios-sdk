@@ -80,12 +80,6 @@
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
              clientConfiguration:(OSSClientConfiguration *)conf;
 
-/**
- 设置后台任务完成回调(仅在开启了后台上传任务的时候有效)
- 这个回调会在后台传输任务完成时被回调
- */
-- (void)setBackgroundSessionCompletionHandler:(void(^)())completeHandler;
-
 #pragma mark restful-api
 
 /**

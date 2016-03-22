@@ -603,15 +603,4 @@
         delegate.downloadProgress(bytesWritten, delegate.payloadTotalBytesWritten, totalBytesExpectedToWrite);
     }
 }
-
-- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    OSSLogVerbose(@"%s - ", __PRETTY_FUNCTION__);
-    if (self.backgroundSessionCompletionHandler) {
-        void (^completeHandler)() = self.backgroundSessionCompletionHandler;
-        self.backgroundSessionCompletionHandler = nil;
-        OSSLogDebug(@"%s - call the complete handler.", __PRETTY_FUNCTION__);
-        completeHandler();
-    }
-}
-
 @end

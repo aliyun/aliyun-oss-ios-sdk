@@ -70,6 +70,10 @@ NSString * const OSSHttpHeaderExpires = @"Expires";
     }
 }
 
+- (NSString *)oss_trim {
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 @end
 
 @implementation NSDictionary (OSS)
@@ -181,8 +185,8 @@ static NSTimeInterval _clockSkew = 0.0;
 
 - (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey {
     if (self = [super init]) {
-        self.accessKey = accessKey;
-        self.secretKey = secretKey;
+        self.accessKey = [accessKey oss_trim];
+        self.secretKey = [secretKey oss_trim];
     }
     return self;
 }
@@ -298,9 +302,9 @@ static NSTimeInterval _clockSkew = 0.0;
 
 - (instancetype)initWithAccessKeyId:(NSString *)accessKeyId secretKeyId:(NSString *)secretKeyId securityToken:(NSString *)securityToken {
     if (self = [super init]) {
-        self.accessKeyId = accessKeyId;
-        self.secretKeyId = secretKeyId;
-        self.securityToken = securityToken;
+        self.accessKeyId = [accessKeyId oss_trim];
+        self.secretKeyId = [secretKeyId oss_trim];
+        self.securityToken = [securityToken oss_trim];
     }
     return self;
 }

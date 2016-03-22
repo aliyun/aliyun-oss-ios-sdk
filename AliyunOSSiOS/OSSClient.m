@@ -39,7 +39,7 @@
         if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
             endpoint = [@"http://" stringByAppendingString:endpoint];
         }
-        self.endpoint = endpoint;
+        self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;
 
         OSSNetworkingConfiguration * netConf = [OSSNetworkingConfiguration new];
@@ -79,10 +79,6 @@
     }
 
     return [_networking sendRequest:request];
-}
-
-- (void)setBackgroundSessionCompletionHandler:(void(^)())completeHandler {
-    self.networking.backgroundSessionCompletionHandler = completeHandler;
 }
 
 #pragma implement restful apis
