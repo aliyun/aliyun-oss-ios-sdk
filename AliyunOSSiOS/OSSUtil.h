@@ -17,6 +17,8 @@
 + (NSString *)encodeURL:(NSString *)url;
 + (NSData *)constructHttpBodyFromPartInfos:(NSArray *)partInfos;
 + (NSData *)constructHttpBodyForCreateBucketWithLocation:(NSString *)location;
++ (BOOL)validateBucketName:(NSString *)bucketName;
++ (BOOL)validateObjectKey:(NSString *)objectKey;
 + (BOOL)isOssOriginBucketHost:(NSString *)host;
 + (NSString *)getIpByHost:(NSString *)host;
 + (BOOL)isNetworkDelegateState;

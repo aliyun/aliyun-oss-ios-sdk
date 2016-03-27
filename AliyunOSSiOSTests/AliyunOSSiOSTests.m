@@ -16,12 +16,12 @@
 
 @end
 
-NSString * const g_AK = @"<your accessKeyId>";
-NSString * const g_SK = @"<your secretKeyId>";
+NSString * const g_AK = @"<Your AccessKeyId>";
+NSString * const g_SK = @"<Your AccessKeySecret>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
-NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
+NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
 NSString * const StsTokenURL = @"http://localhost:8080/distribute-token.json";
 
@@ -1890,6 +1890,48 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     }] waitUntilFinished];
 }
 
+- (void)testBucketNameInvalid {
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = @"-invalid_bucket";
+    request.objectKey = @"file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+
+    request.uploadingFileURL = fileURL;
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testObjectKeyInvalid {
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"/file1m";
+
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+
+    request.uploadingFileURL = fileURL;
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testAccessDenied {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -2247,6 +2289,32 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     NSString * uploadName3 = @"aaa";
     NSString * mimeType3 = [OSSUtil detemineMimeTypeForFilePath:filePath3 uploadName:uploadName3];
     XCTAssertEqualObjects(@"application/octet-stream", mimeType3);
+
+    NSString * filePath4 = @"/a/b/c/d/aaa";
+    NSString * uploadName4 = @"aaa.jpg";
+    NSString * mimeType4 = [OSSUtil detemineMimeTypeForFilePath:filePath4 uploadName:uploadName4];
+    XCTAssertEqualObjects(@"image/jpeg", mimeType4);
+}
+
+- (void)testValidateName {
+    XCTAssertFalse([OSSUtil validateBucketName:@"-abc"]);
+    XCTAssertFalse([OSSUtil validateBucketName:@"abc.cde"]);
+    XCTAssertFalse([OSSUtil validateBucketName:@"_adbdsf"]);
+    XCTAssertFalse([OSSUtil validateBucketName:@"abc\\"]);
+    XCTAssertFalse([OSSUtil validateBucketName:@"中文"]);
+    XCTAssertTrue([OSSUtil validateBucketName:@"abc"]);
+    XCTAssertTrue([OSSUtil validateBucketName:@"abc-abc"]);
+    XCTAssertTrue([OSSUtil validateBucketName:@"abc-abc-"]);
+
+    XCTAssertFalse([OSSUtil validateObjectKey:@"/abc"]);
+    XCTAssertFalse([OSSUtil validateObjectKey:@"\\abc"]);
+    XCTAssertFalse([OSSUtil validateObjectKey:@"\\中文"]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"abc"]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"abc中文"]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"-中文"]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"abc  "]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"abc-sfds/sf-\\sfdssf"]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@" ?-+xsfs*sfds "]);
 }
 
 #pragma mark util

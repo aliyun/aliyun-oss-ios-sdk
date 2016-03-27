@@ -254,11 +254,19 @@
         errorMessage = @"Bucket name should not be nil";
     }
 
+    if (self.bucketName && ![OSSUtil validateBucketName:self.bucketName]) {
+        errorMessage = @"Bucket name invalid";
+    }
+
     if (!self.objectKey &&
         (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
          && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
          && operType != OSSOperationTypeGetBucketACL)) {
         errorMessage = @"Object key should not be nil";
+    }
+
+    if (self.objectKey && ![OSSUtil validateObjectKey:self.objectKey]) {
+        errorMessage = @"Object key invalid";
     }
 
     if (errorMessage) {

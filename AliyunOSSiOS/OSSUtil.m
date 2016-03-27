@@ -105,6 +105,41 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return [body dataUsingEncoding:NSUTF8StringEncoding];
 }
 
++ (BOOL)validateBucketName:(NSString *)bucketName {
+    if (bucketName == nil) {
+        return false;
+    }
+
+    static NSRegularExpression *regEx;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        regEx = [[NSRegularExpression alloc] initWithPattern:@"^[a-z0-9][a-z0-9_\\-]{2,62}$" options:NSRegularExpressionCaseInsensitive error:nil];
+    });
+    NSUInteger regExMatches = [regEx numberOfMatchesInString:bucketName options:0 range:NSMakeRange(0, [bucketName length])];
+    return regExMatches != 0;
+}
+
++ (BOOL)validateObjectKey:(NSString *)objectKey {
+    if (objectKey == nil) {
+        return false;
+    }
+
+    if (objectKey.length <= 0 || objectKey.length > 1023) {
+        return false;
+    }
+
+    if (![objectKey canBeConvertedToEncoding:NSUTF8StringEncoding]) {
+        return false;
+    }
+
+    unichar firstChar = [objectKey characterAtIndex:0];
+    if (firstChar == '/' || firstChar == '\\') {
+        return false;
+    }
+
+    return true;
+}
+
 + (NSString *)getIpByHost:(NSString *)host {
     if ([self isNetworkDelegateState]) {
         OSSLogDebug(@"current network is delegate state");
