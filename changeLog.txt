@@ -15,6 +15,17 @@ http://www.aliyun.com
 
 更新日志:
 
+2016/03/27
+- 发布 2.3.0 版本
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.3.0'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
+1. 增加https场景下使用httpdns的安全性；
+2. 增加BucketName和ObjectKey校验；
+3. 修复一处Content-Type相关的问题；
+
 2016/02/02
 - 发布 2.2.0 版本
 
