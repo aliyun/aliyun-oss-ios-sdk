@@ -565,6 +565,29 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
         return nil;
     }] waitUntilFinished];
 
+    request = [OSSGetBucketRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 2;
+    request.prefix = @"";
+
+    task = [client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertTrue([task isCompleted]);
+        XCTAssertNil(task.error);
+        OSSGetBucketResult * result = task.result;
+        NSLog(@"GetBucket prefixed: %@", result.commentPrefixes);
+        XCTAssertEqualObjects(result.bucketName, TEST_BUCKET);
+        XCTAssertNotEqual(0, [result.contents count]);
+        XCTAssertNotNil(result.nextMarker);
+        for (NSDictionary * objectInfo in result.contents) {
+            XCTAssertNotNil([objectInfo objectForKey:@"Key"]);
+            XCTAssertNotNil([objectInfo objectForKey:@"Size"]);
+            XCTAssertNotNil([objectInfo objectForKey:@"LastModified"]);
+        }
+        return nil;
+    }] waitUntilFinished];
 
     request = [OSSGetBucketRequest new];
     request.bucketName = TEST_BUCKET;

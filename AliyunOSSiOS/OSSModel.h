@@ -16,6 +16,7 @@ extern NSString * const OSSListBucketResultXMLTOKEN;
 extern NSString * const OSSNameXMLTOKEN;
 extern NSString * const OSSDelimiterXMLTOKEN;
 extern NSString * const OSSMarkerXMLTOKEN;
+extern NSString * const OSSNextMarkerXMLTOKEN;
 extern NSString * const OSSMaxKeysXMLTOKEN;
 extern NSString * const OSSIsTruncatedXMLTOKEN;
 extern NSString * const OSSContentsXMLTOKEN;
@@ -514,6 +515,12 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  是一个用于对Object名字进行分组的字符。所有名字包含指定的前缀且第一次出现delimiter字符之间的object作为一组元素——CommonPrefixes。
  */
 @property (nonatomic, strong) NSString * delimiter;
+
+/**
+ 如果因为max-keys的设定无法一次完成listing，返回结果会附加一个<NextMarker>，提示继续listing可以以此为marker。
+ NextMarker中的值仍在list结果之中。
+ */
+@property (nonatomic, strong) NSString * nextMarker;
 
 /**
  指明是否所有的结果都已经返回； “true”表示本次没有返回全部结果；“false”表示本次已经返回了全部结果。
