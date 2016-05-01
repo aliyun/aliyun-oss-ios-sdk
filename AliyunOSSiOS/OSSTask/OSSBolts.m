@@ -10,12 +10,8 @@
 
 #import "OSSBolts.h"
 
-NSInteger const kOSSMultipleErrorsError = 80175001;
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation OSSBolts
+NSString *const OSSBoltsFrameworkVersionString = @"1.7.0";
 
-+ (NSString *)version {
-    return OSSBOLTS_VERSION;
-}
-
-@end
+NS_ASSUME_NONNULL_END

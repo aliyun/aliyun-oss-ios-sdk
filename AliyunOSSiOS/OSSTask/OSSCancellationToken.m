@@ -11,10 +11,11 @@
 #import "OSSCancellationToken.h"
 #import "OSSCancellationTokenRegistration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface OSSCancellationToken ()
 
-@property (atomic, assign, getter=isCancellationRequested) BOOL cancellationRequested;
-@property (nonatomic, strong) NSMutableArray *registrations;
+@property (nullable, nonatomic, strong) NSMutableArray *registrations;
 @property (nonatomic, strong) NSObject *lock;
 @property (nonatomic) BOOL disposed;
 
@@ -30,13 +31,17 @@
 
 @implementation OSSCancellationToken
 
+@synthesize cancellationRequested = _cancellationRequested;
+
 #pragma mark - Initializer
 
 - (instancetype)init {
-    if (self = [super init]) {
-        _registrations = [NSMutableArray array];
-        _lock = [NSObject new];
-    }
+    self = [super init];
+    if (!self) return self;
+
+    _registrations = [NSMutableArray array];
+    _lock = [NSObject new];
+
     return self;
 }
 
@@ -122,11 +127,9 @@
         if (self.disposed) {
             return;
         }
+        [self.registrations makeObjectsPerformSelector:@selector(dispose)];
+        self.registrations = nil;
         self.disposed = YES;
-        for (OSSCancellationTokenRegistration *registration in self.registrations) {
-            [registration dispose];
-        }
-        [self.registrations removeAllObjects];
     }
 }
 
@@ -137,3 +140,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

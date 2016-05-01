@@ -103,7 +103,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     conf.maxConcurrentRequestCount = 5;
 
     // 更换不同的credentialProvider测试
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential1 clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
 }
 
 - (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {

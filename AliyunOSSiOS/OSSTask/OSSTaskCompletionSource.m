@@ -12,19 +12,11 @@
 
 #import "OSSTask.h"
 
-@interface OSSTaskCompletionSource ()
-
-@property (nonatomic, strong, readwrite) OSSTask *task;
-
-@end
+NS_ASSUME_NONNULL_BEGIN
 
 @interface OSSTask (OSSTaskCompletionSource)
 
-- (void)setResult:(id)result;
-- (void)setError:(NSError *)error;
-- (void)setException:(NSException *)exception;
-- (void)cancel;
-- (BOOL)trySetResult:(id)result;
+- (BOOL)trySetResult:(nullable id)result;
 - (BOOL)trySetError:(NSError *)error;
 - (BOOL)trySetException:(NSException *)exception;
 - (BOOL)trySetCancelled;
@@ -40,31 +32,45 @@
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
-        _task = [[OSSTask alloc] init];
-    }
+    self = [super init];
+    if (!self) return self;
+
+    _task = [[OSSTask alloc] init];
+
     return self;
 }
 
 #pragma mark - Custom Setters/Getters
 
-- (void)setResult:(id)result {
-    [self.task setResult:result];
+- (void)setResult:(nullable id)result {
+    if (![self.task trySetResult:result]) {
+        [NSException raise:NSInternalInconsistencyException
+                    format:@"Cannot set the result on a completed task."];
+    }
 }
 
 - (void)setError:(NSError *)error {
-    [self.task setError:error];
+    if (![self.task trySetError:error]) {
+        [NSException raise:NSInternalInconsistencyException
+                    format:@"Cannot set the error on a completed task."];
+    }
 }
 
 - (void)setException:(NSException *)exception {
-    [self.task setException:exception];
+    if (![self.task trySetException:exception]) {
+        [NSException raise:NSInternalInconsistencyException
+                    format:@"Cannot set the exception on a completed task."];
+    }
 }
 
 - (void)cancel {
-    [self.task cancel];
+    if (![self.task trySetCancelled]) {
+        [NSException raise:NSInternalInconsistencyException
+                    format:@"Cannot cancel a completed task."];
+    }
 }
 
-- (BOOL)trySetResult:(id)result {
+- (BOOL)trySetResult:(nullable id)result {
     return [self.task trySetResult:result];
 }
 
@@ -81,3 +87,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

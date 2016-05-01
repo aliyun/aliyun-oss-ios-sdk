@@ -12,6 +12,8 @@
 
 #import "OSSCancellationToken.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface OSSCancellationToken (OSSCancellationTokenSource)
 
 - (void)cancel;
@@ -28,7 +30,7 @@
 
 - (instancetype)init {
     self = [super init];
-    if (!self) return nil;
+    if (!self) return self;
 
     _token = [OSSCancellationToken new];
 
@@ -58,3 +60,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

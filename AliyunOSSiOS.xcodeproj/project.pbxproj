@@ -24,25 +24,23 @@
 		21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BED1BA9AC3600C2A6BA /* OSSUtil.m */; };
 		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */; };
-		21126AFF1BE8DEF400D85DF1 /* OSSBolts.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AEF1BE8DEF400D85DF1 /* OSSBolts.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B001BE8DEF400D85DF1 /* OSSBolts.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AF01BE8DEF400D85DF1 /* OSSBolts.m */; };
-		21126B011BE8DEF400D85DF1 /* OSSBoltsVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF11BE8DEF400D85DF1 /* OSSBoltsVersion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B021BE8DEF400D85DF1 /* OSSCancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF21BE8DEF400D85DF1 /* OSSCancellationToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B031BE8DEF400D85DF1 /* OSSCancellationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AF31BE8DEF400D85DF1 /* OSSCancellationToken.m */; };
-		21126B041BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF41BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B051BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AF51BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.m */; };
-		21126B061BE8DEF400D85DF1 /* OSSCancellationTokenSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF61BE8DEF400D85DF1 /* OSSCancellationTokenSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B071BE8DEF400D85DF1 /* OSSCancellationTokenSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AF71BE8DEF400D85DF1 /* OSSCancellationTokenSource.m */; };
-		21126B081BE8DEF400D85DF1 /* OSSDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF81BE8DEF400D85DF1 /* OSSDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B091BE8DEF400D85DF1 /* OSSExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AF91BE8DEF400D85DF1 /* OSSExecutor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B0A1BE8DEF400D85DF1 /* OSSExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFA1BE8DEF400D85DF1 /* OSSExecutor.m */; };
-		21126B0B1BE8DEF400D85DF1 /* OSSTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AFB1BE8DEF400D85DF1 /* OSSTask.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B0C1BE8DEF400D85DF1 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFC1BE8DEF400D85DF1 /* OSSTask.m */; };
-		21126B0D1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		21126B0E1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */; };
 		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; };
 		214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */; };
 		214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B891CD5E2F9004F8083 /* OSSHttpdns.m */; };
+		214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8C1CD5FE17004F8083 /* OSSBolts.h */; };
+		214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B8D1CD5FE17004F8083 /* OSSBolts.m */; };
+		214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8E1CD5FE17004F8083 /* OSSCancellationToken.h */; };
+		214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B8F1CD5FE17004F8083 /* OSSCancellationToken.m */; };
+		214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B901CD5FE17004F8083 /* OSSCancellationTokenRegistration.h */; };
+		214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B911CD5FE17004F8083 /* OSSCancellationTokenRegistration.m */; };
+		214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B921CD5FE17004F8083 /* OSSCancellationTokenSource.h */; };
+		214E1BA11CD5FE17004F8083 /* OSSCancellationTokenSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B931CD5FE17004F8083 /* OSSCancellationTokenSource.m */; };
+		214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B941CD5FE17004F8083 /* OSSExecutor.h */; };
+		214E1BA31CD5FE17004F8083 /* OSSExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B951CD5FE17004F8083 /* OSSExecutor.m */; };
+		214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B961CD5FE17004F8083 /* OSSTask.h */; };
+		214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B971CD5FE17004F8083 /* OSSTask.m */; };
+		214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */; };
+		214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,25 +74,23 @@
 		21028BED1BA9AC3600C2A6BA /* OSSUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSUtil.m; sourceTree = "<group>"; };
 		21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSXMLDictionary.h; sourceTree = "<group>"; };
 		21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionary.m; sourceTree = "<group>"; };
-		21126AEF1BE8DEF400D85DF1 /* OSSBolts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSBolts.h; sourceTree = "<group>"; };
-		21126AF01BE8DEF400D85DF1 /* OSSBolts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSBolts.m; sourceTree = "<group>"; };
-		21126AF11BE8DEF400D85DF1 /* OSSBoltsVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSBoltsVersion.h; sourceTree = "<group>"; };
-		21126AF21BE8DEF400D85DF1 /* OSSCancellationToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationToken.h; sourceTree = "<group>"; };
-		21126AF31BE8DEF400D85DF1 /* OSSCancellationToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationToken.m; sourceTree = "<group>"; };
-		21126AF41BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationTokenRegistration.h; sourceTree = "<group>"; };
-		21126AF51BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTokenRegistration.m; sourceTree = "<group>"; };
-		21126AF61BE8DEF400D85DF1 /* OSSCancellationTokenSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationTokenSource.h; sourceTree = "<group>"; };
-		21126AF71BE8DEF400D85DF1 /* OSSCancellationTokenSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTokenSource.m; sourceTree = "<group>"; };
-		21126AF81BE8DEF400D85DF1 /* OSSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDefines.h; sourceTree = "<group>"; };
-		21126AF91BE8DEF400D85DF1 /* OSSExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSExecutor.h; sourceTree = "<group>"; };
-		21126AFA1BE8DEF400D85DF1 /* OSSExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSExecutor.m; sourceTree = "<group>"; };
-		21126AFB1BE8DEF400D85DF1 /* OSSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTask.h; sourceTree = "<group>"; };
-		21126AFC1BE8DEF400D85DF1 /* OSSTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTask.m; sourceTree = "<group>"; };
-		21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTaskCompletionSource.h; sourceTree = "<group>"; };
-		21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskCompletionSource.m; sourceTree = "<group>"; };
 		214E1B821CD57D07004F8083 /* OSSDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDefine.h; sourceTree = "<group>"; };
 		214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSHttpdns.h; sourceTree = "<group>"; };
 		214E1B891CD5E2F9004F8083 /* OSSHttpdns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttpdns.m; sourceTree = "<group>"; };
+		214E1B8C1CD5FE17004F8083 /* OSSBolts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSBolts.h; sourceTree = "<group>"; };
+		214E1B8D1CD5FE17004F8083 /* OSSBolts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSBolts.m; sourceTree = "<group>"; };
+		214E1B8E1CD5FE17004F8083 /* OSSCancellationToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationToken.h; sourceTree = "<group>"; };
+		214E1B8F1CD5FE17004F8083 /* OSSCancellationToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationToken.m; sourceTree = "<group>"; };
+		214E1B901CD5FE17004F8083 /* OSSCancellationTokenRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationTokenRegistration.h; sourceTree = "<group>"; };
+		214E1B911CD5FE17004F8083 /* OSSCancellationTokenRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTokenRegistration.m; sourceTree = "<group>"; };
+		214E1B921CD5FE17004F8083 /* OSSCancellationTokenSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCancellationTokenSource.h; sourceTree = "<group>"; };
+		214E1B931CD5FE17004F8083 /* OSSCancellationTokenSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTokenSource.m; sourceTree = "<group>"; };
+		214E1B941CD5FE17004F8083 /* OSSExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSExecutor.h; sourceTree = "<group>"; };
+		214E1B951CD5FE17004F8083 /* OSSExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSExecutor.m; sourceTree = "<group>"; };
+		214E1B961CD5FE17004F8083 /* OSSTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTask.h; sourceTree = "<group>"; };
+		214E1B971CD5FE17004F8083 /* OSSTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTask.m; sourceTree = "<group>"; };
+		214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTaskCompletionSource.h; sourceTree = "<group>"; };
+		214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskCompletionSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,22 +201,20 @@
 		21126AEE1BE8DEF400D85DF1 /* OSSTask */ = {
 			isa = PBXGroup;
 			children = (
-				21126AEF1BE8DEF400D85DF1 /* OSSBolts.h */,
-				21126AF01BE8DEF400D85DF1 /* OSSBolts.m */,
-				21126AF11BE8DEF400D85DF1 /* OSSBoltsVersion.h */,
-				21126AF21BE8DEF400D85DF1 /* OSSCancellationToken.h */,
-				21126AF31BE8DEF400D85DF1 /* OSSCancellationToken.m */,
-				21126AF41BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h */,
-				21126AF51BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.m */,
-				21126AF61BE8DEF400D85DF1 /* OSSCancellationTokenSource.h */,
-				21126AF71BE8DEF400D85DF1 /* OSSCancellationTokenSource.m */,
-				21126AF81BE8DEF400D85DF1 /* OSSDefines.h */,
-				21126AF91BE8DEF400D85DF1 /* OSSExecutor.h */,
-				21126AFA1BE8DEF400D85DF1 /* OSSExecutor.m */,
-				21126AFB1BE8DEF400D85DF1 /* OSSTask.h */,
-				21126AFC1BE8DEF400D85DF1 /* OSSTask.m */,
-				21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */,
-				21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */,
+				214E1B8C1CD5FE17004F8083 /* OSSBolts.h */,
+				214E1B8D1CD5FE17004F8083 /* OSSBolts.m */,
+				214E1B8E1CD5FE17004F8083 /* OSSCancellationToken.h */,
+				214E1B8F1CD5FE17004F8083 /* OSSCancellationToken.m */,
+				214E1B901CD5FE17004F8083 /* OSSCancellationTokenRegistration.h */,
+				214E1B911CD5FE17004F8083 /* OSSCancellationTokenRegistration.m */,
+				214E1B921CD5FE17004F8083 /* OSSCancellationTokenSource.h */,
+				214E1B931CD5FE17004F8083 /* OSSCancellationTokenSource.m */,
+				214E1B941CD5FE17004F8083 /* OSSExecutor.h */,
+				214E1B951CD5FE17004F8083 /* OSSExecutor.m */,
+				214E1B961CD5FE17004F8083 /* OSSTask.h */,
+				214E1B971CD5FE17004F8083 /* OSSTask.m */,
+				214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */,
+				214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */,
 			);
 			path = OSSTask;
 			sourceTree = "<group>";
@@ -232,25 +226,23 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21126B0D1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h in Headers */,
-				21126B091BE8DEF400D85DF1 /* OSSExecutor.h in Headers */,
-				21126B061BE8DEF400D85DF1 /* OSSCancellationTokenSource.h in Headers */,
-				21126B021BE8DEF400D85DF1 /* OSSCancellationToken.h in Headers */,
-				21126B0B1BE8DEF400D85DF1 /* OSSTask.h in Headers */,
-				21126B081BE8DEF400D85DF1 /* OSSDefines.h in Headers */,
-				21126B041BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h in Headers */,
-				21126AFF1BE8DEF400D85DF1 /* OSSBolts.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
+				214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
+				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */,
 				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
+				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
+				214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
-				21126B011BE8DEF400D85DF1 /* OSSBoltsVersion.h in Headers */,
+				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
 				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
+				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
+				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,21 +343,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21126B0E1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m in Sources */,
-				21126B031BE8DEF400D85DF1 /* OSSCancellationToken.m in Sources */,
-				21126B071BE8DEF400D85DF1 /* OSSCancellationTokenSource.m in Sources */,
 				21028BFB1BA9AC3600C2A6BA /* OSSCompat.m in Sources */,
-				21126B051BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.m in Sources */,
-				21126B001BE8DEF400D85DF1 /* OSSBolts.m in Sources */,
+				214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */,
+				214E1BA31CD5FE17004F8083 /* OSSExecutor.m in Sources */,
 				21028C011BA9AC3600C2A6BA /* OSSNetworking.m in Sources */,
 				21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */,
 				21028BFF1BA9AC3600C2A6BA /* OSSModel.m in Sources */,
-				21126B0C1BE8DEF400D85DF1 /* OSSTask.m in Sources */,
 				214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */,
+				214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */,
 				21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */,
-				21126B0A1BE8DEF400D85DF1 /* OSSExecutor.m in Sources */,
+				214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */,
+				214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */,
+				214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */,
 				21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */,
 				21028BFD1BA9AC3600C2A6BA /* OSSLog.m in Sources */,
+				214E1BA11CD5FE17004F8083 /* OSSCancellationTokenSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
