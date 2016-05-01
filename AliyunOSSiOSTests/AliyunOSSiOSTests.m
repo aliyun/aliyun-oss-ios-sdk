@@ -22,7 +22,7 @@ NSString * const g_SK = @"<Your AccessKeySecret>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
-NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
+NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
 NSString * const StsTokenURL = @"http://localhost:8080/distribute-token.json";
 
@@ -103,7 +103,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     conf.maxConcurrentRequestCount = 5;
 
     // 更换不同的credentialProvider测试
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential3 clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential1 clientConfiguration:conf];
 }
 
 - (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
