@@ -49,6 +49,8 @@
 		21126B0D1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21126B0E1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */; };
 		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; };
+		214E1B861CD5CAF5004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B841CD5CAF5004F8083 /* OSSHttpdns.h */; };
+		214E1B871CD5CAF5004F8083 /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B851CD5CAF5004F8083 /* OSSHttpdns.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,8 @@
 		21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTaskCompletionSource.h; sourceTree = "<group>"; };
 		21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskCompletionSource.m; sourceTree = "<group>"; };
 		214E1B821CD57D07004F8083 /* OSSDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDefine.h; sourceTree = "<group>"; };
+		214E1B841CD5CAF5004F8083 /* OSSHttpdns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSHttpdns.h; sourceTree = "<group>"; };
+		214E1B851CD5CAF5004F8083 /* OSSHttpdns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttpdns.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +218,8 @@
 				21028BDE1BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.m */,
 				21028BDF1BA9AC3600C2A6BA /* OSSHTTPDNSTools.h */,
 				21028BE01BA9AC3600C2A6BA /* OSSHTTPDNSTools.m */,
+				214E1B841CD5CAF5004F8083 /* OSSHttpdns.h */,
+				214E1B851CD5CAF5004F8083 /* OSSHttpdns.m */,
 			);
 			path = httpdns;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 				21126B021BE8DEF400D85DF1 /* OSSCancellationToken.h in Headers */,
 				21126B0B1BE8DEF400D85DF1 /* OSSTask.h in Headers */,
 				21126B081BE8DEF400D85DF1 /* OSSDefines.h in Headers */,
+				214E1B861CD5CAF5004F8083 /* OSSHttpdns.h in Headers */,
 				21126B041BE8DEF400D85DF1 /* OSSCancellationTokenRegistration.h in Headers */,
 				21126AFF1BE8DEF400D85DF1 /* OSSBolts.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
@@ -395,6 +402,7 @@
 				21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */,
 				21028BF11BA9AC3600C2A6BA /* OSSHTTPDNSCacheTable.m in Sources */,
 				21126B0A1BE8DEF400D85DF1 /* OSSExecutor.m in Sources */,
+				214E1B871CD5CAF5004F8083 /* OSSHttpdns.m in Sources */,
 				21028BF71BA9AC3600C2A6BA /* OSSHTTPDNSTools.m in Sources */,
 				21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */,
 				21028BFD1BA9AC3600C2A6BA /* OSSLog.m in Sources */,
