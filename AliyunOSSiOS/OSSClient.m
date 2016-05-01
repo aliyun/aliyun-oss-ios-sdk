@@ -42,6 +42,7 @@
         }
         self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;
+        self.clientConfiguration = conf;
 
         OSSNetworkingConfiguration * netConf = [OSSNetworkingConfiguration new];
         if (conf) {
@@ -78,6 +79,8 @@
         id<OSSRequestInterceptor> signer = [[OSSSignerInterceptor alloc] initWithCredentialProvider:self.credentialProvider];
         [request.interceptors addObject:signer];
     }
+
+    request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
 
     return [_networking sendRequest:request];
 }

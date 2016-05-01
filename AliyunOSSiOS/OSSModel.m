@@ -267,6 +267,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.maxRetryCount = OSSDefaultRetryCount;
         self.maxConcurrentRequestCount = OSSDefaultMaxConcurrentNum;
         self.enableBackgroundTransmitService = NO;
+        self.isHttpdnsEnable = YES;
         self.backgroundSesseionIdentifier = BACKGROUND_SESSION_IDENTIFIER;
         self.timeoutIntervalForRequest = OSSDefaultTimeoutForRequestInSecond;
         self.timeoutIntervalForResource = OSSDefaultTimeoutForResourceInSecond;

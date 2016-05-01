@@ -12,7 +12,7 @@
 #import "CommonCrypto/CommonHMAC.h"
 #import "OSSModel.h"
 #import "OSSLog.h"
-#import "OSSHTTPDNSMini.h"
+#import "OSSHttpdns.h"
 
 NSString * const ALIYUN_HOST_SUFFIX = @".aliyuncs.com";
 NSString * const ALIYUN_OSS_TEST_ENDPOINT = @".aliyun-inc.com";
@@ -145,7 +145,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
         OSSLogDebug(@"current network is delegate state");
         return host;
     }
-    NSString * ip = [[OSSHTTPDNSMini sharedInstanceManage] getIpByHostAsync:host];
+    NSString * ip = [[OSSHttpdns sharedInstance] asynGetIpByHost:host];
     OSSLogDebug(@"resolved host %@ and get ip: %@", host, ip);
 
     return ip ? ip : host;

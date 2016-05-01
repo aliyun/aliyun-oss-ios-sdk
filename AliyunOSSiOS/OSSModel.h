@@ -181,6 +181,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
 
 /**
+ 是否使用Httpdns解析域名
+ */
+@property (nonatomic, assign) BOOL isHttpdnsEnable;
+
+/**
  设置后台传输服务使用session的Id
  */
 @property (nonatomic, strong) NSString * backgroundSesseionIdentifier;
