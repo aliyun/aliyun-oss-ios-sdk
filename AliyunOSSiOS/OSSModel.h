@@ -12,51 +12,6 @@
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
 
-extern NSString * const OSSListBucketResultXMLTOKEN;
-extern NSString * const OSSNameXMLTOKEN;
-extern NSString * const OSSDelimiterXMLTOKEN;
-extern NSString * const OSSMarkerXMLTOKEN;
-extern NSString * const OSSNextMarkerXMLTOKEN;
-extern NSString * const OSSMaxKeysXMLTOKEN;
-extern NSString * const OSSIsTruncatedXMLTOKEN;
-extern NSString * const OSSContentsXMLTOKEN;
-extern NSString * const OSSKeyXMLTOKEN;
-extern NSString * const OSSLastModifiedXMLTOKEN;
-extern NSString * const OSSETagXMLTOKEN;
-extern NSString * const OSSTypeXMLTOKEN;
-extern NSString * const OSSSizeXMLTOKEN;
-extern NSString * const OSSStorageClassXMLTOKEN;
-extern NSString * const OSSCommonPrefixesXMLTOKEN;
-extern NSString * const OSSOwnerXMLTOKEN;
-extern NSString * const OSSIDXMLTOKEN;
-extern NSString * const OSSDisplayNameXMLTOKEN;
-extern NSString * const OSSBucketsXMLTOKEN;
-extern NSString * const OSSAccessControlListXMLTOKEN;
-extern NSString * const OSSGrantXMLTOKEN;
-extern NSString * const OSSBucketXMLTOKEN;
-extern NSString * const OSSCreationDate;
-extern NSString * const OSSPrefixXMLTOKEN;
-extern NSString * const OSSUploadIdXMLTOKEN;
-extern NSString * const OSSLocationXMLTOKEN;
-extern NSString * const OSSNextPartNumberMarkerXMLTOKEN;
-extern NSString * const OSSMaxPartsXMLTOKEN;
-extern NSString * const OSSPartXMLTOKEN;
-extern NSString * const OSSPartNumberXMLTOKEN;
-
-extern NSString * const OSSClientErrorDomain;
-extern NSString * const OSSServerErrorDomain;
-
-extern NSString * const OSSErrorMessageTOKEN;
-
-extern NSString * const OSSHttpHeaderContentDisposition;
-extern NSString * const OSSHttpHeaderXOSSCallback;
-extern NSString * const OSSHttpHeaderXOSSCallbackVar;
-extern NSString * const OSSHttpHeaderContentEncoding;
-extern NSString * const OSSHttpHeaderContentType;
-extern NSString * const OSSHttpHeaderContentMD5;
-extern NSString * const OSSHttpHeaderCacheControl;
-extern NSString * const OSSHttpHeaderExpires;
-
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
     OSSOperationTypeCreateBucket,

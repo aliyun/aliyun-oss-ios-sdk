@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OSSDefine.h"
 #import "OSSNetworking.h"
 #import "OSSBolts.h"
 #import "OSSModel.h"
@@ -69,7 +70,7 @@
 
 + (instancetype)defaultRetryHandler {
     OSSURLRequestRetryHandler * retryHandler = [OSSURLRequestRetryHandler new];
-    retryHandler.maxRetryCount = 3;
+    retryHandler.maxRetryCount = OSSDefaultRetryCount;
     return retryHandler;
 }
 

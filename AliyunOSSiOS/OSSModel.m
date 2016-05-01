@@ -7,59 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OSSDefine.h"
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSNetworking.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
-
-NSString * const OSSListBucketResultXMLTOKEN = @"ListBucketResult";
-NSString * const OSSNameXMLTOKEN = @"Name";
-NSString * const OSSDelimiterXMLTOKEN = @"Delimiter";
-NSString * const OSSMarkerXMLTOKEN = @"Marker";
-NSString * const OSSNextMarkerXMLTOKEN = @"NextMarker";
-NSString * const OSSMaxKeysXMLTOKEN = @"MaxKeys";
-NSString * const OSSIsTruncatedXMLTOKEN = @"IsTruncated";
-NSString * const OSSContentsXMLTOKEN = @"Contents";
-NSString * const OSSKeyXMLTOKEN = @"Key";
-NSString * const OSSLastModifiedXMLTOKEN = @"LastModified";
-NSString * const OSSETagXMLTOKEN = @"ETag";
-NSString * const OSSTypeXMLTOKEN = @"Type";
-NSString * const OSSSizeXMLTOKEN = @"Size";
-NSString * const OSSStorageClassXMLTOKEN = @"StorageClass";
-NSString * const OSSCommonPrefixesXMLTOKEN = @"CommonPrefixes";
-NSString * const OSSOwnerXMLTOKEN = @"Owner";
-NSString * const OSSAccessControlListXMLTOKEN = @"AccessControlList";
-NSString * const OSSGrantXMLTOKEN = @"Grant";
-NSString * const OSSIDXMLTOKEN = @"ID";
-NSString * const OSSDisplayNameXMLTOKEN = @"DisplayName";
-NSString * const OSSBucketsXMLTOKEN = @"Buckets";
-NSString * const OSSBucketXMLTOKEN = @"Bucket";
-NSString * const OSSCreationDate = @"CreationDate";
-NSString * const OSSPrefixXMLTOKEN = @"Prefix";
-NSString * const OSSUploadIdXMLTOKEN = @"UploadId";
-NSString * const OSSLocationXMLTOKEN = @"Location";
-NSString * const OSSNextPartNumberMarkerXMLTOKEN = @"NextPartNumberMarker";
-NSString * const OSSMaxPartsXMLTOKEN = @"MaxParts";
-NSString * const OSSPartXMLTOKEN = @"Part";
-NSString * const OSSPartNumberXMLTOKEN = @"PartNumber";
-
-NSString * const OSSClientErrorDomain = @"com.aliyun.oss.clientError";
-NSString * const OSSServerErrorDomain = @"com.aliyun.oss.serverError";
-
-NSString * const OSSErrorMessageTOKEN = @"ErrorMessage";
-
-NSString * const OSSUAPrefix = @"aliyun-sdk-ios";
-NSString * const OSSSDKVersion = @"2.3.0";
-
-NSString * const OSSHttpHeaderContentDisposition = @"Content-Disposition";
-NSString * const OSSHttpHeaderXOSSCallback = @"x-oss-callback";
-NSString * const OSSHttpHeaderXOSSCallbackVar = @"x-oss-callback-var";
-NSString * const OSSHttpHeaderContentEncoding = @"Content-Encoding";
-NSString * const OSSHttpHeaderContentType = @"Content-Type";
-NSString * const OSSHttpHeaderContentMD5 = @"Content-MD5";
-NSString * const OSSHttpHeaderCacheControl = @"Cache-Control";
-NSString * const OSSHttpHeaderExpires = @"Expires";
 
 @implementation NSString (OSS)
 
@@ -311,12 +264,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.maxRetryCount = 3;
-        self.maxConcurrentRequestCount = 5;
+        self.maxRetryCount = OSSDefaultRetryCount;
+        self.maxConcurrentRequestCount = OSSDefaultMaxConcurrentNum;
         self.enableBackgroundTransmitService = NO;
         self.backgroundSesseionIdentifier = BACKGROUND_SESSION_IDENTIFIER;
-        self.timeoutIntervalForRequest = 15;
-        self.timeoutIntervalForResource = 7 * 24 * 60 * 60;
+        self.timeoutIntervalForRequest = OSSDefaultTimeoutForRequestInSecond;
+        self.timeoutIntervalForResource = OSSDefaultTimeoutForResourceInSecond;
     }
     return self;
 }
@@ -336,7 +289,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     OSSLogVerbose(@"signing intercepting - ");
     NSError * error = nil;
 
-    /* define a constant array to contain all specified subresource */
+    /****************************************************************
+    * define a constant array to contain all specified subresource */
     static NSArray * OSSSubResourceARRAY = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

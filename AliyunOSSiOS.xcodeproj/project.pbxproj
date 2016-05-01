@@ -48,6 +48,7 @@
 		21126B0C1BE8DEF400D85DF1 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFC1BE8DEF400D85DF1 /* OSSTask.m */; };
 		21126B0D1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21126B0E1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */; };
+		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		21126AFC1BE8DEF400D85DF1 /* OSSTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTask.m; sourceTree = "<group>"; };
 		21126AFD1BE8DEF400D85DF1 /* OSSTaskCompletionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTaskCompletionSource.h; sourceTree = "<group>"; };
 		21126AFE1BE8DEF400D85DF1 /* OSSTaskCompletionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskCompletionSource.m; sourceTree = "<group>"; };
+		214E1B821CD57D07004F8083 /* OSSDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDefine.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 				21028C071BA9AC3C00C2A6BA /* ThirdParty */,
 				21028BD81BA9AC3600C2A6BA /* httpdns */,
 				21028BEB1BA9AC3600C2A6BA /* OSSService.h */,
+				214E1B821CD57D07004F8083 /* OSSDefine.h */,
 				21028BE11BA9AC3600C2A6BA /* OSSClient.h */,
 				21028BE21BA9AC3600C2A6BA /* OSSClient.m */,
 				21028BE31BA9AC3600C2A6BA /* OSSCompat.h */,
@@ -271,6 +274,7 @@
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BF41BA9AC3600C2A6BA /* OSSHTTPDNSOrigin.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
+				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028BF61BA9AC3600C2A6BA /* OSSHTTPDNSTools.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
 				21126B011BE8DEF400D85DF1 /* OSSBoltsVersion.h in Headers */,
@@ -324,7 +328,7 @@
 		21028BB31BA9ABF500C2A6BA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = zhouzhuo;
 				TargetAttributes = {
 					21028BBB1BA9ABF500C2A6BA = {
@@ -438,6 +442,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -526,6 +531,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -553,6 +559,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -575,6 +582,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -592,6 +600,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

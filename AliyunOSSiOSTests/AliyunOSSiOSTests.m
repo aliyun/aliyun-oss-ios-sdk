@@ -42,21 +42,10 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     dispatch_once(&once, ^{
         fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"fileDirA/", @"fileDirB/"];
         fileSizeArray = @[@1024, @10240, @102400, @1024000, @10240000, @1024, @1024];
-        [self initWithAKSK];
+        [self initOSSClient];
         [self initLocalFiles];
         test_queue = dispatch_queue_create("com.aliyun.oss.test", DISPATCH_QUEUE_CONCURRENT);
     });
-}
-
-- (NSString *)getDocumentDirectory {
-    NSString * path = NSHomeDirectory();
-    NSLog(@"NSHomeDirectory:%@",path);
-    NSString * userName = NSUserName();
-    NSString * rootPath = NSHomeDirectoryForUser(userName);
-    NSLog(@"NSHomeDirectoryForUser:%@",rootPath);
-    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString * documentsDirectory = [paths objectAtIndex:0];
-    return documentsDirectory;
 }
 
 - (void)initLocalFiles {
@@ -87,7 +76,18 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     NSLog(@"main bundle: %@", mainDir);
 }
 
-- (void)initWithAKSK {
+- (NSString *)getDocumentDirectory {
+    NSString * path = NSHomeDirectory();
+    NSLog(@"NSHomeDirectory:%@",path);
+    NSString * userName = NSUserName();
+    NSString * rootPath = NSHomeDirectoryForUser(userName);
+    NSLog(@"NSHomeDirectoryForUser:%@",rootPath);
+    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString * documentsDirectory = [paths objectAtIndex:0];
+    return documentsDirectory;
+}
+
+- (void)initOSSClient {
     [OSSLog enableLog];
 
     credential1 = [self newPlainAKSKCredentialProvider];
@@ -157,11 +157,11 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
                                                                       error:nil];
             OSSFederationToken * token = [OSSFederationToken new];
             // 四个值缺一不可
-            token.tAccessKey = [object objectForKey:@"accessKeyId"];
-            token.tSecretKey = [object objectForKey:@"accessKeySecret"];
-            token.tToken = [object objectForKey:@"securityToken"];
-            token.expirationTimeInGMTFormat = [object objectForKey:@"expiration"];
-            OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"expiration"]);
+            token.tAccessKey = [object objectForKey:@"AccessKeyId"];
+            token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
+            token.tToken = [object objectForKey:@"SecurityToken"];
+            token.expirationTimeInGMTFormat = [object objectForKey:@"Expiration"];
+            OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"Expiration"]);
             return token;
         }
     }];

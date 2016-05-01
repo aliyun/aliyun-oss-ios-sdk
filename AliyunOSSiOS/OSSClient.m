@@ -7,6 +7,7 @@
 //
 
 #import "OSSClient.h"
+#import "OSSDefine.h"
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
@@ -624,7 +625,7 @@
         [listPartsTask waitUntilFinished];
 
         if (listPartsTask.error) {
-            if (listPartsTask.error.domain == OSSServerErrorDomain && listPartsTask.error.code == -1 * 404) {
+            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -1 * 404) {
                 OSSLogVerbose(@"local record existes but the remote record is deleted");
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeCannotResumeUpload
@@ -758,7 +759,7 @@
     if (!headError) {
         return YES;
     } else {
-        if (headError.domain == OSSServerErrorDomain && headError.code == -404) {
+        if ([headError.domain isEqualToString: OSSServerErrorDomain] && headError.code == -404) {
             return NO;
         } else {
             *error = headError;

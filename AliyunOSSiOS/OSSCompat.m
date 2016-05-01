@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 aliyun.com. All rights reserved.
 //
 
+#import "OSSDefine.h"
 #import "OSSCompat.h"
 
 

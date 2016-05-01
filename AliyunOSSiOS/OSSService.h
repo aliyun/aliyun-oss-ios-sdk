@@ -10,6 +10,7 @@
 
 #define OSS_IOS_SDK_VERSION 2.3.0.1
 
+#import "OSSDefine.h"
 #import "OSSNetworking.h"
 #import "OSSClient.h"
 #import "OSSModel.h"
