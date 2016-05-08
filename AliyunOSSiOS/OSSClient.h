@@ -15,6 +15,7 @@
 @class OSSGetBucketACLRequest;
 @class OSSGetObjectRequest;
 @class OSSPutObjectRequest;
+@class OSSPutObjectACLRequest;
 @class OSSDeleteObjectRequest;
 @class OSSCopyObjectRequest;
 @class OSSInitMultipartUploadRequest;
@@ -135,6 +136,12 @@
  用于上传文件。
  */
 - (OSSTask *)putObject:(OSSPutObjectRequest *)request;
+
+/**
+ Put Object ACL接口用于修改Object的访问权限。目前Object有三种访问权限：private, public-read, public-read-write。
+ Put Object ACL操作通过Put请求中的“x-oss-object-acl”头来设置，这个操作只有Bucket Owner有权限执行。如果操作成功，则返回200；否则返回相应的错误码和提示信息。
+ */
+- (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request;
 
 /**
  对应RESTFul API：AppendObject

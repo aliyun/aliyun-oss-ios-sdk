@@ -504,6 +504,35 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     }] waitUntilFinished];
 }
 
+- (void)testZ_putObjectACL {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    request.isAuthenticationRequired = false;
+    OSSTask * task = [client getObject:request];
+    [task waitUntilFinished];
+
+    XCTAssertNotNil(task.error);
+    XCTAssertEqual(-403, task.error.code);
+
+    OSSPutObjectACLRequest * putAclRequest = [OSSPutObjectACLRequest new];
+    putAclRequest.bucketName = TEST_BUCKET;
+    putAclRequest.objectKey = @"file1m";
+    putAclRequest.acl = @"public-read-write";
+    task = [client putObjectACL:putAclRequest];
+    [task waitUntilFinished];
+
+    XCTAssertNil(task.error);
+
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    request.isAuthenticationRequired = false;
+    task = [client getObject:request];
+    [task waitUntilFinished];
+
+    XCTAssertNil(task.error);
+}
+
 - (void)testA_appendObject {
     OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
     delete.bucketName = TEST_BUCKET;

@@ -286,6 +286,33 @@
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
+- (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    NSMutableDictionary * headerParams = [NSMutableDictionary dictionary];
+    if (request.acl) {
+        headerParams[@"x-oss-object-acl"] = request.acl;
+    } else {
+        headerParams[@"x-oss-object-acl"] = @"default";
+    }
+
+    NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObject:@"" forKey:@"acl"];
+
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObjectACL];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                httpMethod:@"PUT"
+                                                bucketName:request.bucketName
+                                                 objectKey:request.objectKey
+                                                      type:nil
+                                                       md5:nil
+                                                     range:nil
+                                                      date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
+                                              headerParams:headerParams
+                                                    querys:querys];
+    requestDelegate.operType = OSSOperationTypePutObjectACL;
+
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 - (OSSTask *)appendObject:(OSSAppendObjectRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];

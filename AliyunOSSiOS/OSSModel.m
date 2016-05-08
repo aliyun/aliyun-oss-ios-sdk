@@ -562,6 +562,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSGetObjectResult
 @end
 
+@implementation OSSPutObjectACLRequest
+@end
+
+@implementation OSSPutObjectACLResult
+@end
+
 @implementation OSSPutObjectRequest
 
 - (instancetype)init {
@@ -978,6 +984,14 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:deleteObjectResult];
             }
             return deleteObjectResult;
+        }
+
+        case OSSOperationTypePutObjectACL: {
+            OSSPutObjectACLResult * putObjectACLResult = [OSSPutObjectACLResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putObjectACLResult];
+            }
+            return putObjectACLResult;
         }
 
         case OSSOperationTypeCopyObject: {

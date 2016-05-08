@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeHeadObject,
     OSSOperationTypeGetObject,
     OSSOperationTypePutObject,
+    OSSOperationTypePutObjectACL,
     OSSOperationTypeAppendObject,
     OSSOperationTypeDeleteObject,
     OSSOperationTypeCopyObject,
@@ -597,6 +598,33 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  下载文件时的HTTP响应头的KV字典
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
+@end
+
+/**
+ 修改Object的访问权限请求头
+ */
+@interface OSSPutObjectACLRequest : OSSRequest
+
+/**
+ Bucket名称
+ */
+@property (nonatomic, strong) NSString * bucketName;
+
+/**
+ Object名称
+ */
+@property (nonatomic, strong) NSString * objectKey;
+
+/**
+ */
+@property (nonatomic, strong) NSString * acl;
+
+@end
+
+/**
+ 修改Object的访问权限响应
+ */
+@interface OSSPutObjectACLResult : OSSResult
 @end
 
 /**
