@@ -144,11 +144,11 @@
         urlString = [NSString stringWithFormat:@"%@://%@.%@", endPointURL.scheme, self.allNeededMessage.bucketName, endPointURL.host];
     }
 
-    NSURL * tempURL = (urlString == nil ? endPointURL : [NSURL URLWithString:urlString]);
-    NSString * originHost = tempURL.host;
+    endPointURL = [NSURL URLWithString:urlString];
+    NSString * originHost = endPointURL.host;
     if (!self.isAccessViaProxy && [OSSUtil isOssOriginBucketHost:endPointURL.host] && self.isHttpdnsEnable) {
-        NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:endPointURL.host];
-        urlString = [NSString stringWithFormat:@"%@://%@", tempURL.scheme, httpdnsResolvedResult];
+        NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:originHost];
+        urlString = [NSString stringWithFormat:@"%@://%@", endPointURL.scheme, httpdnsResolvedResult];
     }
 
     if (self.allNeededMessage.objectKey) {
