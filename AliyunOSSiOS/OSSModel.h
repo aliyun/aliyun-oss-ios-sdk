@@ -1070,6 +1070,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  server回调变量设置
  */
 @property (nonatomic, strong) NSDictionary * callbackVar;
+
+/**
+ 完成分块上传附带的请求头
+ */
+@property (nonatomic, strong) NSDictionary * completeMetaHeader;
 @end
 
 /**
@@ -1228,6 +1233,10 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  */
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
+/**
+ 完成分块上传附带的请求头
+ */
+@property (nonatomic, strong) NSDictionary * completeMetaHeader;
 - (void)cancel;
 @end
 

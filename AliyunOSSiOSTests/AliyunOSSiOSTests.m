@@ -1417,6 +1417,60 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     XCTAssertTrue(isEqual);
 }
 
+- (void)testResumableUpload_SetACL {
+
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+
+    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
+    resumableUpload.bucketName = TEST_BUCKET;
+    resumableUpload.objectKey = MultipartUploadObjectKey;
+    resumableUpload.uploadId = uploadId;
+    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    resumableUpload.completeMetaHeader = @{@"x-oss-object-acl": @"public-read-write"};
+    NSString * docDir = [self getDocumentDirectory];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    [[resumeTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+            if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // 该任务无法续传，需要获取新的uploadId重新上传
+            }
+        } else {
+            NSLog(@"Upload file success");
+        }
+        return nil;
+    }] waitUntilFinished];
+
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
+    XCTAssertTrue(isEqual);
+
+    OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
+    getRequest.bucketName = TEST_BUCKET;
+    getRequest.objectKey = MultipartUploadObjectKey;
+    getRequest.isAuthenticationRequired = NO;
+    OSSTask * getTask = [client getObject:getRequest];
+    [getTask waitUntilFinished];
+    XCTAssertNil(getTask.error);
+}
+
 - (void)testResumableUpload_serverCallback {
     __block NSString * uploadId = nil;
     OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];

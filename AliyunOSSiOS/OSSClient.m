@@ -473,6 +473,9 @@
     if (request.callbackVar) {
         [headerParams setObject:[request.callbackVar base64JsonString] forKey:OSSHttpHeaderXOSSCallbackVar];
     }
+    if (request.completeMetaHeader) {
+        [headerParams addEntriesFromDictionary:request.completeMetaHeader];
+    }
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCompleteMultipartUpload];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
@@ -758,6 +761,9 @@
         }
         if (request.callbackVar != nil) {
             complete.callbackVar = request.callbackVar;
+        }
+        if (request.completeMetaHeader != nil) {
+            complete.completeMetaHeader = request.completeMetaHeader;
         }
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
