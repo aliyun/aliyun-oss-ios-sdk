@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "AliyunOSSiOS"
 
-  s.version      = "2.4.0-SNAPSHOT"
+  s.version      = "2.4.0"
 
   s.summary      = "An iOS SDK for Aliyun Object Storage Service"
 
