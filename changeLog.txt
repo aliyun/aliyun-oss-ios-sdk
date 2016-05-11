@@ -15,16 +15,17 @@ http://www.aliyun.com
 
 更新日志:
 
-2016/05/09
-- 发布 2.4.0 版本
+2016/05/11
+- 发布 2.4.1 版本
 
 github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.4.0'
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.4.1'
 demo地址：  https://github.com/alibaba/alicloud-ios-demo
 
 1. 更新httpdns为公有云版本；
 2. 增加PutObjectACL接口；
 3. 修复GetBucket的NextMarker相关问题；
+4. 修复断点上传进度粒度过大的问题；
 
 2016/03/27
 - 发布 2.3.0 版本
