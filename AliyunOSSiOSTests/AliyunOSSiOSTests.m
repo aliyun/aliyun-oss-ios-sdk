@@ -1170,7 +1170,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     request.contentMd5 = [OSSUtil base64Md5ForFilePath:fileURL.path];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
 
     OSSTask * task = [client putObject:request];
@@ -2218,7 +2218,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
                                                    }];
 
     while (progValue < 0.5) {
-        [NSThread sleepForTimeInterval:0.2];
+        [NSThread sleepForTimeInterval:0.1];
         OSSLogError(@"sleep : %f", progValue);
     }
 
@@ -2237,7 +2237,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
                         [bcs setResult:nil];
                     } onProgress:^(float progress) {
                         NSLog(@"2. progress: %f", progress);
-                        if (progress < 0.5) {
+                        if (progress < 0.4) {
                             /* should continue from last position which should larger than 0.5 */
                             XCTAssertTrue(false);
                         }

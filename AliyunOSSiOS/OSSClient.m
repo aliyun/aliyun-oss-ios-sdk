@@ -726,6 +726,15 @@
                 uploadPart.uploadId = request.uploadId;
                 uploadPart.uploadPartData = uploadPartData;
                 uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
+
+                // 分块可能会重试，为了不扰乱进度，重试时进度不重置
+                int64_t lastSuccessProgress = uploadedLength;
+                uploadPart.uploadPartProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+                    int64_t currentProgress = uploadedLength + totalBytesSent;
+                    if (currentProgress > lastSuccessProgress) {
+                        request.uploadProgress(bytesSent, currentProgress, expectedUploadLength);
+                    }
+                };
                 OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                 [uploadPartTask waitUntilFinished];
                 if (uploadPartTask.error) {
@@ -738,9 +747,6 @@
                     [alreadyUploadPart addObject:partInfo];
 
                     uploadedLength += readLength;
-                    if (request.uploadProgress && expectedUploadLength) {
-                        request.uploadProgress(readLength, uploadedLength, expectedUploadLength);
-                    }
                 }
 
                 if (request.isCancelled) {
