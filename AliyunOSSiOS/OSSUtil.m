@@ -176,18 +176,20 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)base64Md5ForData:(NSData *)data {
-    return [self base64ForData:[self dataMD5:data] length:CC_MD5_DIGEST_LENGTH];
+    uint8_t * bytes = (uint8_t *)[[self dataMD5:data] bytes];
+    return [self base64ForData:bytes length:CC_MD5_DIGEST_LENGTH];
 }
 
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath {
-    return [self base64ForData:[self fileMD5:filePath] length:CC_MD5_DIGEST_LENGTH];
+    uint8_t * bytes = (uint8_t *)[[self fileMD5:filePath] bytes];
+    return [self base64ForData:bytes length:CC_MD5_DIGEST_LENGTH];
 }
 
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL {
     return [self base64Md5ForFilePath:[fileURL path]];
 }
 
-+ (unsigned char *)dataMD5:(NSData *)data {
++ (NSData *)dataMD5:(NSData *)data {
     if(data == nil) {
         return nil;
     }
@@ -203,12 +205,12 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             CC_MD5_Update(&md5, [subdata bytes], (CC_LONG)[subdata length]);
         }
     }
-    unsigned char * digestResult = (unsigned char *)malloc(CC_MD5_DIGEST_LENGTH * sizeof(unsigned char));
+    unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
     CC_MD5_Final(digestResult, &md5);
-    return digestResult;
+    return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
 }
 
-+ (unsigned char *)fileMD5:(NSString*)path {
++ (NSData *)fileMD5:(NSString*)path {
     NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
     if(handle == nil) {
         return nil;
@@ -223,9 +225,9 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             done = YES;
         }
     }
-    unsigned char * digestResult = (unsigned char *)malloc(CC_MD5_DIGEST_LENGTH * sizeof(unsigned char));
+    unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
     CC_MD5_Final(digestResult, &md5);
-    return digestResult;
+    return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
 }
 
 + (NSString *)convertMd5Bytes2String:(unsigned char *)md5Bytes {
@@ -239,11 +241,13 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)dataMD5String:(NSData *)data {
-    return [self convertMd5Bytes2String:[self dataMD5:data]];
+    unsigned char * md5Bytes = (unsigned char *)[[self dataMD5:data] bytes];
+    return [self convertMd5Bytes2String:md5Bytes];
 }
 
 + (NSString *)fileMD5String:(NSString *)path {
-    return [self convertMd5Bytes2String:[self fileMD5:path]];
+    unsigned char * md5Bytes = (unsigned char *)[[self fileMD5:path] bytes];
+    return [self convertMd5Bytes2String:md5Bytes];
 }
 
 + (NSString*)base64ForData:(uint8_t *)input length:(int32_t)length {

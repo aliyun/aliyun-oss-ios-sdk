@@ -22,8 +22,6 @@
 + (BOOL)isOssOriginBucketHost:(NSString *)host;
 + (NSString *)getIpByHost:(NSString *)host;
 + (BOOL)isNetworkDelegateState;
-+ (unsigned char *)dataMD5:(NSData *)data;
-+ (unsigned char *)fileMD5:(NSString*)path;
 + (NSString *)dataMD5String:(NSData *)data;
 + (NSString *)fileMD5String:(NSString *)path;
 + (NSString*)base64ForData:(uint8_t *)input length:(int32_t)length;
