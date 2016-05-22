@@ -36,7 +36,7 @@ $ cd Products && ls
 如果工程是通过pod管理依赖，那么在Podfile中加入以下依赖即可，不需要再导入framework：
 
 ```
-pod 'AliyunOSSiOS', '~> 2.4.1'
+pod 'AliyunOSSiOS', '~> 2.5.0'
 ```
 
 CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: [CocoaPods安装和使用教程](http://code4app.com/article/cocoapods-install-usage)。
@@ -50,6 +50,15 @@ CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: 
 ```
 
 注意，引入Framework后，需要在工程`Build Settings`的`Other Linker Flags`中加入`-ObjC`。如果工程此前已经设置过`-force_load`选项，那么，需要加入`-force_load <framework path>/AliyunOSSiOS`。
+
+### 兼容IPv6-Only网络
+
+OSS移动端SDK为了解决无线网络下域名解析容易遭到劫持的问题，已经引入了HTTPDNS进行域名解析，直接使用IP请求OSS服务端。在IPv6-Only的网络下，可能会遇到兼容性问题。而APP官方近期发布了关于IPv6-only网络环境兼容的APP审核要求，为此，SDK从`2.5.0`版本开始已经做了兼容性处理。在新版本中，除了`-ObjC`的设置，还需要引入两个系统库：
+
+```
+libresolv.tbd
+SystemConfiguration.framework
+```
 
 ### 对于OSSTask的一些说明
 

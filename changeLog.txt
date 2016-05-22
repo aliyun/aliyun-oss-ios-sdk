@@ -15,8 +15,19 @@ http://www.aliyun.com
 
 更新日志:
 
-2016/05/11
+- 发布 2.5.0 版本
+
+2016/05/22
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.5.0'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
+1. 兼容IPv6-Only网络；
+
 - 发布 2.4.1 版本
+
+2016/05/11
 
 github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod依赖：   pod 'AliyunOSSiOS', '~> 2.4.1'

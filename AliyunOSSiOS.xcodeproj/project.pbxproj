@@ -27,19 +27,19 @@
 		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */; };
 		214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B891CD5E2F9004F8083 /* OSSHttpdns.m */; };
-		214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8C1CD5FE17004F8083 /* OSSBolts.h */; };
+		214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8C1CD5FE17004F8083 /* OSSBolts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B8D1CD5FE17004F8083 /* OSSBolts.m */; };
-		214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8E1CD5FE17004F8083 /* OSSCancellationToken.h */; };
+		214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8E1CD5FE17004F8083 /* OSSCancellationToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B8F1CD5FE17004F8083 /* OSSCancellationToken.m */; };
-		214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B901CD5FE17004F8083 /* OSSCancellationTokenRegistration.h */; };
+		214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B901CD5FE17004F8083 /* OSSCancellationTokenRegistration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B911CD5FE17004F8083 /* OSSCancellationTokenRegistration.m */; };
-		214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B921CD5FE17004F8083 /* OSSCancellationTokenSource.h */; };
+		214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B921CD5FE17004F8083 /* OSSCancellationTokenSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1BA11CD5FE17004F8083 /* OSSCancellationTokenSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B931CD5FE17004F8083 /* OSSCancellationTokenSource.m */; };
-		214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B941CD5FE17004F8083 /* OSSExecutor.h */; };
+		214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B941CD5FE17004F8083 /* OSSExecutor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1BA31CD5FE17004F8083 /* OSSExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B951CD5FE17004F8083 /* OSSExecutor.m */; };
 		214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B961CD5FE17004F8083 /* OSSTask.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B971CD5FE17004F8083 /* OSSTask.m */; };
-		214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */; };
+		214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */; };
 		216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E01CF1835F0086458F /* OSSIPv6Adapter.h */; };
 		216256E71CF1835F0086458F /* OSSIPv6Adapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E11CF1835F0086458F /* OSSIPv6Adapter.m */; };
@@ -263,23 +263,23 @@
 				214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */,
 				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
-				214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
 				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
 				216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */,
-				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */,
+				214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */,
 				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
+				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
+				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
 				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
+				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
+				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
-				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
 				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
-				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
-				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

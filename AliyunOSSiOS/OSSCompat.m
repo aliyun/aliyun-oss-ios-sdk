@@ -8,6 +8,8 @@
 
 #import "OSSDefine.h"
 #import "OSSCompat.h"
+#import "OSSBolts.h"
+#import "OSSModel.h"
 
 
 int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;

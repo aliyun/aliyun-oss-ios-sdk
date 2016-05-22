@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import "OSSService.h"
 #import "OSSModel.h"
+#import "OSSBolts.h"
 #import "OSSHttpdns.h"
 #import "OSSCompat.h"
 

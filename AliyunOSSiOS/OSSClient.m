@@ -11,6 +11,7 @@
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
+#import "OSSBolts.h"
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"

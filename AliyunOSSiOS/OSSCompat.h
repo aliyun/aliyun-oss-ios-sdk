@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "OSSService.h"
 
+@class OSSCancellationTokenSource;
+
 typedef OSSCancellationTokenSource OSSTaskHandler;
 
 @interface OSSClient (Compat)

@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "AliyunOSSiOS"
 
-  s.version      = "2.4.1"
+  s.version      = "2.5.0"
 
   s.summary      = "An iOS SDK for Aliyun Object Storage Service"
 
@@ -22,6 +22,10 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '7.0'
 
-  s.source_files = 'AliyunOSSiOS/*.{h,m}', 'AliyunOSSiOS/OSSTask/*.{h,m}'
+  s.source_files = 'AliyunOSSiOS/*.{h,m}', 'AliyunOSSiOS/OSSTask/*.{h,m}', 'AliyunOSSiOS/OSSIPv6/*.{h,m}'
+
+  s.frameworks = 'SystemConfiguration'
+
+  s.library   = 'resolv'
 
 end

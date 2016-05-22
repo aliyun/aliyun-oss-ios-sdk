@@ -11,6 +11,7 @@
 
 @class OSSSyncMutableDictionary;
 @class OSSNetworkingRequestDelegate;
+@class OSSExecutor;
 
 /**
  定义重试类型

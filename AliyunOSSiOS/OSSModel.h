@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OSSBolts.h"
 
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
+@class OSSTask;
 
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
