@@ -8,6 +8,7 @@
 
 #import "OSSLog.h"
 #import "OSSHttpdns.h"
+#import "OSSIPv6Adapter.h"
 
 NSString * const HTTPDNS_SERVER_IP = @"203.107.1.1";
 NSString * const HTTPDNS_SERVER_PORT = @"80";
@@ -97,7 +98,7 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // 如果发现距离
         }
     }
 
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/%@/d?host=%@", HTTPDNS_SERVER_IP, ACCOUNT_ID, host]];
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/%@/d?host=%@", [[OSSIPv6Adapter getInstance] handleIpv4Address:HTTPDNS_SERVER_IP], ACCOUNT_ID, host]];
     NSURLSession * session = [NSURLSession sharedSession];
 
     NSURLSessionDataTask * dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -105,7 +106,7 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // 如果发现距离
         IpObject * ipObject = nil;
         NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
         if (statusCode != 200) {
-            OSSLogError(@"Httpdns resolve host: %@ failed, responseCode: %lu", host, statusCode);
+            OSSLogError(@"Httpdns resolve host: %@ failed, responseCode: %lu", host, (unsigned long)statusCode);
         } else {
             NSError *error = nil;
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];

@@ -13,6 +13,7 @@
 #import "OSSLog.h"
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
+#import "OSSReachabilityManager.h"
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -33,6 +34,10 @@
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
              clientConfiguration:(OSSClientConfiguration *)conf {
     if (self = [super init]) {
+
+        // 监听网络，网络类型变化时，重新判定ipv6情况
+        [OSSReachabilityManager shareInstance];
+
         NSOperationQueue * queue = [NSOperationQueue new];
         // using for resumable upload and compat old interface
         queue.maxConcurrentOperationCount = 3;

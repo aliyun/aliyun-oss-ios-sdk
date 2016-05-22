@@ -13,6 +13,7 @@
 #import "OSSModel.h"
 #import "OSSLog.h"
 #import "OSSHttpdns.h"
+#import "OSSIPv6Adapter.h"
 
 NSString * const ALIYUN_HOST_SUFFIX = @".aliyuncs.com";
 NSString * const ALIYUN_OSS_TEST_ENDPOINT = @".aliyun-inc.com";
@@ -148,7 +149,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     NSString * ip = [[OSSHttpdns sharedInstance] asynGetIpByHost:host];
     OSSLogDebug(@"resolved host %@ and get ip: %@", host, ip);
 
-    return ip ? ip : host;
+    return ip ? [[OSSIPv6Adapter getInstance] handleIpv4Address:ip] : host;
 }
 
 + (BOOL)isNetworkDelegateState

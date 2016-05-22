@@ -41,6 +41,14 @@
 		214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B971CD5FE17004F8083 /* OSSTask.m */; };
 		214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */; };
 		214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */; };
+		216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E01CF1835F0086458F /* OSSIPv6Adapter.h */; };
+		216256E71CF1835F0086458F /* OSSIPv6Adapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E11CF1835F0086458F /* OSSIPv6Adapter.m */; };
+		216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E21CF1835F0086458F /* OSSIPv6PrefixResolver.h */; };
+		216256E91CF1835F0086458F /* OSSIPv6PrefixResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E31CF1835F0086458F /* OSSIPv6PrefixResolver.m */; };
+		216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E41CF1835F0086458F /* OSSReachabilityManager.h */; };
+		216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E51CF1835F0086458F /* OSSReachabilityManager.m */; };
+		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
+		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +99,14 @@
 		214E1B971CD5FE17004F8083 /* OSSTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTask.m; sourceTree = "<group>"; };
 		214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSTaskCompletionSource.h; sourceTree = "<group>"; };
 		214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskCompletionSource.m; sourceTree = "<group>"; };
+		216256E01CF1835F0086458F /* OSSIPv6Adapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSIPv6Adapter.h; sourceTree = "<group>"; };
+		216256E11CF1835F0086458F /* OSSIPv6Adapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSIPv6Adapter.m; sourceTree = "<group>"; };
+		216256E21CF1835F0086458F /* OSSIPv6PrefixResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSIPv6PrefixResolver.h; sourceTree = "<group>"; };
+		216256E31CF1835F0086458F /* OSSIPv6PrefixResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSIPv6PrefixResolver.m; sourceTree = "<group>"; };
+		216256E41CF1835F0086458F /* OSSReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSReachabilityManager.h; sourceTree = "<group>"; };
+		216256E51CF1835F0086458F /* OSSReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityManager.m; sourceTree = "<group>"; };
+		216256EC1CF1B1210086458F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +121,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */,
+				216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */,
 				21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,6 +133,8 @@
 		124FC752CC2150C34DBACDBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				216256EF1CF1B1580086458F /* SystemConfiguration.framework */,
+				216256EC1CF1B1210086458F /* libresolv.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -141,6 +161,7 @@
 		21028BBE1BA9ABF500C2A6BA /* AliyunOSSiOS */ = {
 			isa = PBXGroup;
 			children = (
+				216256DF1CF1835F0086458F /* OSSIPv6 */,
 				21028C071BA9AC3C00C2A6BA /* ThirdParty */,
 				21028BEB1BA9AC3600C2A6BA /* OSSService.h */,
 				214E1B821CD57D07004F8083 /* OSSDefine.h */,
@@ -219,6 +240,19 @@
 			path = OSSTask;
 			sourceTree = "<group>";
 		};
+		216256DF1CF1835F0086458F /* OSSIPv6 */ = {
+			isa = PBXGroup;
+			children = (
+				216256E01CF1835F0086458F /* OSSIPv6Adapter.h */,
+				216256E11CF1835F0086458F /* OSSIPv6Adapter.m */,
+				216256E21CF1835F0086458F /* OSSIPv6PrefixResolver.h */,
+				216256E31CF1835F0086458F /* OSSIPv6PrefixResolver.m */,
+				216256E41CF1835F0086458F /* OSSReachabilityManager.h */,
+				216256E51CF1835F0086458F /* OSSReachabilityManager.m */,
+			);
+			path = OSSIPv6;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -232,10 +266,13 @@
 				214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
+				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
+				216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */,
 				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */,
 				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
 				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
+				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
@@ -347,12 +384,15 @@
 				21028BFB1BA9AC3600C2A6BA /* OSSCompat.m in Sources */,
 				214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */,
 				214E1BA31CD5FE17004F8083 /* OSSExecutor.m in Sources */,
+				216256E71CF1835F0086458F /* OSSIPv6Adapter.m in Sources */,
 				21028C011BA9AC3600C2A6BA /* OSSNetworking.m in Sources */,
 				21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */,
+				216256E91CF1835F0086458F /* OSSIPv6PrefixResolver.m in Sources */,
 				21028BFF1BA9AC3600C2A6BA /* OSSModel.m in Sources */,
 				214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */,
 				214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */,
 				21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */,
+				216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */,
 				214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */,
 				214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */,
 				214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */,
