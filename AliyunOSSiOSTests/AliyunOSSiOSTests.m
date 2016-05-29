@@ -203,9 +203,9 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
         NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                                 options:kNilOptions
                                                                   error:nil];
-        NSString * accessKey = [object objectForKey:@"accessKeyId"];
-        NSString * secretKey = [object objectForKey:@"accessKeySecret"];
-        NSString * token = [object objectForKey:@"securityToken"];
+        NSString * accessKey = [object objectForKey:@"AccessKeyId"];
+        NSString * secretKey = [object objectForKey:@"AccessKeySecret"];
+        NSString * token = [object objectForKey:@"SecurityToken"];
         OSSLogDebug(@"token: %@ %@ %@", accessKey, secretKey, token);
 
         return [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:accessKey secretKeyId:secretKey securityToken:token];
