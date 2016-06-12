@@ -145,9 +145,9 @@
     }
 
     endPointURL = [NSURL URLWithString:urlString];
-    NSString * originHost = endPointURL.host;
-    if (!self.isAccessViaProxy && [OSSUtil isOssOriginBucketHost:endPointURL.host] && self.isHttpdnsEnable) {
-        NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:originHost];
+    NSString * urlHost = endPointURL.host;
+    if (!self.isAccessViaProxy && [OSSUtil isOssOriginBucketHost:urlHost] && self.isHttpdnsEnable) {
+        NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:urlHost];
         urlString = [NSString stringWithFormat:@"%@://%@", endPointURL.scheme, httpdnsResolvedResult];
     }
 
@@ -175,11 +175,16 @@
     }
     OSSLogDebug(@"built full url: %@", urlString);
 
+    NSString * headerHost = urlHost;
+    if (![OSSUtil isOssOriginBucketHost:urlHost] && self.allNeededMessage.isHostInCnameExcludeList && self.allNeededMessage.bucketName) {
+        headerHost = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlHost];
+    }
+
     // set header fields
     self.internalRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
 
     // override default host
-    [self.internalRequest setValue:originHost forHTTPHeaderField:@"Host"];
+    [self.internalRequest setValue:headerHost forHTTPHeaderField:@"Host"];
 
     if (self.allNeededMessage.httpMethod) {
         [self.internalRequest setHTTPMethod:self.allNeededMessage.httpMethod];

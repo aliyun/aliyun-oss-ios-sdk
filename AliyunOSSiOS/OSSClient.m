@@ -77,6 +77,17 @@
                                                                          uploadName:request.allNeededMessage.objectKey];
     }
 
+    // 检查endpoint是否在cname排除列表中
+    if ([self.clientConfiguration.cnameExcludeList count] > 0) {
+        [self.clientConfiguration.cnameExcludeList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString * exclude = obj;
+            if ([self.endpoint hasSuffix:exclude]) {
+                request.allNeededMessage.isHostInCnameExcludeList = true;
+                *stop = true;
+            }
+        }];
+    }
+
     id<OSSRequestInterceptor> uaSetting = [OSSUASettingInterceptor new];
     [request.interceptors addObject:uaSetting];
 

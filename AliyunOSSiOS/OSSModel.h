@@ -206,6 +206,12 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  */
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
+
+/**
+ 设置Cname排除列表
+ */
+@property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>

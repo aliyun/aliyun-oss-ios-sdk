@@ -1695,8 +1695,40 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testCnameGetObejct {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
                                           credentialProvider:credential3];
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+
+    OSSTask * task = [tClient getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertEqual(1024000, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testCustomExcludeCname {
+    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
+
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+                                           credentialProvider:credential3
+                                          clientConfiguration:conf];
+
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";

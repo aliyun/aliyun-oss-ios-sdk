@@ -111,6 +111,8 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, strong) NSMutableDictionary * headerParams;
 @property (nonatomic, strong) NSMutableDictionary * querys;
 
+@property (nonatomic, assign) BOOL isHostInCnameExcludeList;
+
 - (instancetype)initWithEndpoint:(NSString *)endpoint
                       httpMethod:(NSString *)httpMethod
                       bucketName:(NSString *)bucketName

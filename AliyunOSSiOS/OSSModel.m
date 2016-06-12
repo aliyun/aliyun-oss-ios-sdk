@@ -276,6 +276,20 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return self;
 }
 
+- (void)setCnameExcludeList:(NSArray *)cnameExcludeList {
+    NSMutableArray * array = [NSMutableArray new];
+    [cnameExcludeList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString * host = [(NSString *)obj lowercaseString];
+        if ([host containsString:@"://"]) {
+            NSString * trimHost = [host substringFromIndex:[host rangeOfString:@"://"].location + 3];
+            [array addObject:trimHost];
+        } else {
+            [array addObject:host];
+        }
+    }];
+    _cnameExcludeList = array.copy;
+}
+
 @end
 
 @implementation OSSSignerInterceptor
