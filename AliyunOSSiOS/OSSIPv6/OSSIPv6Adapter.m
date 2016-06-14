@@ -153,8 +153,10 @@
                 OSSLogDebug(@"%s: Undefined family.", __FUNCTION__);
             }
         }
+        free(addr_union);
     }
-    res_nclose(res);
+    res_ndestroy(res);
+    free(res);
     return dns_stack;
 }
 
