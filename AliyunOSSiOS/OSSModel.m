@@ -1080,8 +1080,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:listPartsReuslt];
             }
             if (_collectingData) {
-                OSSLogVerbose(@"list multipart upload result: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
                 NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"list multipart upload result: %@", parsedDict);
                 if (parsedDict) {
                     listPartsReuslt.nextPartNumberMarker = [[parsedDict objectForKey:OSSNextPartNumberMarkerXMLTOKEN] intValue];
                     listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
