@@ -1648,7 +1648,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 2);
+        XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
     };
     resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {

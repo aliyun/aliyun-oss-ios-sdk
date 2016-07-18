@@ -492,6 +492,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 }
 
 - (void)cancel {
+    _isCancelled = YES;
+
     if (self.requestDelegate) {
         [self.requestDelegate cancel];
     }
@@ -693,7 +695,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 }
 
 - (void)cancel {
-    self.isCancelled = YES;
+    [super cancel];
+    [_runningChildrenRequest cancel];
 }
 
 @end

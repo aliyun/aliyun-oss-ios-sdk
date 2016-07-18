@@ -672,6 +672,7 @@
         listParts.objectKey = request.objectKey;
         listParts.uploadId = request.uploadId;
         OSSTask * listPartsTask = [self listParts:listParts];
+        request.runningChildrenRequest = listParts;
         [listPartsTask waitUntilFinished];
 
         if (listPartsTask.error) {
@@ -753,6 +754,7 @@
                     }
                 };
                 OSSTask * uploadPartTask = [self uploadPart:uploadPart];
+                request.runningChildrenRequest = uploadPart;
                 [uploadPartTask waitUntilFinished];
                 if (uploadPartTask.error) {
                     return uploadPartTask;
@@ -789,6 +791,7 @@
             complete.completeMetaHeader = request.completeMetaHeader;
         }
         OSSTask * completeTask = [self completeMultipartUpload:complete];
+        request.runningChildrenRequest = complete;
         [completeTask waitUntilFinished];
 
         if (completeTask.error) {

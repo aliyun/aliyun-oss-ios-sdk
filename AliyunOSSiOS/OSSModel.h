@@ -268,6 +268,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, assign) BOOL isAuthenticationRequired;
 
 /**
+ 指明该请求是否已经被取消
+ */
+@property (nonatomic, assign) BOOL isCancelled;
+
+/**
  取消这个请求
  */
 - (void)cancel;
@@ -1225,11 +1230,6 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 
 /**
- 此次续传是否被取消
- */
-@property (atomic, assign) BOOL isCancelled;
-
-/**
  server回调参数设置
  */
 @property (nonatomic, strong) NSDictionary * callbackParam;
@@ -1243,6 +1243,12 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  完成分块上传附带的请求头
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+/**
+ 当前正在处理的子请求
+ */
+@property (atomic, weak) OSSRequest * runningChildrenRequest;
+
 - (void)cancel;
 @end
 
