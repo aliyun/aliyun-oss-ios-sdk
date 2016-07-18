@@ -16,13 +16,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__attribute__ ((noinline)) void warnBlockingOperationOnMainThread() {
+__attribute__ ((noinline)) void ossWarnBlockingOperationOnMainThread() {
     NSLog(@"Warning: A long-running operation is being executed on the main thread. \n"
           " Break on warnBlockingOperationOnMainThread() to debug.");
 }
 
 NSString *const OSSTaskErrorDomain = @"bolts";
-NSInteger const kBFMultipleErrorsError = 80175001;
+NSInteger const kOSSMultipleErrorsError = 80175001;
 NSString *const OSSTaskMultipleExceptionsException = @"OSSMultipleExceptionsException";
 
 NSString *const OSSTaskMultipleErrorsUserInfoKey = @"errors";
@@ -155,7 +155,7 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
                         tcs.error = [errors firstObject];
                     } else {
                         NSError *error = [NSError errorWithDomain:OSSTaskErrorDomain
-                                                             code:kBFMultipleErrorsError
+                                                             code:kOSSMultipleErrorsError
                                                          userInfo:@{ OSSTaskMultipleErrorsUserInfoKey: errors }];
                         tcs.error = error;
                     }
@@ -229,7 +229,7 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
                         source.error = errors.firstObject;
                     } else {
                         NSError *error = [NSError errorWithDomain:OSSTaskErrorDomain
-                                                             code:kBFMultipleErrorsError
+                                                             code:kOSSMultipleErrorsError
                                                          userInfo:@{ @"errors": errors }];
                         source.error = error;
                     }
@@ -485,7 +485,7 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
 #pragma mark - Syncing Task (Avoid it)
 
 - (void)warnOperationOnMainThread {
-    warnBlockingOperationOnMainThread();
+    ossWarnBlockingOperationOnMainThread();
 }
 
 - (void)waitUntilFinished {

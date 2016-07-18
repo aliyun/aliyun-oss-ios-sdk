@@ -22,7 +22,7 @@ extern NSString *const OSSTaskErrorDomain;
 /*!
  An error code used for <OSSTask taskForCompletionOfAllTasks:>, if there were multiple errors.
  */
-extern NSInteger const kBFMultipleErrorsError;
+extern NSInteger const kOSSMultipleErrorsError;
 
 /*!
  An exception that is thrown if there was multiple exceptions on <OSSTask taskForCompletionOfAllTasks:>.
