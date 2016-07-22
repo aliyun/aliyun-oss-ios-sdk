@@ -103,7 +103,7 @@ demo示例: [点击查看](https://github.com/alibaba/alicloud-ios-demo)。
 初始化主要完成Endpoint设置、鉴权方式设置、Client参数设置。其中，鉴权方式包含明文设置模式、自签名模式、STS鉴权模式。鉴权细节详见后面链接给出的官网完整文档的`访问控制`章节。
 
 ```objc
-NSString *endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
+NSString *endpoint = @"http://oss-cn-hangzhou.aliyuncs.com";
 
 // 明文设置secret的方式建议只在测试时使用，更多鉴权模式参考后面链接给出的官网完整文档的`访问控制`章节
 id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"<your accesskeyId>"
