@@ -747,12 +747,14 @@
 
                 // 分块可能会重试，为了不扰乱进度，重试时进度不重置
                 int64_t lastSuccessProgress = uploadedLength;
-                uploadPart.uploadPartProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-                    int64_t currentProgress = uploadedLength + totalBytesSent;
-                    if (currentProgress > lastSuccessProgress) {
-                        request.uploadProgress(bytesSent, currentProgress, expectedUploadLength);
-                    }
-                };
+                if (request.uploadProgress != nil) {
+                    uploadPart.uploadPartProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+                        int64_t currentProgress = uploadedLength + totalBytesSent;
+                        if (currentProgress > lastSuccessProgress) {
+                            request.uploadProgress(bytesSent, currentProgress, expectedUploadLength);
+                        }
+                    };
+                }
                 OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                 request.runningChildrenRequest = uploadPart;
                 [uploadPartTask waitUntilFinished];
