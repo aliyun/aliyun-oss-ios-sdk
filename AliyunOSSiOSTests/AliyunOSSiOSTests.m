@@ -665,6 +665,30 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     }] waitUntilFinished];
 }
 
+- (void)testGetImage {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"shilan.jpg";
+    request.xOssProcess = @"image/resize,m_lfit,w_100,h_100";
+
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+
+    OSSTask * task = [client getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testGetObjectWithRecieveDataBlock {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;

@@ -585,6 +585,11 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, strong) NSURL * downloadToFileURL;
 
 /**
+ 图片处理配置
+ */
+@property (nonatomic, strong) NSString * xOssProcess;
+
+/**
  回调下载进度
  */
 @property (nonatomic, copy) OSSNetworkingDownloadProgressBlock downloadProgress;

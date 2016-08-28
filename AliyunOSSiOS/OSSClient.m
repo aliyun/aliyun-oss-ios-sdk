@@ -239,6 +239,10 @@
     if (request.onRecieveData) {
         requestDelegate.onRecieveData = request.onRecieveData;
     }
+    NSMutableDictionary * querys = nil;
+    if (request.xOssProcess) {
+         querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.xOssProcess, @"x-oss-process", nil];
+    }
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetObject];
     requestDelegate.responseParser.downloadingFileURL = request.downloadToFileURL;
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
@@ -250,7 +254,7 @@
                                                      range:rangeString
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:nil];
+                                                    querys:querys];
     requestDelegate.operType = OSSOperationTypeGetObject;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
