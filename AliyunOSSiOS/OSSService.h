@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define OSS_IOS_SDK_VERSION 2.5.1
+#define OSS_IOS_SDK_VERSION 2.5.2
 
 #import "OSSDefine.h"
 #import "OSSNetworking.h"
