@@ -446,6 +446,16 @@
         return ;
     }
 
+    NSString * dateStr = [[httpResponse allHeaderFields] objectForKey:@"Date"];
+    if ([dateStr length]) {
+        NSDate * serverTime = [NSDate oss_dateFromString:dateStr];
+        NSDate * deviceTime = [NSDate date];
+        NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
+        [NSDate oss_setClockSkew:skewTime];
+    } else {
+        OSSLogError(@"date header does not exist, unable to adjust the time skew");
+    }
+
     /* background upload task will not call back didRecieveResponse */
     if (delegate.isBackgroundUploadFileTask) {
         OSSLogVerbose(@"backgroud upload task did recieve response: %@", httpResponse);
@@ -508,18 +518,8 @@
 
                 case OSSNetworkingRetryTypeShouldCorrectClockSkewAndRetry: {
                     /* correct clock skew */
-                    NSString * dateStr = [[httpResponse allHeaderFields] objectForKey:@"Date"];
-                    if ([dateStr length]) {
-                        NSDate * serverTime = [NSDate oss_dateFromString:dateStr];
-                        NSDate * deviceTime = [NSDate date];
-                        NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
-                        [NSDate oss_setClockSkew:skewTime];
-                        [delegate.interceptors insertObject:[OSSTimeSkewedFixingInterceptor new] atIndex:0];
-                    } else {
-                        OSSLogError(@"date header does not exist, unable to fix the time skew");
-                        delegate.completionHandler(nil, task.error);
-                        return nil;
-                    }
+                    [delegate.interceptors insertObject:[OSSTimeSkewedFixingInterceptor new] atIndex:0];
+                    break;
                 }
 
                 default:

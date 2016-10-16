@@ -210,10 +210,9 @@ static NSTimeInterval _clockSkew = 0.0;
 
             NSDate * expirationDate = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)(self.cachedToken.expirationTimeInMilliSecond / 1000)];
             NSTimeInterval interval = [expirationDate timeIntervalSinceDate:[NSDate oss_clockSkewFixedDate]];
-            // OSSLogVerbose(@"get federation token, after %lf second it would be expired", interval);
-            /* if this token will be expired after less than 30s, we abort it in case of when request arrived oss server,
+            /* if this token will be expired after less than 2min, we abort it in case of when request arrived oss server,
                it's expired already. */
-            if (interval < 30) {
+            if (interval < 2 * 60) {
                 OSSLogDebug(@"get federation token, but after %lf second it would be expired", interval);
                 self.cachedToken = self.federationTokenGetter();
             }
