@@ -11,14 +11,16 @@ FMK_NAME=${PROJECT_NAME}
 INSTALL_DIR=${SRCROOT}/Products/${PROJECT_NAME}.framework
 
 # Working dir will be deleted after the framework creation.
-WRK_DIR=build
+WRK_DIR=./build
 DEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework
 SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework
 
 # -configuration ${CONFIGURATION}
 # Clean and Building both architectures.
-xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphoneos clean build
-xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphonesimulator clean build
+# xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphoneos clean build
+# xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphonesimulator clean build
+xcodebuild -configuration Release -project "${FMK_NAME}.xcodeproj" -scheme "${FMK_NAME}" -sdk iphoneos clean archive SYMROOT="${WRK_DIR}"
+xcodebuild -configuration Release -project "${FMK_NAME}.xcodeproj" -scheme "${FMK_NAME}" -sdk iphonesimulator clean build SYMROOT="${WRK_DIR}"
 
 # Cleaning the oldest.
 if [ -d "${INSTALL_DIR}" ]
@@ -28,7 +30,7 @@ fi
 
 mkdir -p ${SRCROOT}/Products
 
-cp -R "${DEVICE_DIR}" "${INSTALL_DIR}"
+cp -LR "${DEVICE_DIR}" "${INSTALL_DIR}"
 
 # Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.
 lipo -create "${DEVICE_DIR}/${FMK_NAME}" "${SIMULATOR_DIR}/${FMK_NAME}" -output "${INSTALL_DIR}/${FMK_NAME}"
@@ -44,3 +46,4 @@ if [ -f "${INSTALL_DIR}/Info.plist" ]
 then
     rm "${INSTALL_DIR}/Info.plist"
 fi
+
