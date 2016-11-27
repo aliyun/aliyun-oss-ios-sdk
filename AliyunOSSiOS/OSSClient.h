@@ -32,6 +32,8 @@
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。
  一般来说，全局内只需要保持一个OSSClient，用来调用各种操作。
@@ -245,3 +247,5 @@
                       objectKey:(NSString *)objectKey
                           error:(const NSError **)error;
 @end
+
+NS_ASSUME_NONNULL_END

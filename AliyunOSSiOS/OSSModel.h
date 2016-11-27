@@ -149,6 +149,9 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 - (OSSFederationToken *)getToken:(NSError **)error;
 @end
 
+/**
+ 通过已经获取到的StsToken来加签的加签器
+ */
 @interface OSSStsTokenCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) NSString * accessKeyId;
 @property (nonatomic, strong) NSString * secretKeyId;
