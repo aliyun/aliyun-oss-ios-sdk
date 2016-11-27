@@ -22,7 +22,7 @@
 		21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEB1BA9AC3600C2A6BA /* OSSService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEC1BA9AC3600C2A6BA /* OSSUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BED1BA9AC3600C2A6BA /* OSSUtil.m */; };
-		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; };
 		21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */; };
 		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */; };
@@ -49,6 +49,7 @@
 		216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E51CF1835F0086458F /* OSSReachabilityManager.m */; };
 		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		216256E51CF1835F0086458F /* OSSReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityManager.m; sourceTree = "<group>"; };
 		216256EC1CF1B1210086458F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 		21028BBE1BA9ABF500C2A6BA /* AliyunOSSiOS */ = {
 			isa = PBXGroup;
 			children = (
+				9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */,
 				216256DF1CF1835F0086458F /* OSSIPv6 */,
 				21028C071BA9AC3C00C2A6BA /* ThirdParty */,
 				21028BEB1BA9AC3600C2A6BA /* OSSService.h */,
@@ -260,6 +263,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */,
 				214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */,
 				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
@@ -276,10 +280,10 @@
 				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
 				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
+				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
-				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +518,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -532,6 +537,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -562,6 +568,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
