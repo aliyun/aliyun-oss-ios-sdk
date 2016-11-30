@@ -1136,7 +1136,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
 
-    [NSDate oss_setClockSkew:-1 * 30 * 60];
+    [NSDate oss_setClockSkew: 30 * 60];
 
     request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
