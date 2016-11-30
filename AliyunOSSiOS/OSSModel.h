@@ -72,6 +72,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
  扩展NSDate
  */
 @interface NSDate (OSS)
++ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime;
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
 + (NSDate *)oss_dateFromString:(NSString *)string;
 + (NSDate *)oss_clockSkewFixedDate;
