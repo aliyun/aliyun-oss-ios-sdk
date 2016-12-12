@@ -23,9 +23,9 @@ NSString * const g_SK = @"<Your AccessKeySecret>";
 NSString * const TEST_BUCKET = @"mbaas-test1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
-NSString * const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
+NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
-NSString * const StsTokenURL = @"http://localhost:8080/distribute-token.json";
+NSString * const StsTokenURL = @"https://localhost:8080/distribute-token.json";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
@@ -1289,7 +1289,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
-    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"http://oss-cn-hangzhou.aliyuncs.com"
+    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
                                            credentialProvider:credential3
                                           clientConfiguration:conf];
 
@@ -1299,7 +1299,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     conf.backgroundSesseionIdentifier = @"test_other_backgroundservice-enbaled_client";
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
-    OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:@"http://oss-cn-hangzhou.aliyuncs.com"
+    OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
                                            credentialProvider:credential3
                                           clientConfiguration:conf];
 
@@ -1687,7 +1687,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testCnamePutObject {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
                                           credentialProvider:credential3];
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1719,7 +1719,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testCnameGetObejct {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
                                           credentialProvider:credential3];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1749,7 +1749,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
 
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
                                            credentialProvider:credential3
                                           clientConfiguration:conf];
 

@@ -44,7 +44,7 @@
         queue.maxConcurrentOperationCount = 3;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
         if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
-            endpoint = [@"http://" stringByAppendingString:endpoint];
+            endpoint = [@"https://" stringByAppendingString:endpoint];
         }
         self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;

@@ -98,7 +98,7 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // 如果发现距离
         }
     }
 
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/%@/d?host=%@", [[OSSIPv6Adapter getInstance] handleIpv4Address:HTTPDNS_SERVER_IP], ACCOUNT_ID, host]];
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/%@/d?host=%@", [[OSSIPv6Adapter getInstance] handleIpv4Address:HTTPDNS_SERVER_IP], ACCOUNT_ID, host]];
     NSURLSession * session = [NSURLSession sharedSession];
 
     NSURLSessionDataTask * dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

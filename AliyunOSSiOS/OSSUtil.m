@@ -152,20 +152,17 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return ip ? [[OSSIPv6Adapter getInstance] handleIpv4Address:ip] : host;
 }
 
-+ (BOOL)isNetworkDelegateState
-{
-    NSURL* URL = [[NSURL alloc] initWithString:@"http://www.taobao.com"];
++ (BOOL)isNetworkDelegateState {
+    NSURL* URL = [[NSURL alloc] initWithString:@"https://m.aliyun.com"];
     NSDictionary *proxySettings = CFBridgingRelease(CFNetworkCopySystemProxySettings());
     NSArray *proxies = nil;
     proxies = CFBridgingRelease(CFNetworkCopyProxiesForURL((__bridge CFURLRef)URL,
                                                            (__bridge CFDictionaryRef)proxySettings));
-    if (proxies.count)
-    {
+    if (proxies.count) {
         NSDictionary *settings = [proxies objectAtIndex:0];
         NSString* host = [settings objectForKey:(NSString *)kCFProxyHostNameKey];
         NSNumber* port = [settings objectForKey:(NSString *)kCFProxyPortNumberKey];
-        if (host && port)
-        {
+        if (host && port) {
             return YES;
         }
     }
