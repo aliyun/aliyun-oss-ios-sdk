@@ -14,21 +14,33 @@ http://www.aliyun.com
 
 更新日志:
 
+
+2016/12/15
+- 发布 2.6.0 版本
+
+1. 支持苹果ATS标准。
+2. 提供初始化时调用的校准时间接口。
+3. 支持bitcode。
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.6.0'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
+
+2016/09/18
 - 发布 2.5.3 版本
 
 1. 优化STS Token的刷新策略。
 
-- 发布 2.5.2 版本
 
 2016/08/28
+- 发布 2.5.2 版本
 
 1. 使断点上传的进度可选。
 2. 在GetObject接口支持图片处理x-oss-process设置。
 
-更新日志:
 
 2016/07/22
-
 - 发布 2.5.1 版本
 
 1. 修复一处符号冲突问题。
@@ -37,11 +49,9 @@ http://www.aliyun.com
 
 pod依赖：   pod 'AliyunOSSiOS', '~> 2.5.1'
 
-更新日志:
-
-- 发布 2.5.0 版本
 
 2016/05/22
+- 发布 2.5.0 版本
 
 github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod依赖：   pod 'AliyunOSSiOS', '~> 2.5.0'
@@ -49,9 +59,9 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 
 1. 兼容IPv6-Only网络。
 
-- 发布 2.4.1 版本
 
 2016/05/11
+- 发布 2.4.1 版本
 
 github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod依赖：   pod 'AliyunOSSiOS', '~> 2.4.1'
@@ -61,6 +71,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 2. 增加PutObjectACL接口。
 3. 修复GetBucket的NextMarker相关问题。
 4. 修复断点上传进度粒度过大的问题。
+
 
 2016/03/27
 - 发布 2.3.0 版本
@@ -73,6 +84,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 2. 增加BucketName和ObjectKey校验。
 3. 修复一处Content-Type相关的问题。
 
+
 2016/02/02
 - 发布 2.2.0 版本
 
@@ -82,6 +94,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 
 1. 增加可以直接设置sts token的credentialProvider。
 2. 优化加签逻辑。
+
 
 2016/01/12
 - 发布 2.1.4 版本
@@ -96,6 +109,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 4. 支持任务并发数控制。
 5. 修复一处内存问题。
 
+
 2015/12/11
 - 发布 2.1.3 版本
 
@@ -106,6 +120,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 - 修正token过期时更新的策略。
 - 支持不带scheme的endpoint设置如oss-cn-hangzhou.aliyuncs.com。
 
+
 2015/11/19
 - 发布 2.1.1 版本
 
@@ -115,6 +130,7 @@ demo地址：  https://github.com/alibaba/alicloud-ios-demo
 
 - putObject支持servercallback。
 - 重试策略调整。
+
 
 2015/11/10
 - 发布 2.1.0 版本

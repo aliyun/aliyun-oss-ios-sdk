@@ -36,7 +36,7 @@ $ cd Products && ls
 如果工程是通过pod管理依赖，那么在Podfile中加入以下依赖即可，不需要再导入framework：
 
 ```
-pod 'AliyunOSSiOS', '~> 2.5.4'
+pod 'AliyunOSSiOS', '~> 2.6.0'
 ```
 
 CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: [CocoaPods安装和使用教程](http://code4app.com/article/cocoapods-install-usage)。
@@ -59,6 +59,17 @@ OSS移动端SDK为了解决无线网络下域名解析容易遭到劫持的问�
 libresolv.tbd
 SystemConfiguration.framework
 ```
+
+### 关于苹果ATS政策
+
+WWDC 2016开发者大会上，苹果宣布从2017年1月1日起，苹果App Store中的所有App都必须启用 App Transport Security(ATS) 安全功能。也就是说，所有的新提交 app 默认是不允许使用`NSAllowsArbitraryLoads`来绕过 ATS 限制的。我们最好保证 app 的所有网络请求都是 HTTPS 加密的，否则可能会在应用审核时遇到麻烦。
+
+本SDK在`2.6.0`以上版本中对此做出支持，其中，SDK不会自行发出任何非HTTPS请求，同时，SDK支持`https://`前缀的`Endpoint`，只需要设置正确的HTTPS `Endpoint`，就能保证发出的网络请求都是符合要求的。
+
+所以，用户需要注意：
+
+* 设置`Endpoint`时，需要使用`https://`前缀的URL。
+* 在实现加签、获取STSToken等回调时，需要确保自己不会发出 非HTTPS 的请求。
 
 ### 对于OSSTask的一些说明
 
@@ -103,7 +114,7 @@ demo示例: [点击查看](https://github.com/alibaba/alicloud-ios-demo)。
 初始化主要完成Endpoint设置、鉴权方式设置、Client参数设置。其中，鉴权方式包含明文设置模式、自签名模式、STS鉴权模式。鉴权细节详见后面链接给出的官网完整文档的`访问控制`章节。
 
 ```objc
-NSString *endpoint = @"http://oss-cn-hangzhou.aliyuncs.com";
+NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
 
 // 明文设置secret的方式建议只在测试时使用，更多鉴权模式参考后面链接给出的官网完整文档的`访问控制`章节
 id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"<your accesskeyId>"
