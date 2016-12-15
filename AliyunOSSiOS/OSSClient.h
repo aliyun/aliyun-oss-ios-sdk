@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  初始化OSSClient，使用默认的本地设置
- @endpoint 指明Bucket所在的Region域名
+ @endpoint 指明Bucket所在的Region域名，2017年以后苹果要求APP符合ATS政策，这里要写https的endpoint，如 "https://oss-cn-hangzhou.aliyuncs.com"
  @credentialProvider 需要实现的签名器
  */
 - (instancetype)initWithEndpoint:(NSString *)endpoint
@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  初始化OSSClient，使用自定义设置
- @endpoint 指明Bucket所在的Region域名
+ @endpoint 指明Bucket所在的Region域名，2017年以后苹果要求APP符合ATS政策，这里要写https的endpoint，如 "https://oss-cn-hangzhou.aliyuncs.com"
  @credentialProvider 需要实现的签名器
  @conf 可以设置一些本地参数如重试次数、超时时间等
  */
