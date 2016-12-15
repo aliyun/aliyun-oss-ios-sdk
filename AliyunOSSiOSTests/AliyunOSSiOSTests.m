@@ -1687,7 +1687,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testCnamePutObject {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
                                           credentialProvider:credential3];
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1719,7 +1719,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testCnameGetObejct {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
                                           credentialProvider:credential3];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1749,7 +1749,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
 
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"https://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
                                            credentialProvider:credential3
                                           clientConfiguration:conf];
 
