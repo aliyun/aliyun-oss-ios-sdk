@@ -216,12 +216,34 @@ NS_ASSUME_NONNULL_BEGIN
                        withExpirationInterval:(NSTimeInterval)interval;
 
 /**
+ 对一个Object签名出一个URL，可以把该URL转给第三方实现授权访问。
+ @bucketName Object所在的Bucket名称
+ @objectKey Object名称
+ @interval 签名URL时，可以指定这个URL的有效时长是多久，单位是秒，比如说需要有效时长为1小时的URL，这里传入3600
+ @parameter 参数
+ */
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters;
+
+/**
  如果Object的权限是公共读或者公共读写，调用这个接口对该Object签名出一个URL，可以把该URL转给第三方实现授权访问。
  @bucketName Object所在的Bucket名称
  @objectKey Object名称
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
                             withObjectKey:(NSString *)objectKey;
+
+/**
+ 如果Object的权限是公共读或者公共读写，调用这个接口对该Object签名出一个URL，可以把该URL转给第三方实现授权访问。
+ @bucketName Object所在的Bucket名称
+ @objectKey Object名称
+ @parameter 参数
+ */
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                             withObjectKey:(NSString *)objectKey
+                             withParameters:(NSDictionary *)parameters;
 
 /**
  断点上传接口

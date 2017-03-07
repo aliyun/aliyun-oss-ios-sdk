@@ -49,11 +49,26 @@
 		216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E51CF1835F0086458F /* OSSReachabilityManager.m */; };
 		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		21A924371E498212002155BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A924361E498212002155BF /* AppDelegate.swift */; };
+		21A924391E498212002155BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A924381E498212002155BF /* ViewController.swift */; };
+		21A9243C1E498212002155BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21A9243A1E498212002155BF /* Main.storyboard */; };
+		21A9243E1E498212002155BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21A9243D1E498212002155BF /* Assets.xcassets */; };
+		21A924411E498212002155BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21A9243F1E498212002155BF /* LaunchScreen.storyboard */; };
+		21A924461E498231002155BF /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
+		21A924491E498240002155BF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		21A9244A1E498246002155BF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		21028BC91BA9ABF600C2A6BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21028BB31BA9ABF500C2A6BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 21028BBB1BA9ABF500C2A6BA;
+			remoteInfo = AliyunOSSiOS;
+		};
+		21A924471E49823A002155BF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 21028BB31BA9ABF500C2A6BA /* Project object */;
 			proxyType = 1;
@@ -108,6 +123,13 @@
 		216256E51CF1835F0086458F /* OSSReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityManager.m; sourceTree = "<group>"; };
 		216256EC1CF1B1210086458F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		21A924341E498211002155BF /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21A924361E498212002155BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		21A924381E498212002155BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		21A9243B1E498212002155BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		21A9243D1E498212002155BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		21A924401E498212002155BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		21A924421E498212002155BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +151,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		21A924311E498211002155BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21A9244A1E498246002155BF /* libresolv.tbd in Frameworks */,
+				21A924491E498240002155BF /* SystemConfiguration.framework in Frameworks */,
+				21A924461E498231002155BF /* AliyunOSSiOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -146,6 +178,7 @@
 			children = (
 				21028BBE1BA9ABF500C2A6BA /* AliyunOSSiOS */,
 				21028BCB1BA9ABF600C2A6BA /* AliyunOSSiOSTests */,
+				21A924351E498211002155BF /* Demo */,
 				21028BBD1BA9ABF500C2A6BA /* Products */,
 				124FC752CC2150C34DBACDBC /* Frameworks */,
 			);
@@ -156,6 +189,7 @@
 			children = (
 				21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */,
 				21028BC71BA9ABF600C2A6BA /* AliyunOSSiOSTests.xctest */,
+				21A924341E498211002155BF /* Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -256,6 +290,19 @@
 			path = OSSIPv6;
 			sourceTree = "<group>";
 		};
+		21A924351E498211002155BF /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				21A924361E498212002155BF /* AppDelegate.swift */,
+				21A924381E498212002155BF /* ViewController.swift */,
+				21A9243A1E498212002155BF /* Main.storyboard */,
+				21A9243D1E498212002155BF /* Assets.xcassets */,
+				21A9243F1E498212002155BF /* LaunchScreen.storyboard */,
+				21A924421E498212002155BF /* Info.plist */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -326,12 +373,31 @@
 			productReference = 21028BC71BA9ABF600C2A6BA /* AliyunOSSiOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		21A924331E498211002155BF /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21A924451E498212002155BF /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				21A924301E498211002155BF /* Sources */,
+				21A924311E498211002155BF /* Frameworks */,
+				21A924321E498211002155BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				21A924481E49823A002155BF /* PBXTargetDependency */,
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = 21A924341E498211002155BF /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		21028BB31BA9ABF500C2A6BA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = zhouzhuo;
 				TargetAttributes = {
@@ -340,6 +406,11 @@
 					};
 					21028BC61BA9ABF600C2A6BA = {
 						CreatedOnToolsVersion = 6.4;
+					};
+					21A924331E498211002155BF = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = QBMN2BBW3K;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -357,6 +428,7 @@
 			projectRoot = "";
 			targets = (
 				21028BBB1BA9ABF500C2A6BA /* AliyunOSSiOS */,
+				21A924331E498211002155BF /* Demo */,
 				21028BC61BA9ABF600C2A6BA /* AliyunOSSiOSTests */,
 			);
 		};
@@ -374,6 +446,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21A924321E498211002155BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21A924411E498212002155BF /* LaunchScreen.storyboard in Resources */,
+				21A9243E1E498212002155BF /* Assets.xcassets in Resources */,
+				21A9243C1E498212002155BF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +495,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		21A924301E498211002155BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21A924391E498212002155BF /* ViewController.swift in Sources */,
+				21A924371E498212002155BF /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -421,7 +512,31 @@
 			target = 21028BBB1BA9ABF500C2A6BA /* AliyunOSSiOS */;
 			targetProxy = 21028BC91BA9ABF600C2A6BA /* PBXContainerItemProxy */;
 		};
+		21A924481E49823A002155BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 21028BBB1BA9ABF500C2A6BA /* AliyunOSSiOS */;
+			targetProxy = 21A924471E49823A002155BF /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		21A9243A1E498212002155BF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				21A9243B1E498212002155BF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		21A9243F1E498212002155BF /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				21A924401E498212002155BF /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		21028BD01BA9ABF600C2A6BA /* Debug */ = {
@@ -616,6 +731,48 @@
 			};
 			name = Release;
 		};
+		21A924431E498212002155BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = QBMN2BBW3K;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.wstudio.amc.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		21A924441E498212002155BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEVELOPMENT_TEAM = QBMN2BBW3K;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.wstudio.amc.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -645,6 +802,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		21A924451E498212002155BF /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21A924431E498212002155BF /* Debug */,
+				21A924441E498212002155BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

@@ -558,12 +558,28 @@
                                  withObjectKey:(NSString *)objectKey
                         withExpirationInterval:(NSTimeInterval)interval {
 
+    return [self presignConstrainURLWithBucketName:bucketName
+                                     withObjectKey:objectKey
+                            withExpirationInterval:interval
+                                    withParameters:@{}];
+}
+
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters {
+
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
         NSString * wholeSign = nil;
         OSSFederationToken * token = nil;
         NSError * error = nil;
+        NSMutableDictionary * params = [NSMutableDictionary new];
+
+        if (parameters) {
+            [params addEntriesFromDictionary:parameters];
+        }
 
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
@@ -576,10 +592,17 @@
 
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
             || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-            resource = [NSString stringWithFormat:@"%@?security-token=%@", resource, token.tToken];
+            if (token.tToken) {
+                [params setObject:token.tToken forKey:@"security-token"];
+            }
+            resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
             NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
             wholeSign = [OSSUtil sign:string2sign withToken:token];
         } else {
+            NSString * subresource = [OSSUtil populateSubresourceStringFromParameter:params];
+            if ([subresource length] > 0) {
+                resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
+            }
             NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
             wholeSign = [self.credentialProvider sign:string2sign error:&error];
             if (error) {
@@ -602,24 +625,29 @@
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
         }
-        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?OSSAccessKeyId=%@&Expires=%@&Signature=%@",
+        [params setObject:signature forKey:@"Signature"];
+        [params setObject:accessKey forKey:@"OSSAccessKeyId"];
+        [params setObject:expires forKey:@"Expires"];
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?%@",
                                 endpointURL.scheme,
                                 host,
                                 [OSSUtil encodeURL:objectKey],
-                                [OSSUtil encodeURL:accessKey],
-                                expires,
-                                [OSSUtil encodeURL:signature]];
-
-        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
-            || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-            stringURL = [NSString stringWithFormat:@"%@&security-token=%@", stringURL, [OSSUtil encodeURL:token.tToken]];
-        }
+                                [OSSUtil populateQueryStringFromParameter:params]];
         return [OSSTask taskWithResult:stringURL];
     }];
 }
 
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                             withObjectKey:(NSString *)objectKey {
+                              withObjectKey:(NSString *)objectKey {
+
+    return [self presignPublicURLWithBucketName:bucketName
+                                  withObjectKey:objectKey
+                                 withParameters:@{}];
+}
+
+- (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
+                             withObjectKey:(NSString *)objectKey
+                             withParameters:(NSDictionary *)parameters {
 
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
@@ -627,11 +655,20 @@
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
         }
-        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@",
-                                endpointURL.scheme,
-                                host,
-                                [OSSUtil encodeURL:objectKey]];
-        return [OSSTask taskWithResult:stringURL];
+        if ([parameters count] > 0) {
+            NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?%@",
+                                    endpointURL.scheme,
+                                    host,
+                                    [OSSUtil encodeURL:objectKey],
+                                    [OSSUtil populateQueryStringFromParameter:parameters]];
+            return [OSSTask taskWithResult:stringURL];
+        } else {
+            NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@",
+                                    endpointURL.scheme,
+                                    host,
+                                    [OSSUtil encodeURL:objectKey]];
+            return [OSSTask taskWithResult:stringURL];
+        }
     }];
 }
 

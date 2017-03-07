@@ -26,7 +26,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     NSData *clearTextData = [data dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t input[20];
     CCHmac(kCCHmacAlgSHA1, [secretData bytes], [secretData length], [clearTextData bytes], [clearTextData length], input);
-    
+
     return [self calBase64WithData:input];
 }
 
@@ -98,9 +98,9 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
 + (NSData *)constructHttpBodyForCreateBucketWithLocation:(NSString *)location {
     NSString * body = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                              @"<CreateBucketConfiguration>\n"
-                              @"<LocationConstraint>%@</LocationConstraint>\n"
-                              @"</CreateBucketConfiguration>\n",
+                       @"<CreateBucketConfiguration>\n"
+                       @"<LocationConstraint>%@</LocationConstraint>\n"
+                       @"</CreateBucketConfiguration>\n",
                        location];
     OSSLogVerbose(@"constucted create bucket body:\n%@", body);
     return [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -254,6 +254,59 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     }
     NSData * data = [NSData dataWithBytes:input length:length];
     return [data base64EncodedStringWithOptions:0];
+}
+
++ (BOOL)isSubresource:(NSString *)param {
+    /****************************************************************
+    * define a constant array to contain all specified subresource */
+    static NSArray * OSSSubResourceARRAY = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        OSSSubResourceARRAY = @[
+            @"acl", @"uploads", @"location", @"cors", @"logging", @"website", @"referer", @"lifecycle", @"delete", @"append",
+            @"tagging", @"objectMeta", @"uploadId", @"partNumber", @"security-token", @"position", @"img", @"style",
+            @"styleName", @"replication", @"replicationProgress", @"replicationLocation", @"cname", @"bucketInfo", @"comp",
+            @"qos", @"live", @"status", @"vod", @"startTime", @"endTime", @"symlink", @"x-oss-process", @"response-content-type",
+            @"response-content-language", @"response-expires", @"response-cache-control", @"response-content-disposition", @"response-content-encoding"
+            ];
+    });
+    /****************************************************************/
+
+    return [OSSSubResourceARRAY containsObject:param];
+}
+
++ (NSString *)populateSubresourceStringFromParameter:(NSDictionary *)parameters {
+    NSMutableArray * subresource = [NSMutableArray new];
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSString * keyStr = [key oss_trim];
+        NSString * valueStr = [obj oss_trim];
+        if (![OSSUtil isSubresource:keyStr]) {
+            return;
+        }
+        if ([valueStr length] == 0) {
+            [subresource addObject:keyStr];
+        } else {
+            [subresource addObject:[NSString stringWithFormat:@"%@=%@", keyStr, valueStr]];
+        }
+    }];
+    [subresource sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return obj1 < obj2;
+    }];
+    return [subresource componentsJoinedByString:@"&"];
+}
+
++ (NSString *)populateQueryStringFromParameter:(NSDictionary *)parameters {
+    NSMutableArray * subresource = [NSMutableArray new];
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSString * keyStr = [OSSUtil encodeURL:[key oss_trim]];
+        NSString * valueStr = [OSSUtil encodeURL:[obj oss_trim]];
+        if ([valueStr length] == 0) {
+            [subresource addObject:keyStr];
+        } else {
+            [subresource addObject:[NSString stringWithFormat:@"%@=%@", keyStr, valueStr]];
+        }
+    }];
+    return [subresource componentsJoinedByString:@"&"];
 }
 
 + (NSString *)sign:(NSString *)content withToken:(OSSFederationToken *)token {
@@ -957,7 +1010,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             @"ice": @"x-conference/x-cooltalk",
             @"par ": @"text/plain-bas",
             @"yaml": @"text/yaml"
-        };
+            };
     });
 
     NSString * extention = nil;

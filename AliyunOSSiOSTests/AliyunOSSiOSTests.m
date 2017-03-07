@@ -1243,17 +1243,8 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     }] waitUntilFinished];
 }
 
-- (void)testPresignConstrainURL {
-    OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
-                                                 withObjectKey:@"file1k"
-                                        withExpirationInterval:30 * 60];
-    XCTAssertNil(tk.error);
-    if (tk.error) {
-        NSLog(@"error: %@", tk.error);
-    } else {
-        NSLog(@"url: %@", (NSString *)tk.result);
-    }
-    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:tk.result]];
+- (void)assertURLValid:(NSString *)urlString {
+    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
     NSURLSession * session = [NSURLSession sharedSession];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
@@ -1266,21 +1257,47 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     [tcs.task waitUntilFinished];
 }
 
+- (void)testPresignConstrainURL {
+    OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
+                                                 withObjectKey:@"file1k"
+                                        withExpirationInterval:30 * 60];
+    XCTAssertNil(tk.error);
+    if (tk.error) {
+        NSLog(@"error: %@", tk.error);
+    } else {
+        NSLog(@"url: %@", (NSString *)tk.result);
+    }
+    [self assertURLValid:tk.result];
+}
+
 - (void)testPresignPublicURL {
     OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1k"];
     XCTAssertNil(task.error);
     NSLog(@"url: %@", task.result);
-    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:task.result]];
-    NSURLSession * session = [NSURLSession sharedSession];
-    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
-    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
-        XCTAssertNil(error);
-        XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
-        XCTAssertEqual(1024, [data length]);
-        [tcs setResult:nil];
-    }];
-    [dataTask resume];
-    [tcs.task waitUntilFinished];
+    [self assertURLValid:task.result];
+}
+
+- (void)testPresignImageConstrainURL {
+    OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
+                                                 withObjectKey:@"shilan.jpg"
+                                        withExpirationInterval:30 * 60
+                                              withParameters:@{@"x-oss-process": @"image/resize,w_50"}];
+    XCTAssertNil(tk.error);
+    if (tk.error) {
+        NSLog(@"error: %@", tk.error);
+    } else {
+        NSLog(@"url: %@", (NSString *)tk.result);
+    }
+    [self assertURLValid:tk.result];
+}
+
+- (void)testPublicImageURL {
+    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET
+                                              withObjectKey:@"shilan.jpg"
+                                             withParameters:@{@"x-oss-process": @"image/resize,w_50"}];
+    XCTAssertNil(task.error);
+    NSLog(@"url: %@", task.result);
+    [self assertURLValid:task.result];
 }
 
 - (void)testMultiClientInstance {
