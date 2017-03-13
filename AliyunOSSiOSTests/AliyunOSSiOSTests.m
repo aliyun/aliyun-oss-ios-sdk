@@ -20,12 +20,12 @@
 
 NSString * const g_AK = @"<Your AccessKeyId>";
 NSString * const g_SK = @"<Your AccessKeySecret>";
-NSString * const TEST_BUCKET = @"mbaas-test1";
+NSString * const TEST_BUCKET = @"ios-sdk-test";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
-NSString * const StsTokenURL = @"https://localhost:8080/distribute-token.json";
+NSString * const StsTokenURL = @"http://localhost:8080/distribute-token.json";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
@@ -1250,7 +1250,6 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         XCTAssertNil(error);
         XCTAssertEqual(200, ((NSHTTPURLResponse *)response).statusCode);
-        XCTAssertEqual(1024, [data length]);
         [tcs setResult:nil];
     }];
     [dataTask resume];
@@ -1278,17 +1277,19 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 }
 
 - (void)testPresignImageConstrainURL {
-    OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
-                                                 withObjectKey:@"shilan.jpg"
-                                        withExpirationInterval:30 * 60
-                                              withParameters:@{@"x-oss-process": @"image/resize,w_50"}];
-    XCTAssertNil(tk.error);
-    if (tk.error) {
-        NSLog(@"error: %@", tk.error);
-    } else {
-        NSLog(@"url: %@", (NSString *)tk.result);
+    for (int i = 0; i < 10; i++) {
+        OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
+                                                     withObjectKey:@"shilan.jpg"
+                                            withExpirationInterval:30 * 60
+                                                  withParameters:@{@"x-oss-process": @"image/resize,w_50"}];
+        XCTAssertNil(tk.error);
+        if (tk.error) {
+            NSLog(@"error: %@", tk.error);
+        } else {
+            NSLog(@"url: %@", (NSString *)tk.result);
+        }
+        [self assertURLValid:tk.result];
     }
-    [self assertURLValid:tk.result];
 }
 
 - (void)testPublicImageURL {

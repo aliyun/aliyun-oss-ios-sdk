@@ -289,10 +289,8 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             [subresource addObject:[NSString stringWithFormat:@"%@=%@", keyStr, valueStr]];
         }
     }];
-    [subresource sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        return obj1 < obj2;
-    }];
-    return [subresource componentsJoinedByString:@"&"];
+    NSArray * sortedSubResource = [subresource sortedArrayUsingSelector:@selector(compare:)]; // 升序
+    return [sortedSubResource componentsJoinedByString:@"&"];
 }
 
 + (NSString *)populateQueryStringFromParameter:(NSDictionary *)parameters {
