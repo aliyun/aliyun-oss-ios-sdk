@@ -18,9 +18,14 @@
 
 @end
 
-NSString * const g_AK = @"<Your AccessKeyId>";
-NSString * const g_SK = @"<Your AccessKeySecret>";
-NSString * const TEST_BUCKET = @"ios-sdk-test";
+//NSString * const g_AK = @"<Your AccessKeyId>";
+//NSString * const g_SK = @"<Your AccessKeySecret>";
+
+
+NSString * const g_AK = @"LTAIdJcQW6Uap6cL";
+NSString * const g_SK = @"ssnJED1Ro4inSpE2NF71bGZD6IEbN1";
+
+NSString * const TEST_BUCKET = @"ios-sdk-test-1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
 NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
@@ -272,7 +277,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
         return; // we need the account owner's ak/sk to create bucket; federation token can't do this
     }
     OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
-    create.bucketName = @"create-zhouzhuo-bucket";
+    create.bucketName = TEST_BUCKET;
     create.xOssACL = @"public-read";
     create.location = @"oss-cn-hangzhou";
 
@@ -973,17 +978,28 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
         uploadId = result.uploadId;
         return nil;
     }] waitUntilFinished];
-
-    for (int i = 1; i <= 3; i++) {
+    
+    int chuckCount = 3;
+    for (int i = 1; i <= chuckCount; i++) {
         OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
         uploadPart.bucketName = TEST_BUCKET;
         uploadPart.objectkey = MultipartUploadObjectKey;
         uploadPart.uploadId = uploadId;
         uploadPart.partNumber = i; // part number start from 1
         NSString * docDir = [self getDocumentDirectory];
-        uploadPart.uploadPartFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
-        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:uploadPart.uploadPartFileURL.absoluteString error:nil] fileSize];
-        OSSLogError(@"filesize: %llu", fileSize);
+        NSString * filePath = [docDir stringByAppendingPathComponent:@"file10m"];
+//        uploadPart.uploadPartFileURL = [NSURL fileURLWithPath:filePath];
+        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+        OSSLogError(@" testMultipartUpload filesize: %llu", fileSize);
+        uint64_t offset = fileSize / chuckCount;
+        OSSLogError(@" testMultipartUpload offset: %llu", offset);
+        
+        NSFileHandle* readHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+        [readHandle seekToFileOffset:offset * (i -1)];
+        
+        NSData* data = [readHandle readDataOfLength:offset];
+        uploadPart.uploadPartData = data;
+        
         task = [client uploadPart:uploadPart];
         [[task continueWithBlock:^id(OSSTask *task) {
             XCTAssertNil(task.error);
