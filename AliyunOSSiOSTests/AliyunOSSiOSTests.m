@@ -18,12 +18,8 @@
 
 @end
 
-//NSString * const g_AK = @"<Your AccessKeyId>";
-//NSString * const g_SK = @"<Your AccessKeySecret>";
-
-
-NSString * const g_AK = @"LTAIdJcQW6Uap6cL";
-NSString * const g_SK = @"ssnJED1Ro4inSpE2NF71bGZD6IEbN1";
+NSString * const g_AK = @"<Your AccessKeyId>";
+NSString * const g_SK = @"<Your AccessKeySecret>";
 
 NSString * const TEST_BUCKET = @"ios-sdk-test-1";
 
