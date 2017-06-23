@@ -1,6 +1,6 @@
 # Aliyun OSS SDK for iOS
 
-## [README of English](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README-CN.md)
+## [README of English](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README.md)
 
 ## 简介
 
