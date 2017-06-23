@@ -1,86 +1,87 @@
-## 简介
+﻿# Alibaba Cloud OSS SDK for iOS
 
-本文档主要介绍OSS iOS SDK的安装和使用。本文档假设您已经开通了阿里云OSS 服务，并创建了Access Key ID 和Access Key Secret。文中的ID 指的是Access Key ID，KEY 指的是Access Key Secret。如果您还没有开通或者还不了解OSS，请登录[OSS产品主页](http://www.aliyun.com/product/oss)获取更多的帮助。
+## [README of Chinese](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README-CN.md)
 
-### 环境要求：
-- iOS系统版本：iOS 7.0以上
-- 必须注册有Aliyun.com用户账户，并开通OSS服务。
+## Introduction
 
------
-## 安装
+This document mainly describes how to install and use the OSS iOS SDK. This document assumes that you have already activated the Alibaba Cloud OSS service and created an *AccessKeyID* and an *AccessKeySecret*. In the document, *ID* refers to the *AccessKeyID* and *KEY* indicates the *AccessKeySecret*. If you have not yet activated or do not know about the OSS service, log on to the [OSS Product Homepage](http://www.aliyun.com/product/oss) for more help.
 
-### 直接引入Framework
+## Environment requirements
+- iOS ***7.0*** or above. 
+- You must have registered an Alibaba Cloud account with the OSS activated.
 
-需要引入OSS iOS SDK framework。
+## Installation
 
-您可以在MacOS系统中直接使用在本工程生成framwork：
+### Introduce framework directly
+
+The OSS iOS SDK framework needs to be introduced.
+
+You can use this project to directly generate a framework in MacOS : 
 
 ```bash
-# clone工程
+# Clone the project
 $ git clone git@github.com:aliyun/aliyun-oss-ios-sdk.git
 
-# 进入目录
+# Enter the directory
 $ cd aliyun-oss-ios-sdk
 
-# 执行打包脚本
+# Run the packaging script
 $ sh ./buildFramework.sh
 
-# 进入打包生成目录，AliyunOSSiOS.framework生成在该目录下
+# Enter the generated packaging directory  where the AliyunOSSiOS.framework will be generated
 $ cd Products && ls
 ```
 
-在Xcode中，直接把framework拖入您对应的Target下即可，在弹出框勾选`Copy items if needed`。
+In Xcode, drag the OSS iOS SDK framework and drop it to your target, and select *Copy items if needed* in the pop-up box.
 
-### Pod依赖
+### Pod dependency
 
-如果工程是通过pod管理依赖，那么在Podfile中加入以下依赖即可，不需要再导入framework：
+If your project manages dependencies using a Pod, add the following dependency to the Podfile. In this case, you do not need to import the OSS iOS SDK framework.
 
 ```
 pod 'AliyunOSSiOS', '~> 2.6.0'
 ```
 
-CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: [CocoaPods安装和使用教程](http://code4app.com/article/cocoapods-install-usage)。
+CocoaPods is an outstanding dependency manager. Recommended official reference documents: [CocoaPods Installation and Usage Tutorial]((http://code4app.com/article/cocoapods-install-usage)).
 
-直接引入Framework和Pod依赖，两种方式选其一即可。
+You can directly introduce the OSS iOS SDK framework or the Pod dependency, either way works.
 
-### 工程中引入头文件
+### Introduce the header file to the project
 
 ```objc
 #import <AliyunOSSiOS/OSSService.h>
 ```
 
-注意，引入Framework后，需要在工程`Build Settings`的`Other Linker Flags`中加入`-ObjC`。如果工程此前已经设置过`-force_load`选项，那么，需要加入`-force_load <framework path>/AliyunOSSiOS`。
+**Note:** After you introduce the OSS iOS SDK framework, add `-ObjC` to *Other Linker Flags* of *Build Settings* in your project. If the `-force_load` option has been configured for your project, add `-force_load <framework path>/AliyunOSSiOS`.
 
-### 兼容IPv6-Only网络
+### Compatible with IPv6-Only networks
 
-OSS移动端SDK为了解决无线网络下域名解析容易遭到劫持的问题，已经引入了HTTPDNS进行域名解析，直接使用IP请求OSS服务端。在IPv6-Only的网络下，可能会遇到兼容性问题。而APP官方近期发布了关于IPv6-only网络环境兼容的APP审核要求，为此，SDK从`2.5.0`版本开始已经做了兼容性处理。在新版本中，除了`-ObjC`的设置，还需要引入两个系统库：
+The OSS mobile SDK has introduced the *HTTPDNS* for domain name resolution to solve the problem of domain resolution hijacking in a wireless network and directly uses IP addresses for requests to the server. In the IPv6-Only network, compatibility issues may occur. The app has officially issued the review requirements for apps, requiring apps to be IPv6-only network compatible. To this end, the SDK starts to be compatible from ***V2.5.0***. In the new version, apart from `-ObjC` settings, two system libraries should be introduced:
 
 ```
 libresolv.tbd
 SystemConfiguration.framework
 ```
 
-### 关于苹果ATS政策
+### The ATS policy of Apple
 
-WWDC 2016开发者大会上，苹果宣布从2017年1月1日起，苹果App Store中的所有App都必须启用 App Transport Security(ATS) 安全功能。也就是说，所有的新提交 app 默认是不允许使用`NSAllowsArbitraryLoads`来绕过 ATS 限制的。我们最好保证 app 的所有网络请求都是 HTTPS 加密的，否则可能会在应用审核时遇到麻烦。
+At the WWDC 2016, Apple announced that starting January 1, 2017, all the apps in Apple App Store must enable App Transport Security (ATS). That is to say, all newly submitted apps are not allowed to use `NSAllowsArbitraryLoads` to bypass the ATS limitation by default. We'd better ensure that all network requests of the app are HTTPS-encrypted. Otherwise the app may have troubles to pass the review.
 
-本SDK在`2.6.0`以上版本中对此做出支持，其中，SDK不会自行发出任何非HTTPS请求，同时，SDK支持`https://`前缀的`Endpoint`，只需要设置正确的HTTPS `Endpoint`，就能保证发出的网络请求都是符合要求的。
+This SDK provides the support in ***V2.6.0*** and above. Specifically, the SDK will not issue any non-HTTPS requests. At the same time, the SDK supports *endpoint* with the `https://` prefix. You only need to set the correct HTTPS *endpoint* to ensure that all network requests comply with the requirements.
 
-所以，用户需要注意：
+**Note:**
+* Use a URL with the `https://` prefix for setting the *endpoint*.
+* Ensure that the app will not send non-HTTPS requests when *implementing signing* and *getting STSToken callbacks*.
 
-* 设置`Endpoint`时，需要使用`https://`前缀的URL。
-* 在实现加签、获取STSToken等回调时，需要确保自己不会发出 非HTTPS 的请求。
+### Descriptions of OSSTask
 
-### 对于OSSTask的一些说明
-
-所有调用api的操作，都会立即获得一个OSSTask，如：
+You will get an *OSSTask* immediately for all operations that call APIs:
 
 ```
 OSSTask * task = [client getObject:get];
 ```
 
-可以为这个Task设置一个延续(continution)，以实现异步回调，如：
-
+You can configure a continuation for the *task* to achieve asynchronous callback. For example, 
 ```
 [task continueWithBlock: ^(OSSTask *task) {
 	// do something
@@ -90,7 +91,7 @@ OSSTask * task = [client getObject:get];
 }];
 ```
 
-也可以等待这个Task完成，以实现同步等待，如：
+You can also wait till the *task* is finished (synchronous wait). For example, 
 
 ```
 [task waitUntilFinished];
@@ -98,25 +99,24 @@ OSSTask * task = [client getObject:get];
 ...
 ```
 
------
-## 快速入门
+## Quick start
 
-以下演示了上传、下载文件的基本流程。更多细节用法可以参考本工程的：
+The basic object upload and download processes are demonstrated below. For details, you can refer to the following directories of this project:
 
-test资源：[点击查看](https://github.com/aliyun/AliyunOSSiOS/tree/master/AliyunOSSiOSTests)
+*test*: [Click to view details](https://github.com/aliyun/AliyunOSSiOS/tree/master/AliyunOSSiOSTests); 
 
-或者：
+or
 
-demo示例: [点击查看](https://github.com/alibaba/alicloud-ios-demo)。
+*demo*: [click to view details](https://github.com/alibaba/alicloud-ios-demo).
 
-### STEP-1. 初始化OSSClient
+### Step-1. Initialize the OSSClient
 
-初始化主要完成Endpoint设置、鉴权方式设置、Client参数设置。其中，鉴权方式包含明文设置模式、自签名模式、STS鉴权模式。鉴权细节详见后面链接给出的官网完整文档的`访问控制`章节。
+The initialization process mainly includes the following steps: endpoint settings, authentication mode settings, and client parameter settings. Three authentication modes are available: plain text setting mode, self-signed mode, and STS authentication mode. For details about authentication, refer to the *Access Control* section in the complete official documentation provided in the following link.
 
 ```objc
 NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
 
-// 明文设置secret的方式建议只在测试时使用，更多鉴权模式参考后面链接给出的官网完整文档的`访问控制`章节
+// AccessKeySecret setting in plain text mode is recommended for test purposes only. For more authentication modes, refer to the 'Access Control' section in the complete official documentation provided in the following link.
 id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"<your accesskeyId>"
                                                                                                         secretKey:@"<your accessKeySecret>"];
 
@@ -124,9 +124,9 @@ client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credent
 
 ```
 
-### STEP-2. 上传文件
+### Step-2. Upload a file
 
-这里假设您已经在控制台上拥有自己的Bucket。SDK的所有操作，都会返回一个`OSSTask`，您可以为这个task设置一个延续动作，等待其异步完成，也可以通过调用`waitUntilFinished`阻塞等待其完成。
+Suppose that you have a bucket in the OSS console. An *OSSTask* will be returned after each SDK operation. You can configure a continuation for the task to achieve asynchronous callback. You can also use the *waitUntilFinished* to block other requests and wait until the task is finished.
 
 ```objc
 OSSPutObjectRequest * put = [OSSPutObjectRequest new];
@@ -134,7 +134,7 @@ OSSPutObjectRequest * put = [OSSPutObjectRequest new];
 put.bucketName = @"<bucketName>";
 put.objectKey = @"<objectKey>";
 
-put.uploadingData = <NSData *>; // 直接上传NSData
+put.uploadingData = <NSData *>; // Directly upload NSData
 
 put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
 	NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
@@ -151,14 +151,14 @@ OSSTask * putTask = [client putObject:put];
 	return nil;
 }];
 
-// 可以等待任务完成
+// Wait until the task is finished
 // [putTask waitUntilFinished];
 
 ```
 
-### STEP-3. 下载指定文件
+### Step-3. Download a specified object
 
-下载一个指定`object`为`NSData`:
+The following code downloads a specified *object* as *NSData*:
 
 ```objc
 OSSGetObjectRequest * request = [OSSGetObjectRequest new];
@@ -182,48 +182,26 @@ OSSTask * getTask = [client getObject:request];
 	return nil;
 }];
 
-// 如果需要阻塞等待任务完成
+// Use a blocking call to wait until the task is finished
 // [task waitUntilFinished];
 
 ```
 
------
-## 完整文档
+## Complete documentation
 
-SDK提供进阶的上传、下载功能、断点续传，以及文件管理、Bucket管理等功能。详见官方完整文档：[点击查看](http://help.aliyun.com/document_detail/oss/sdk/ios-sdk/preface.html?spm=5176.product8314910_oss.4.30.tK2G02)
+The SDK provides advanced upload, download, resumable upload/download, object management and bucket management features. For details, see the complete official documentation: [click to view details](http://help.aliyun.com/document_detail/oss/sdk/ios-sdk/preface.html?spm=5176.product8314910_oss.4.30.tK2G02). 
 
------
-## API文档
+## API documentation
 
-[点击查看](http://aliyun.github.io/aliyun-oss-ios-sdk/)
+[Click to view details](http://aliyun.github.io/aliyun-oss-ios-sdk/).
 
------
-## 联系我们
-
-* 阿里云OSS官方网站：http://oss.aliyun.com
-* 阿里云OSS官方论坛：http://bbs.aliyun.com
-* 阿里云OSS官方文档中心：http://www.aliyun.com/product/oss#Docs
-* 阿里云官方技术支持 登录OSS控制台 https://home.console.aliyun.com -> 点击"工单系统"
-
------
 ## License
 
-Copyright (c) 2015 Aliyun.Inc.
+* Apache License 2.0.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+## Contact us
 
-you may not use this file except in compliance with the License.
-
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-
-distributed under the License is distributed on an "AS IS" BASIS,
-
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-See the License for the specific language governing permissions and
-
-limitations under the License.
+* [Alibaba Cloud OSS official website](http://oss.aliyun.com).
+* [Alibaba Cloud OSS official forum](http://bbs.aliyun.com).
+* [Alibaba Cloud OSS official documentation center](http://www.aliyun.com/product/oss#Docs).
+* Alibaba Cloud official technical support: [Submit a ticket](https://workorder.console.aliyun.com/#/ticket/createIndex).
