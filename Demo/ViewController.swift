@@ -9,8 +9,9 @@
 import UIKit
 import AliyunOSSiOS
 
-private let AccessKeyId = "<Your AccessKeyId>"
-private let AccessKeySecret = "<Your AccessKeySecret>"
+private let AccessKeyId = "<StsToken.AccessKeyId>"
+private let AccessKeySecret = "<StsToken.SecretKeyId>"
+private let SecurityToken = "<StsToken.SecurityToken>"
 private let BucketName = "<Your BucketName>"
 private let EndPoint = "https://oss-cn-hangzhou.aliyuncs.com"
 
@@ -27,9 +28,10 @@ class ViewController: UIViewController {
         conf.timeoutIntervalForRequest = 30
         conf.timeoutIntervalForResource = TimeInterval(24 * 60 * 60)
         conf.maxConcurrentRequestCount = 5
-
-        let cred = OSSPlainTextAKSKPairCredentialProvider(plainTextAccessKey: AccessKeyId, secretKey: AccessKeySecret)!
-
+        
+        
+        let cred = OSSStsTokenCredentialProvider(accessKeyId: AccessKeyId, secretKeyId: AccessKeySecret, securityToken: SecurityToken)!
+        
         self.oss = OSSClient(endpoint: EndPoint, credentialProvider: cred, clientConfiguration: conf)
 
         let get = OSSGetObjectRequest()

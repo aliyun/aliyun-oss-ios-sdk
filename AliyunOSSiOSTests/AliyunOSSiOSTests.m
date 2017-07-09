@@ -33,7 +33,7 @@ static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
-id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
+id<OSSCredentialProvider>  credential, credential2, credential3;
 
 @implementation oss_ios_sdk_newTests
 
@@ -93,10 +93,11 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
 - (void)initOSSClient {
     [OSSLog enableLog];
 
-    credential1 = [self newPlainAKSKCredentialProvider];
+
+    credential = [self newStsTokenCredentialProvider];
     credential2 = [self newCustomSignerCredentialProvider];
     credential3 = [self newFederationCredentialProvider];
-    credential4 = [self newStsTokenCredentialProvider];
+    
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
@@ -105,7 +106,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     conf.maxConcurrentRequestCount = 5;
 
     // 更换不同的credentialProvider测试
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential1 clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
 }
 
 - (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
@@ -182,6 +183,7 @@ id<OSSCredentialProvider> credential1, credential2, credential3, credential4;
     // "federatedUser":"335450541522398178:alice-001",
     // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
     // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
+    
     NSURL * url = [NSURL URLWithString:StsTokenURL];
     NSURLRequest * request = [NSURLRequest requestWithURL:url];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
