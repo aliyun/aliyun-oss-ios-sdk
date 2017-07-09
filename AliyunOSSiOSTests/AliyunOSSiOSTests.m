@@ -18,9 +18,6 @@
 
 @end
 
-NSString * const g_AK = @"<Your AccessKeyId>";
-NSString * const g_SK = @"<Your AccessKeySecret>";
-
 NSString * const TEST_BUCKET = @"ios-sdk-test-1";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android";
@@ -109,10 +106,10 @@ id<OSSCredentialProvider>  credential, credential2, credential3;
     client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
 }
 
-- (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
-    return [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
-                                                                            secretKey:g_SK];
-}
+//- (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
+//    return [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
+//                                                                            secretKey:g_SK];
+//}
 
 - (id<OSSCredentialProvider>)newCustomSignerCredentialProvider {
     // 自实现签名，可以用本地签名也可以远程加签
