@@ -111,14 +111,12 @@ or
 
 ### Step-1. Initialize the OSSClient
 
-The initialization process mainly includes the following steps: endpoint settings, authentication mode settings, and client parameter settings. Three authentication modes are available: plain text setting mode, self-signed mode, and STS authentication mode. For details about authentication, refer to the *Access Control* section in the complete official documentation provided in the following link.
+We recommend STS authentication mode to initialize the OSSClient on mobile. For details about authentication, refer to the *Access Control* section in the complete official documentation provided in the following link.
 
 ```objc
 NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
 
-// AccessKeySecret setting in plain text mode is recommended for test purposes only. For more authentication modes, refer to the 'Access Control' section in the complete official documentation provided in the following link.
-id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"<your accesskeyId>"
-                                                                                                        secretKey:@"<your accessKeySecret>"];
+id<OSSCredentialProvider> credential = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"<StsToken.AccessKeyId>" secretKeyId:@"<StsToken.SecretKeyId>" securityToken:@"<StsToken.SecurityToken>"];
 
 client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential];
 
