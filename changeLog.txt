@@ -14,6 +14,15 @@ http://www.aliyun.com
 
 更新日志:
 
+2017/7/12
+- 发布 2.6.1 版本
+
+1. deprecate initWithPlainText 方法。移动端建议使用STS鉴权方式
+
+github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod依赖：   pod 'AliyunOSSiOS', '~> 2.6.1'
+demo地址：  https://github.com/alibaba/alicloud-ios-demo
+
 
 2016/12/15
 - 发布 2.6.0 版本
