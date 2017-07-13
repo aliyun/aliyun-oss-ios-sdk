@@ -122,12 +122,13 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 /**
  用明文AK/SK实现的加签器，建议只在测试模式时使用
  */
+
 @interface OSSPlainTextAKSKPairCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) NSString * accessKey;
 @property (nonatomic, strong) NSString * secretKey;
 
 - (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey
-                                 secretKey:(NSString *)secretKey;
+                                 secretKey:(NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
 @end
 
 /**
