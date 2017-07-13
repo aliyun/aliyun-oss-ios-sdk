@@ -128,7 +128,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, strong) NSString * secretKey;
 
 - (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey
-                                 secretKey:(NSString *)secretKey __attribute__((deprecated("请使用STS鉴权方式")));
+                                 secretKey:(NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
 @end
 
 /**

@@ -30,7 +30,7 @@ static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
-id<OSSCredentialProvider>  credential, credential2;
+id<OSSCredentialProvider>  credential, credentialFed;
 
 @implementation oss_ios_sdk_newTests
 
@@ -92,7 +92,7 @@ id<OSSCredentialProvider>  credential, credential2;
 
 
     credential = [self newStsTokenCredentialProvider];
-    credential2 = [self newFederationCredentialProvider];
+    credentialFed = [self newFederationCredentialProvider];
     
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
@@ -105,25 +105,6 @@ id<OSSCredentialProvider>  credential, credential2;
     client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
 }
 
-//- (id<OSSCredentialProvider>)newPlainAKSKCredentialProvider {
-//    return [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:g_AK
-//                                                                            secretKey:g_SK];
-//}
-
-//- (id<OSSCredentialProvider>)newCustomSignerCredentialProvider {
-//    // 自实现签名，可以用本地签名也可以远程加签
-//    return [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-//        NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:@"***"];
-//        if (signature != nil) {
-//            *error = nil;
-//        } else {
-//            // construct error object
-//            *error = [NSError errorWithDomain:@"<your error domain>" code:OSSClientErrorCodeSignFailed userInfo:nil];
-//            return nil;
-//        }
-//        return [NSString stringWithFormat:@"OSS %@:%@", @"***", signature];
-//    }];
-//}
 
 - (id<OSSCredentialProvider>)newFederationCredentialProvider {
     // Federation鉴权，建议通过访问远程业务服务器获取签名
@@ -1318,7 +1299,7 @@ id<OSSCredentialProvider>  credential, credential2;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
     OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
-                                           credentialProvider:credential2
+                                           credentialProvider:credential
                                           clientConfiguration:conf];
 
     conf = [OSSClientConfiguration new];
@@ -1328,7 +1309,7 @@ id<OSSCredentialProvider>  credential, credential2;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
     OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
-                                           credentialProvider:credential2
+                                           credentialProvider:credential
                                           clientConfiguration:conf];
 
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
@@ -1393,7 +1374,7 @@ id<OSSCredentialProvider>  credential, credential2;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
     OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"oss-cn-hangzhou.aliyuncs.com"
-                                           credentialProvider:credential2
+                                           credentialProvider:credential
                                           clientConfiguration:conf];
 
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
@@ -1716,7 +1697,7 @@ id<OSSCredentialProvider>  credential, credential2;
 
 - (void)testCnamePutObject {
     OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
-                                          credentialProvider:credential2];
+                                          credentialProvider:credential];
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
@@ -1748,7 +1729,7 @@ id<OSSCredentialProvider>  credential, credential2;
 
 - (void)testCnameGetObejct {
     OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
-                                          credentialProvider:credential2];
+                                          credentialProvider:credential];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
@@ -1778,7 +1759,7 @@ id<OSSCredentialProvider>  credential, credential2;
     conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
 
     OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
-                                           credentialProvider:credential2
+                                           credentialProvider:credential
                                           clientConfiguration:conf];
 
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
@@ -1980,7 +1961,7 @@ id<OSSCredentialProvider>  credential, credential2;
     configuration.timeoutIntervalForRequest = 30;
     configuration.timeoutIntervalForResource = 24 * 60 * 60;
     configuration.maxConcurrentRequestCount = 1;
-    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential2 clientConfiguration:configuration];
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:configuration];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     __block int counter = 0;
     for (int i = 0; i < 5; i++) {
