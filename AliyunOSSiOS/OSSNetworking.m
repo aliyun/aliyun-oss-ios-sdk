@@ -416,17 +416,6 @@
                                                           userInfo:nil]];
         }
         [sessionTask resume];
-
-        /** 
-         内存泄露点，两个强引用指向 OSSNetworking 这个对象
-         
-         1.sessionWithConfiguration:delegate:delegateQueue: 这个回调delegate会被强引用
-         2.当不再需要连接调用Session的时候，调用invalidateAndCancel直接关闭，或者调用finishTasksAndInvalidate等待当前Task结束后关闭。
-         3.这时Delegate会收到URLSession:didBecomeInvalidWithError:这个事件。
-         4.Delegate收到这个事件之后会被解引用。
-         */
-        [_dataSession finishTasksAndInvalidate];
-        [_uploadFileSession finishTasksAndInvalidate];
       
         return task;
     }] continueWithBlock:^id(OSSTask *task) {
