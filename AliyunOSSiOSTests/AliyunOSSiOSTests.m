@@ -1434,6 +1434,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
+    
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         if (task.error) {
@@ -1442,6 +1443,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
                 // 该任务无法续传，需要获取新的uploadId重新上传
             }
         } else {
+            
             NSLog(@"Upload file success");
         }
         return nil;
@@ -1549,6 +1551,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
                 // 该任务无法续传，需要获取新的uploadId重新上传
             }
         } else {
+            NSString * requestId = resumableUploadResult.requestId;
+            
             NSLog(@"Upload file success");
             XCTAssertNotNil(resumableUploadResult);
             XCTAssertNotNil(resumableUploadResult.serverReturnJsonString);
