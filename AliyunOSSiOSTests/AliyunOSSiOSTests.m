@@ -101,14 +101,14 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
     conf.maxConcurrentRequestCount = 5;
 
-    // 更换不同的credentialProvider测试
+    // switches to another credential provider.
     client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
 }
 
 
 - (id<OSSCredentialProvider>)newFederationCredentialProvider {
-    // Federation鉴权，建议通过访问远程业务服务器获取签名
-    // 假设访问业务服务器的获取token服务时，返回的数据格式如下：
+    // Federation authentication，getting the STS token and AK pair from app servers.
+    // Assuming the following is the returned data:
     // {"accessKeyId":"STS.iA645eTOXEqP3cg3VeHf",
     // "accessKeySecret":"rV3VQrpFQ4BsyHSAvi5NVLpPIVffDJv4LojUBZCf",
     // "expiration":"2015-11-03T09:52:59Z[;",
@@ -137,7 +137,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
                                                                     options:kNilOptions
                                                                       error:nil];
             OSSFederationToken * token = [OSSFederationToken new];
-            // 四个值缺一不可
+            // All the entries below are mandatory. 
             token.tAccessKey = [object objectForKey:@"AccessKeyId"];
             token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
             token.tToken = [object objectForKey:@"SecurityToken"];
@@ -149,11 +149,12 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
 }
 
-// 用获取到的STS Token直接初始化OSSClient，这种设置下，OSSClient不会自动管理更新token，需要用户自行判断token是否失效并重新设置新的token。
-// 如果token过期仍未更新，后续的请求将无法通过鉴权。
+// Initializes an OSSClient object with STS token and AK pairs. 
+// In this case, the OSSClient will not auto refresh the token. The caller needs to check if the token has been expired and refresh a new STS token.
+// If the expired token is not updated, the authentication will fail for subsequential requests.
 - (id<OSSCredentialProvider>)newStsTokenCredentialProvider {
 
-    // 假设访问业务服务器的获取token服务时，返回的数据格式如下：
+    // Assuming the following is the returned data from app servers
     // {"accessKeyId":"STS.iA645eTOXEqP3cg3VeHf",
     // "accessKeySecret":"rV3VQrpFQ4BsyHSAvi5NVLpPIVffDJv4LojUBZCf",
     // "expiration":"2015-11-03T09:52:59Z[;",
@@ -176,7 +177,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
     [sessionTask resume];
     [tcs.task waitUntilFinished];
     if (tcs.task.error) {
-        // 如果拿不到token，建议重试直到获取。如果一直拿不到，应该放弃任务，或者返回空。
+        // If the call to retrieve token fails, return null.
+        // In real world, a few retries are recommended. 
         NSLog(@"Cant't init credential4, error: %@", tcs.task.error);
         return nil;
     } else {
@@ -1440,7 +1442,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         if (task.error) {
             NSLog(@"error: %@", task.error);
             if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
-                // 该任务无法续传，需要获取新的uploadId重新上传
+                // The upload cannot be resumed. Needs to re-initiate a upload.
             }
         } else {
             
@@ -1487,7 +1489,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         if (task.error) {
             NSLog(@"error: %@", task.error);
             if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
-                // 该任务无法续传，需要获取新的uploadId重新上传
+                // The upload cannot be resumed. Needs to re-initiate a upload.
             }
         } else {
             NSLog(@"Upload file success");
@@ -1548,7 +1550,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         if (task.error) {
             NSLog(@"error: %@", task.error);
             if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
-                // 该任务无法续传，需要获取新的uploadId重新上传
+                // The upload cannot be resumed. Needs to re-initiate a upload.
             }
         } else {
             NSString * requestId = resumableUploadResult.requestId;

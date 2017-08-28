@@ -1,236 +1,232 @@
-阿里云计算开放服务软件开发工具包iOS版
 Aliyun Open Services SDK for iOS
-
-版权所有 （C）阿里云计算有限公司
 
 Copyright (C) Alibaba Cloud Computing
 All rights reserved.
 
 http://www.aliyun.com
 
-环境要求：
-- iOS系统版本：iOS 7.0以上
-- 必须注册有Aliyun.com用户账户，并开通相应的服务（OSS等）。
+Environment Requirement：
+- iOS：iOS 7.0 or higher
+- You need a registered Aliyun.com user and OSS is enabled.
 
-更新日志:
+Update Logs:
 
 2017/7/13
-- 发布 2.6.2 版本
+- Release 2.6.2
 
-1. 更正内存泄漏的修改方式。
+1. Update the fix of memory leak.
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.6.2'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.6.2'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
 2017/7/12
-- 发布 2.6.1 版本
+- Release 2.6.1
 
-1. deprecate initWithPlainText 方法。移动端建议使用STS鉴权方式
+1. deprecate initWithPlainText methods. STS authentication is recommended in mobile.
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.6.1'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.6.1'
+demo address: https://github.com/alibaba/alicloud-ios-demo
 
 
 2016/12/15
-- 发布 2.6.0 版本
+- Release 2.6.0
 
-1. 支持苹果ATS标准。
-2. 提供初始化时调用的校准时间接口。
-3. 支持bitcode。
+1. Supports Apple's ATS standard.
+2. Add a API to offset time during the initialization.
+3. Supports bitcode。
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.6.0'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.6.0'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
 
 2016/09/18
-- 发布 2.5.3 版本
+- Release 2.5.3
 
-1. 优化STS Token的刷新策略。
+1. Optimize the STS token refresh strategy.
 
 
 2016/08/28
-- 发布 2.5.2 版本
+- Release 2.5.2
 
-1. 使断点上传的进度可选。
-2. 在GetObject接口支持图片处理x-oss-process设置。
+1. Make the progress callback optional in resumable upload.
+2. Add the x-oss-process parameter in GetObjectAPI to process pictures
 
 
 2016/07/22
-- 发布 2.5.1 版本
+- Release 2.5.1
 
-1. 修复一处符号冲突问题。
-2. 针对某些专有云场景做支持。
-3. 断点上传可以在任意进度取消。
+1. Fix a symbol conflict
+2. Support some scenarios in the private cloud
+3. Support cancel at any time during the resumable upload.
 
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.5.1'
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.5.1'
 
 
 2016/05/22
-- 发布 2.5.0 版本
+- Release 2.5.0
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.5.0'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.5.0'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-1. 兼容IPv6-Only网络。
+1. Support IPv6-Only network
 
 
 2016/05/11
-- 发布 2.4.1 版本
+- Release 2.4.1
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.4.1'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.4.1'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-1. 更新httpdns为公有云版本。
-2. 增加PutObjectACL接口。
-3. 修复GetBucket的NextMarker相关问题。
-4. 修复断点上传进度粒度过大的问题。
+1. Upgrade the httpdns with the public cloud version
+2. Add PutObjectACL API
+3. Fix NextMarker related issues in GetBucket
+4. Fix the issue that the granularity in upload progress is too big in resumable upload.
 
 
 2016/03/27
-- 发布 2.3.0 版本
+- Release 2.3.0
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.3.0'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.3.0'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-1. 增加https场景下使用httpdns的安全性。
-2. 增加BucketName和ObjectKey校验。
-3. 修复一处Content-Type相关的问题。
+1. Improves the security of using httpdns in https
+2. Add the client side verification on bucket name and object key.
+3. Fix a content-type related issue.
 
 
 2016/02/02
-- 发布 2.2.0 版本
+- Release 2.2.0
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.2.0'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.2.0'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-1. 增加可以直接设置sts token的credentialProvider。
-2. 优化加签逻辑。
+1. Add a new credential provider that could set the sts token directly.
+2. Optimize the authentication logic.
 
 
 2016/01/12
-- 发布 2.1.4 版本
+- Release 2.1.4
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.4'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.1.4'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-1. 优化任务取消逻辑。
-2. 断点续传支持server回调。
-3. 增加doesObjectExist接口。
-4. 支持任务并发数控制。
-5. 修复一处内存问题。
+1. Optimize the task cancellation logic.
+2. Support the server side callback in resumable upload
+3. Add doesObjectExist API
+4. Support adjustable concurrent task number
+5. Fix a memory leak.
 
 
 2015/12/11
-- 发布 2.1.3 版本
+- Release 2.1.3
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.3'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.1.3'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-- 修正token过期时更新的策略。
-- 支持不带scheme的endpoint设置如oss-cn-hangzhou.aliyuncs.com。
+- Fix the expired token's refresh strategy.
+- Support endpoint without schema such as oss-cn-hangzhou.aliyuncs.com
 
 
 2015/11/19
-- 发布 2.1.1 版本
+- Release 2.1.1
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.1'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.1.1'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
 - putObject支持servercallback。
-- 重试策略调整。
+- Adjust the retry strategy.
 
 
 2015/11/10
-- 发布 2.1.0 版本
+- Release 2.1.0
 
-github地址：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖：   pod 'AliyunOSSiOS', '~> 2.1.0'
-demo地址：  https://github.com/alibaba/alicloud-ios-demo
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.1.0'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
 
-- 增加getService/resumableUpload/presignURL接口。
-- 使用STS鉴权时，可以直接返回expiration为原GMT格式字符串的Token。
+- Add getService/resumableUpload/presignURL APIs
+- Support to return expiration time in GMT string when using STS for authentication.
 
 
 2015/09/18
-- 发布 2.0.2 版本
+- Release 2.0.2
 
-此次更新iOS SDK进行完全重构，不再兼容旧版本，旧版本处于只维护不更新状态，建议尽快迁移到新版本。
-新版本SDK要求iOS 7.0+，采用RESTFul风格接口，代码开源，用Pod管理依赖。
+This release is a complete refactor and hence is not compatibel with older version. Strongly recommend all users to upgrade to this version.
+It requires iOS 7.0+ and uses RESTFul style APIs. The code is open-sourced and pod is used for dependency management.
 
-github地址: https://github.com/aliyun/aliyun-oss-ios-sdk
-pod依赖:    pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/aliyun-oss-ios-sdk.git'
-demo地址:   https://github.com/alibaba/alicloud-ios-demo
+github address: https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency:    pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/aliyun-oss-ios-sdk.git'
+demo address:   https://github.com/alibaba/alicloud-ios-demo
 
- - 支持与RESTFul Api一致的参数设置。
- - 支持后台传输服务。
- - 支持下载时的分段回调，方便实现视频边下边播功能。
-
+ - Use RESTFul APIs' parameters to achieve the consistent API usage 
+ - Support background transport service
+ - Support callback per parts, to enable streaming function (play while downloading)
 
 
 2015/07/24
-- 发布 1.3.0 版本
+- Release 1.3.0
 
-- 开放独立的分块上传接口。
-- STS鉴权模式下，Token未过期不会发起新请求。
-- 修复并发情况下上传任务可能无法取消的问题。
-- 上传、下载的异步接口返回handler，通过handler取消任务。
+- Add a new multipart upload API
+- In STS authentication, new refresh token request is not issued as long as token is not expired.
+- Fix the issue that the task could not be canceled in concurrent uploads in some cases.
+- Add async APIs for Upoad, Download. The handler returned could be used for cancelling the task.
 
 2015/06/30
-－发布第六个版本1.2.0
+－Release 1.2.0
 
-－集成HTTPDNSMini到OSS SDK。
+－Integrate HTTPDNSMini to OSS SDK.
 
 
 2015/06/09
 
-－修复个别情况下回调失效的bug。
-－完善对sts临时token的更新策略。
+－Fix the callback bug that it may not be called in some cases.
+－Improves the STS token refresh strategy.
 
 
 2015/06/02
-－发布第五个版本1.1.0
+－Release 1.1.0
 
-－添加commonPrefixes结果。
-－添加头文件引入文件。
-－添加断点下载功能。
-－添加自定义时间接口。
-－md5校验开关。
-－将sdk的使用方式由原来的.a文件更改为framework。
-－增加对sts的支持。
+－Add the commonPrefixes in the result class
+－Add a include file of header files.
+－Support resumable download
+－Add custom time API
+－Add the option for MD5 verification
+－Change the SDK reference way from .a file to Framework
+－Add STS support.
 
 
 2015/04/07
-－发布第四个版本1.0.0
-－注意：本次OSS iOS SDK正式集成入阿里云OneSDK，为了风格统一，本次更新，SDK包名和若干接口名有所变动，细节请参考文档。
+－Release 1.0.0
+－Notes：This version's OSS iOS SDK is integrated into AliCloud OneSDK. Some APIs and packages are renamed to have a consistent style cross the SDK. For details, checks out the reference document.
 
-－增加list Objects功能。
-－指定范围下载功能支持指定文件结尾。
-－增加使用OSS SDK新的使用方式（详见文档）。
+－Add list objects API
+－Support suffix filtering in the download with specified range API.
+－Add a new way to reference the SDK(Check out online reference document for more detail).
 
 
 2015/03/04
-- 发布第三个版本0.1.2
+- Release 0.1.2
 
--修复中文兼容问题。
--修复断点续传bug。
+-Fix Chinese compatibility issue
+-Fix resumable download bug
 
 
 2015/01/20
-- 发布第二个版本0.1.1
+- Release 0.1.1
 
-- 修复用户打包不能上传到app store的问题。
-- 修正逻辑。
+- Fix the issue that user app's package could not be uploaded to app store.
+- Some other bug fixes.
 
 
 2014/12/22
-- 发布第一个版本0.1.0
+- Release 0.1.0
