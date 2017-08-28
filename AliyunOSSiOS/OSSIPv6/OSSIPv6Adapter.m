@@ -2,7 +2,7 @@
 //  OSSIPv6Adapter.m
 //
 //  Created by lingkun on 16/5/16.
-//  Copyright © 2016年 Ali. All rights reserved.
+//  Copyright © 2016 Ali. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -45,7 +45,7 @@
         isIPv6Only = NO;
         isIPv6OnlyResolved = NO;
 
-        // App转换到激活状态时，刷新IPv6-Only的判定和解析
+        // When App switches to active status, refresh the IPv6-only check.
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
         [defaultCenter addObserver:self
                           selector:@selector(appDidBecomeActiveFunc)
@@ -127,7 +127,7 @@
 }
 
 /**
- *	@brief	查询本机DNS Servers协议
+ *	@brief	Looks up the DNS server stack and returns the flag combinations of SUPPORT_IPV4_STACK and SUPPORT_IPV6_STACK.
  *
  *	@return
  */
@@ -161,7 +161,7 @@
 }
 
 /**
- *	@brief	判断是否为IPv4地址
+ *	@brief	Checks if the address is IPV4
  *
  *	@return
  */
@@ -177,7 +177,7 @@
 }
 
 /**
- *	@brief	判断是否为IPv6地址
+ *	@brief	Checks if the address is IPV6
  *
  *	@return
  */

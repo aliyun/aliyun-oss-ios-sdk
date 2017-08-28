@@ -3,7 +3,7 @@
 //
 //  Created by lingkun on 16/5/16.
 //  Edit by zhouzhuo on 16/5/22
-//  Copyright © 2016年 Ali. All rights reserved.
+//  Copyright © 2016 Ali. All rights reserved.
 //
 
 #ifndef AlicloudIPv6PrefixResolver_h

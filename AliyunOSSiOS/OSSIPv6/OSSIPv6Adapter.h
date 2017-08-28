@@ -71,23 +71,23 @@
 + (instancetype)getInstance;
 
 /**
- *	@brief	判断当前是否为IPv6-Only网络
+ *	@brief	Checks if it's a IPv6-only network. If it's true, it's IPv6-only.
  *
  *	@return
  */
 - (BOOL)isIPv6OnlyNetwork;
 
 /**
- *	@brief	手动刷新IPv6-Only网络的判定
+ *	@brief	Refresh the IPV6-only check
  *
  *	@return
  */
 - (BOOL)reResolveIPv6OnlyStatus;
 
 /**
- *	@brief	自动完成对IPv4地址的适配
- *          IPv6-Only网络环境：IPv4 address -> IPv4 Embedded IPv6 address
-            例：42.156.220.114 -> 64:ff9b::2a9c:dc72
+ *	@brief	Adapts the IPv4 address into IPv6 format under IPv6-only network.
+ *          For example:
+                42.156.220.114 -> 64:ff9b::2a9c:dc72
  *	@param 	addr
  *
  *	@return
@@ -95,14 +95,14 @@
 - (NSString *)handleIpv4Address:(NSString *)addr;
 
 /**
- *	@brief	判断是否为IPv4地址
+ *	@brief	Checks if it's an IPv4 address.
  *
  *	@return
  */
 - (BOOL)isIPv4Address:(NSString *)addr;
 
 /**
- *	@brief	判断是否为IPv6地址
+ *	@brief	Checks if it's an IPv6 address
  *
  *	@return
  */

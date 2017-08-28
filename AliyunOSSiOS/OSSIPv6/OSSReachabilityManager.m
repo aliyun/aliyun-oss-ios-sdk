@@ -4,7 +4,7 @@
 //  Created by 亿刀 on 14-1-9.
 //  Edited by junmo on 15-5-16
 //  Edited by zhouzhuo on 2016/5/22
-//  Copyright (c) 2014年 Twitter. All rights reserved.
+//  Copyright (c) 2014 Twitter. All rights reserved.
 //
 
 #import "OSSReachabilityManager.h"
@@ -54,7 +54,7 @@ static NSString *const CHECK_HOSTNAME = @"www.taobao.com";
     {
         _reachabilityRef =  SCNetworkReachabilityCreateWithName(NULL, [CHECK_HOSTNAME UTF8String]);
 
-        //开始监控网络变化
+        // Start network monitor
         [self _startNotifier];
     }
 
@@ -83,7 +83,7 @@ static NSString *const CHECK_HOSTNAME = @"www.taobao.com";
     return NO;
 }
 
-//网络变化回调函数
+// Callback of Network change 
 static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void* info)
 {
     if ([[OSSIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
