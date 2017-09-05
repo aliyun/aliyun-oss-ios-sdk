@@ -64,13 +64,16 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)encodeURL:(NSString *)url {
+    //保持和android处理方式一致，添加+ -> %20，* -> %2A，%7E -> ~, "%2F" -> /
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[url UTF8String];
     NSUInteger sourceLen = strlen((const char *)source);
     for (int i = 0; i < sourceLen; ++i) {
         const unsigned char thisChar = source[i];
         if (thisChar == ' ') {
-            [output appendString:@"+"];
+            [output appendString:@"%20"];
+        } else if (thisChar == '*') {
+            [output appendString:@"%2A"];
         } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
                    (thisChar >= 'a' && thisChar <= 'z') ||
                    (thisChar >= 'A' && thisChar <= 'Z') ||
@@ -80,7 +83,17 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             [output appendFormat:@"%%%02X", thisChar];
         }
     }
-    return output;
+    NSString *encodeUrl = [output stringByReplacingOccurrencesOfString:@"%2F" withString:@"/"];
+    encodeUrl = [encodeUrl stringByReplacingOccurrencesOfString:@"%7E" withString:@"~"];
+    return encodeUrl;
+
+    
+//  不要用这种方式，很多特殊字符都没有转化；
+//    //123 `~!@#$%^&*()_+-={}[]|\:;"'<,>.?/AZaz 转化为 123%20%60~!@%23$%25%5E&*()_+-=%7B%7D%5B%5D%7C%5C:;%22'%3C,%3E.?/AZaz
+//    // 空格不会转化成+号
+//    NSString *content = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    return content;
+
 }
 
 + (NSData *)constructHttpBodyFromPartInfos:(NSArray *)partInfos {
