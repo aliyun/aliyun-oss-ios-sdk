@@ -1261,7 +1261,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testPresignPublicURL {
-    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"a b*c~d/e+f"];
+    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1k"];
     XCTAssertNil(task.error);
     NSLog(@"url: %@", task.result);
     [self assertURLValid:task.result];

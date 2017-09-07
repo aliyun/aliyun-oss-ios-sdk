@@ -88,11 +88,8 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return encodeUrl;
 
     
-//  不要用这种方式，很多特殊字符都没有转化；
-//    //123 `~!@#$%^&*()_+-={}[]|\:;"'<,>.?/AZaz 转化为 123%20%60~!@%23$%25%5E&*()_+-=%7B%7D%5B%5D%7C%5C:;%22'%3C,%3E.?/AZaz
-//    // 空格不会转化成+号
-//    NSString *content = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    return content;
+//  不要用系统urlencode 的方式，很多特殊字符都没有转化；
+//  详见：https://stackoverflow.com/questions/8088473/how-do-i-url-encode-a-string
 
 }
 
