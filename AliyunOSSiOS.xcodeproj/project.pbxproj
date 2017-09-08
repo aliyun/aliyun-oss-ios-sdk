@@ -69,6 +69,7 @@
 		4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4CE524731F623F5D00DD3DCF /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
 		4CE524771F6267BB00DD3DCF /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE524761F6267BB00DD3DCF /* Constant.m */; };
+		4CE5247B1F62796A00DD3DCF /* pyserver in Resources */ = {isa = PBXBuildFile; fileRef = 4CE5247A1F62796A00DD3DCF /* pyserver */; };
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -167,6 +168,7 @@
 		4CE524741F62641D00DD3DCF /* DemoByOC.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoByOC.pch; sourceTree = "<group>"; };
 		4CE524751F6267BB00DD3DCF /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		4CE524761F6267BB00DD3DCF /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
+		4CE5247A1F62796A00DD3DCF /* pyserver */ = {isa = PBXFileReference; lastKnownFileType = folder; name = pyserver; path = ../pyserver; sourceTree = "<group>"; };
 		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -224,6 +226,7 @@
 		21028BB21BA9ABF500C2A6BA = {
 			isa = PBXGroup;
 			children = (
+				4CE5247A1F62796A00DD3DCF /* pyserver */,
 				21028BBE1BA9ABF500C2A6BA /* AliyunOSSiOS */,
 				21028BCB1BA9ABF600C2A6BA /* AliyunOSSiOSTests */,
 				21A924351E498211002155BF /* Demo */,
@@ -551,6 +554,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE5247B1F62796A00DD3DCF /* pyserver in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

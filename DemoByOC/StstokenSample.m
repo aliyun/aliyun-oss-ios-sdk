@@ -13,7 +13,7 @@
 
 @implementation StstokenSample
 
-const NSString* url = @"http://30.40.39.49:12555/sts/getsts";
+const NSString* url = @"http://xx.xx.xx.xx:12555/sts/getsts";//本地服务器 可以通过提供的server进行启动
 
 
 - (void)getStsToken:(void (^)(NSDictionary *))block{
