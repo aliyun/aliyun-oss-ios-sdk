@@ -8,7 +8,7 @@
 
 #import "Constant.h"
 
-NSString * const BUCKET_NAME = @"jingdan";
+NSString * const BUCKET_NAME = @"<bucket_name>";
 NSString * const UPLOAD_OBJECT_KEY = @"sampleObject";
 NSString * const DOWNLOAD_OBJECT_KEY = @"sampleObject";
 
