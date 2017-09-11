@@ -34,6 +34,8 @@ const NSString* url = @"http://xx.xx.xx.xx:12555/sts/getsts";//本地服务器 �
             dispatch_async(dispatch_get_main_queue(), ^{
                 block(dict[@"Credentials"]);
             });
+        }else{
+            //处理失败情况，自行处理
         }
         
     }];

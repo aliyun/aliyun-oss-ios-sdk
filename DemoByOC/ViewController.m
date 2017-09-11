@@ -120,11 +120,14 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 - (void)getStsToken:(id)sender{
     [self.activityIndicatorView startAnimating];
     [[[StstokenSample alloc] init] getStsToken:^(NSDictionary *dict){
+        //给provider设置
         [provider setAccessKeyId:dict[@"AccessKeyId"]];
         [provider setSecretKeyId:dict[@"AccessKeySecret"]];
         [provider setSecurityToken:dict[@"SecurityToken"]];
+        
+        //以下内容只是用于展示事例
         NSMutableString *string = [[NSMutableString alloc] init];
-        for (id key in dict){
+        for (id key in dict){//只是打印下日志
             NSLog(@"%@：%@", key,dict[key]);
             [string appendString:[NSString stringWithFormat:@"%@：%@\n\n", key,dict[key]]];
         }
