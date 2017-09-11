@@ -13,7 +13,8 @@
 
 @implementation StstokenSample
 
-const NSString* url = @"http://xx.xx.xx.xx:12555/sts/getsts";//本地服务器 可以通过提供的server进行启动
+const NSString* url = @"http://xx.xx.xx.xx:12555/sts/getsts";//本地服务地址
+    //如何启动本地服务可参加python 目录下httpserver.py中注释说明。xx.xx.xx.xx 为本机ip地址。
 
 
 - (void)getStsToken:(void (^)(NSDictionary *))block{
