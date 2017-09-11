@@ -16,7 +16,7 @@
 @interface ViewController ()
 
 - (void)createButtonWithName:(NSString*)name LocationY:(CGFloat)y ClickFunc:(SEL)func Container:(UIView*) group;
-- (void)initOSSClient;
+- (void)initOSSClientWithAk:(NSString*)ak Sk:(NSString*)sk Token:(NSString*)token;
 
 @end
 
@@ -30,8 +30,6 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
     [super viewDidLoad];
     NSLog(@"viewDidLoad");
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    [self initOSSClient];
     
     self.width = [[UIScreen mainScreen] bounds].size.width;
     self.height = [[UIScreen mainScreen] bounds].size.height;
@@ -56,13 +54,11 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
     [self.view addSubview:self.activityIndicatorView];
 }
 
-- (void)initOSSClient{
+- (void)initOSSClientWithAk:(NSString *)ak Sk:(NSString *)sk Token:(NSString *)token{
     [OSSLog enableLog];
+    provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:ak secretKeyId:sk securityToken:token];
     
-    provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"" secretKeyId:@"" securityToken:@""];
-    
-    
-    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    OSSClientConfiguration * conf = [[OSSClientConfiguration alloc] init];
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
@@ -120,10 +116,16 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 - (void)getStsToken:(id)sender{
     [self.activityIndicatorView startAnimating];
     [[[StstokenSample alloc] init] getStsToken:^(NSDictionary *dict){
-        //给provider设置
-        [provider setAccessKeyId:dict[@"AccessKeyId"]];
-        [provider setSecretKeyId:dict[@"AccessKeySecret"]];
-        [provider setSecurityToken:dict[@"SecurityToken"]];
+        
+        if(provider == nil || client == nil){
+            [self initOSSClientWithAk:dict[@"AccessKeyId"] Sk:dict[@"AccessKeySecret"] Token:dict[@"SecurityToken"]];
+        }else{
+            //给provider设置
+            [provider setAccessKeyId:dict[@"AccessKeyId"]];
+            [provider setSecretKeyId:dict[@"AccessKeySecret"]];
+            [provider setSecurityToken:dict[@"SecurityToken"]];
+        }
+        
         
         //以下内容只是用于展示事例
         NSMutableString *string = [[NSMutableString alloc] init];
