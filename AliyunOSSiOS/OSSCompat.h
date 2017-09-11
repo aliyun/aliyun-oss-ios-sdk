@@ -16,8 +16,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
 @interface OSSClient (Compat)
 
 /**
- 兼容老版本用法的上传数据接口
- 建议更换使用：putObject
+ The old version's upload API.
+ Please use putObject instead.
  */
 - (OSSTaskHandler *)uploadData:(NSData *)data
                withContentType:(NSString *)contentType
@@ -28,8 +28,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
                     onProgress:(void(^)(float progress))onProgress;
 
 /**
- 兼容老版本用法的下载数据接口
- 建议更换使用：getObject
+ The old version's download API.
+ Please use getObject instead.
  */
 - (OSSTaskHandler *)downloadToDataFromBucket:(NSString *)bucketName
                    objectKey:(NSString *)objectKey
@@ -37,8 +37,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
                   onProgress:(void(^)(float progress))onProgress;
 
 /**
- 兼容老版本用法的上传文件接口
- 建议更换使用：putObject
+ The old version's upload API.
+ Please use putObject instead.
  */
 - (OSSTaskHandler *)uploadFile:(NSString *)filePath
                 withContentType:(NSString *)contentType
@@ -49,8 +49,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
                      onProgress:(void(^)(float progress))onProgress;
 
 /**
- 兼容老版本用法的下载文件接口
- 建议更换使用：getObject
+ The old version's download API.
+ Please use getObject instead.
  */
 - (OSSTaskHandler *)downloadToFileFromBucket:(NSString *)bucketName
                   objectKey:(NSString *)objectKey
@@ -60,8 +60,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
 
 
 /**
- 兼容老版本用法的断点上传文件接口
- 建议更换使用：resumableUpload
+ The old version's upload API with resumable upload support.
+ Please use resumableUpload instead.
  */
 - (OSSTaskHandler *)resumableUploadFile:(NSString *)filePath
           withContentType:(NSString *)contentType
@@ -72,8 +72,8 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
                onProgress:(void(^)(float progress))onProgress;
 
 /**
- 兼容老版本用法的删除Object接口
- 建议更换使用：deleteObject
+ The old version's delete API.
+ Please use deleteObject instead.
  */
 - (void)deleteObjectInBucket:(NSString *)bucketName
                    objectKey:(NSString *)objectKey

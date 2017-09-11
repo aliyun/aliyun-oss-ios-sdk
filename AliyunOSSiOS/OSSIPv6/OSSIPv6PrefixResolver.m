@@ -3,7 +3,7 @@
 //
 //  Created by lingkun on 16/5/16.
 //  Edit by zhouzhuo on 2016/5/22
-//  Copyright © 2016年 Ali. All rights reserved.
+//  Copyright © 2016 Ali. All rights reserved.
 
 #import "OSSIPv6PrefixResolver.h"
 #import "OSSLog.h"
@@ -75,7 +75,7 @@ typedef enum {
 }
 
 /**
- *	@brief	主动更新IPv6 Prefix
+ *	@brief	Updates IPv6 Prefix
  */
 - (void)updateIPv6Prefix {
     @synchronized(self) {
@@ -193,7 +193,7 @@ typedef enum {
         ipv6[length+4] |= (__uint8_t)(addr_v4>>24 & 0xff);
     }
     
-    // 构造IPv6的结构
+    // constructs the IPv6 structure
     char addr_text[ MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN) ];
     if(inet_ntop(AF_INET6, ipv6, addr_text, INET6_ADDRSTRLEN)) {
         NSString *ret = [NSString stringWithUTF8String:addr_text];

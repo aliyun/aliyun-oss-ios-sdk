@@ -36,7 +36,7 @@
              clientConfiguration:(OSSClientConfiguration *)conf {
     if (self = [super init]) {
 
-        // 监听网络，网络类型变化时，重新判定ipv6情况
+        // Monitor the network. If the network type is changed, recheck the IPv6 status.
         [OSSReachabilityManager shareInstance];
 
         NSOperationQueue * queue = [NSOperationQueue new];
@@ -77,7 +77,7 @@
                                                                          uploadName:request.allNeededMessage.objectKey];
     }
 
-    // 检查endpoint是否在cname排除列表中
+    // Checks if the endpoint is in the excluded CName list.
     if ([self.clientConfiguration.cnameExcludeList count] > 0) {
         [self.clientConfiguration.cnameExcludeList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString * exclude = obj;

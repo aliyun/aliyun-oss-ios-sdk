@@ -54,7 +54,7 @@ typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSErr
 typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 
 /**
- 扩展NSString
+ Categories NSString
  */
 @interface NSString (OSS)
 - (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
@@ -62,14 +62,14 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 扩展NSDictionary
+ Categories NSDictionary
  */
 @interface NSDictionary (OSS)
 - (NSString *)base64JsonString;
 @end
 
 /**
- 扩展NSDate
+ Categories NSDate
  */
 @interface NSDate (OSS)
 + (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime;
@@ -80,7 +80,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 线程安全的字典
+ A thread-safe dictionary
  */
 @interface OSSSyncMutableDictionary : NSObject
 @property (nonatomic, strong) NSMutableDictionary *dictionary;
@@ -93,7 +93,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- FederationToken类
+ FederationToken class
  */
 @interface OSSFederationToken : NSObject
 @property (nonatomic, strong) NSString * tAccessKey;
@@ -101,18 +101,18 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @property (nonatomic, strong) NSString * tToken;
 
 /**
- 指明Token的失效时间，为linux时间对应的毫秒数，即自UTC时间1970年1月1日经过的毫秒数
+ Token's expiration time in milliseconds of the unix time.
  */
 @property (atomic, assign) int64_t expirationTimeInMilliSecond;
 
 /**
- 指明Token的失效时间，格式为GMT字符串，如: "2015-11-03T08:51:05Z"
+ Token's expiration time in GMT format string.
  */
 @property (atomic, strong) NSString * expirationTimeInGMTFormat;
 @end
 
 /**
- CredentialProvider协议，要求实现加签接口
+ CredentialProvider protocol, needs to implement sign API.
  */
 @protocol OSSCredentialProvider <NSObject>
 @optional
@@ -120,7 +120,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 用明文AK/SK实现的加签器，建议只在测试模式时使用
+ The plaint text AK/SK credential provider for test purposely.
  */
 
 @interface OSSPlainTextAKSKPairCredentialProvider : NSObject <OSSCredentialProvider>
@@ -132,35 +132,37 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 用户自实现加签接口的加签器
+TODOTODO
+ The custom signed credential provider
  */
 @interface OSSCustomSignerCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, copy) NSString * (^signContent)(NSString *, NSError **);
 
 /**
- 任务执行时，这个方法会被调用，进行加签
- 会在任务执行的后台线程被调用，而非UI线程
+ During the task execution, this API is called for signing
+ It's executed at the background thread instead of UI thread.
  */
 - (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent;
 @end
 
 /**
- 用户自实现的通过获取FederationToken来加签的加签器
+TODOTODO
+ User's custom federation credential provider.
  */
 @interface OSSFederationCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) OSSFederationToken * cachedToken;
 @property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)();
 
 /**
- 任务执行时，这个方法会被调用，获取新的ststoken
- 会在任务执行的后台线程被调用，而非UI线程
+ During the task execution, this method is called to get the new STS token.
+ It runs in the background thread, not the UI thread.
  */
 - (instancetype)initWithFederationTokenGetter:(OSSGetFederationTokenBlock)federationTokenGetter;
 - (OSSFederationToken *)getToken:(NSError **)error;
 @end
 
 /**
- 通过已经获取到的StsToken来加签的加签器
+ The STS token's credential provider.
  */
 @interface OSSStsTokenCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) NSString * accessKeyId;
@@ -174,54 +176,54 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- OSSClient可以设置的参数
+ OSSClient side configuration.
  */
 @interface OSSClientConfiguration : NSObject
 
 /**
- 最大重试次数
+ Max retry count
  */
 @property (nonatomic, assign) uint32_t maxRetryCount;
 
 /**
- 最大并发请求数
+ Max concurrent requests
  */
 @property (nonatomic, assign) uint32_t maxConcurrentRequestCount;
 
 /**
- 是否开启后台传输服务
- 注意：只在上传文件时有效
+ Flag of enabling background file transmit service.
+ Note: it's only applicable for file upload.
  */
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
 
 /**
- 是否使用Httpdns解析域名
+ Flag of using Http request for DNS resolution.
  */
 @property (nonatomic, assign) BOOL isHttpdnsEnable;
 
 /**
- 设置后台传输服务使用session的Id
+Sets the session Id for background file transmission
  */
 @property (nonatomic, strong) NSString * backgroundSesseionIdentifier;
 
 /**
- 请求超时时间
+ Sets request timeout
  */
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;
 
 /**
- 单个Object下载的最长持续时间
+ Sets single object download's max time
  */
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 
 /**
- 设置代理Host、端口
+ Sets proxy host and port.
  */
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
 
 /**
- 设置Cname排除列表
+ Sets CName excluded list.
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
 
@@ -232,7 +234,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 构造请求过程中做加签
+ Signs the request when it's being created.
  */
 @interface OSSSignerInterceptor : NSObject <OSSRequestInterceptor>
 @property (nonatomic, strong) id<OSSCredentialProvider> credentialProvider;
@@ -241,19 +243,19 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 构造请求过程中修改UA
+ Updates the UA when creating the request.
  */
 @interface OSSUASettingInterceptor : NSObject <OSSRequestInterceptor>
 @end
 
 /**
- 构造请求过程中设置发起请求的标准时间
+ Fixes the time skew issue when creating the request.
  */
 @interface OSSTimeSkewedFixingInterceptor : NSObject <OSSRequestInterceptor>
 @end
 
 /**
- 下载时指定范围
+ The download range of OSS object
  */
 @interface OSSRange : NSObject
 @property (nonatomic, assign) int64_t startPosition;
@@ -263,7 +265,7 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
                       withEnd:(int64_t)end;
 
 /**
- * 转换为字符串: 'bytes=${start}-${end}'
+ * Converts the header to string: 'bytes=${start}-${end}'
  */
 - (NSString *)toHeaderString;
 @end
@@ -272,377 +274,384 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 #pragma mark RequestAndResultClass
 
 /**
- 请求头的基类
+ The base class of request to OSS.
  */
 @interface OSSRequest : NSObject
 /**
- 指明该请求是否需要鉴权，单次有效
+ Flag of requiring authentication. It's per each request.
  */
 @property (nonatomic, assign) BOOL isAuthenticationRequired;
 
 /**
- 指明该请求是否已经被取消
+ Flag of request canceled.
  */
 @property (nonatomic, assign) BOOL isCancelled;
 
 /**
- 取消这个请求
+ Cancels the request
  */
 - (void)cancel;
 @end
 
 /**
- 请求结果的基类
+ The base class of result from OSS.
  */
 @interface OSSResult : NSObject
 
 /**
- 请求HTTP响应码
+ The http response code.
  */
 @property (nonatomic, assign) NSInteger httpResponseCode;
 
 /**
- 请求HTTP响应头部，以KV形式放在字典中
+ The http headers, in the form of key value dictionary.
  */
 @property (nonatomic, strong) NSDictionary * httpResponseHeaderFields;
 
 /**
- x-oss-request-id是由Aliyun OSS创建，并唯一标识这个response的UUID。如果在使用OSS服务时遇到问题，可以凭借该字段联系OSS工作人员，快速定位问题。
+The request Id. It's the value of header x-oss-request-id, which is created from OSS server.
+It's a unique Id represents this request. This is used for troubleshooting when you contact OSS support.
  */
 @property (nonatomic, strong) NSString * requestId;
 @end
 
 /**
- 罗列用户拥有的所有Bucket的请求。
+ The request to list all buckets of current user.
  */
 @interface OSSGetServiceRequest : OSSRequest
 
 /**
- 限定返回的bucket name必须以prefix作为前缀，可以不设定，不设定时不过滤前缀信息
+ The prefix filter for listing buckets---optional.
  */
 @property (nonatomic, strong) NSString * prefix;
 
 /**
- 设定结果从marker之后按字母排序的第一个开始返回，可以不设定，不设定时从头开始返回
+ The marker filter for listing buckets----optional.
+ The marker filter is to ensure any returned bucket name must be greater than the marker in the lexicographic order.
  */
 @property (nonatomic, strong) NSString * marker;
 
 /**
- 限定此次返回bucket的最大数，如果不设定，默认为100，max-keys取值不能大于1000
+ The max entries to return. By default it's 100 and max value of this property is 1000.
  */
 @property (nonatomic, assign) int32_t maxKeys;
 
 
 /**
- 根据参数各字段构造URL中的查询串
+ Gets the query parameters' dictionary according to the properties.
  */
 - (NSMutableDictionary *)getQueryDict;
 @end
 
 /**
- 罗列用户拥有的所有Bucket的请求结果
+ The result class of listing all buckets
  */
 @interface OSSGetServiceResult : OSSResult
 
 /**
- Bucket拥有者的用户ID
+ The owner Id
  */
 @property (nonatomic, strong) NSString * ownerId;
 
 /**
- Bucket拥有者的名称 (目前和ID一致)。
+ Bucket owner name---currently it's same as owner Id.
  */
 @property (nonatomic, strong) NSString * ownerDispName;
 
 /**
- 本次查询结果的前缀，当bucket未全部返回时才有此节点
+ The prefix of this query. It's only set when there's remaining buckets to return.
  */
 @property (nonatomic, strong) NSString * prefix;
 
 /**
- 标明这次GetService(ListBucket)的起点，当bucket未全部返回时才有此节点
+ The marker of this query. It's only set when there's remaining buckets to return.
  */
 @property (nonatomic, strong) NSString * marker;
 
 /**
- 响应请求内返回结果的最大数目，当bucket未全部返回时才有此节点
+ The max buckets to return. It's only set when there's remaining buckets to return.
  */
 @property (nonatomic, assign) int32_t maxKeys;
 
 /**
- 指明是否所有的结果都已经返回：“true”表示本次没有返回全部结果；“false”表示本次已经返回了全部结果。当bucket未全部返回时才有此节点。
+ Flag of the result is truncated. If it's truncated, it means there's remaining buckets to return.
  */
 @property (nonatomic, assign) BOOL isTruncated;
 
 /**
- 表示下一次GetService(ListBucket)可以以此为marker，将未返回的结果返回。当bucket未全部返回时才有此节点。
+ The marker for the next ListBucket call. It's only set when there's remaining buckets to return.
  */
 @property (nonatomic, strong) NSString * nextMarker;
 
 /**
- 保存bucket信息的容器，结构上是一个数组，数组每个元素是一个字典，字典的key有 ["Name", "CreationDate", "Location" ]
+ The container of the buckets. It's a dictionary array, in which every element has keys "Name", "CreationDate" and "Location".
  */
 @property (nonatomic, strong) NSArray * buckets;
 @end
 
 /**
- 创建Bucket的请求
+ The request to create bucket
  */
 @interface OSSCreateBucketRequest : OSSRequest
 
 /**
- 要创建的Bucket的名称
+ The bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- 指定Bucket所在的数据中心。
- 关于数据中心和终端域名的更多内容，参见访问域名和数据中心<a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
+ The bucket location
+ For more information about OSS datacenter and endpoint, please check out <a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
  */
 @property (nonatomic, strong) NSString * location;
 
 /**
- 设置Bucket 访问权限。目前Bucket有三种访问权限：public-read-write，public-read和private。
+ Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.
  */
 @property (nonatomic, strong) NSString * xOssACL;
 @end
 
 /**
- 创建Bucket的请求结果
+ Result class of bucket creation
  */
 @interface OSSCreateBucketResult : OSSResult
 
 /**
- Bucket所在的数据中心
+ Bucket datacenter
  */
 @property (nonatomic, strong) NSString * location;
 @end
 
 /**
- 删除Bucket的请求
+ The request class of deleting bucket
  */
 @interface OSSDeleteBucketRequest : OSSRequest
 
 /**
- Bucket的名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 @end
 
 /**
- 删除Bucket的请求结果
+ Result class of deleting bucket
  */
 @interface OSSDeleteBucketResult : OSSResult
 @end
 
 /**
- 罗列Bucket中Objects的请求
+ The request class of listing objects under a bucket
  */
 @interface OSSGetBucketRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- 是一个用于对Object名字进行分组的字符。所有名字包含指定的前缀且第一次出现delimiter字符之间的object作为一组元素——CommonPrefixes。
+ The delimiter is very important and it determines the behavior of common prefix.
+ For most cases, use the default '/' as the delimiter. 
+ For example, if a bucket has folder 'prefix/' and a file 'abc'. And inside the folder it has file '123.txt'
+ If the delimiter is '/', then the ListObject will return a common prefix 'prefix/' and a file 'abc'.
+ If the delimiter is something else, then ListObject will return three files: prefix/, abc and prefix/123.txt. No common prefix!.
  */
 @property (nonatomic, strong) NSString * delimiter;
 
 /**
- 设定结果从marker之后按字母排序的第一个开始返回。
+ The marker filter for listing objects----optional.
+ The marker filter is to ensure any returned object name must be greater than the marker in the lexicographic order.
  */
 @property (nonatomic, strong) NSString * marker;
 
 /**
- 限定此次返回object的最大数，如果不设定，默认为100，max-keys取值不能大于1000。
+ The max entries count to return. By default it's 100 and it could be up to 1000.
  */
 @property (nonatomic, assign) int32_t maxKeys;
 
 /**
- 限定返回的object key必须以prefix作为前缀。注意使用prefix查询时，返回的key中仍会包含prefix。
+ The filter prefix of the objects to return----the returned objects' name must have the prefix.
  */
 @property (nonatomic, strong) NSString * prefix;
 
 /**
- 根据请求的各个字段生成URL中的查询串
+ Generates the query parameter dictionary according to the properties.
  */
 - (NSMutableDictionary *)getQueryDict;
 @end
 
 /**
- 罗列Bucket中Objects的请求结果
+ The result class of listing objects.
  */
 @interface OSSGetBucketResult : OSSResult
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- 限定返回的object key必须以prefix作为前缀。注意使用prefix查询时，返回的key中仍会包含prefix。
+ The prefix of the objects returned----the returned objects must have this prefix.
  */
 @property (nonatomic, strong) NSString * prefix;
 
 /**
- 设定结果从marker之后按字母排序的第一个开始返回。
+ The marker filter of the objects returned---all objects returned are greater than this marker in lexicographic order.
  */
 @property (nonatomic, strong) NSString * marker;
 
 /**
- 限定此次返回object的最大数，如果不设定，默认为100，max-keys取值不能大于1000。
+ The max entries to return. By default it's 100 and it could be up to 1000.
  */
 @property (nonatomic, assign) int32_t maxKeys;
 
 /**
- 是一个用于对Object名字进行分组的字符。所有名字包含指定的前缀且第一次出现delimiter字符之间的object作为一组元素——CommonPrefixes。
+ The delimiter to differentiate the folder object and file object.
+ For object whose name ends with the delimiter, then it's treated as folder or common prefixes.
  */
 @property (nonatomic, strong) NSString * delimiter;
 
 /**
- 如果因为max-keys的设定无法一次完成listing，返回结果会附加一个<NextMarker>，提示继续listing可以以此为marker。
- NextMarker中的值仍在list结果之中。
+ The maker for the next call. If no more entries to return, it's null.
  */
 @property (nonatomic, strong) NSString * nextMarker;
 
 /**
- 指明是否所有的结果都已经返回； “true”表示本次没有返回全部结果；“false”表示本次已经返回了全部结果。
+ Flag of truncated result. If it's truncated, it means there's more entries to return.
  */
 @property (nonatomic, assign) BOOL isTruncated;
 
 /**
- 装载文件信息的容器，结构为一个数组，数组中元素是一个个字典，代表每个文件，字典的key有 [ "Key", "LastModified", "ETag", "Type", "Size", "StorageClass", "Owner" ]
+ The dictionary arrary, in which each dictionary has keys of "Key", "LastModified", "ETag", "Type", "Size", "StorageClass" and "Owner".
  */
 @property (nonatomic, strong) NSArray * contents;
 
 /**
- 装载公共前缀信息的容器，结构为一个数组，数组中元素是NSString，每个代表一个前缀
+ The arrary of common prefixes. Each element is one common prefix.
  */
 @property (nonatomic, strong) NSArray * commentPrefixes;
 @end
 
 /**
- 获取指定Bucket的读写权限
+ The request class to get the bucket ACL.
  */
 @interface OSSGetBucketACLRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 @end
 
 /**
- 获取指定Bucket的ACL的请求结果
+ The result class to get the bucket ACL.
  */
 @interface OSSGetBucketACLResult : OSSResult
 
 /**
- 获取到的Bucket的ACL，有 private/public-read/public-read-write
+ The bucket ACL. It could be one of the three values: private/public-read/public-read-write.
  */
 @property (nonatomic, strong) NSString * aclGranted;
 @end
 
 /**
- 获取Object Meta信息的请求
+ The request class to get object metadata
  */
 @interface OSSHeadObjectRequest : OSSRequest
 
 /**
- Object所在Bucket的名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 @end
 
 /**
- 获取Object Meta信息的结果
+ The result class of getting object metadata.
  */
 @interface OSSHeadObjectResult : OSSResult
 
 /**
- Obejct的Meta信息
+ Object metadata
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 @end
 
 /**
- 下载Object的请求头
+ The request class to get object
  */
 @interface OSSGetObjectRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 指定文件传输的范围。如，设定 bytes=0-9，表示传送第0到第9这10个字符。
+ OSS Download Range: For example, bytes=0-9 means uploading the first to the tenth's character.
  */
 @property (nonatomic, strong) OSSRange * range;
 
 /**
- 如果希望Object直接下载到文件中，通过这个字段指明文件地址
+ The local file path to download to.
  */
 @property (nonatomic, strong) NSURL * downloadToFileURL;
 
 /**
- 图片处理配置
+ Image processing configuration.
  */
 @property (nonatomic, strong) NSString * xOssProcess;
 
 /**
- 回调下载进度
- 会在任务执行的后台线程被回调，而非UI线程
+ Download progress callback.
+ It runs at background thread.
  */
 @property (nonatomic, copy) OSSNetworkingDownloadProgressBlock downloadProgress;
 
 /**
- Object下载过程中，会在接收每一段数据后回调这个Block
- 会在任务执行的后台线程被回调，而非UI线程
+ During the object download, the callback is called upon response is received.
+ It runs under background thread (not UI thread)
  */
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveData;
 @end
 
 /**
- 下载Object的请求结果
+ Result class of downloading an object.
  */
 @interface OSSGetObjectResult : OSSResult
 
 /**
- 如果下载时未指明下载到文件，那么Object会被下载到内存中，类型为NSData
+ The in-memory content of the downloaded object, if the local file path is not specified.
  */
 @property (nonatomic, strong) NSData * downloadedData;
 
 /**
- 下载文件时的HTTP响应头的KV字典
+ The object metadata dictionary
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 @end
 
 /**
- 修改Object的访问权限请求头
+ The request class to update the object ACL.
  */
 @interface OSSPutObjectACLRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
@@ -653,104 +662,108 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 修改Object的访问权限响应
+ The response class to update the object ACL.
  */
 @interface OSSPutObjectACLResult : OSSResult
 @end
 
 /**
- 上传Object的请求头
+ The request class to upload an object.
  */
 @interface OSSPutObjectRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 从内存中的NSData上传时，通过这个字段设置
+ The in-memory data to upload.
  */
 @property (nonatomic, strong) NSData * uploadingData;
 
 /**
- 从文件上传时，通过这个字段设置
+ The local file path to upload.
  */
 @property (nonatomic, strong) NSURL * uploadingFileURL;
 
 /**
- server回调参数设置
+ The callback parameters.
  */
 @property (nonatomic, strong) NSDictionary * callbackParam;
 
 /**
- server回调变量设置
+ The callback variables.
  */
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
- 设置文件类型
+ The content type.
  */
 @property (nonatomic, strong) NSString * contentType;
 
 /**
- 根据协议RFC 1864对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码为一个消息的Content-MD5值。
- 该请求头可用于消息合法性的检查（消息内容是否与发送时一致）。虽然该请求头是可选项，OSS建议用户使用该请求头进行端到端检查。
+ The content's MD5 digest. 
+ It's calculated on the request body (not headers) according to RFC 1864 to get the 128 bit digest data.
+ Then use base64 encoding on the 128bit result to get this MD5 value.
+ This header is for integrity check on the data. And it's recommended to turn on for every body.
  */
 @property (nonatomic, strong) NSString * contentMd5;
 
 /**
- 指定该Object被下载时的名称；更详细描述请参照RFC2616。
+ Specifies the download name of the object. Checks out RFC2616 for more details.
  */
 @property (nonatomic, strong) NSString * contentDisposition;
 
 /**
- 指定该Object被下载时的内容编码格式；更详细描述请参照RFC2616。
+ Specifies the content encoding during the download. Checks out RFC2616 for more details.
  */
 @property (nonatomic, strong) NSString * contentEncoding;
 
 /**
- 指定该Object被下载时的网页的缓存行为；更详细描述请参照RFC2616。
+ Specifies the cache behavior during the download. Checks out RFC2616 for more details.
  */
 @property (nonatomic, strong) NSString * cacheControl;
 
 /**
- 过期时间（milliseconds）；更详细描述请参照RFC2616。
+ Expiration time in milliseconds. Checks out RFC2616 for more details.
  */
 @property (nonatomic, strong) NSString * expires;
 
 /**
- 可以在这个字段中携带以x-oss-meta-为前缀的参数，则视为user meta，比如x-oss-meta-location。一个Object可以有多个类似的参数，但所有的user meta总大小不能超过8k。
- 如果上传时还需要指定其他HTTP请求头字段，也可以在这里设置
+ The object's metadata.
+ When the object is being uploaded, it could be specified with http headers prefixed with x-oss-meta for user metadata.
+ The total size of all user metadata cannot be more than 8K. 
+ It also could include standard HTTP headers in this object.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 
 /**
- 上传进度回调，
- 会在任务执行的后台线程被回调，而非UI线程
+ The upload progress callback.
+ It runs in background thread (not UI thread).
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 @end
 
 /**
- 上传Object的请求结果
+ The result class to put an object
  */
 @interface OSSPutObjectResult : OSSResult
 
 /**
- ETag (entity tag) 在每个Object生成的时候被创建，用于标示一个Object的内容。
- 对于Put Object请求创建的Object，ETag值是其内容的MD5值；对于其他方式创建的Object，ETag值是其内容的UUID。
- ETag值可以用于检查Object内容是否发生变化。
+ETag (entity tag) is the tag during the object creation in OSS server side.
+It's the MD5 value for put object request. If the object is created by other APIs, the ETag is the UUID of the content.
+ ETag could be used to check if the object has been updated.
  */
 @property (nonatomic, strong) NSString * eTag;
 
 /**
- 如果设置了server回调，回调的响应内容
+ If the callback is specified, this is the callback response result.
  */
 @property (nonatomic, strong) NSString * serverReturnJsonString;
 @end
@@ -761,72 +774,73 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @interface OSSAppendObjectRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 指定从何处进行追加。首次追加操作的position必须为0，后续追加操作的position是Object的当前长度。
- 例如，第一次Append Object请求指定position值为0，content-length是65536；那么，第二次Append Object需要指定position为65536。
- 每次操作成功后，响应头部x-oss-next-append-position也会标明下一次追加的position。
+ Specifies which position to append. For a new file, the first append should start from 0. And the subsequential calls will start from the current length of the object.
+ For example, if the first append's size is 65536, then the appendPosition value in the next call will be 65536.
+ In its response, the header x-oss-next-append-position is included for next call.
  */
 @property (nonatomic, assign) int64_t appendPosition;
 
 /**
- 从内存中的NSData上传时，通过这个字段设置
+ The in-memory data to upload from.
  */
 @property (nonatomic, strong) NSData * uploadingData;
 
 /**
- 从文件上传时，通过这个字段设置
+ The local file path to upload from.
  */
 @property (nonatomic, strong) NSURL * uploadingFileURL;
 
 /**
- 设置文件类型
+ Sets the content type
  */
 @property (nonatomic, strong) NSString * contentType;
 
 /**
- 根据协议RFC 1864对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码为一个消息的Content-MD5值。
- 该请求头可用于消息合法性的检查（消息内容是否与发送时一致）。虽然该请求头是可选项，OSS建议用户使用该请求头进行端到端检查。
+ The content's MD5 digest value.
+ It's calculated from the MD5 value of the request body according to RFC 1864 and then encoded by base64.
  */
 @property (nonatomic, strong) NSString * contentMd5;
 
 /**
- 指定该Object被下载时的名称；更详细描述请参照RFC2616。
+ The object's name during the download according to RFC 2616.
  */
 @property (nonatomic, strong) NSString * contentDisposition;
 
 /**
- 指定该Object被下载时的内容编码格式；更详细描述请参照RFC2616。
+ The content encoding during the object upload. Checks out RFC2616 for more detail.
  */
 @property (nonatomic, strong) NSString * contentEncoding;
 
 /**
- 指定该Object被下载时的网页的缓存行为；更详细描述请参照RFC2616。
+ Specifies the cache control behavior when it's being downloaded.Checks out RFC 2616 for more details.
  */
 @property (nonatomic, strong) NSString * cacheControl;
 
 /**
- 过期时间（milliseconds）；更详细描述请参照RFC2616。
+ Expiration time. Checks out RFC2616 for more information.
  */
 @property (nonatomic, strong) NSString * expires;
 
 /**
- 可以在这个字段中携带以x-oss-meta-为前缀的参数，则视为user meta，比如x-oss-meta-location。一个Object可以有多个类似的参数，但所有的user meta总大小不能超过8k。
- 如果上传时还需要指定其他HTTP请求头字段，也可以在这里设置
+ The object's metadata, which start with x-oss-meta-, such as x-oss-meta-location.
+ Each request can have multiple metadata as long as the total size of all metadata is no bigger than 8KB.
+ It could include standard headers as well.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 
 /**
- 上传进度回调
- 会在任务执行的后台线程被回调，而非UI线程
+ Upload progress callback.
+ It's called on the background thread.
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 @end
@@ -837,225 +851,230 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @interface OSSAppendObjectResult : OSSResult
 
 /**
- ETag (entity tag) 在每个Object生成的时候被创建，用于标示一个Object的内容。
- 对于Put Object请求创建的Object，ETag值是其内容的MD5值；对于其他方式创建的Object，ETag值是其内容的UUID。
- ETag值可以用于检查Object内容是否发生变化。
+ TODOTODO
+ ETag (entity tag). It's created for every object when it's created.
+ For Objects created by PUT, ETag is the MD5 value of the content data. For others, ETag is the UUID of the content.
+ ETag is used for checking data integrity.
  */
 @property (nonatomic, strong) NSString * eTag;
 
 /**
- 指明下一次请求应当提供的position。实际上就是当前Object长度。
- 当Append Object成功返回，或是因position和Object长度不匹配而引起的409错误时，会包含此header。
+ Specifies the next starting position. It's essentially the current object size.
+ This header is included in the successful response or the error response when the start position does not match the object size.
  */
 @property (nonatomic, assign, readwrite) int64_t xOssNextAppendPosition;
 @end
 
 /**
- 删除指定Object
+ The request of deleting an object.
  */
 @interface OSSDeleteObjectRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object object
  */
 @property (nonatomic, strong) NSString * objectKey;
 @end
 
 /**
- 删除指定Object的响应
+ Result class of deleting an object
  */
 @interface OSSDeleteObjectResult : OSSResult
 @end
 
 /**
- 复制一个Object的请求
+ Request class of copying an object in OSS.
  */
 @interface OSSCopyObjectRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 复制源地址（必须有可读权限）
+ Source object's address (the caller needs the read permission on this object)
  */
 @property (nonatomic, strong) NSString * sourceCopyFrom;
 
 /**
- 设置文件类型
+ The content type
  */
 @property (nonatomic, strong) NSString * contentType;
 
 /**
- 根据协议RFC 1864对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码为一个消息的Content-MD5值。
- 该请求头可用于消息合法性的检查（消息内容是否与发送时一致）。虽然该请求头是可选项，OSS建议用户使用该请求头进行端到端检查。
+ The content's MD5 digest.
+ It's calculated according to RFC 1864 and encoded in base64.
+ Though it's optional, it's recommended to turn it on for integrity check.
  */
 @property (nonatomic, strong) NSString * contentMd5;
 
 /**
- 可以在这个字段中携带以x-oss-meta-为前缀的参数，则视为user meta，比如x-oss-meta-location。一个Object可以有多个类似的参数，但所有的user meta总大小不能超过8k。
- 如果上传时还需要指定其他HTTP请求头字段，也可以在这里设置
+ The user metadata dictionary, which starts with x-oss-meta-. 
+ The total size of user metadata can be no more than 8KB.
+ It could include standard http headers as well.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 @end
 
 /**
- 复制Object的请求结果
+ The result class of copying an object
  */
 @interface OSSCopyObjectResult : OSSResult
 
 /**
- 新Object最后更新时间。
+ The last modified time
  */
 @property (nonatomic, strong) NSString * lastModifed;
 
 /**
- 新Object的ETag值。
+ The ETag of the new object.
  */
 @property (nonatomic, strong) NSString * eTag;
 @end
 
 /**
- 初始化分块上传的请求
+ Request class of initiating a multipart upload.
  */
 @interface OSSInitMultipartUploadRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 设置文件类型
+ Content type
  */
 @property (nonatomic, strong) NSString * contentType;
 
 /**
- 指定该Object被下载时的名称；更详细描述请参照RFC2616。
+ The object's download name. Checks out RFC 2616 for more details.
  */
 @property (nonatomic, strong) NSString * contentDisposition;
 
 /**
- 指定该Object被下载时的内容编码格式；更详细描述请参照RFC2616。
+ The content encoding. Checks out RFC 2616.
  */
 @property (nonatomic, strong) NSString * contentEncoding;
 
 /**
- 指定该Object被下载时的网页的缓存行为；更详细描述请参照RFC2616。
+ Specifies the cache control behavior when it's downloaded. Checks out RFC 2616 for more details.
  */
 @property (nonatomic, strong) NSString * cacheControl;
 
 /**
- 过期时间（milliseconds）；更详细描述请参照RFC2616。
+ Expiration time in milliseconds. Checks out RFC 2616 for more details.
  */
 @property (nonatomic, strong) NSString * expires;
 
 /**
- 可以在这个字段中携带以x-oss-meta-为前缀的参数，则视为user meta，比如x-oss-meta-location。一个Object可以有多个类似的参数，但所有的user meta总大小不能超过8k。
- 如果上传时还需要指定其他HTTP请求头字段，也可以在这里设置
+ The dictionary of object's custom metadata, which starts with x-oss-meta-. 
+ The total size of user metadata is no more than 8KB.
+ It could include other standard http headers.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
 @end
 
 /**
- 初始化分块上传的请求结果
+ The resutl class of initiating a multipart upload.
  */
 @interface OSSInitMultipartUploadResult : OSSResult
 
 /**
- 唯一标示此次Multipart Upload事件的ID。
+ The upload Id of the multipart upload
  */
 @property (nonatomic, strong) NSString * uploadId;
 @end
 
 /**
- 上传单个分块的请求
+ The request class of uploading one part.
  */
 @interface OSSUploadPartRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectkey;
 
 /**
- 唯一标示此次Multipart Upload事件的ID。
+ Multipart Upload id.
  */
 @property (nonatomic, strong) NSString * uploadId;
 
 /**
- 指定本次上传分块的标识号码
+ The part number of this part.
  */
 @property (nonatomic, assign) int partNumber;
 
 /**
- 根据协议RFC 1864对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码为一个消息的Content-MD5值。
- 该请求头可用于消息合法性的检查（消息内容是否与发送时一致）。虽然该请求头是可选项，OSS建议用户使用该请求头进行端到端检查。
+ The content MD5 value.
+ It's calculated according to RFC 1864 and encoded in base64.
+ Though it's optional, it's recommended to turn it on for integrity check.
  */
 @property (nonatomic, strong) NSString * contentMd5;
 
 /**
- 从内存中的NSData上传时，通过这个字段设置
+ The in-memory data to upload from.
  */
 @property (nonatomic, strong) NSData * uploadPartData;
 
 /**
- 从文件上传时，通过这个字段设置
+ The local file path to upload from
  */
 @property (nonatomic, strong) NSURL * uploadPartFileURL;
 
 /**
- 上传进度回调
- 会在任务执行的后台线程被回调，而非UI线程
+ The upload progress callback.
+ It runs in background thread (not UI thread);
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadPartProgress;
 @end
 
 /**
- 上传单个分块的结果
+ The result class of uploading one part.
  */
 @interface OSSUploadPartResult : OSSResult
 @property (nonatomic, strong) NSString * eTag;
 @end
 
 /**
- 分块上传中每个分块的信息，这些信息将会在调用‘完成分块上传’的接口中使用
+ The Part information. It's called by CompleteMultipartUpload().
  */
 @interface OSSPartInfo : NSObject
 
 /**
- 指定本次上传分块的标识号码
+ The part number in this part upload.
  */
 @property (nonatomic, assign) int32_t partNum;
 
 /**
- Part成功上传后，OSS返回的ETag值。
+ ETag value of this part returned by OSS.
  */
 @property (nonatomic, strong) NSString * eTag;
 
 /**
- 分块数据长度
+ The part size.
  */
 @property (nonatomic, assign) int64_t size;
 
@@ -1065,211 +1084,214 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 完成分块上传请求
+ The request class of completing a multipart upload.
  */
 @interface OSSCompleteMultipartUploadRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 唯一标示此次Multipart Upload事件的ID。
+ Multipart upload Id
  */
 @property (nonatomic, strong) NSString * uploadId;
 
 /**
- 根据协议RFC 1864对消息内容（不包括头部）计算MD5值获得128比特位数字，对该数字进行base64编码为一个消息的Content-MD5值。
- 该请求头可用于消息合法性的检查（消息内容是否与发送时一致）。虽然该请求头是可选项，OSS建议用户使用该请求头进行端到端检查。
+ The content MD5 value.
+ It's calculated according to RFC 1864 and encoded in base64.
+ Though it's optional, it's recommended to turn it on for integrity check. 
  */
 @property (nonatomic, strong) NSString * contentMd5;
 
 /**
- 各个分块的信息
+ All parts' information.
  */
 @property (nonatomic, strong) NSArray * partInfos;
 
 /**
- server回调参数设置
+ Server side callback parameter
  */
 @property (nonatomic, strong) NSDictionary * callbackParam;
 
 /**
- server回调变量设置
+ Callback variables 
  */
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
- 完成分块上传附带的请求头
+ The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
 @end
 
 /**
- 完成分块上传请求的结果
+ The resutl class of completing a multipart upload.
  */
 @interface OSSCompleteMultipartUploadResult : OSSResult
 
 /**
- 新创建Object的URL。
+ The object's URL
  */
 @property (nonatomic, strong) NSString * location;
 
 /**
- ETag (entity tag) 在每个Object生成的时候被创建，用于标示一个Object的内容。
- Complete Multipart Upload请求创建的Object，ETag值是其内容的UUID。ETag值可以用于检查Object内容是否发生变化。.
+ ETag (entity tag).
+ It's generated when the object is created. 
  */
 @property (nonatomic, strong) NSString * eTag;
 
 /**
- 如果设置了server回调，回调的响应内容
+ The callback response if the callback is specified.
+ The resutl class of initiating a multipart upload.
  */
 @property (nonatomic, strong) NSString * serverReturnJsonString;
 @end
 
 /**
- 罗列某次分块上传事件已经上传的分块请求
+ The request class of listing all parts that have been uploaded.
  */
 @interface OSSListPartsRequest : OSSRequest
 
 /**
- Bucket名称
- */
+ Bucket name
+ The request class of uploading one part.*/
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 唯一标示此次Multipart Upload事件的ID。
+ The multipart upload Id.
  */
 @property (nonatomic, strong) NSString * uploadId;
 
 /**
- 返回请求中最大的Part数目。
+ The max part count to return
  */
 @property (nonatomic, assign) int maxParts;
 
 /**
- 指定List的起始位置，只有Part Number数目大于该参数的Part会被列出。
+ The part number marker filter---only parts whose part number is greater than this value will be returned.
  */
 @property (nonatomic, assign) int partNumberMarker;
 @end
 
 /**
- 罗列分块请求的结果
- */
+The result class of listing uploaded parts.
+*/
 @interface OSSListPartsResult : OSSResult
 
 /**
- 如果本次没有返回全部结果，响应请求中将包含NextPartNumberMarker元素，用于标明接下来请求的PartNumberMarker值。
+ The next part number marker. If the response does not include all data, this header specifies what's the start point for the next list call.
  */
 @property (nonatomic, assign) int nextPartNumberMarker;
 
 /**
- 返回请求中最大的Part数目。
+ The max parts count to return.
  */
 @property (nonatomic, assign) int maxParts;
 
 /**
- 标明是否本次返回的List Part结果列表被截断。“true”表示本次没有返回全部结果；“false”表示本次已经返回了全部结果。
+ Flag of truncated data in the response. If it's true, it means there're more data to come.
+ If it's false, it means all data have been returned.
  */
 @property (nonatomic, assign) BOOL isTruncated;
 
 /**
- 保存Part信息的容器。
+ The array of the part information.
  */
 @property (nonatomic, strong) NSArray * parts;
 @end
 
 /**
- 取消分块上传事件请求
+ Request to abort a multipart upload
  */
 @interface OSSAbortMultipartUploadRequest : OSSRequest
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object name
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 唯一标示此次Multipart Upload事件的ID。
+ The multipart upload Id.
  */
 @property (nonatomic, strong) NSString * uploadId;
 @end
 
 /**
- 取消分块上传事件的结果
+ The result class of aborting a multipart upload
  */
 @interface OSSAbortMultipartUploadResult : OSSResult
 @end
 
 /**
- 断点续传请求
+ The request class of resumable upload.
  */
 @interface OSSResumableUploadRequest : OSSRequest
 
 /**
- 一个续传事件对应着同一个唯一的UploadId
+ The upload Id 
  */
 @property (nonatomic, strong) NSString * uploadId;
 
 /**
- Bucket名称
+ Bucket name
  */
 @property (nonatomic, strong) NSString * bucketName;
 
 /**
- Object名称
+ Object object
  */
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
- 从文件上传时，通过这个字段设置
+ The local file path to upload from.
  */
 @property (nonatomic, strong) NSURL * uploadingFileURL;
 
 /**
- 自定义分块大小，最小100KB
+ The part size, minimal value is 100KB.
  */
 @property (nonatomic, assign) int64_t partSize;
 
 /**
- 上传进度
- 会在任务执行的后台线程被回调，而非UI线程
+ Upload progress callback.
+ It runs at the background thread (not UI thread).
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 
 /**
- server回调参数设置
+ The callback parmeters
  */
 @property (nonatomic, strong) NSDictionary * callbackParam;
 
 /**
- server回调变量设置
+ The callback variables
  */
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
- 完成分块上传附带的请求头
+ The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
 
 /**
- 当前正在处理的子请求
+ All running children requests
  */
 @property (atomic, weak) OSSRequest * runningChildrenRequest;
 
@@ -1277,19 +1299,19 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
 @end
 
 /**
- 断点续传的结果
+ The result class of resumable uploading
  */
 @interface OSSResumableUploadResult : OSSResult
 /**
- 如果设置了server回调，回调的响应内容
+ The callback response, if the callback is specified.
  */
 @property (nonatomic, strong) NSString * serverReturnJsonString;
 @end
 
-#pragma mark 其他
+#pragma mark Others
 
 /**
- HTTP响应内容解析器
+ HTTP response parser
  */
 @interface OSSHttpResponseParser : NSObject
 @property (nonatomic, strong) NSURL * downloadingFileURL;

@@ -14,8 +14,8 @@ NSString * const HTTPDNS_SERVER_IP = @"203.107.1.1";
 NSString * const HTTPDNS_SERVER_PORT = @"80";
 
 NSString * const ACCOUNT_ID = @"181345";
-NSTimeInterval const MAX_ENDURABLE_EXPIRED_TIME_IN_SECOND = 60; // 如果离TTL到期已经过去某个秒数，不再使用该解析结果
-NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // 如果发现距离TTL到期小于某个秒数，提前发起更新
+NSTimeInterval const MAX_ENDURABLE_EXPIRED_TIME_IN_SECOND = 60; // The DNS entry's expiration time in seconds. After it expires, the entry is invalid.
+NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // Once the remaining valid time of an DNS entry is less than this number, issue a DNS request to prefetch the data.
 
 @interface IpObject : NSObject
 
@@ -51,42 +51,42 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // 如果发现距离
 }
 
 /**
- *  OSS SDK专用
+ *  OSS SDK specific
  *
- *  @param host 需要严格遵守domain标准格式，如 oss-cn-hangzhou.aliyuncs.com
+ *  @param host it needs strictly follow the domain's format, such as oss-cn-hangzhou.aliyuncs.com
  *
- *  @return 解析host得到的ip列表中的某个ip
+ *  @return an ip in the ip list of the resolved host.
  */
 - (NSString *)asynGetIpByHost:(NSString *)host {
     IpObject * ipObject = [gHostIpMap objectForKey:host];
     if (!ipObject) {
 
-        // 如果还没解析过该host，发起解析，返回nil
+        // if the host is not resolved, asynchronously resolve it and return nil
         [self resolveHost:host];
         return nil;
     } else if ([[NSDate date] timeIntervalSince1970] - ipObject.expiredTime > MAX_ENDURABLE_EXPIRED_TIME_IN_SECOND) {
 
-        // 如果该host的解析结果已经过期太久，发起解析，返回nil
+        // If the entry is expired, asynchronously resolve it and return nil.
         [self resolveHost:host];
         return nil;
     } else if (ipObject.expiredTime -[[NSDate date] timeIntervalSince1970] < PRERESOLVE_IN_ADVANCE_IN_SECOND) {
 
-        // 如果该host的解析结果即将过期，或已经过期一段可以接受的时间，发起解析，并返回之前的结果
+        // If the entry is about to expire, asynchronously resolve it and return the current value.
         [self resolveHost:host];
         return ipObject.ip;
     } else {
 
-        // 还未过期，直接返回结果
+        // returns the current result.
         return ipObject.ip;
     }
 }
 
 /**
- *  发起对一个host的解析，异步执行
+ *  resolve the host asynchronously
 
- *  如果该host已经在解析中，那么后续的请求都会被放弃，直到它解析完成
+ *  If the host is being resolved, the call will be skipped.
  *
- *  @param host 需要解析的ip
+ *  @param host the host to resolve
  */
 - (void)resolveHost:(NSString *)host {
 

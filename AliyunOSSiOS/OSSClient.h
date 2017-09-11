@@ -35,49 +35,51 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- OSSClient是OSS服务的iOS客户端，它为调用者提供了一系列的方法，用于和OSS服务进行交互。
- 一般来说，全局内只需要保持一个OSSClient，用来调用各种操作。
+ OSSClient is the entry class to access OSS in an iOS client. It provides all the methods to communicate with OSS.
+ Generally speaking, only one instance of OSSClient is needed in the whole app.
  */
 @interface OSSClient : NSObject
 
 /**
- OSS访问域名
+ OSS endpoint. It varies in different regions. Please check out OSS official website for the exact endpoints for your data.
  */
 @property (nonatomic, strong) NSString * endpoint;
 
 /**
- 用以收发网络请求
+ The networking instance for sending and receiving data
  */
 @property (nonatomic, strong) OSSNetworking * networking;
 
 /**
- 提供访问所需凭证
+ The credential provider instance
  */
 @property (nonatomic, strong) id<OSSCredentialProvider> credentialProvider;
 
 /**
- 客户端设置
+ Client configuration instance
  */
 @property (nonatomic, strong) OSSClientConfiguration * clientConfiguration;
 
 /**
- 任务队列
+ oss operation task queue
  */
 @property (nonatomic, strong, readonly) OSSExecutor * ossOperationExecutor;
 
 /**
- 初始化OSSClient，使用默认的本地设置
- @endpoint 指明Bucket所在的Region域名，2017年以后苹果要求APP符合ATS政策，这里要写https的endpoint，如 "https://oss-cn-hangzhou.aliyuncs.com"
- @credentialProvider 需要实现的签名器
+ Initializes an OSSClient instance with the default client configuration.
+ @endpoint it specifies domain of the bucket's region. Starting 2017, the domain must be prefixed with "https://" to follow Apple's ATS policy.
+             For example: "https://oss-cn-hangzhou.aliyuncs.com"
+ @credentialProvider The credential provider
  */
 - (instancetype)initWithEndpoint:(NSString *)endpoint
               credentialProvider:(id<OSSCredentialProvider>) credentialProvider;
 
 /**
- 初始化OSSClient，使用自定义设置
- @endpoint 指明Bucket所在的Region域名，2017年以后苹果要求APP符合ATS政策，这里要写https的endpoint，如 "https://oss-cn-hangzhou.aliyuncs.com"
- @credentialProvider 需要实现的签名器
- @conf 可以设置一些本地参数如重试次数、超时时间等
+ Initializes an OSSClient with the custom client configuration.
+ @endpoint it specifies domain of the bucket's region. Starting 2017, the domain must be prefixed with "https://" to follow Apple's ATS policy.
+             For example: "https://oss-cn-hangzhou.aliyuncs.com"
+ @credentialProvider The credential provider
+ @conf The custom client configuration such as retry time, timeout values, etc.
  */
 - (instancetype)initWithEndpoint:(NSString *)endpoint
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
@@ -86,184 +88,190 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark restful-api
 
 /**
- 对应RESTFul API：GetService
- 获取请求者当前拥有的全部Bucket。
- 注意：
- 1. 尚不支持STS;
- 2. 当所有的bucket都返回时，返回的xml中不包含Prefix、Marker、MaxKeys、IsTruncated、NextMarker节点，如果还有部分结果未返回，则增加上述节点，其中NextMarker用于继续查询时给marker赋值。
+ The corresponding RESTFul API: GetService
+ Gets all the buckets of the current user
+ Notes：
+ 1. STS is not supported yet in this call.
+ 2. When all buckets are returned, the xml in response body does not have nodes of Prefix, Marker, MaxKeys, IsTruncated and NextMarker.
+    If there're remaining buckets to return, the xml will have these nodes. The nextMarker is the value of marker in the next call.
  */
 - (OSSTask *)getService:(OSSGetServiceRequest *)request;
 
 /**
- 对应RESTFul API：PutBucket
- 用于创建Bucket（不支持匿名访问）。默认情况下，创建的Bucket位于默认的数据中心：oss-cn-hangzhou。
- 用户可以显式指定Bucket位于的数据中心，从而最优化延迟，最小化费用或者满足监管要求等。
- 注意：
- 1. 尚不支持STS。
+ The corresponding RESTFul API: PutBucket
+ Creates a bucket--it does not support anonymous access. By default, the datacenter used is oss-cn-hangzhou.
+ Callers could explicitly specify the datacenter for the bucket to optimize the performance and cost or meet the regulation requirement.
+ Notes:
+ 1. STS is not supported yet.
  */
 - (OSSTask *)createBucket:(OSSCreateBucketRequest *)request;
 
 /**
- 对应RESTFul API：DeleteBucket
- 用于删除某个Bucket。
+ The corresponding RESTFul API: DeleteBucket
+ Deletes a bucket.
  */
 - (OSSTask *)deleteBucket:(OSSDeleteBucketRequest *)request;
 
 /**
- 对应RESTFul API：GetBucket
- 用来list Bucket中所有Object的信息，可以通过prefix，marker，delimiter和max-keys对list做限定，返回部分结果。
+The corresponding RESTFul API: GetBucket
+ Lists all objects in a bucket. It could be specified with filters such as prefix, marker, delimeter and max-keys.
  */
 - (OSSTask *)getBucket:(OSSGetBucketRequest *)request;
 
 /**
- 对应RESTFul API：GetBucketACL
- 用来获取某个Bucket的访问权限。
+The corresponding RESTFul API: GetBucketACL
+ Gets the bucket ACL.
  */
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request;
 
 /**
- 对应RESTFul API：HeadObject
- 只返回某个Object的meta信息，不返回文件内容。
+The corresponding RESTFul API: HeadObject
+ Gets the object's metadata information. The object's content is not returned.
  */
 - (OSSTask *)headObject:(OSSHeadObjectRequest *)request;
 
 /**
- 对应RESTFul API：GetObject
- 用于获取某个Object，此操作要求用户对该Object有读权限。
+The corresponding RESTFul API: GetObject
+ Gets the whole object (includes content). It requires caller have read permission on the object.
  */
 - (OSSTask *)getObject:(OSSGetObjectRequest *)request;
 
 /**
- 对应RESTFul API：PutObject
- 用于上传文件。
+The corresponding RESTFul API: PutObject
+ Uploads a file.
  */
 - (OSSTask *)putObject:(OSSPutObjectRequest *)request;
 
 /**
- Put Object ACL接口用于修改Object的访问权限。目前Object有三种访问权限：private, public-read, public-read-write。
- Put Object ACL操作通过Put请求中的“x-oss-object-acl”头来设置，这个操作只有Bucket Owner有权限执行。如果操作成功，则返回200；否则返回相应的错误码和提示信息。
+ Sets the object's ACL. Right now an object has three access permissions: private, public-ready, public-read-write.
+ The operation specifies the x-oss-object-acl header in the put request. The caller must be the owner of the object.
+ If succeeds, it returns HTTP status 200; otherwise it returns related error code and error messages.
  */
 - (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request;
 
 /**
- 对应RESTFul API：AppendObject
- 以追加写的方式上传文件。通过Append Object操作创建的Object类型为Appendable Object，而通过Put Object上传的Object是Normal Object。
+The corresponding RESTFul API: AppendObject
+ Appends data to an existing or non-existing object. The object created by this operation is appendable. 
+ As a comparison, the object created by Put Object is normal (non-appendable).
  */
 - (OSSTask *)appendObject:(OSSAppendObjectRequest *)request;
 
 /**
- 对应RESTFul API：copyObject
- 拷贝一个在OSS上已经存在的object成另外一个object，可以发送一个PUT请求给OSS，并在PUT请求头中添加元素“x-oss-copy-source”来指定拷贝源。
- OSS会自动判断出这是一个Copy操作，并直接在服务器端执行该操作。如果拷贝成功，则返回新的object信息给用户。
- 该操作适用于拷贝小于1GB的文件。
+The corresponding RESTFul API: copyObject
+ Copies an existing object to another one.The operation sends a PUT request with x-oss-copy-source header to specify the source object.
+ OSS server side will detect and copy the object. If it succeeds, the new object's metadata information will be returned.
+ The operation applies for files less than 1GB. For big files, use UploadPartCopy RESTFul API.
  */
 - (OSSTask *)copyObject:(OSSCopyObjectRequest *)request;
 
 /**
- 对应RESTFul API：DeleteObject
- 用于删除某个Object。
+The corresponding RESTFul API: DeleteObject
+Deletes an object
  */
 - (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request;
 
 /**
- 对应RESTFul API：InitiateMultipartUpload
- 使用Multipart Upload模式传输数据前，必须先调用该接口来通知OSS初始化一个Multipart Upload事件。该接口会返回一个OSS服务器创建的全局唯一的Upload ID，用于标识本次Multipart Upload事件。
- 用户可以根据这个ID来发起相关的操作，如中止Multipart Upload、查询Multipart Upload等。
+The corresponding RESTFul API: InitiateMultipartUpload
+ Initiates a multipart upload to get a upload Id. It's needed before starting uploading parts data. 
+ The upload Id is used for subsequential operations such as aborting the upload, querying the uploaded parts, etc.
  */
 - (OSSTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request;
 
 /**
- 对应RESTFul API：UploadPart
- 初始化一个Multipart Upload之后，可以根据指定的Object名和Upload ID来分块（Part）上传数据。
- 每一个上传的Part都有一个标识它的号码（part number，范围是1~10,000）。
- 对于同一个Upload ID，该号码不但唯一标识这一块数据，也标识了这块数据在整个文件内的相对位置。
- 如果你用同一个part号码，上传了新的数据，那么OSS上已有的这个号码的Part数据将被覆盖。除了最后一块Part以外，其他的part最小为100KB；
- 最后一块Part没有大小限制。
+The corresponding RESTFul API: UploadPart
+ After the multipart upload is initiated, this API could be called to upload the data to the target file with the upload Id.
+ Every uploaded part has a unique id called part number, which ranges from 1 to 10,000. 
+ For a given upload Id, the part number identifies the specific range of the data in the whole file. 
+ If the same part number is used for another upload, the existing data will be overwritten by the new upload. 
+ Except the last part, all other part's minimal size is 100KB.
+ But no minimal size requirement on the last part.
  */
 - (OSSTask *)uploadPart:(OSSUploadPartRequest *)request;
 
 /**
- 对应RESTFul API：CompleteMultipartUpload
- 在将所有数据Part都上传完成后，必须调用Complete Multipart Upload API来完成整个文件的Multipart Upload。
- 在执行该操作时，用户必须提供所有有效的数据Part的列表（包括part号码和ETAG）；OSS收到用户提交的Part列表后，会逐一验证每个数据Part的有效性。
- 当所有的数据Part验证通过后，OSS将把这些数据part组合成一个完整的Object。
+The corresponding RESTFul API: CompleteMultipartUpload
+ This API is to complete the multipart upload after all parts data have been uploaded.
+ It must be provided with a valid part list (each part has the part number and ETag). 
+ OSS will validate every part and then complete the multipart upload.
+ If any part is invalid (e.g. the part is updated by another part upload), this API will fail.
  */
 - (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request;
 
 /**
- 对应RESTFul API：ListParts
- 可以罗列出指定Upload ID所属的所有已经上传成功Part。
+The corresponding RESTFul API: ListParts
+ Lists all uploaded parts of the specified upload id.
  */
 - (OSSTask *)listParts:(OSSListPartsRequest *)request;
 
 /**
- 对应RESTFul API：AbortMultipartUpload
- 该接口可以根据用户提供的Upload ID中止其对应的Multipart Upload事件。
- 当一个Multipart Upload事件被中止后，就不能再使用这个Upload ID做任何操作，已经上传的Part数据也会被删除。
+The corresponding RESTFul API: AbortMultipartUpload
+Aborts the multipart upload by the specified upload Id.
+ Once the multipart upload is aborted by this API, all parts data will be deleted and the upload Id is invalid anymore.
  */
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
 #pragma mark extention method
 
 /**
- 对一个Object签名出一个URL，可以把该URL转给第三方实现授权访问。
- @bucketName Object所在的Bucket名称
- @objectKey Object名称
- @interval 签名URL时，可以指定这个URL的有效时长是多久，单位是秒，比如说需要有效时长为1小时的URL，这里传入3600
+ Generates a signed URL for the object and anyone has this URL will get the GET permission on the object.
+ @bucketName object's bucket name
+ @objectKey Object name
+ @interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
  */
 - (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
                                 withObjectKey:(NSString *)objectKey
                        withExpirationInterval:(NSTimeInterval)interval;
 
 /**
- 对一个Object签名出一个URL，可以把该URL转给第三方实现授权访问。
- @bucketName Object所在的Bucket名称
- @objectKey Object名称
- @interval 签名URL时，可以指定这个URL的有效时长是多久，单位是秒，比如说需要有效时长为1小时的URL，这里传入3600
- @parameter 参数
+ Generates a signed URL for the object and anyone has this URL will get the specified permission on the object.
+ @bucketName object's bucket name
+ @objectKey Object name
+ @interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
+ @parameter it could specify allowed HTTP methods 
  */
 - (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
                                  withObjectKey:(NSString *)objectKey
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters;
 
-/**
- 如果Object的权限是公共读或者公共读写，调用这个接口对该Object签名出一个URL，可以把该URL转给第三方实现授权访问。
- @bucketName Object所在的Bucket名称
- @objectKey Object名称
+/** TODOTODO
+ If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
+ @bucketName Object's bucket name
+ @objectKey Object name
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
                             withObjectKey:(NSString *)objectKey;
 
-/**
- 如果Object的权限是公共读或者公共读写，调用这个接口对该Object签名出一个URL，可以把该URL转给第三方实现授权访问。
- @bucketName Object所在的Bucket名称
- @objectKey Object名称
- @parameter 参数
+/** TODOTODO
+ If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
+ @bucketName Object's bucket name
+ @objectKey Object name
+ @parameter the request parameters.
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
                              withObjectKey:(NSString *)objectKey
                              withParameters:(NSDictionary *)parameters;
 
 /**
- 断点上传接口
- 这个接口封装了分块上传的若干接口以实现断点上传，但是需要用户自行保存UploadId。
- 对一个新文件，用户需要首先调用multipartUploadInit接口获得一个UploadId，然后调用此接口上传这个文件。
- 如果上传失败，首先需要检查一下失败原因：
-     如果非不可恢复的失败，那么可以用同一个UploadId和同一文件继续调用这个接口续传
-     否则，需要重新获取UploadId，重新上传这个文件。
- 详细参考demo。
+ TODOTODO
+ Resumable upload API
+ This API wraps the multipart upload and also enables resuming upload by reading/writing  the checkpoint data.
+ For a new file, multipartUploadInit() needs to be called first to get the upload Id. Then use this upload id to call this API to upload the data.
+ If the upload fails, checks the error messages:
+     If it's a recoverable error, then call this API again with the same upload Id to retry. The uploaded data will not be uploaded again.
+     Otherwise then you may need to recreates a new upload Id and call this method again.
+ Check out demo for the detail.
  */
 - (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request;
 
 /**
- 查看某个Object是否存在
- @bucketName Object所在的Bucket名称
- @objectKey Object名称
+ Checks if the object exists
+ @bucketName Object's bucket name
+ @objectKey Object name
  
- return YES                     Object存在
- return NO && *error = nil      Object不存在
- return NO && *error != nil     发生错误
+ return YES                     Object exists
+ return NO && *error = nil      Object does not exist
+ return NO && *error != nil     Error occured.
  */
 - (BOOL)doesObjectExistInBucket:(NSString *)bucketName
                       objectKey:(NSString *)objectKey
