@@ -226,7 +226,7 @@
 		21028BB21BA9ABF500C2A6BA = {
 			isa = PBXGroup;
 			children = (
-				4CE5247A1F62796A00DD3DCF /* pyserver */,
+				4CE5247C1F665F0D00DD3DCF /* Server */,
 				21028BBE1BA9ABF500C2A6BA /* AliyunOSSiOS */,
 				21028BCB1BA9ABF600C2A6BA /* AliyunOSSiOSTests */,
 				21A924351E498211002155BF /* Demo */,
@@ -393,6 +393,14 @@
 				4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */,
 			);
 			name = samples;
+			sourceTree = "<group>";
+		};
+		4CE5247C1F665F0D00DD3DCF /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				4CE5247A1F62796A00DD3DCF /* pyserver */,
+			);
+			name = Server;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
