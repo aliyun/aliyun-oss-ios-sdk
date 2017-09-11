@@ -2514,6 +2514,16 @@ id<OSSCredentialProvider>  credential, credentialFed;
     XCTAssertTrue([OSSUtil validateObjectKey:@" ?-+xsfs*sfds "]);
 }
 
+- (void) testUrlEncode{
+    NSString * objectKey = @"test/a/汉字。，；：‘’“”？（）『』【】《》！@#￥%……&×/test+ =-_*&^%$#@!`~[]{}()<>|\\/?.,;";
+    NSString * encodekey = [OSSUtil encodeURL:objectKey];
+    
+    NSString * encodedKey = @"test/a/%E6%B1%89%E5%AD%97%E3%80%82%EF%BC%8C%EF%BC%9B%EF%BC%9A%E2%80%98%E2%80%99%E2%80%9C%E2%80%9D%EF%BC%9F%EF%BC%88%EF%BC%89%E3%80%8E%E3%80%8F%E3%80%90%E3%80%91%E3%80%8A%E3%80%8B%EF%BC%81%40%23%EF%BF%A5%25%E2%80%A6%E2%80%A6%26%C3%97/test%2B%20%3D-_%2A%26%5E%25%24%23%40%21%60~%5B%5D%7B%7D%28%29%3C%3E%7C%5C/%3F.%2C%3B";
+    XCTAssertTrue([encodekey isEqualToString:encodedKey]);
+}
+
+
+
 #pragma mark util
 
 - (BOOL)isFileOnOSSBucket:(NSString *)bucketName objectKey:(NSString *)objectKey equalsToLocalFile:(NSString *)filePath {
