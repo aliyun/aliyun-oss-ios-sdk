@@ -6,16 +6,17 @@ from aliyunsdksts.request.v20150401 import AssumeRoleRequest
 
 def getSts():
 
+
 	# 通过管理控制后台-访问控制 https://help.aliyun.com/product/28625.html
 	# RAM控制台 https://ram.console.aliyun.com/
-    # STS授权相关信息获取步骤:
+	# STS授权相关信息获取步骤:
 	# 1.RAM控制台用户管理创建子用户(User)同时点击该用户创建并获取AccessKeyID和AccessKeySecret https://help.aliyun.com/document_detail/28637.html
 	# 2.对该子用户(User) 授予AliyunSTSAssumeRoleAccess策略(必须),如需自定义策略请看 https://help.aliyun.com/document_detail/28640.html
 	# 3.RAM控制台角色管理创建角色role,进行自定义授权设置(控制操作的内容),获取Arn https://help.aliyun.com/document_detail/28649.html
 	# 注意点：
 	# 只有子用户(User)才能调用 AssumeRole 接口
 	# 阿里云主用户(Root User)的AccessKeys不能用于发起AssumeRole请求
-    # python sdk说明
+	# python sdk说明
 	# 构建一个 Aliyun Client, 用于发起请求
 	# 构建Aliyun Client时需要设置AccessKeyId和AccessKeySevcret
 	# STS是Global Service, API入口位于华东 1 (杭州) , 这里Region填写"cn-hangzhou"
