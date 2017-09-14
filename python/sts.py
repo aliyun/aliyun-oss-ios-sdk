@@ -42,7 +42,6 @@ def getSts():
     
 	# 发起请求，并得到response
 	response = clt.do_action_with_exception(request)
-
-    print response
+	
 	return response
 	pass
