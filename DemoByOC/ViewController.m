@@ -18,6 +18,8 @@
 - (void)createButtonWithName:(NSString*)name LocationY:(CGFloat)y ClickFunc:(SEL)func Container:(UIView*) group;
 - (void)initOSSClientWithAk:(NSString*)ak Sk:(NSString*)sk Token:(NSString*)token;
 
+- (void)initSTSToken;
+
 @end
 
 static OSSClient * client;
@@ -52,6 +54,10 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
     [self.view addSubview:self.scrollView];
     
     [self.view addSubview:self.activityIndicatorView];
+    
+    //please init local sts server firstly。 please check python/*.py for more info.
+    [self initSTSToken];
+    
 }
 
 - (void)initOSSClientWithAk:(NSString *)ak Sk:(NSString *)sk Token:(NSString *)token{
@@ -111,6 +117,20 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
     }];
 }
 
+- (void)initSTSToken{
+    [[[StstokenSample alloc] init] getStsToken:^(NSDictionary *dict){
+        
+        if(provider == nil || client == nil){
+            [self initOSSClientWithAk:dict[@"AccessKeyId"] Sk:dict[@"AccessKeySecret"] Token:dict[@"SecurityToken"]];
+        }else{
+            //给provider设置
+            [provider setAccessKeyId:dict[@"AccessKeyId"]];
+            [provider setSecretKeyId:dict[@"AccessKeySecret"]];
+            [provider setSecurityToken:dict[@"SecurityToken"]];
+        }
+        
+    }];
+}
 
 
 - (void)getStsToken:(id)sender{
