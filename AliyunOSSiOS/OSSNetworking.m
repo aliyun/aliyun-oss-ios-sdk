@@ -446,15 +446,15 @@
         return ;
     }
 
-    NSString * dateStr = [[httpResponse allHeaderFields] objectForKey:@"Date"];
-    if ([dateStr length]) {
-        NSDate * serverTime = [NSDate oss_dateFromString:dateStr];
-        NSDate * deviceTime = [NSDate date];
-        NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
-        [NSDate oss_setClockSkew:skewTime];
-    } else {
-        OSSLogError(@"date header does not exist, unable to adjust the time skew");
-    }
+//    NSString * dateStr = [[httpResponse allHeaderFields] objectForKey:@"Date"];
+//    if ([dateStr length]) {
+//        NSDate * serverTime = [NSDate oss_dateFromString:dateStr];
+//        NSDate * deviceTime = [NSDate date];
+//        NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
+//        [NSDate oss_setClockSkew:skewTime];
+//    } else {
+//        OSSLogError(@"date header does not exist, unable to adjust the time skew");
+//    }
 
     /* background upload task will not call back didRecieveResponse */
     if (delegate.isBackgroundUploadFileTask) {
