@@ -10,12 +10,14 @@ Environment Requirement：
 - You need a registered Aliyun.com user and OSS is enabled.
 
 Update Logs:
+
 2017/9/14
+- Release 2.6.3
 1.	update url encode method for special chars。
 2.	add sts sample
 
 github address：https://github.com/aliyun/aliyun-oss-ios-sdk
-pod dependency：   pod 'AliyunOSSiOS', '~> 2.6.2'
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.6.3'
 demo address：  https://github.com/alibaba/alicloud-ios-demo
 
 2017/7/13
