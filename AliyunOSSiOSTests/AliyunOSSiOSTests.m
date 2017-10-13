@@ -20,10 +20,11 @@
 
 NSString * const TEST_BUCKET = @"ios-sdk-test-1";
 
-NSString * const PUBLIC_BUCKET = @"public-read-write-android";
-NSString * const ENDPOINT = @"https://oss-cn-hangzhou.aliyuncs.com";
-NSString * const MultipartUploadObjectKey = @"multipartUploadObject";
-NSString * const StsTokenURL = @"http://localhost:8080/distribute-token.json";
+NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
+NSString * const ENDPOINT = @"https://oss-cn-beijing.aliyuncs.com";
+NSString * const MultipartUploadObjectKey = @"multipart";
+NSString * const CALLBACK_URL = @"oss-demo.aliyuncs.com:23450";
+NSString * const StsTokenURL = @"http://0.0.0.0:12555/sts/getsts";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
@@ -185,9 +186,10 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                                 options:kNilOptions
                                                                   error:nil];
-        NSString * accessKey = [object objectForKey:@"AccessKeyId"];
-        NSString * secretKey = [object objectForKey:@"AccessKeySecret"];
-        NSString * token = [object objectForKey:@"SecurityToken"];
+        
+        NSString * accessKey = [object[@"Credentials"] objectForKey:@"AccessKeyId"];
+        NSString * secretKey = [object[@"Credentials"] objectForKey:@"AccessKeySecret"];
+        NSString * token = [object[@"Credentials"] objectForKey:@"SecurityToken"];
         OSSLogDebug(@"token: %@ %@ %@", accessKey, secretKey, token);
 
         return [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:accessKey secretKeyId:secretKey securityToken:token];
@@ -226,7 +228,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
     getService = [OSSGetServiceRequest new];
     getService.maxKeys = 10;
-    getService.prefix = @"android";
+    getService.prefix = @"king";
     [[[client getService:getService] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetServiceResult * result = task.result;
@@ -254,9 +256,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
         return; // we need the account owner's ak/sk to create bucket; federation token can't do this
     }
     OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
-    create.bucketName = TEST_BUCKET;
+    create.bucketName = @"ios-test-bucket";
     create.xOssACL = @"public-read";
-    create.location = @"oss-cn-hangzhou";
 
     [[[client createBucket:create] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -269,7 +270,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         return; // we need the account owner's ak/sk to create bucket; federation token can't do this
     }
     OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
-    delete.bucketName = @"create-zhouzhuo-bucket";
+    delete.bucketName = @"ios-test-bucket";
 
     [[[client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -460,7 +461,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file100k"]];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.callbackParam = @{
-                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackUrl": CALLBACK_URL,
                               @"callbackBody": @"test"
                               };
     request.callbackVar = @{
@@ -1078,7 +1079,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     complete.uploadId = uploadId;
     complete.partInfos = partInfos;
     complete.callbackParam = @{
-                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackUrl": CALLBACK_URL,
                               @"callbackBody": @"test"
                               };
     complete.callbackVar = @{
@@ -1263,7 +1264,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testPresignPublicURL {
-    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1k"];
+    OSSTask * task = [client presignPublicURLWithBucketName:PUBLIC_BUCKET withObjectKey:@"file1m"];
     XCTAssertNil(task.error);
     NSLog(@"url: %@", task.result);
     [self assertURLValid:task.result];
@@ -1300,7 +1301,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
-    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
+    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:ENDPOINT
                                            credentialProvider:credential
                                           clientConfiguration:conf];
 
@@ -1310,7 +1311,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.backgroundSesseionIdentifier = @"test_other_backgroundservice-enbaled_client";
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
-    OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:@"https://oss-cn-hangzhou.aliyuncs.com"
+    OSSClient * client2 = [[OSSClient alloc] initWithEndpoint:ENDPOINT
                                            credentialProvider:credential
                                           clientConfiguration:conf];
 
@@ -1375,7 +1376,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.timeoutIntervalForRequest = 15;
     conf.timeoutIntervalForResource = 24 * 60 * 60;
 
-    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:@"oss-cn-hangzhou.aliyuncs.com"
+    OSSClient * client1 = [[OSSClient alloc] initWithEndpoint:ENDPOINT
                                            credentialProvider:credential
                                           clientConfiguration:conf];
 
@@ -1531,7 +1532,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.uploadId = uploadId;
     resumableUpload.partSize = 1024 * 1024;
     resumableUpload.callbackParam = @{
-                              @"callbackUrl": @"110.75.82.106/mbaas/callback",
+                              @"callbackUrl": CALLBACK_URL,
                               @"callbackBody": @"test"
                               };
     resumableUpload.callbackVar = @{
@@ -1553,8 +1554,6 @@ id<OSSCredentialProvider>  credential, credentialFed;
                 // The upload cannot be resumed. Needs to re-initiate a upload.
             }
         } else {
-            NSString * requestId = resumableUploadResult.requestId;
-            
             NSLog(@"Upload file success");
             XCTAssertNotNil(resumableUploadResult);
             XCTAssertNotNil(resumableUploadResult.serverReturnJsonString);
@@ -2544,6 +2543,55 @@ id<OSSCredentialProvider>  credential, credentialFed;
     NSLog(@"%s - tempfile path: %@", __func__, tempFile);
     NSLog(@"%s - remote md5: %@ local md5: %@", __func__, remoteMD5, localMD5);
     return [remoteMD5 isEqualToString:localMD5];
+}
+
+#pragma mark filelog
+
+- (void)testWiteFileLog {
+    OSSLogDebug(@"----------TestDebug------------");
+    [NSThread sleepForTimeInterval:(1)];
+    unsigned long long filesize = [self getLogFileSize];
+    XCTAssertTrue(filesize > 0);
+}
+
+- (void)testFileLogMaxSize {
+    unsigned long long max_size = 1024;
+    [OSSDDLog removeAllLoggers];
+    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    [[fileLogger logFileManager] createNewLogFile];
+    [fileLogger setMaximumFileSize:max_size];
+    [OSSDDLog addLogger:fileLogger];
+    [NSThread sleepForTimeInterval:(1.0)];
+    unsigned long long filesize = 0;
+    while (filesize <= max_size) {
+        OSSLogDebug(@"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        [NSThread sleepForTimeInterval:(1.0)];
+        filesize = [self getLogFileSize];
+    }
+    XCTAssertTrue(filesize > max_size);
+    OSSLogDebug(@"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    [NSThread sleepForTimeInterval:(1.0)];
+    filesize = [self getLogFileSize];
+    XCTAssertTrue(filesize <= max_size);
+    //revert file max size 5mb
+    [fileLogger setMaximumFileSize:5 * 1024 * 1024];
+}
+
+- (void)testDisableFileLog {
+    [OSSLog disableLog];
+    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    [[fileLogger logFileManager] createNewLogFile];
+    OSSLogDebug(@"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    [NSThread sleepForTimeInterval:(1.0)];
+    unsigned long long filesize = [self getLogFileSize];
+    XCTAssertTrue(filesize == 0);
+}
+
+- (unsigned long long)getLogFileSize {
+    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    NSArray *arr = [[fileLogger logFileManager] sortedLogFileInfos];
+    unsigned long long filesize = [arr[0] fileSize];
+    return filesize;
 }
 
 @end

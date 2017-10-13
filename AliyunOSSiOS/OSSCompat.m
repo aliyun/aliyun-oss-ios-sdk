@@ -275,7 +275,7 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
             if (bcts.token.isCancellationRequested || bcts.isCancellationRequested) {
                 [weakRef cancel];
             }
-            NSLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+            OSSLogDebugNoFile(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
         };
         return [self resumableUpload:resumableUpload];
     }] continueWithBlock:^id(OSSTask *task) {

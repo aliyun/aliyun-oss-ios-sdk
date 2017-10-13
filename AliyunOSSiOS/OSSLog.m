@@ -11,6 +11,10 @@
 @implementation OSSLog
 + (void)enableLog {
     isEnable = YES;
+    [OSSDDLog addLogger:[DDASLLogger sharedInstance]];
+    [OSSDDLog addLogger:[OSSTTYLogger sharedInstance]];
+    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    [OSSDDLog addLogger:fileLogger];
 }
 
 + (void)disableLog {
