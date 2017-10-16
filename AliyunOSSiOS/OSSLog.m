@@ -7,15 +7,18 @@
 //
 
 #import "OSSLog.h"
+#import "OSSUtil.h"
 
 @implementation OSSLog
 + (void)enableLog {
-    isEnable = YES;
-    [OSSDDLog removeAllLoggers];
-    [OSSDDLog addLogger:[DDASLLogger sharedInstance]];
-    [OSSDDLog addLogger:[OSSTTYLogger sharedInstance]];
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-    [OSSDDLog addLogger:fileLogger];
+    if([OSSUtil hasPhoneFreeSpace]){
+        isEnable = YES;
+        [OSSDDLog removeAllLoggers];
+        [OSSDDLog addLogger:[DDASLLogger sharedInstance]];
+        [OSSDDLog addLogger:[OSSTTYLogger sharedInstance]];
+        DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+        [OSSDDLog addLogger:fileLogger];
+    }
 }
 
 + (void)disableLog {
@@ -25,4 +28,5 @@
 + (BOOL)isLogEnable {
     return isEnable;
 }
+
 @end

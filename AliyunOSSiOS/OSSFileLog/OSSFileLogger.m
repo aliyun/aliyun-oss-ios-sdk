@@ -1005,15 +1005,17 @@ static int exception_count = 0;
     
     CTTelephonyNetworkInfo *telephonyInfo = [[CTTelephonyNetworkInfo alloc] init];
     CTCarrier *carrier = [telephonyInfo subscriberCellularProvider];
-    NSString *currentCountry = [carrier carrierName];
-    if(currentCountry){
-        DDLogMessage *carrierWorkLogMessage = [DDLogMessage new];
-        carrierWorkLogMessage->_message = [@"[operator]: " stringByAppendingString:currentCountry];
-        carrierWorkLogMessage->_timestamp = [NSDate new];
-        currentCountry = [_logFormatter formatLogMessage:carrierWorkLogMessage];
-        currentCountry = [tempMessage stringByAppendingString:currentCountry];
-        currentCountry = [currentCountry stringByAppendingString:@"\n"];
-        tempMessage = [tempMessage stringByAppendingString:currentCountry];
+    if(carrier){
+        NSString *currentCountry = [carrier carrierName];
+        if(currentCountry){
+            DDLogMessage *carrierWorkLogMessage = [DDLogMessage new];
+            carrierWorkLogMessage->_message = [@"[operator]: " stringByAppendingString:currentCountry];
+            carrierWorkLogMessage->_timestamp = [NSDate new];
+            currentCountry = [_logFormatter formatLogMessage:carrierWorkLogMessage];
+            currentCountry = [tempMessage stringByAppendingString:currentCountry];
+            currentCountry = [currentCountry stringByAppendingString:@"\n"];
+            tempMessage = [tempMessage stringByAppendingString:currentCountry];
+        }
     }
     return tempMessage;
 }

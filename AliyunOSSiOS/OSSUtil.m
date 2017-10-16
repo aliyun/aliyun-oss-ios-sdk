@@ -1039,4 +1039,14 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return mimeType ? mimeType : @"application/octet-stream";
 }
 
++ (BOOL)hasPhoneFreeSpace{
+    NSError *error = nil;
+    NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
+    if(error) return NO;
+    long long space = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
+    if(space < 0) return NO;
+    if(space < kDDDefaultLogMaxFileSize) return NO;
+    return YES;
+}
+
 @end
