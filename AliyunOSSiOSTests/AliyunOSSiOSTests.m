@@ -24,6 +24,7 @@ NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
 NSString * const ENDPOINT = @"https://oss-cn-beijing.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"oss-demo.aliyuncs.com:23450";
+NSString * const CNAME = @"http://************************/";
 NSString * const StsTokenURL = @"http://0.0.0.0:12555/sts/getsts";
 
 static NSArray * fileNameArray;
@@ -1701,7 +1702,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testCnamePutObject {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:CNAME
                                           credentialProvider:credential];
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1733,7 +1734,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testCnameGetObejct {
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:CNAME
                                           credentialProvider:credential];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -1763,7 +1764,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
 
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:@"http://osstest.xxyycc.com"
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:CNAME
                                            credentialProvider:credential
                                           clientConfiguration:conf];
 
@@ -2555,6 +2556,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testFileLogMaxSize {
+    [NSThread sleepForTimeInterval:(1.0)];
     unsigned long long max_size = 1024;
     [OSSDDLog removeAllLoggers];
     DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
@@ -2585,6 +2587,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     [NSThread sleepForTimeInterval:(1.0)];
     unsigned long long filesize = [self getLogFileSize];
     XCTAssertTrue(filesize == 0);
+    [OSSLog enableLog];
 }
 
 - (unsigned long long)getLogFileSize {

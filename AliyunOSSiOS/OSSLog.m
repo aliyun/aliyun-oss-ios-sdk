@@ -11,6 +11,7 @@
 @implementation OSSLog
 + (void)enableLog {
     isEnable = YES;
+    [OSSDDLog removeAllLoggers];
     [OSSDDLog addLogger:[DDASLLogger sharedInstance]];
     [OSSDDLog addLogger:[OSSTTYLogger sharedInstance]];
     DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
