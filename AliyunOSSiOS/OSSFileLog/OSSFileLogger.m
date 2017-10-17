@@ -14,10 +14,7 @@
 //   prior written permission of Deusty, LLC.
 
 #import "OSSFileLogger.h"
-#import "OSSReachability.h"
 
-#import <CoreTelephony/CTCarrier.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <unistd.h>
 #import <sys/attr.h>
 #import <sys/xattr.h>
@@ -983,42 +980,6 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static int exception_count = 0;
-- (NSString *)setBaseInfo {
-    NSString *tempMessage = @"";
-    OSSReachability *reach=[OSSReachability reachabilityWithHostName:@"www.apple.com"];
-    switch([reach currentReachabilityStatus]){
-        case ReachableViaWWAN:
-            tempMessage = @"[network_state]: connected\n";
-            break;
-        case ReachableViaWiFi:
-            tempMessage = @"[network_state]: connected\n";
-            break;
-        default:
-            tempMessage = @"[network_state]: disconnected\n";
-            break;
-            
-    }
-    OSSDDLogMessage *netWorkLogMessage = [OSSDDLogMessage new];
-    netWorkLogMessage->_message = tempMessage;
-    netWorkLogMessage->_timestamp = [NSDate new];
-    tempMessage = [_logFormatter formatLogMessage:netWorkLogMessage];
-    
-    CTTelephonyNetworkInfo *telephonyInfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [telephonyInfo subscriberCellularProvider];
-    if(carrier){
-        NSString *currentCountry = [carrier carrierName];
-        if(currentCountry){
-            OSSDDLogMessage *carrierWorkLogMessage = [OSSDDLogMessage new];
-            carrierWorkLogMessage->_message = [@"[operator]: " stringByAppendingString:currentCountry];
-            carrierWorkLogMessage->_timestamp = [NSDate new];
-            currentCountry = [_logFormatter formatLogMessage:carrierWorkLogMessage];
-            currentCountry = [tempMessage stringByAppendingString:currentCountry];
-            currentCountry = [currentCountry stringByAppendingString:@"\n"];
-            tempMessage = [tempMessage stringByAppendingString:currentCountry];
-        }
-    }
-    return tempMessage;
-}
 
 - (void)logMessage:(OSSDDLogMessage *)logMessage {
     NSString *message = logMessage->_message;
@@ -1027,10 +988,6 @@ static int exception_count = 0;
     if (_logFormatter) {
         message = [_logFormatter formatLogMessage:logMessage];
         isFormatted = message != logMessage->_message;
-        
-        NSString * currentCountry = [self setBaseInfo];
-        
-        message = [currentCountry stringByAppendingString:message];
     }
 
     if (message) {
