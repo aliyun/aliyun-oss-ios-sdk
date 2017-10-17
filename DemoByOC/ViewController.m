@@ -7,9 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "OSSClient.h"
-#import "OSSModel.h"
-#import "OSSLog.h"
+#import "AliyunOSSiOS.h"
 #import "GetObjcetSample.h"
 #import "StstokenSample.h"
 
