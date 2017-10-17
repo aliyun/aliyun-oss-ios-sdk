@@ -50,8 +50,6 @@
 		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4C2B586F1F8CE9AA008CBCE1 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
-		4C2F1F1D1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F0A1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.h */; };
-		4C2F1F1E1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F0B1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.m */; };
 		4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */; };
 		4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */; };
 		4C2F1F271F8C70E300B12B57 /* OSSDDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */; };
@@ -141,8 +139,6 @@
 		216256E51CF1835F0086458F /* OSSReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityManager.m; sourceTree = "<group>"; };
 		216256EC1CF1B1210086458F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		4C2F1F0A1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSAbstractDatabaseLogger.h; sourceTree = "<group>"; };
-		4C2F1F0B1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCocoaLumberjack.h; sourceTree = "<group>"; };
 		4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDDLog.h; sourceTree = "<group>"; };
 		4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSDDLog.m; sourceTree = "<group>"; };
@@ -342,8 +338,6 @@
 			children = (
 				4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */,
 				4C2F1F311F8CB9C600B12B57 /* OSSReachability.m */,
-				4C2F1F0A1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.h */,
-				4C2F1F0B1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.m */,
 				4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */,
 				4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */,
 				4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */,
@@ -408,7 +402,6 @@
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
 				4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
-				4C2F1F1D1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
 				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
 				216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */,
@@ -575,7 +568,6 @@
 				21028BFF1BA9AC3600C2A6BA /* OSSModel.m in Sources */,
 				214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */,
 				214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */,
-				4C2F1F1E1F8C70E300B12B57 /* OSSAbstractDatabaseLogger.m in Sources */,
 				21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */,
 				216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */,
 				4C2F1F271F8C70E300B12B57 /* OSSDDLog.m in Sources */,
