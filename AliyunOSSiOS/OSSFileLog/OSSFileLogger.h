@@ -506,7 +506,4 @@ extern unsigned long long const osskDDDefaultLogFilesDiskQuota;
 
 #endif /* if TARGET_IPHONE_SIMULATOR */
 
-- (NSComparisonResult)reverseCompareByCreationDate:(OSSDDLogFileInfo *)another;
-- (NSComparisonResult)reverseCompareByModificationDate:(OSSDDLogFileInfo *)another;
-
 @end

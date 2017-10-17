@@ -806,7 +806,7 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
 }
 
 - (void)rollLogFileNow {
-    NSLogVerbose(@"DDFileLogger: rollLogFileNow");
+    NSLogVerbose(@"OSSDDFileLogger: rollLogFileNow");
 
     if (_currentLogFileHandle == nil) {
         return;
@@ -948,7 +948,7 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
         [_currentLogFileHandle seekToEndOfFile];
 
         if (_currentLogFileHandle) {
-            [self scheduleTimerToRollLogFileDueToAge];
+//            [self scheduleTimerToRollLogFileDueToAge];
 
             // Here we are monitoring the log file. In case if it would be deleted ormoved
             // somewhere we want to roll it and use a new one.
@@ -960,7 +960,7 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
                     );
     
             dispatch_source_set_event_handler(_currentLogFileVnode, ^{ @autoreleasepool {
-                                                                          NSLogInfo(@"DDFileLogger: Current logfile was moved. Rolling it and creating a new one");
+                                                                          NSLogInfo(@"OSSDDFileLogger: Current logfile was moved. Rolling it and creating a new one");
                                                                           [self rollLogFileNow];
                                                                       } });
 
@@ -1476,40 +1476,6 @@ static int exception_count = 0;
 
 -(NSUInteger)hash {
     return [filePath hash];
-}
-
-- (NSComparisonResult)reverseCompareByCreationDate:(OSSDDLogFileInfo *)another {
-    NSDate *us = [self creationDate];
-    NSDate *them = [another creationDate];
-
-    NSComparisonResult result = [us compare:them];
-
-    if (result == NSOrderedAscending) {
-        return NSOrderedDescending;
-    }
-
-    if (result == NSOrderedDescending) {
-        return NSOrderedAscending;
-    }
-
-    return NSOrderedSame;
-}
-
-- (NSComparisonResult)reverseCompareByModificationDate:(OSSDDLogFileInfo *)another {
-    NSDate *us = [self modificationDate];
-    NSDate *them = [another modificationDate];
-
-    NSComparisonResult result = [us compare:them];
-
-    if (result == NSOrderedAscending) {
-        return NSOrderedDescending;
-    }
-
-    if (result == NSOrderedDescending) {
-        return NSOrderedAscending;
-    }
-
-    return NSOrderedSame;
 }
 
 @end
