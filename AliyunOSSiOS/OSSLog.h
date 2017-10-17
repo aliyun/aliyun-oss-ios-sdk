@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OSSCocoaLumberjack.h"
-static const DDLogLevel ddLogLevel = DDLogLevelAll;
+static const OSSDDLogLevel ddLogLevel = OSSDDLogLevelAll;
 
 // colorful log configuration
 // see https://github.com/robbiehanson/XcodeColors
@@ -21,13 +21,13 @@ static const DDLogLevel ddLogLevel = DDLogLevelAll;
 
 #define OSSLogVerbose(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-DDLogVerbose(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+OSSDDLogVerbose(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 NSLog(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogDebug(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-DDLogDebug(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+OSSDDLogDebug(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
@@ -38,7 +38,7 @@ NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 
 #define OSSLogError(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-DDLogError(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+OSSDDLogError(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 NSLog(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 

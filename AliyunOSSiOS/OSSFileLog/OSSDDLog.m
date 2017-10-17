@@ -76,18 +76,18 @@ static void *const GlobalLoggingQueueIdentityKey = (void *)&GlobalLoggingQueueId
 {
     // Direct accessors to be used only for performance
     @public
-    id <DDLogger> _logger;
-    DDLogLevel _level;
+    id <OSSDDLogger> _logger;
+    OSSDDLogLevel _level;
     dispatch_queue_t _loggerQueue;
 }
 
-@property (nonatomic, readonly) id <DDLogger> logger;
-@property (nonatomic, readonly) DDLogLevel level;
+@property (nonatomic, readonly) id <OSSDDLogger> logger;
+@property (nonatomic, readonly) OSSDDLogLevel level;
 @property (nonatomic, readonly) dispatch_queue_t loggerQueue;
 
-+ (OSSLoggerNode *)nodeWithLogger:(id <DDLogger>)logger
++ (OSSLoggerNode *)nodeWithLogger:(id <OSSDDLogger>)logger
                      loggerQueue:(dispatch_queue_t)loggerQueue
-                           level:(DDLogLevel)level;
+                           level:(OSSDDLogLevel)level;
 
 @end
 
@@ -234,19 +234,19 @@ static NSUInteger _numProcessors;
 #pragma mark Logger Management
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (void)addLogger:(id <DDLogger>)logger {
++ (void)addLogger:(id <OSSDDLogger>)logger {
     [self.sharedInstance addLogger:logger];
 }
 
-- (void)addLogger:(id <DDLogger>)logger {
-    [self addLogger:logger withLevel:DDLogLevelAll]; // DDLogLevelAll has all bits set
+- (void)addLogger:(id <OSSDDLogger>)logger {
+    [self addLogger:logger withLevel:OSSDDLogLevelAll]; // DDLogLevelAll has all bits set
 }
 
-+ (void)addLogger:(id <DDLogger>)logger withLevel:(DDLogLevel)level {
++ (void)addLogger:(id <OSSDDLogger>)logger withLevel:(OSSDDLogLevel)level {
     [self.sharedInstance addLogger:logger withLevel:level];
 }
 
-- (void)addLogger:(id <DDLogger>)logger withLevel:(DDLogLevel)level {
+- (void)addLogger:(id <OSSDDLogger>)logger withLevel:(OSSDDLogLevel)level {
     if (!logger) {
         return;
     }
@@ -256,11 +256,11 @@ static NSUInteger _numProcessors;
     } });
 }
 
-+ (void)removeLogger:(id <DDLogger>)logger {
++ (void)removeLogger:(id <OSSDDLogger>)logger {
     [self.sharedInstance removeLogger:logger];
 }
 
-- (void)removeLogger:(id <DDLogger>)logger {
+- (void)removeLogger:(id <OSSDDLogger>)logger {
     if (!logger) {
         return;
     }
@@ -280,11 +280,11 @@ static NSUInteger _numProcessors;
     } });
 }
 
-+ (NSArray<id<DDLogger>> *)allLoggers {
++ (NSArray<id<OSSDDLogger>> *)allLoggers {
     return [self.sharedInstance allLoggers];
 }
 
-- (NSArray<id<DDLogger>> *)allLoggers {
+- (NSArray<id<OSSDDLogger>> *)allLoggers {
     __block NSArray *theLoggers;
     
     dispatch_sync(_loggingQueue, ^{ @autoreleasepool {
@@ -370,8 +370,8 @@ static NSUInteger _numProcessors;
 }
 
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -404,8 +404,8 @@ static NSUInteger _numProcessors;
 }
 
 - (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -438,8 +438,8 @@ static NSUInteger _numProcessors;
 }
 
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -451,8 +451,8 @@ static NSUInteger _numProcessors;
 }
 
 - (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -476,8 +476,8 @@ static NSUInteger _numProcessors;
 
 + (void)log:(BOOL)asynchronous
     message:(NSString *)message
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -488,8 +488,8 @@ static NSUInteger _numProcessors;
 
 - (void)log:(BOOL)asynchronous
     message:(NSString *)message
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -503,7 +503,7 @@ static NSUInteger _numProcessors;
                                                             function:[NSString stringWithFormat:@"%s", function]
                                                                 line:line
                                                                  tag:tag
-                                                             options:(DDLogMessageOptions)0
+                                                             options:(OSSDDLogMessageOptions)0
                                                            timestamp:nil];
     
     [self queueLogMessage:logMessage asynchronously:asynchronous];
@@ -661,26 +661,26 @@ static NSUInteger _numProcessors;
     return result;
 }
 
-+ (DDLogLevel)levelForClass:(Class)aClass {
++ (OSSDDLogLevel)levelForClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
         return [aClass ddLogLevel];
     }
-    return (DDLogLevel)-1;
+    return (OSSDDLogLevel)-1;
 }
 
-+ (DDLogLevel)levelForClassWithName:(NSString *)aClassName {
++ (OSSDDLogLevel)levelForClassWithName:(NSString *)aClassName {
     Class aClass = NSClassFromString(aClassName);
 
     return [self levelForClass:aClass];
 }
 
-+ (void)setLevel:(DDLogLevel)level forClass:(Class)aClass {
++ (void)setLevel:(OSSDDLogLevel)level forClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
         [aClass ddSetLogLevel:level];
     }
 }
 
-+ (void)setLevel:(DDLogLevel)level forClassWithName:(NSString *)aClassName {
++ (void)setLevel:(OSSDDLogLevel)level forClassWithName:(NSString *)aClassName {
     Class aClass = NSClassFromString(aClassName);
     [self setLevel:level forClass:aClass];
 }
@@ -689,7 +689,7 @@ static NSUInteger _numProcessors;
 #pragma mark Logging Thread
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)lt_addLogger:(id <DDLogger>)logger level:(DDLogLevel)level {
+- (void)lt_addLogger:(id <OSSDDLogger>)logger level:(OSSDDLogLevel)level {
     // Add to loggers array.
     // Need to create loggerQueue if loggerNode doesn't provide one.
 
@@ -739,7 +739,7 @@ static NSUInteger _numProcessors;
     }
 }
 
-- (void)lt_removeLogger:(id <DDLogger>)logger {
+- (void)lt_removeLogger:(id <OSSDDLogger>)logger {
     // Find associated loggerNode in list of added loggers
 
     NSAssert(dispatch_get_specific(GlobalLoggingQueueIdentityKey),
@@ -968,7 +968,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
 
 @implementation OSSLoggerNode
 
-- (instancetype)initWithLogger:(id <DDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(DDLogLevel)level {
+- (instancetype)initWithLogger:(id <OSSDDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(OSSDDLogLevel)level {
     if ((self = [super init])) {
         _logger = logger;
 
@@ -984,7 +984,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
     return self;
 }
 
-+ (OSSLoggerNode *)nodeWithLogger:(id <DDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(DDLogLevel)level {
++ (OSSLoggerNode *)nodeWithLogger:(id <OSSDDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(OSSDDLogLevel)level {
     return [[OSSLoggerNode alloc] initWithLogger:logger loggerQueue:loggerQueue level:level];
 }
 
@@ -1118,26 +1118,26 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
 }
 
 - (instancetype)initWithMessage:(NSString *)message
-                          level:(DDLogLevel)level
-                           flag:(DDLogFlag)flag
+                          level:(OSSDDLogLevel)level
+                           flag:(OSSDDLogFlag)flag
                         context:(NSInteger)context
                            file:(NSString *)file
                        function:(NSString *)function
                            line:(NSUInteger)line
                             tag:(id)tag
-                        options:(DDLogMessageOptions)options
+                        options:(OSSDDLogMessageOptions)options
                       timestamp:(NSDate *)timestamp {
     if ((self = [super init])) {
-        BOOL copyMessage = (options & DDLogMessageDontCopyMessage) == 0;
+        BOOL copyMessage = (options & OSSDDLogMessageDontCopyMessage) == 0;
         _message      = copyMessage ? [message copy] : message;
         _level        = level;
         _flag         = flag;
         _context      = context;
 
-        BOOL copyFile = (options & DDLogMessageCopyFile) != 0;
+        BOOL copyFile = (options & OSSDDLogMessageCopyFile) != 0;
         _file = copyFile ? [file copy] : file;
 
-        BOOL copyFunction = (options & DDLogMessageCopyFunction) != 0;
+        BOOL copyFunction = (options & OSSDDLogMessageCopyFunction) != 0;
         _function = copyFunction ? [function copy] : function;
 
         _line         = line;
@@ -1255,7 +1255,7 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
     // Override me
 }
 
-- (id <DDLogFormatter>)logFormatter {
+- (id <OSSDDLogFormatter>)logFormatter {
     // This method must be thread safe and intuitive.
     // Therefore if somebody executes the following code:
     //
@@ -1310,7 +1310,7 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
 
     dispatch_queue_t globalLoggingQueue = [OSSDDLog loggingQueue];
 
-    __block id <DDLogFormatter> result;
+    __block id <OSSDDLogFormatter> result;
 
     dispatch_sync(globalLoggingQueue, ^{
         dispatch_sync(_loggerQueue, ^{
@@ -1321,7 +1321,7 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
     return result;
 }
 
-- (void)setLogFormatter:(id <DDLogFormatter>)logFormatter {
+- (void)setLogFormatter:(id <OSSDDLogFormatter>)logFormatter {
     // The design of this method is documented extensively in the logFormatter message (above in code).
 
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
@@ -1380,15 +1380,15 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
 {
     // Direct accessors to be used only for performance
     @public
-    id <DDLogger> _logger;
-    DDLogLevel _level;
+    id <OSSDDLogger> _logger;
+    OSSDDLogLevel _level;
 }
 
 @end
 
 @implementation OSSDDLoggerInformation
 
-- (instancetype)initWithLogger:(id <DDLogger>)logger andLevel:(DDLogLevel)level {
+- (instancetype)initWithLogger:(id <OSSDDLogger>)logger andLevel:(OSSDDLogLevel)level {
     if ((self = [super init])) {
         _logger = logger;
         _level = level;
@@ -1396,7 +1396,7 @@ static __inline__ __attribute__((__always_inline__)) void _dispatch_queue_label_
     return self;
 }
 
-+ (OSSDDLoggerInformation *)informationWithLogger:(id <DDLogger>)logger andLevel:(DDLogLevel)level {
++ (OSSDDLoggerInformation *)informationWithLogger:(id <OSSDDLogger>)logger andLevel:(OSSDDLogLevel)level {
     return [[OSSDDLoggerInformation alloc] initWithLogger:logger andLevel:level];
 }
 

@@ -28,8 +28,8 @@
 
 @class OSSDDLogMessage;
 @class OSSDDLoggerInformation;
-@protocol DDLogger;
-@protocol DDLogFormatter;
+@protocol OSSDDLogger;
+@protocol OSSDDLogFormatter;
 
 /**
  * Define the standard options.
@@ -98,71 +98,71 @@
 /**
  *  Flags accompany each log. They are used together with levels to filter out logs.
  */
-typedef NS_OPTIONS(NSUInteger, DDLogFlag){
+typedef NS_OPTIONS(NSUInteger, OSSDDLogFlag){
     /**
      *  0...00001 DDLogFlagError
      */
-    DDLogFlagError      = (1 << 0),
+    OSSDDLogFlagError      = (1 << 0),
     
     /**
      *  0...00010 DDLogFlagWarning
      */
-    DDLogFlagWarning    = (1 << 1),
+    OSSDDLogFlagWarning    = (1 << 1),
     
     /**
      *  0...00100 DDLogFlagInfo
      */
-    DDLogFlagInfo       = (1 << 2),
+    OSSDDLogFlagInfo       = (1 << 2),
     
     /**
      *  0...01000 DDLogFlagDebug
      */
-    DDLogFlagDebug      = (1 << 3),
+    OSSDDLogFlagDebug      = (1 << 3),
     
     /**
      *  0...10000 DDLogFlagVerbose
      */
-    DDLogFlagVerbose    = (1 << 4)
+    OSSDDLogFlagVerbose    = (1 << 4)
 };
 
 /**
  *  Log levels are used to filter out logs. Used together with flags.
  */
-typedef NS_ENUM(NSUInteger, DDLogLevel){
+typedef NS_ENUM(NSUInteger, OSSDDLogLevel){
     /**
      *  No logs
      */
-    DDLogLevelOff       = 0,
+    OSSDDLogLevelOff       = 0,
     
     /**
      *  Error logs only
      */
-    DDLogLevelError     = (DDLogFlagError),
+    OSSDDLogLevelError     = (OSSDDLogFlagError),
     
     /**
      *  Error and warning logs
      */
-    DDLogLevelWarning   = (DDLogLevelError   | DDLogFlagWarning),
+    OSSDDLogLevelWarning   = (OSSDDLogLevelError   | OSSDDLogFlagWarning),
     
     /**
      *  Error, warning and info logs
      */
-    DDLogLevelInfo      = (DDLogLevelWarning | DDLogFlagInfo),
+    OSSDDLogLevelInfo      = (OSSDDLogLevelWarning | OSSDDLogFlagInfo),
     
     /**
      *  Error, warning, info and debug logs
      */
-    DDLogLevelDebug     = (DDLogLevelInfo    | DDLogFlagDebug),
+    OSSDDLogLevelDebug     = (OSSDDLogLevelInfo    | OSSDDLogFlagDebug),
     
     /**
      *  Error, warning, info, debug and verbose logs
      */
-    DDLogLevelVerbose   = (DDLogLevelDebug   | DDLogFlagVerbose),
+    OSSDDLogLevelVerbose   = (OSSDDLogLevelDebug   | OSSDDLogFlagVerbose),
     
     /**
      *  All logs (1...11111)
      */
-    DDLogLevelAll       = NSUIntegerMax
+    OSSDDLogLevelAll       = NSUIntegerMax
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -235,8 +235,8 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param format       the log format
  */
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -261,8 +261,8 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param format       the log format
  */
 - (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -288,8 +288,8 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param argList      the arguments list as a va_list
  */
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -316,8 +316,8 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param argList      the arguments list as a va_list
  */
 - (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -375,14 +375,14 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *
  * This is equivalent to invoking `[DDLog addLogger:logger withLogLevel:DDLogLevelAll]`.
  **/
-+ (void)addLogger:(id <DDLogger>)logger;
++ (void)addLogger:(id <OSSDDLogger>)logger;
 
 /**
  * Adds the logger to the system.
  *
  * This is equivalent to invoking `[DDLog addLogger:logger withLogLevel:DDLogLevelAll]`.
  **/
-- (void)addLogger:(id <DDLogger>)logger;
+- (void)addLogger:(id <OSSDDLogger>)logger;
 
 /**
  * Adds the logger to the system.
@@ -420,7 +420,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *
  * `((DDLogLevelAll ^ DDLogLevelVerbose) | DDLogLevelInfo)`
  **/
-+ (void)addLogger:(id <DDLogger>)logger withLevel:(DDLogLevel)level;
++ (void)addLogger:(id <OSSDDLogger>)logger withLevel:(OSSDDLogLevel)level;
 
 /**
  * Adds the logger to the system.
@@ -458,17 +458,17 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *
  * `((DDLogLevelAll ^ DDLogLevelVerbose) | DDLogLevelInfo)`
  **/
-- (void)addLogger:(id <DDLogger>)logger withLevel:(DDLogLevel)level;
+- (void)addLogger:(id <OSSDDLogger>)logger withLevel:(OSSDDLogLevel)level;
 
 /**
  *  Remove the logger from the system
  */
-+ (void)removeLogger:(id <DDLogger>)logger;
++ (void)removeLogger:(id <OSSDDLogger>)logger;
 
 /**
  *  Remove the logger from the system
  */
-- (void)removeLogger:(id <DDLogger>)logger;
+- (void)removeLogger:(id <OSSDDLogger>)logger;
 
 /**
  *  Remove all the current loggers
@@ -483,12 +483,12 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
 /**
  *  Return all the current loggers
  */
-@property (class, nonatomic, copy, readonly) NSArray<id<DDLogger>> *allLoggers;
+@property (class, nonatomic, copy, readonly) NSArray<id<OSSDDLogger>> *allLoggers;
 
 /**
  *  Return all the current loggers
  */
-@property (nonatomic, copy, readonly) NSArray<id<DDLogger>> *allLoggers;
+@property (nonatomic, copy, readonly) NSArray<id<OSSDDLogger>> *allLoggers;
 
 /**
  *  Return all the current loggers with their level (aka DDLoggerInformation).
@@ -522,14 +522,14 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *
  *  @param aClass `Class` param
  */
-+ (DDLogLevel)levelForClass:(Class)aClass;
++ (OSSDDLogLevel)levelForClass:(Class)aClass;
 
 /**
  *  Returns the current log level for a certain class
  *
  *  @param aClassName string param
  */
-+ (DDLogLevel)levelForClassWithName:(NSString *)aClassName;
++ (OSSDDLogLevel)levelForClassWithName:(NSString *)aClassName;
 
 /**
  *  Set the log level for a certain class
@@ -537,7 +537,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param level  the new level
  *  @param aClass `Class` param
  */
-+ (void)setLevel:(DDLogLevel)level forClass:(Class)aClass;
++ (void)setLevel:(OSSDDLogLevel)level forClass:(Class)aClass;
 
 /**
  *  Set the log level for a certain class
@@ -545,7 +545,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  @param level      the new level
  *  @param aClassName string param
  */
-+ (void)setLevel:(DDLogLevel)level forClassWithName:(NSString *)aClassName;
++ (void)setLevel:(OSSDDLogLevel)level forClassWithName:(NSString *)aClassName;
 
 @end
 
@@ -558,7 +558,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  *  Basically, it can log messages, store a logFormatter plus a bunch of optional behaviors.
  *  (i.e. flush, get its loggerQueue, get its name, ...
  */
-@protocol DDLogger <NSObject>
+@protocol OSSDDLogger <NSObject>
 
 /**
  *  The log message method
@@ -573,7 +573,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * If no formatter is set, the logger simply logs the message as it is given in logMessage,
  * or it may use its own built in formatting style.
  **/
-@property (nonatomic, strong) id <DDLogFormatter> logFormatter;
+@property (nonatomic, strong) id <OSSDDLogFormatter> logFormatter;
 
 @optional
 
@@ -644,7 +644,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
 /**
  *  This protocol describes the behavior of a log formatter
  */
-@protocol DDLogFormatter <NSObject>
+@protocol OSSDDLogFormatter <NSObject>
 @required
 
 /**
@@ -671,7 +671,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * Or if a formatter has potentially thread-unsafe code (e.g. NSDateFormatter),
  * it could possibly use these hooks to switch to thread-safe versions of the code.
  **/
-- (void)didAddToLogger:(id <DDLogger>)logger;
+- (void)didAddToLogger:(id <OSSDDLogger>)logger;
 
 /**
  * A single formatter instance can be added to multiple loggers.
@@ -683,12 +683,12 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * it could possibly use these hooks to switch to thread-safe versions of the code or use dispatch_set_specific()
 .* to add its own specific values.
  **/
-- (void)didAddToLogger:(id <DDLogger>)logger inQueue:(dispatch_queue_t)queue;
+- (void)didAddToLogger:(id <OSSDDLogger>)logger inQueue:(dispatch_queue_t)queue;
 
 /**
  *  See the above description for `didAddToLogger:`
  */
-- (void)willRemoveFromLogger:(id <DDLogger>)logger;
+- (void)willRemoveFromLogger:(id <OSSDDLogger>)logger;
 
 @end
 
@@ -699,7 +699,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
 /**
  *  This protocol describes a dynamic logging component
  */
-@protocol DDRegisteredDynamicLogging
+@protocol OSSDDRegisteredDynamicLogging
 
 /**
  * Implement these methods to allow a file's log level to be managed from a central location.
@@ -724,7 +724,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * }
  * ```
  **/
-@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) DDLogLevel ddLogLevel;
+@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) OSSDDLogLevel ddLogLevel;
 
 @end
 
@@ -739,19 +739,19 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
 /**
  *  Log message options, allow copying certain log elements
  */
-typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
+typedef NS_OPTIONS(NSInteger, OSSDDLogMessageOptions){
     /**
      *  Use this to use a copy of the file path
      */
-    DDLogMessageCopyFile        = 1 << 0,
+    OSSDDLogMessageCopyFile        = 1 << 0,
     /**
      *  Use this to use a copy of the function name
      */
-    DDLogMessageCopyFunction    = 1 << 1,
+    OSSDDLogMessageCopyFunction    = 1 << 1,
     /**
      *  Use this to use avoid a copy of the message
      */
-    DDLogMessageDontCopyMessage = 1 << 2
+    OSSDDLogMessageDontCopyMessage = 1 << 2
 };
 
 /**
@@ -763,15 +763,15 @@ typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
     // Direct accessors to be used only for performance
     @public
     NSString *_message;
-    DDLogLevel _level;
-    DDLogFlag _flag;
+    OSSDDLogLevel _level;
+    OSSDDLogFlag _flag;
     NSInteger _context;
     NSString *_file;
     NSString *_fileName;
     NSString *_function;
     NSUInteger _line;
     id _tag;
-    DDLogMessageOptions _options;
+    OSSDDLogMessageOptions _options;
     NSDate *_timestamp;
     NSString *_threadID;
     NSString *_threadName;
@@ -811,14 +811,14 @@ typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
  *  @return a new instance of a log message model object
  */
 - (instancetype)initWithMessage:(NSString *)message
-                          level:(DDLogLevel)level
-                           flag:(DDLogFlag)flag
+                          level:(OSSDDLogLevel)level
+                           flag:(OSSDDLogFlag)flag
                         context:(NSInteger)context
                            file:(NSString *)file
                        function:(NSString * __nullable)function
                            line:(NSUInteger)line
                             tag:(id __nullable)tag
-                        options:(DDLogMessageOptions)options
+                        options:(OSSDDLogMessageOptions)options
                       timestamp:(NSDate * __nullable)timestamp NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -829,15 +829,15 @@ typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
  *  The log message
  */
 @property (readonly, nonatomic) NSString *message;
-@property (readonly, nonatomic) DDLogLevel level;
-@property (readonly, nonatomic) DDLogFlag flag;
+@property (readonly, nonatomic) OSSDDLogLevel level;
+@property (readonly, nonatomic) OSSDDLogFlag flag;
 @property (readonly, nonatomic) NSInteger context;
 @property (readonly, nonatomic) NSString *file;
 @property (readonly, nonatomic) NSString *fileName;
 @property (readonly, nonatomic) NSString * __nullable function;
 @property (readonly, nonatomic) NSUInteger line;
 @property (readonly, nonatomic) id __nullable tag;
-@property (readonly, nonatomic) DDLogMessageOptions options;
+@property (readonly, nonatomic) OSSDDLogMessageOptions options;
 @property (readonly, nonatomic) NSDate *timestamp;
 @property (readonly, nonatomic) NSString *threadID; // ID as it appears in NSLog calculated from the machThreadID
 @property (readonly, nonatomic) NSString *threadName;
@@ -865,15 +865,15 @@ typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
  * Logger implementations may simply extend this class,
  * and they can ACCESS THE FORMATTER VARIABLE DIRECTLY from within their `logMessage:` method!
  **/
-@interface OSSDDAbstractLogger : NSObject <DDLogger>
+@interface OSSDDAbstractLogger : NSObject <OSSDDLogger>
 {
     // Direct accessors to be used only for performance
     @public
-    id <DDLogFormatter> _logFormatter;
+    id <OSSDDLogFormatter> _logFormatter;
     dispatch_queue_t _loggerQueue;
 }
 
-@property (nonatomic, strong, nullable) id <DDLogFormatter> logFormatter;
+@property (nonatomic, strong, nullable) id <OSSDDLogFormatter> logFormatter;
 @property (nonatomic, DISPATCH_QUEUE_REFERENCE_TYPE) dispatch_queue_t loggerQueue;
 
 // For thread-safety assertions
@@ -896,11 +896,11 @@ typedef NS_OPTIONS(NSInteger, DDLogMessageOptions){
 
 @interface OSSDDLoggerInformation : NSObject
 
-@property (nonatomic, readonly) id <DDLogger> logger;
-@property (nonatomic, readonly) DDLogLevel level;
+@property (nonatomic, readonly) id <OSSDDLogger> logger;
+@property (nonatomic, readonly) OSSDDLogLevel level;
 
-+ (OSSDDLoggerInformation *)informationWithLogger:(id <DDLogger>)logger
-                           andLevel:(DDLogLevel)level;
++ (OSSDDLoggerInformation *)informationWithLogger:(id <OSSDDLogger>)logger
+                           andLevel:(OSSDDLogLevel)level;
 
 @end
 

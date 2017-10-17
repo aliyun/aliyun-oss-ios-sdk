@@ -281,7 +281,7 @@ extern unsigned long long const osskDDDefaultLogFilesDiskQuota;
  * In addition to the convenience of having a logical default formatter,
  * it will also provide a template that makes it easy for developers to copy and change.
  **/
-@interface OSSDDLogFileFormatterDefault : NSObject <DDLogFormatter>
+@interface OSSDDLogFileFormatterDefault : NSObject <OSSDDLogFormatter>
 
 /**
  *  Default initializer
@@ -302,7 +302,7 @@ extern unsigned long long const osskDDDefaultLogFilesDiskQuota;
 /**
  *  The standard implementation for a file logger
  */
-@interface OSSDDFileLogger : OSSDDAbstractLogger <DDLogger> {
+@interface OSSDDFileLogger : OSSDDAbstractLogger <OSSDDLogger> {
 	OSSDDLogFileInfo *_currentLogFileInfo;
 }
 
