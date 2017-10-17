@@ -146,12 +146,12 @@ static NSUInteger _numProcessors;
  * This method may also be called directly (assumably by accident), hence the safety mechanism.
  **/
 + (void)initialize {
-    static dispatch_once_t DDLogOnceToken;
+    static dispatch_once_t OSSDDLogOnceToken;
     
-    dispatch_once(&DDLogOnceToken, ^{
-        NSLogDebug(@"DDLog: Using grand central dispatch");
+    dispatch_once(&OSSDDLogOnceToken, ^{
+        NSLogDebug(@"OSSDDLog: Using grand central dispatch");
         
-        _loggingQueue = dispatch_queue_create("cocoa.lumberjack", NULL);
+        _loggingQueue = dispatch_queue_create("oss.cocoa.lumberjack", NULL);
         _loggingGroup = dispatch_group_create();
         
         void *nonNullValue = GlobalLoggingQueueIdentityKey; // Whatever, just not null
