@@ -21,7 +21,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface DDAbstractDatabaseLogger ()
+@interface OSSDDAbstractDatabaseLogger ()
 
 - (void)destroySaveTimer;
 - (void)destroyDeleteTimer;
@@ -30,7 +30,7 @@
 
 #pragma mark -
 
-@implementation DDAbstractDatabaseLogger
+@implementation OSSDDAbstractDatabaseLogger
 
 - (instancetype)init {
     if ((self = [super init])) {
@@ -52,7 +52,7 @@
 #pragma mark Override Me
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)db_log:(DDLogMessage *)logMessage {
+- (BOOL)db_log:(OSSDDLogMessage *)logMessage {
     // Override me and add your implementation.
     //
     // Return YES if an item was added to the buffer.
@@ -635,7 +635,7 @@
     [self destroyDeleteTimer];
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(OSSDDLogMessage *)logMessage {
     if ([self db_log:logMessage]) {
         BOOL firstUnsavedEntry = (++_unsavedCount == 1);
 

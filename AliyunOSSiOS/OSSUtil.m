@@ -1045,7 +1045,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     if(error) return NO;
     long long space = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
     if(space < 0) return NO;
-    if(space < kDDDefaultLogMaxFileSize) return NO;
+    if(space < osskDDDefaultLogMaxFileSize) return NO;
     return YES;
 }
 

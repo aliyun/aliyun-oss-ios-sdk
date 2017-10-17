@@ -2559,7 +2559,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     [NSThread sleepForTimeInterval:(1.0)];
     unsigned long long max_size = 1024;
     [OSSDDLog removeAllLoggers];
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init];
     [[fileLogger logFileManager] createNewLogFile];
     [fileLogger setMaximumFileSize:max_size];
     [OSSDDLog addLogger:fileLogger];
@@ -2581,7 +2581,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
 - (void)testDisableFileLog {
     [OSSLog disableLog];
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init];
     [[fileLogger logFileManager] createNewLogFile];
     OSSLogDebug(@"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     [NSThread sleepForTimeInterval:(1.0)];
@@ -2591,7 +2591,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (unsigned long long)getLogFileSize {
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init];
     NSArray *arr = [[fileLogger logFileManager] sortedLogFileInfos];
     unsigned long long filesize = [arr[0] fileSize];
     return filesize;

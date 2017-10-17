@@ -80,7 +80,7 @@
 #define MAP_TO_TERMINAL_APP_COLORS 1
 
 
-@interface DDTTYLoggerColorProfile : NSObject {
+@interface OSSDDTTYLoggerColorProfile : NSObject {
     @public
     DDLogFlag mask;
     NSInteger context;
@@ -945,8 +945,8 @@ static OSSTTYLogger *sharedInstance;
 - (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask context:(NSInteger)ctxt {
     dispatch_block_t block = ^{
         @autoreleasepool {
-            DDTTYLoggerColorProfile *newColorProfile =
-                [[DDTTYLoggerColorProfile alloc] initWithForegroundColor:txtColor
+            OSSDDTTYLoggerColorProfile *newColorProfile =
+                [[OSSDDTTYLoggerColorProfile alloc] initWithForegroundColor:txtColor
                                                          backgroundColor:bgColor
                                                                     flag:mask
                                                                  context:ctxt];
@@ -955,7 +955,7 @@ static OSSTTYLogger *sharedInstance;
 
             NSUInteger i = 0;
 
-            for (DDTTYLoggerColorProfile *colorProfile in _colorProfilesArray) {
+            for (OSSDDTTYLoggerColorProfile *colorProfile in _colorProfilesArray) {
                 if ((colorProfile->mask == mask) && (colorProfile->context == ctxt)) {
                     break;
                 }
@@ -991,8 +991,8 @@ static OSSTTYLogger *sharedInstance;
 
     dispatch_block_t block = ^{
         @autoreleasepool {
-            DDTTYLoggerColorProfile *newColorProfile =
-                [[DDTTYLoggerColorProfile alloc] initWithForegroundColor:txtColor
+            OSSDDTTYLoggerColorProfile *newColorProfile =
+                [[OSSDDTTYLoggerColorProfile alloc] initWithForegroundColor:txtColor
                                                          backgroundColor:bgColor
                                                                     flag:(DDLogFlag)0
                                                                  context:0];
@@ -1027,7 +1027,7 @@ static OSSTTYLogger *sharedInstance;
         @autoreleasepool {
             NSUInteger i = 0;
 
-            for (DDTTYLoggerColorProfile *colorProfile in _colorProfilesArray) {
+            for (OSSDDTTYLoggerColorProfile *colorProfile in _colorProfilesArray) {
                 if ((colorProfile->mask == mask) && (colorProfile->context == context)) {
                     break;
                 }
@@ -1147,7 +1147,7 @@ static OSSTTYLogger *sharedInstance;
     }
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(OSSDDLogMessage *)logMessage {
     NSString *logMsg = logMessage->_message;
     BOOL isFormatted = NO;
 
@@ -1159,7 +1159,7 @@ static OSSTTYLogger *sharedInstance;
     if (logMsg) {
         // Search for a color profile associated with the log message
 
-        DDTTYLoggerColorProfile *colorProfile = nil;
+        OSSDDTTYLoggerColorProfile *colorProfile = nil;
 
         if (_colorsEnabled) {
             if (logMessage->_tag) {
@@ -1167,7 +1167,7 @@ static OSSTTYLogger *sharedInstance;
             }
 
             if (colorProfile == nil) {
-                for (DDTTYLoggerColorProfile *cp in _colorProfilesArray) {
+                for (OSSDDTTYLoggerColorProfile *cp in _colorProfilesArray) {
                     if (logMessage->_flag & cp->mask) {
                         // Color profile set for this context?
                         if (logMessage->_context == cp->context) {
@@ -1360,7 +1360,7 @@ static OSSTTYLogger *sharedInstance;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation DDTTYLoggerColorProfile
+@implementation OSSDDTTYLoggerColorProfile
 
 - (instancetype)initWithForegroundColor:(DDColor *)fgColor backgroundColor:(DDColor *)bgColor flag:(DDLogFlag)aMask context:(NSInteger)ctxt {
     if ((self = [super init])) {

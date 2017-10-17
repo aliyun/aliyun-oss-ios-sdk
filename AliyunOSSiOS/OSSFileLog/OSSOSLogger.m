@@ -42,7 +42,7 @@ static OSSOSLogger *sharedInstance;
     return nil;
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(OSSDDLogMessage *)logMessage {
     // Skip captured log messages
     if ([logMessage->_fileName isEqualToString:@"DDASLLogCapture"]) {
         return;

@@ -20,7 +20,7 @@
 
 #import "OSSDDLog.h"
 
-@class DDLogFileInfo;
+@class OSSDDLogFileInfo;
 
 /**
  * This class provides a logger to write log statements to a file.
@@ -36,10 +36,10 @@
 //
 // You should carefully consider the proper configuration values for your application.
 
-extern unsigned long long const kDDDefaultLogMaxFileSize;
-extern NSTimeInterval     const kDDDefaultLogRollingFrequency;
-extern NSUInteger         const kDDDefaultLogMaxNumLogFiles;
-extern unsigned long long const kDDDefaultLogFilesDiskQuota;
+extern unsigned long long const osskDDDefaultLogMaxFileSize;
+extern NSTimeInterval     const osskDDDefaultLogRollingFrequency;
+extern NSUInteger         const osskDDDefaultLogMaxNumLogFiles;
+extern unsigned long long const osskDDDefaultLogFilesDiskQuota;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  *  The `DDLogFileInfo` class is documented below, and provides a handy wrapper that
  *  gives you easy access to various file attributes such as the creation date or the file size.
  */
-@protocol DDLogFileManager <NSObject>
+@protocol OSSDDLogFileManager <NSObject>
 @required
 
 // Public properties
@@ -116,7 +116,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  * each representing an existing log file on disk,
  * and containing important information about the log file such as it's modification date and size.
  **/
-@property (nonatomic, readonly, strong) NSArray<DDLogFileInfo *> *unsortedLogFileInfos;
+@property (nonatomic, readonly, strong) NSArray<OSSDDLogFileInfo *> *unsortedLogFileInfos;
 
 /**
  * Just like the `unsortedLogFilePaths` method, but sorts the array.
@@ -137,7 +137,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  * The items in the array are sorted by creation date.
  * The first item in the array will be the most recently created log file.
  **/
-@property (nonatomic, readonly, strong) NSArray<DDLogFileInfo *> *sortedLogFileInfos;
+@property (nonatomic, readonly, strong) NSArray<OSSDDLogFileInfo *> *sortedLogFileInfos;
 
 // Private methods (only to be used by DDFileLogger)
 
@@ -179,7 +179,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  *
  * Archived log files are automatically deleted according to the `maximumNumberOfLogFiles` property.
  **/
-@interface DDLogFileManagerDefault : NSObject <DDLogFileManager>
+@interface OSSDDLogFileManagerDefault : NSObject <OSSDDLogFileManager>
 
 /**
  *  Default initializer
@@ -281,7 +281,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  * In addition to the convenience of having a logical default formatter,
  * it will also provide a template that makes it easy for developers to copy and change.
  **/
-@interface DDLogFileFormatterDefault : NSObject <DDLogFormatter>
+@interface OSSDDLogFileFormatterDefault : NSObject <DDLogFormatter>
 
 /**
  *  Default initializer
@@ -302,8 +302,8 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
 /**
  *  The standard implementation for a file logger
  */
-@interface DDFileLogger : DDAbstractLogger <DDLogger> {
-	DDLogFileInfo *_currentLogFileInfo;
+@interface OSSDDFileLogger : OSSDDAbstractLogger <DDLogger> {
+	OSSDDLogFileInfo *_currentLogFileInfo;
 }
 
 /**
@@ -314,7 +314,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
 /**
  *  Designated initializer, requires a `DDLogFileManager` instance
  */
-- (instancetype)initWithLogFileManager:(id <DDLogFileManager>)logFileManager NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithLogFileManager:(id <OSSDDLogFileManager>)logFileManager NS_DESIGNATED_INITIALIZER;
 
 /**
  *  Called when the logger is about to write message. Call super before your implementation.
@@ -330,7 +330,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  *  Called when the logger checks archive or not current log file. 
  *  Override this method to exdend standart behavior. By default returns NO.
  */
-- (BOOL)shouldArchiveRecentLogFileInfo:(DDLogFileInfo *)recentLogFileInfo;
+- (BOOL)shouldArchiveRecentLogFileInfo:(OSSDDLogFileInfo *)recentLogFileInfo;
 
 /**
  * Log File Rolling:
@@ -384,7 +384,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  *
  * @see DDLogFileManager.maximumNumberOfLogFiles
  **/
-@property (strong, nonatomic, readonly) id <DDLogFileManager> logFileManager;
+@property (strong, nonatomic, readonly) id <OSSDDLogFileManager> logFileManager;
 
 /**
  * When using a custom formatter you can set the `logMessage` method not to append
@@ -417,7 +417,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  *
  * Otherwise a new file is created and returned.
  **/
-@property (nonatomic, readonly, strong) DDLogFileInfo *currentLogFileInfo;
+@property (nonatomic, readonly, strong) OSSDDLogFileInfo *currentLogFileInfo;
 
 @end
 
@@ -439,7 +439,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
  * If you absolutely must get updated values,
  * you can invoke the reset method which will clear the cache.
  **/
-@interface DDLogFileInfo : NSObject
+@interface OSSDDLogFileInfo : NSObject
 
 @property (strong, nonatomic, readonly) NSString *filePath;
 @property (strong, nonatomic, readonly) NSString *fileName;
@@ -506,7 +506,7 @@ extern unsigned long long const kDDDefaultLogFilesDiskQuota;
 
 #endif /* if TARGET_IPHONE_SIMULATOR */
 
-- (NSComparisonResult)reverseCompareByCreationDate:(DDLogFileInfo *)another;
-- (NSComparisonResult)reverseCompareByModificationDate:(DDLogFileInfo *)another;
+- (NSComparisonResult)reverseCompareByCreationDate:(OSSDDLogFileInfo *)another;
+- (NSComparisonResult)reverseCompareByModificationDate:(OSSDDLogFileInfo *)another;
 
 @end

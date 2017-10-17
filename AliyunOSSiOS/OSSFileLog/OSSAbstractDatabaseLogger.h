@@ -27,7 +27,7 @@
  * All that is needed for a concrete database logger is to extend this class
  * and override the methods in the implementation file that are prefixed with "db_".
  **/
-@interface DDAbstractDatabaseLogger : DDAbstractLogger {
+@interface OSSDDAbstractDatabaseLogger : OSSDDAbstractLogger {
     
 @protected
     NSUInteger _saveThreshold;

@@ -23,10 +23,10 @@
 #import "OSSDDLog.h"
 
 // Custom key set on messages sent to ASL
-extern const char* const kDDASLKeyDDLog;
+extern const char* const osskDDASLKeyDDLog;
 
 // Value set for kDDASLKeyDDLog
-extern const char* const kDDASLDDLogValue;
+extern const char* const osskDDASLDDLogValue;
 
 /**
  * This class provides a logger for the Apple System Log facility.
@@ -41,14 +41,14 @@ extern const char* const kDDASLDDLogValue;
  * However, if you instead choose to use file logging (for faster performance),
  * you may choose to use a file logger and a tty logger.
  **/
-@interface DDASLLogger : DDAbstractLogger <DDLogger>
+@interface OSSDDASLLogger : OSSDDAbstractLogger <DDLogger>
 
 /**
  *  Singleton method
  *
  *  @return the shared instance
  */
-@property (class, readonly, strong) DDASLLogger *sharedInstance;
+@property (class, readonly, strong) OSSDDASLLogger *sharedInstance;
 
 // Inherited from DDAbstractLogger
 

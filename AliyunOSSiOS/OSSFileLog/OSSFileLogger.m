@@ -46,19 +46,19 @@
 
 
 #if TARGET_OS_IPHONE
-BOOL doesAppRunInBackground(void);
+BOOL ossdoesAppRunInBackground(void);
 #endif
 
-unsigned long long const kDDDefaultLogMaxFileSize      = 5 * 1024 * 1024;      // 5 MB
-NSTimeInterval     const kDDDefaultLogRollingFrequency = 60 * 60 * 24;     // 24 Hours
-NSUInteger         const kDDDefaultLogMaxNumLogFiles   = 1;                // 1 Files
-unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 MB
+unsigned long long const osskDDDefaultLogMaxFileSize      = 5 * 1024 * 1024;      // 5 MB
+NSTimeInterval     const osskDDDefaultLogRollingFrequency = 60 * 60 * 24;     // 24 Hours
+NSUInteger         const osskDDDefaultLogMaxNumLogFiles   = 1;                // 1 Files
+unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 MB
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DDLogFileManagerDefault () {
+@interface OSSDDLogFileManagerDefault () {
     NSUInteger _maximumNumberOfLogFiles;
     unsigned long long _logFilesDiskQuota;
     NSString *_logsDirectory;
@@ -72,7 +72,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 
 @end
 
-@implementation DDLogFileManagerDefault
+@implementation OSSDDLogFileManagerDefault
 
 @synthesize maximumNumberOfLogFiles = _maximumNumberOfLogFiles;
 @synthesize logFilesDiskQuota = _logFilesDiskQuota;
@@ -84,8 +84,8 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 
 - (instancetype)initWithLogsDirectory:(NSString *)aLogsDirectory {
     if ((self = [super init])) {
-        _maximumNumberOfLogFiles = kDDDefaultLogMaxNumLogFiles;
-        _logFilesDiskQuota = kDDDefaultLogFilesDiskQuota;
+        _maximumNumberOfLogFiles = osskDDDefaultLogMaxNumLogFiles;
+        _logFilesDiskQuota = osskDDDefaultLogFilesDiskQuota;
 
         if (aLogsDirectory) {
             _logsDirectory = [aLogsDirectory copy];
@@ -189,7 +189,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
         unsigned long long used = 0;
 
         for (NSUInteger i = 0; i < sortedLogFileInfos.count; i++) {
-            DDLogFileInfo *info = sortedLogFileInfos[i];
+            OSSDDLogFileInfo *info = sortedLogFileInfos[i];
             used += info.fileSize;
 
             if (used > diskQuota) {
@@ -214,7 +214,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
         // So in most cases, we do not want to consider this file for deletion.
 
         if (sortedLogFileInfos.count > 0) {
-            DDLogFileInfo *logFileInfo = sortedLogFileInfos[0];
+            OSSDDLogFileInfo *logFileInfo = sortedLogFileInfos[0];
 
             if (!logFileInfo.isArchived) {
                 // Don't delete active file.
@@ -227,7 +227,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
         // removing all logfiles starting with firstIndexToDelete
 
         for (NSUInteger i = firstIndexToDelete; i < sortedLogFileInfos.count; i++) {
-            DDLogFileInfo *logFileInfo = sortedLogFileInfos[i];
+            OSSDDLogFileInfo *logFileInfo = sortedLogFileInfos[i];
 
             NSLogInfo(@"DDLogFileManagerDefault: Deleting file: %@", logFileInfo.fileName);
 
@@ -357,7 +357,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
     NSMutableArray *unsortedLogFileInfos = [NSMutableArray arrayWithCapacity:[unsortedLogFilePaths count]];
 
     for (NSString *filePath in unsortedLogFilePaths) {
-        DDLogFileInfo *logFileInfo = [[DDLogFileInfo alloc] initWithFilePath:filePath];
+        OSSDDLogFileInfo *logFileInfo = [[OSSDDLogFileInfo alloc] initWithFilePath:filePath];
 
         [unsortedLogFileInfos addObject:logFileInfo];
     }
@@ -370,7 +370,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 
     NSMutableArray *sortedLogFilePaths = [NSMutableArray arrayWithCapacity:[sortedLogFileInfos count]];
 
-    for (DDLogFileInfo *logFileInfo in sortedLogFileInfos) {
+    for (OSSDDLogFileInfo *logFileInfo in sortedLogFileInfos) {
         [sortedLogFilePaths addObject:[logFileInfo filePath]];
     }
 
@@ -382,7 +382,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 
     NSMutableArray *sortedLogFileNames = [NSMutableArray arrayWithCapacity:[sortedLogFileInfos count]];
 
-    for (DDLogFileInfo *logFileInfo in sortedLogFileInfos) {
+    for (OSSDDLogFileInfo *logFileInfo in sortedLogFileInfos) {
         [sortedLogFileNames addObject:[logFileInfo fileName]];
     }
 
@@ -390,7 +390,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 }
 
 - (NSArray *)sortedLogFileInfos {
-    return  [[self unsortedLogFileInfos] sortedArrayUsingComparator:^NSComparisonResult(DDLogFileInfo   * _Nonnull obj1, DDLogFileInfo   * _Nonnull obj2) {
+    return  [[self unsortedLogFileInfos] sortedArrayUsingComparator:^NSComparisonResult(OSSDDLogFileInfo   * _Nonnull obj1, OSSDDLogFileInfo   * _Nonnull obj2) {
         NSDate *date1 = [NSDate new];
         NSDate *date2 = [NSDate new];
 
@@ -463,7 +463,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
             // NSFileProtectionCompleteUntilFirstUserAuthentication.
 
             NSFileProtectionType key = _defaultFileProtectionLevel ? :
-                (doesAppRunInBackground() ? NSFileProtectionCompleteUntilFirstUserAuthentication : NSFileProtectionCompleteUnlessOpen);
+                (ossdoesAppRunInBackground() ? NSFileProtectionCompleteUntilFirstUserAuthentication : NSFileProtectionCompleteUnlessOpen);
 
             attributes = @{
                 NSFileProtectionKey: key
@@ -511,13 +511,13 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DDLogFileFormatterDefault () {
+@interface OSSDDLogFileFormatterDefault () {
     NSDateFormatter *_dateFormatter;
 }
 
 @end
 
-@implementation DDLogFileFormatterDefault
+@implementation OSSDDLogFileFormatterDefault
 
 - (instancetype)init {
     return [self initWithDateFormatter:nil];
@@ -537,7 +537,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
     return self;
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(OSSDDLogMessage *)logMessage {
     NSString *dateAndTime = [_dateFormatter stringFromDate:(logMessage->_timestamp)];
 
     return [NSString stringWithFormat:@"%@  %@", dateAndTime, logMessage->_message];
@@ -549,8 +549,8 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DDFileLogger () {
-    __strong id <DDLogFileManager> _logFileManager;
+@interface OSSDDFileLogger () {
+    __strong id <OSSDDLogFileManager> _logFileManager;
     
     NSFileHandle *_currentLogFileHandle;
     
@@ -567,23 +567,23 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
 
 @end
 
-@implementation DDFileLogger
+@implementation OSSDDFileLogger
 
 - (instancetype)init {
-    DDLogFileManagerDefault *defaultLogFileManager = [[DDLogFileManagerDefault alloc] init];
+    OSSDDLogFileManagerDefault *defaultLogFileManager = [[OSSDDLogFileManagerDefault alloc] init];
 
     return [self initWithLogFileManager:defaultLogFileManager];
 }
 
-- (instancetype)initWithLogFileManager:(id <DDLogFileManager>)aLogFileManager {
+- (instancetype)initWithLogFileManager:(id <OSSDDLogFileManager>)aLogFileManager {
     if ((self = [super init])) {
-        _maximumFileSize = kDDDefaultLogMaxFileSize;
-        _rollingFrequency = kDDDefaultLogRollingFrequency;
+        _maximumFileSize = osskDDDefaultLogMaxFileSize;
+        _rollingFrequency = osskDDDefaultLogRollingFrequency;
         _automaticallyAppendNewlineForCustomFormatters = YES;
 
         logFileManager = aLogFileManager;
 
-        self.logFormatter = [DDLogFileFormatterDefault new];
+        self.logFormatter = [OSSDDLogFileFormatterDefault new];
     }
 
     return self;
@@ -874,12 +874,12 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
  *
  * Otherwise a new file is created and returned.
  **/
-- (DDLogFileInfo *)currentLogFileInfo {
+- (OSSDDLogFileInfo *)currentLogFileInfo {
     if (_currentLogFileInfo == nil) {
         NSArray *sortedLogFileInfos = [logFileManager sortedLogFileInfos];
 
         if ([sortedLogFileInfos count] > 0) {
-            DDLogFileInfo *mostRecentLogFileInfo = sortedLogFileInfos[0];
+            OSSDDLogFileInfo *mostRecentLogFileInfo = sortedLogFileInfos[0];
 
             BOOL shouldArchiveMostRecent = NO;
 
@@ -905,7 +905,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
             //
             // If user has overwritten to NSFileProtectionNone there is no neeed to create a new one.
 
-            if (!_doNotReuseLogFiles && doesAppRunInBackground()) {
+            if (!_doNotReuseLogFiles && ossdoesAppRunInBackground()) {
                 NSFileProtectionType key = mostRecentLogFileInfo.fileAttributes[NSFileProtectionKey];
 
                 if ([key length] > 0 && !([key isEqualToString:NSFileProtectionCompleteUntilFirstUserAuthentication] || [key isEqualToString:NSFileProtectionNone])) {
@@ -933,7 +933,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 5 M
         if (_currentLogFileInfo == nil) {
             NSString *currentLogFilePath = [logFileManager createNewLogFile];
 
-            _currentLogFileInfo = [[DDLogFileInfo alloc] initWithFilePath:currentLogFilePath];
+            _currentLogFileInfo = [[OSSDDLogFileInfo alloc] initWithFilePath:currentLogFilePath];
         }
     }
 
@@ -998,7 +998,7 @@ static int exception_count = 0;
             break;
             
     }
-    DDLogMessage *netWorkLogMessage = [DDLogMessage new];
+    OSSDDLogMessage *netWorkLogMessage = [OSSDDLogMessage new];
     netWorkLogMessage->_message = tempMessage;
     netWorkLogMessage->_timestamp = [NSDate new];
     tempMessage = [_logFormatter formatLogMessage:netWorkLogMessage];
@@ -1008,7 +1008,7 @@ static int exception_count = 0;
     if(carrier){
         NSString *currentCountry = [carrier carrierName];
         if(currentCountry){
-            DDLogMessage *carrierWorkLogMessage = [DDLogMessage new];
+            OSSDDLogMessage *carrierWorkLogMessage = [OSSDDLogMessage new];
             carrierWorkLogMessage->_message = [@"[operator]: " stringByAppendingString:currentCountry];
             carrierWorkLogMessage->_timestamp = [NSDate new];
             currentCountry = [_logFormatter formatLogMessage:carrierWorkLogMessage];
@@ -1020,7 +1020,7 @@ static int exception_count = 0;
     return tempMessage;
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(OSSDDLogMessage *)logMessage {
     NSString *message = logMessage->_message;
     BOOL isFormatted = NO;
     
@@ -1070,7 +1070,7 @@ static int exception_count = 0;
     [self maybeRollLogFileDueToSize];
 }
 
-- (BOOL)shouldArchiveRecentLogFileInfo:(DDLogFileInfo *)recentLogFileInfo {
+- (BOOL)shouldArchiveRecentLogFileInfo:(OSSDDLogFileInfo *)recentLogFileInfo {
     return NO;
 }
 
@@ -1096,7 +1096,7 @@ static int exception_count = 0;
     static NSString * const kDDXAttrArchivedName = @"lumberjack.log.archived";
 #endif
 
-@interface DDLogFileInfo () {
+@interface OSSDDLogFileInfo () {
     __strong NSString *_filePath;
     __strong NSString *_fileName;
     
@@ -1111,7 +1111,7 @@ static int exception_count = 0;
 @end
 
 
-@implementation DDLogFileInfo
+@implementation OSSDDLogFileInfo
 
 @synthesize filePath;
 
@@ -1466,7 +1466,7 @@ static int exception_count = 0;
 
 - (BOOL)isEqual:(id)object {
     if ([object isKindOfClass:[self class]]) {
-        DDLogFileInfo *another = (DDLogFileInfo *)object;
+        OSSDDLogFileInfo *another = (OSSDDLogFileInfo *)object;
 
         return [filePath isEqualToString:[another filePath]];
     }
@@ -1478,7 +1478,7 @@ static int exception_count = 0;
     return [filePath hash];
 }
 
-- (NSComparisonResult)reverseCompareByCreationDate:(DDLogFileInfo *)another {
+- (NSComparisonResult)reverseCompareByCreationDate:(OSSDDLogFileInfo *)another {
     NSDate *us = [self creationDate];
     NSDate *them = [another creationDate];
 
@@ -1495,7 +1495,7 @@ static int exception_count = 0;
     return NSOrderedSame;
 }
 
-- (NSComparisonResult)reverseCompareByModificationDate:(DDLogFileInfo *)another {
+- (NSComparisonResult)reverseCompareByModificationDate:(OSSDDLogFileInfo *)another {
     NSDate *us = [self modificationDate];
     NSDate *them = [another modificationDate];
 
@@ -1522,7 +1522,7 @@ static int exception_count = 0;
  * want (even if device is locked). Thats why that attribute have to be changed to
  * NSFileProtectionCompleteUntilFirstUserAuthentication.
  */
-BOOL doesAppRunInBackground() {
+BOOL ossdoesAppRunInBackground() {
     BOOL answer = NO;
 
     NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];

@@ -14,9 +14,9 @@
     if([OSSUtil hasPhoneFreeSpace]){
         isEnable = YES;
         [OSSDDLog removeAllLoggers];
-        [OSSDDLog addLogger:[DDASLLogger sharedInstance]];
+        [OSSDDLog addLogger:[OSSDDASLLogger sharedInstance]];
         [OSSDDLog addLogger:[OSSTTYLogger sharedInstance]];
-        DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+        OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init];
         [OSSDDLog addLogger:fileLogger];
     }
 }

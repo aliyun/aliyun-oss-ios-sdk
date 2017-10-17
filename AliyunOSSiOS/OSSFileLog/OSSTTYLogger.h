@@ -47,7 +47,7 @@
  * However, if you instead choose to use file logging (for faster performance),
  * you may choose to use only a file logger and a tty logger.
  **/
-@interface OSSTTYLogger : DDAbstractLogger <DDLogger>
+@interface OSSTTYLogger : OSSDDAbstractLogger <DDLogger>
 
 /**
  *  Singleton method
