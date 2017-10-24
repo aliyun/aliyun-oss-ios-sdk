@@ -49,6 +49,15 @@
 		216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E51CF1835F0086458F /* OSSReachabilityManager.m */; };
 		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		4C2B586F1F8CE9AA008CBCE1 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
+		4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */; };
+		4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */; };
+		4C2F1F271F8C70E300B12B57 /* OSSDDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */; };
+		4C2F1F281F8C70E300B12B57 /* OSSFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */; };
+		4C2F1F291F8C70E300B12B57 /* OSSFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F161F8C70E300B12B57 /* OSSFileLogger.m */; };
+		4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */; };
+		4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */; };
+		4C2F1F331F8CB9C600B12B57 /* OSSReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F311F8CB9C600B12B57 /* OSSReachability.m */; };
 		4C30B7BE1F6136EB00CDAD9B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7BD1F6136EB00CDAD9B /* main.m */; };
 		4C30B7C11F6136EB00CDAD9B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7C01F6136EB00CDAD9B /* AppDelegate.m */; };
 		4C30B7C41F6136EB00CDAD9B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7C31F6136EB00CDAD9B /* ViewController.m */; };
@@ -57,6 +66,9 @@
 		4C30B7CC1F6136EB00CDAD9B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C30B7CA1F6136EB00CDAD9B /* LaunchScreen.storyboard */; };
 		4C30B7F01F61372400CDAD9B /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7EF1F61372400CDAD9B /* StstokenSample.m */; };
 		4C30B7F31F61405600CDAD9B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */; };
+		4C7D8BB91F8CC741005D3040 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
+		4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */; };
+		4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */; };
 		4CE524711F623EDF00DD3DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4CE524731F623F5D00DD3DCF /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
@@ -129,6 +141,14 @@
 		216256E51CF1835F0086458F /* OSSReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityManager.m; sourceTree = "<group>"; };
 		216256EC1CF1B1210086458F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCocoaLumberjack.h; sourceTree = "<group>"; };
+		4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSDDLog.h; sourceTree = "<group>"; };
+		4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSDDLog.m; sourceTree = "<group>"; };
+		4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSFileLogger.h; sourceTree = "<group>"; };
+		4C2F1F161F8C70E300B12B57 /* OSSFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSFileLogger.m; sourceTree = "<group>"; };
+		4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSLogMacros.h; sourceTree = "<group>"; };
+		4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSReachability.h; sourceTree = "<group>"; };
+		4C2F1F311F8CB9C600B12B57 /* OSSReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachability.m; sourceTree = "<group>"; };
 		4C30B7BA1F6136EB00CDAD9B /* DemoByOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoByOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C30B7BD1F6136EB00CDAD9B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4C30B7BF1F6136EB00CDAD9B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -143,6 +163,10 @@
 		4C30B7EF1F61372400CDAD9B /* StstokenSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StstokenSample.m; sourceTree = "<group>"; };
 		4C30B7F11F61405600CDAD9B /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
 		4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
+		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSNSLogger.h; sourceTree = "<group>"; };
+		4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSNSLogger.m; sourceTree = "<group>"; };
 		4CE524741F62641D00DD3DCF /* DemoByOC.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoByOC.pch; sourceTree = "<group>"; };
 		4CE524751F6267BB00DD3DCF /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		4CE524761F6267BB00DD3DCF /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
@@ -163,6 +187,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C7D8BB91F8CC741005D3040 /* CoreTelephony.framework in Frameworks */,
 				216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */,
 				216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */,
 				21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */,
@@ -173,6 +198,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2B586F1F8CE9AA008CBCE1 /* CoreTelephony.framework in Frameworks */,
 				4CE524731F623F5D00DD3DCF /* AliyunOSSiOS.framework in Frameworks */,
 				4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */,
 				4CE524711F623EDF00DD3DCF /* libresolv.tbd in Frameworks */,
@@ -185,6 +211,8 @@
 		124FC752CC2150C34DBACDBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */,
+				4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */,
 				216256EF1CF1B1580086458F /* SystemConfiguration.framework */,
 				216256EC1CF1B1210086458F /* libresolv.tbd */,
 			);
@@ -267,6 +295,7 @@
 		21028C071BA9AC3C00C2A6BA /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				4C2F1F091F8C70E300B12B57 /* OSSFileLog */,
 				21126AEE1BE8DEF400D85DF1 /* OSSTask */,
 				21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */,
 				21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */,
@@ -306,6 +335,23 @@
 				216256E51CF1835F0086458F /* OSSReachabilityManager.m */,
 			);
 			path = OSSIPv6;
+			sourceTree = "<group>";
+		};
+		4C2F1F091F8C70E300B12B57 /* OSSFileLog */ = {
+			isa = PBXGroup;
+			children = (
+				4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */,
+				4C2F1F311F8CB9C600B12B57 /* OSSReachability.m */,
+				4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */,
+				4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */,
+				4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */,
+				4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */,
+				4C2F1F161F8C70E300B12B57 /* OSSFileLogger.m */,
+				4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */,
+				4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */,
+				4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */,
+			);
+			path = OSSFileLog;
 			sourceTree = "<group>";
 		};
 		4C30B7BB1F6136EB00CDAD9B /* DemoByOC */ = {
@@ -355,10 +401,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2F1F281F8C70E300B12B57 /* OSSFileLogger.h in Headers */,
 				9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */,
 				214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */,
 				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
+				4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
 				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
@@ -368,11 +416,15 @@
 				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
 				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
 				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
+				4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */,
+				4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */,
 				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
 				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
 				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
+				4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */,
 				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
+				4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
@@ -514,7 +566,9 @@
 				21028BFB1BA9AC3600C2A6BA /* OSSCompat.m in Sources */,
 				214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */,
 				214E1BA31CD5FE17004F8083 /* OSSExecutor.m in Sources */,
+				4C2F1F331F8CB9C600B12B57 /* OSSReachability.m in Sources */,
 				216256E71CF1835F0086458F /* OSSIPv6Adapter.m in Sources */,
+				4C2F1F291F8C70E300B12B57 /* OSSFileLogger.m in Sources */,
 				21028C011BA9AC3600C2A6BA /* OSSNetworking.m in Sources */,
 				21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */,
 				216256E91CF1835F0086458F /* OSSIPv6PrefixResolver.m in Sources */,
@@ -523,9 +577,11 @@
 				214E1B9F1CD5FE17004F8083 /* OSSCancellationTokenRegistration.m in Sources */,
 				21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */,
 				216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */,
+				4C2F1F271F8C70E300B12B57 /* OSSDDLog.m in Sources */,
 				214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */,
 				214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */,
 				214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */,
+				4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */,
 				21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */,
 				21028BFD1BA9AC3600C2A6BA /* OSSLog.m in Sources */,
 				214E1BA11CD5FE17004F8083 /* OSSCancellationTokenSource.m in Sources */,
@@ -592,6 +648,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -643,6 +700,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -687,6 +745,7 @@
 		21028BD31BA9ABF600C2A6BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -699,6 +758,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = AliyunOSSiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -719,6 +779,7 @@
 		21028BD41BA9ABF600C2A6BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -731,6 +792,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = AliyunOSSiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -792,12 +854,15 @@
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5KG9AE2U9K;
 				GCC_PREFIX_HEADER = DemoByOC/DemoByOC.pch;
 				INFOPLIST_FILE = DemoByOC/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC001;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -808,12 +873,15 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = 5KG9AE2U9K;
 				GCC_PREFIX_HEADER = DemoByOC/DemoByOC.pch;
 				INFOPLIST_FILE = DemoByOC/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC001;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

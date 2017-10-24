@@ -14,6 +14,9 @@
 #import "OSSLog.h"
 #import "OSSHttpdns.h"
 #import "OSSIPv6Adapter.h"
+#import "OSSReachability.h"
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
 NSString * const ALIYUN_HOST_SUFFIX = @".aliyuncs.com";
 NSString * const ALIYUN_OSS_TEST_ENDPOINT = @".aliyun-inc.com";
@@ -1038,5 +1041,48 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     NSString * mimeType = [mimeMap objectForKey:extention];
     return mimeType ? mimeType : @"application/octet-stream";
 }
+
++ (BOOL)hasPhoneFreeSpace{
+    NSError *error = nil;
+    NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
+    if(error) return NO;
+    long long space = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
+    if(space < 0) return NO;
+    if(space < osskDDDefaultLogMaxFileSize) return NO;
+    return YES;
+}
+
++ (NSString*)buildNetWorkConnectedMsg{
+    NSString *tempMessage = @"[network_state]: disconnected";
+    OSSReachability *reach=[OSSReachability reachabilityWithHostName:@"www.apple.com"];
+    if(reach){
+        switch([reach currentReachabilityStatus]){
+            case ReachableViaWWAN:
+                tempMessage = @"[network_state]: connected";
+                break;
+            case ReachableViaWiFi:
+                tempMessage = @"[network_state]: connected";
+                break;
+            default:
+                tempMessage = @"[network_state]: disconnected";
+                break;
+                
+        }
+    }
+    return tempMessage;
+}
++ (NSString*)buildOperatorMsg{
+    NSString *currentCountry;
+    CTTelephonyNetworkInfo *telephonyInfo = [[CTTelephonyNetworkInfo alloc] init];
+    CTCarrier *carrier = [telephonyInfo subscriberCellularProvider];
+    if(carrier){
+        currentCountry = [carrier carrierName];
+        if(currentCountry){
+            currentCountry = [@"[operator]: " stringByAppendingString:currentCountry];
+        }
+    }
+    return currentCountry;
+}
+
 
 @end

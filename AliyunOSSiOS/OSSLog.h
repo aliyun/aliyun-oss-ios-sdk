@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSSCocoaLumberjack.h"
+static const OSSDDLogLevel ddLogLevel = OSSDDLogLevelAll;
 
 // colorful log configuration
 // see https://github.com/robbiehanson/XcodeColors
@@ -19,21 +21,28 @@
 
 #define OSSLogVerbose(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-NSLog(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+OSSDDLogVerbose(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogDebug(frmt, ...)\
+if ([OSSLog isLogEnable]) {\
+OSSDDLogDebug(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+}
+
+#define OSSLogDebugNoFile(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
 NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogError(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
-NSLog(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+OSSDDLogError(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
+
 static BOOL isEnable;
 
 @interface OSSLog : NSObject
+
 + (void)enableLog;
 + (void)disableLog;
 + (BOOL)isLogEnable;

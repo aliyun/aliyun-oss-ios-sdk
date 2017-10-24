@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSSFileLogger.h"
 
 @class OSSFederationToken;
 
@@ -34,4 +35,7 @@
 + (NSString *)sign:(NSString *)content withToken:(OSSFederationToken *)token;
 + (NSString *)getRelativePath:(NSString *)fullPath;
 + (NSString *)detemineMimeTypeForFilePath:(NSString *)filePath uploadName:(NSString *)uploadName;
++ (BOOL)hasPhoneFreeSpace;
++ (NSString*)buildNetWorkConnectedMsg;
++ (NSString*)buildOperatorMsg;
 @end

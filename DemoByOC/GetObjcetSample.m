@@ -4,9 +4,7 @@
 //
 
 #import "GetObjcetSample.h"
-#import "OSSClient.h"
-#import "OSSModel.h"
-#import "OSSTask.h"
+#import "AliyunOSSiOS.h"
 
 OSSClient* _client;
 
