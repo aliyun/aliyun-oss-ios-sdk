@@ -22,13 +22,11 @@ static const OSSDDLogLevel ddLogLevel = OSSDDLogLevelAll;
 #define OSSLogVerbose(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
 OSSDDLogVerbose(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
-NSLog(@"[Verbose]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogDebug(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
 OSSDDLogDebug(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
-NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 #define OSSLogDebugNoFile(frmt, ...)\
@@ -39,7 +37,6 @@ NSLog(@"[Debug]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 #define OSSLogError(frmt, ...)\
 if ([OSSLog isLogEnable]) {\
 OSSDDLogError(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
-NSLog(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
 static BOOL isEnable;

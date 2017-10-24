@@ -67,6 +67,8 @@
 		4C30B7F01F61372400CDAD9B /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7EF1F61372400CDAD9B /* StstokenSample.m */; };
 		4C30B7F31F61405600CDAD9B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */; };
 		4C7D8BB91F8CC741005D3040 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
+		4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */; };
+		4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */; };
 		4CE524711F623EDF00DD3DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4CE524731F623F5D00DD3DCF /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
@@ -163,6 +165,8 @@
 		4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
 		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSNSLogger.h; sourceTree = "<group>"; };
+		4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSNSLogger.m; sourceTree = "<group>"; };
 		4CE524741F62641D00DD3DCF /* DemoByOC.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoByOC.pch; sourceTree = "<group>"; };
 		4CE524751F6267BB00DD3DCF /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		4CE524761F6267BB00DD3DCF /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
@@ -344,6 +348,8 @@
 				4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */,
 				4C2F1F161F8C70E300B12B57 /* OSSFileLogger.m */,
 				4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */,
+				4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */,
+				4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */,
 			);
 			path = OSSFileLog;
 			sourceTree = "<group>";
@@ -411,6 +417,7 @@
 				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
 				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
 				4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */,
+				4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */,
 				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
 				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
 				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
@@ -574,6 +581,7 @@
 				214E1B9D1CD5FE17004F8083 /* OSSCancellationToken.m in Sources */,
 				214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */,
 				214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */,
+				4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */,
 				21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */,
 				21028BFD1BA9AC3600C2A6BA /* OSSLog.m in Sources */,
 				214E1BA11CD5FE17004F8083 /* OSSCancellationTokenSource.m in Sources */,

@@ -71,4 +71,5 @@
 
 // Loggers
 #import "OSSFileLogger.h"
+#import "OSSNSLogger.h"
 
