@@ -723,7 +723,7 @@
         
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         [queue setMaxConcurrentOperationCount: 5];
-        NSTimeInterval startAllUpload = [[NSDate date] timeIntervalSince1970];
+        
         for (int i = 1; i <= partCount; i++) {
             
             if(errorTask != NULL && errorTask.error){
@@ -782,8 +782,7 @@
         }
         
         [queue waitUntilAllOperationsAreFinished];
-        NSTimeInterval endAllUpload = [[NSDate date] timeIntervalSince1970];
-        OSSLogDebug(@"multipart upload cost time: %f", endAllUpload - startAllUpload);
+        
         if(errorTask != NULL && errorTask.error){
             return errorTask;
         }
