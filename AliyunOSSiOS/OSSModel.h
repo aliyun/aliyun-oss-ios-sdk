@@ -1240,6 +1240,60 @@ The result class of listing uploaded parts.
 @end
 
 /**
+ The request class of multipart upload.
+ */
+@interface OSSMultipartUploadRequest : OSSRequest
+
+/**
+ The upload Id
+ */
+@property (nonatomic, strong) NSString * uploadId;
+
+/**
+ Bucket name
+ */
+@property (nonatomic, strong) NSString * bucketName;
+
+/**
+ Object object
+ */
+@property (nonatomic, strong) NSString * objectKey;
+
+/**
+ The local file path to upload from.
+ */
+@property (nonatomic, strong) NSURL * uploadingFileURL;
+
+/**
+ The part size, minimal value is 100KB.
+ */
+@property (nonatomic, assign) int64_t partSize;
+
+/**
+ Upload progress callback.
+ It runs at the background thread (not UI thread).
+ */
+@property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
+
+/**
+ The callback parmeters
+ */
+@property (nonatomic, strong) NSDictionary * callbackParam;
+
+/**
+ The callback variables
+ */
+@property (nonatomic, strong) NSDictionary * callbackVar;
+
+/**
+ The metadata header
+ */
+@property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+- (void)cancel;
+@end
+
+/**
  The request class of resumable upload.
  */
 @interface OSSResumableUploadRequest : OSSRequest

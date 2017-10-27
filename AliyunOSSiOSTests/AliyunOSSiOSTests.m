@@ -42,8 +42,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"fileDirA/", @"fileDirB/"];
-        fileSizeArray = @[@1024, @10240, @102400, @1024000, @10240000, @1024, @1024];
+        fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"file100m", @"fileDirA/", @"fileDirB/"];
+        fileSizeArray = @[@1024, @10240, @102400, @1024000, @10240000, @102400000, @1024, @1024];
         [self initOSSClient];
         [self initLocalFiles];
         test_queue = dispatch_queue_create("com.aliyun.oss.test", DISPATCH_QUEUE_CONCURRENT);
@@ -53,7 +53,6 @@ id<OSSCredentialProvider>  credential, credentialFed;
 - (void)initLocalFiles {
     NSFileManager * fm = [NSFileManager defaultManager];
     NSString * mainDir = [self getDocumentDirectory];
-
 
     for (int i = 0; i < [fileNameArray count]; i++) {
         NSMutableData * basePart = [NSMutableData dataWithCapacity:1024];
@@ -958,8 +957,10 @@ id<OSSCredentialProvider>  credential, credentialFed;
         return nil;
     }] waitUntilFinished];
     
-    int chuckCount = 3;
+    int chuckCount = 10;
+    NSTimeInterval startAllUpload = [[NSDate date] timeIntervalSince1970];
     for (int i = 1; i <= chuckCount; i++) {
+        
         OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
         uploadPart.bucketName = TEST_BUCKET;
         uploadPart.objectkey = MultipartUploadObjectKey;
@@ -978,7 +979,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         
         NSData* data = [readHandle readDataOfLength:offset];
         uploadPart.uploadPartData = data;
-        
+        NSTimeInterval startUpload = [[NSDate date] timeIntervalSince1970];
         task = [client uploadPart:uploadPart];
         [[task continueWithBlock:^id(OSSTask *task) {
             XCTAssertNil(task.error);
@@ -987,8 +988,13 @@ id<OSSCredentialProvider>  credential, credentialFed;
             [partInfos addObject:[OSSPartInfo partInfoWithPartNum:i eTag:result.eTag size:fileSize]];
             return nil;
         }] waitUntilFinished];
+        NSTimeInterval endUpload = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval cost = endUpload - startUpload;
+        OSSLogDebug(@"part num: %d  upload part cost time: %f", i, cost);
     }
 
+    NSTimeInterval endAllUpload = [[NSDate date] timeIntervalSince1970];
+    OSSLogDebug(@"multipart upload cost time: %f", endAllUpload - startAllUpload);
     OSSListPartsRequest * listParts = [OSSListPartsRequest new];
     listParts.bucketName = TEST_BUCKET;
     listParts.objectKey = MultipartUploadObjectKey;
@@ -1411,6 +1417,90 @@ id<OSSCredentialProvider>  credential, credentialFed;
     }] waitUntilFinished];
 }
 
+- (void)testMultipartUpload_normal {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.bucketName = TEST_BUCKET;
+    multipartUploadRequest.objectKey = MultipartUploadObjectKey;
+    multipartUploadRequest.uploadId = uploadId;
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * multipartTask = [client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+            if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // The upload cannot be resumed. Needs to re-initiate a upload.
+            }
+        } else {
+            
+            NSLog(@"Upload file success");
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:MultipartUploadObjectKey equalsToLocalFile:[multipartUploadRequest.uploadingFileURL path]];
+    XCTAssertTrue(isEqual);
+}
+
+- (void)testMultipartUpload_cancel {
+    __block NSString * uploadId = nil;
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.bucketName = TEST_BUCKET;
+    multipartUploadRequest.objectKey = MultipartUploadObjectKey;
+    multipartUploadRequest.uploadId = uploadId;
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [self getDocumentDirectory];
+    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    OSSTask * resumeTask = [client multipartUpload:multipartUploadRequest];
+    [resumeTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"error: %@", task.error);
+        XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
+        return nil;
+    }];
+    
+    [multipartUploadRequest cancel];
+    [NSThread sleepForTimeInterval:1];
+}
+
 - (void)testResumableUpload_normal {
     __block NSString * uploadId = nil;
     OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
@@ -1433,7 +1523,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.uploadId = uploadId;
     resumableUpload.partSize = 1024 * 1024;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     NSString * docDir = [self getDocumentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
@@ -2548,11 +2638,26 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
 #pragma mark filelog
 
-- (void)testWiteFileLog {
+- (void)testWriteFileLog {
     OSSLogDebug(@"----------TestDebug------------");
     [NSThread sleepForTimeInterval:(1)];
     unsigned long long filesize = [self getLogFileSize];
     XCTAssertTrue(filesize > 0);
+//    //1.创建一个其他队列
+//    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//    [queue setMaxConcurrentOperationCount:5];
+//    //3.添加多个Block
+//    for (NSInteger i = 0; i < 20; i++) {
+//        //2.创建NSBlockOperation对象
+//        NSBlockOperation *operation = [[NSBlockOperation alloc] init];
+//        [operation addExecutionBlock:^{
+//            OSSLogDebug(@"第%ld次：%@", i, [NSThread currentThread]);
+//        }];
+//        //4.队列添加任务
+//        [queue addOperation:operation];
+//    }
+//    [queue waitUntilAllOperationsAreFinished];
+//    OSSLogDebug(@"----------TestDebug------------");
 }
 
 - (void)testFileLogMaxSize {
