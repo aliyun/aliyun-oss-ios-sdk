@@ -24,7 +24,7 @@
  * The constant/variable/method responsible for controlling the current log level.
  **/
 #ifndef LOG_LEVEL_DEF
-    #define LOG_LEVEL_DEF ddLogLevel
+    #define LOG_LEVEL_DEF ossLogLevel
 #endif
 
 /**

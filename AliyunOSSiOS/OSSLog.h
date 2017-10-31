@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OSSCocoaLumberjack.h"
-static const OSSDDLogLevel ddLogLevel = OSSDDLogLevelAll;
+static const OSSDDLogLevel ossLogLevel = OSSDDLogLevelAll;
 
 // colorful log configuration
 // see https://github.com/robbiehanson/XcodeColors
