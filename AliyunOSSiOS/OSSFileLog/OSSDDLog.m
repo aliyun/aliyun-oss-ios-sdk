@@ -534,7 +534,7 @@ static NSUInteger _numProcessors;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 + (BOOL)isRegisteredClass:(Class)class {
-    SEL getterSel = @selector(ddLogLevel);
+    SEL getterSel = @selector(ossLogLevel);
     SEL setterSel = @selector(ddSetLogLevel:);
 
 #if TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
@@ -663,7 +663,7 @@ static NSUInteger _numProcessors;
 
 + (OSSDDLogLevel)levelForClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
-        return [aClass ddLogLevel];
+        return [aClass ossLogLevel];
     }
     return (OSSDDLogLevel)-1;
 }

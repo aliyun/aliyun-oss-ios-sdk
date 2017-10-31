@@ -724,7 +724,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * }
  * ```
  **/
-@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) OSSDDLogLevel ddLogLevel;
+@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) OSSDDLogLevel ossLogLevel;
 
 @end
 
