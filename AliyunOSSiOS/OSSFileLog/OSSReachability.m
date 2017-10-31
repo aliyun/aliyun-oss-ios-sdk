@@ -20,7 +20,7 @@
 //Reachability fully support IPv6.  For full details, see ReadMe.md.
 
 
-NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";
+NSString *ossReachabilityChangedNotification = @"ossNetworkReachabilityChangedNotification";
 
 
 #pragma mark - Supporting functions
@@ -56,7 +56,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
     OSSReachability* noteObject = (__bridge OSSReachability *)info;
     // Post a notification to notify the client that the network reachability changed.
-    [[NSNotificationCenter defaultCenter] postNotificationName: kReachabilityChangedNotification object: noteObject];
+    [[NSNotificationCenter defaultCenter] postNotificationName: ossReachabilityChangedNotification object: noteObject];
 }
 
 
