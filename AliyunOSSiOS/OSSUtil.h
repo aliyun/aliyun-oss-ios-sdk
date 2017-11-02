@@ -36,6 +36,7 @@
 + (NSString *)getRelativePath:(NSString *)fullPath;
 + (NSString *)detemineMimeTypeForFilePath:(NSString *)filePath uploadName:(NSString *)uploadName;
 + (BOOL)hasPhoneFreeSpace;
++ (NSData *)fileMD5:(NSString *)path;
 + (NSString*)buildNetWorkConnectedMsg;
 + (NSString*)buildOperatorMsg;
 @end

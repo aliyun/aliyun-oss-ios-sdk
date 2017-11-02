@@ -211,6 +211,8 @@ Aborts the multipart upload by the specified upload Id.
  */
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
+- (OSSTask *)abortResumableMultipartUpload:(OSSResumableUploadRequest *)request;
+
 #pragma mark extention method
 
 /**

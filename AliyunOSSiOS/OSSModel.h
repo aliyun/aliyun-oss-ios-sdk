@@ -1286,6 +1286,11 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
+ Content type
+ */
+@property (nonatomic, strong) NSString * contentType;
+
+/**
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
@@ -1314,6 +1319,11 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSString * objectKey;
 
 /**
+ directory path about create record uploadId file 
+ */
+@property (nonatomic, strong) NSString * recordDirectoryPath;
+
+/**
  The local file path to upload from.
  */
 @property (nonatomic, strong) NSURL * uploadingFileURL;
@@ -1340,9 +1350,19 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
+ Content type
+ */
+@property (nonatomic, strong) NSString * contentType;
+
+/**
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+/**
+ need or not delete uploadId with cancel
+ */
+@property (nonatomic, assign) BOOL deleteUploadIdOnCancelling;
 
 /**
  All running children requests
