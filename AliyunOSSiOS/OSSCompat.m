@@ -11,9 +11,6 @@
 #import "OSSBolts.h"
 #import "OSSModel.h"
 
-
-int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
-
 @implementation OSSClient (Compat)
 
 - (OSSTaskHandler *)uploadData:(NSData *)data
@@ -211,10 +208,9 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
                             onCompleted:(void(^)(BOOL, NSError *))onComplete
                              onProgress:(void(^)(float progress))onProgress {
 
-    __block NSString * recordKey;
     OSSTaskHandler * bcts = [OSSCancellationTokenSource cancellationTokenSource];
 
-    [[[[[[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
+    [[[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];
         NSDate * lastModified;
         NSError * error;
@@ -222,50 +218,14 @@ int64_t const OSSMultipartUploadDefaultBlockSize = 256 * 1024;
         if (error) {
             return [OSSTask taskWithError:error];
         }
-        recordKey = [NSString stringWithFormat:@"%@-%@-%@-%@", bucketName, objectKey, [OSSUtil getRelativePath:filePath], lastModified];
-        NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
-        return [OSSTask taskWithResult:[userDefault objectForKey:recordKey]];
-    }] continueWithSuccessBlock:^id(OSSTask *task) {
-        if (!task.result) {
-            // new upload task
-            OSSInitMultipartUploadRequest * initMultipart = [OSSInitMultipartUploadRequest new];
-            initMultipart.bucketName = bucketName;
-            initMultipart.objectKey = objectKey;
-            initMultipart.contentType = contentType;
-            initMultipart.objectMeta = meta;
-            return [self multipartUploadInit:initMultipart];
-        }
-        OSSLogVerbose(@"An resumable task for uploadid: %@", task.result);
-        return task;
-    }] continueWithSuccessBlock:^id(OSSTask *task) {
-        NSString * uploadId = nil;
-
-        if (bcts.token.isCancellationRequested || bcts.isCancellationRequested) {
-            return [OSSTask cancelledTask];
-        }
-
-        if (task.error) {
-            return task;
-        }
-
-        if ([task.result isKindOfClass:[OSSInitMultipartUploadResult class]]) {
-            uploadId = ((OSSInitMultipartUploadResult *)task.result).uploadId;
-        } else {
-            uploadId = task.result;
-        }
-
-        if (!uploadId) {
-            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                             code:OSSClientErrorCodeNilUploadid
-                                                         userInfo:@{OSSErrorMessageTOKEN: @"Can't get an upload id"}]];
-        }
-        NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
-        [userDefault setObject:uploadId forKey:recordKey];
-        [userDefault synchronize];
-        return [OSSTask taskWithResult:uploadId];
-    }] continueWithSuccessBlock:^id(OSSTask *task) {
         OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
         resumableUpload.bucketName = bucketName;
+        resumableUpload.deleteUploadIdOnCancelling = false;//cancel not delete record file
+        resumableUpload.contentType = contentType;
+        resumableUpload.completeMetaHeader = meta;
+        NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        resumableUpload.recordDirectoryPath = cachesDir; //default record file path
+        resumableUpload.uploadingFileURL = fileURL;
         resumableUpload.objectKey = objectKey;
         resumableUpload.uploadId = task.result;
         resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:filePath];
