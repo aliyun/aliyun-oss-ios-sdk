@@ -419,22 +419,38 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 @implementation OSSUASettingInterceptor
 
-- (NSString *)getUserAgent {
+- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *)clientConfiguration{
+    if (self = [super init]) {
+        self.clientConfiguration = clientConfiguration;
+    }
+    return self;
+}
+
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
+    NSString * userAgent = [self getUserAgent:self.clientConfiguration.customUserAgent];
+    [request.headerParams setObject:userAgent forKey:@"User-Agent"];
+    return [OSSTask taskWithResult:nil];
+}
+
+
+- (NSString *)getUserAgent:(NSString *)customUserAgent {
     static NSString * _userAgent = nil;
     static dispatch_once_t once;
+    NSString * tempUserAgent = nil;
     dispatch_once(&once, ^{
         NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
         NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
         NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-        _userAgent = [NSString stringWithFormat:@"%@/%@/%@/%@/%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+       _userAgent = [NSString stringWithFormat:@"%@/%@/%@/%@/%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
     });
-    return _userAgent;
-}
-
-- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
-    NSString * userAgent = [self getUserAgent];
-    [request.headerParams setObject:userAgent forKey:@"User-Agent"];
-    return [OSSTask taskWithResult:nil];
+    if(customUserAgent){
+        if(_userAgent){
+            tempUserAgent = [[_userAgent stringByAppendingString:@"/"] stringByAppendingString:customUserAgent];
+        }else{
+            tempUserAgent = customUserAgent;
+        }
+    }
+    return tempUserAgent;
 }
 
 @end
