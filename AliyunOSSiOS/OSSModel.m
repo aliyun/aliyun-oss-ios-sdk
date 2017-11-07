@@ -427,7 +427,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 }
 
 - (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
-    NSString * userAgent = [self getUserAgent:self.clientConfiguration.customUserAgent];
+    NSString * userAgent = [self getUserAgent:self.clientConfiguration.userAgentMark];
     [request.headerParams setObject:userAgent forKey:@"User-Agent"];
     return [OSSTask taskWithResult:nil];
 }
@@ -441,7 +441,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
         NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
         NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-       _userAgent = [NSString stringWithFormat:@"%@/%@/%@/%@/%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+       _userAgent = [NSString stringWithFormat:@"%@/%@(/%@/%@/%@)", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
     });
     if(customUserAgent){
         if(_userAgent){

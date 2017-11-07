@@ -226,7 +226,7 @@ Sets the session Id for background file transmission
 /**
  Sets UA
  */
-@property (nonatomic, strong) NSString * customUserAgent;
+@property (nonatomic, strong) NSString * userAgentMark;
 
 /**
  Sets CName excluded list.

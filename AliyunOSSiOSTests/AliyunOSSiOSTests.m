@@ -1254,7 +1254,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 - (void)testUserAgentConfig {
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     
-    conf.customUserAgent = @"customUserAgent";
+    conf.userAgentMark = @"customUserAgent";
     
     OSSClient * testProxyClient = [[OSSClient alloc] initWithEndpoint:ENDPOINT
                                                    credentialProvider:client.credentialProvider
@@ -1277,7 +1277,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     
     OSSClientConfiguration * conf1 = [OSSClientConfiguration new];
     
-    conf1.customUserAgent = @"customUserAgentOther";
+    conf1.userAgentMark = @"customUserAgentOther";
     
     [testProxyClient setClientConfiguration:conf1];
     
