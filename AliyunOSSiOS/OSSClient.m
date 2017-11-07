@@ -818,6 +818,11 @@
         [queue waitUntilAllOperationsAreFinished];
         
         if(errorTask != NULL && errorTask.error){
+            OSSAbortMultipartUploadRequest * abort = [OSSAbortMultipartUploadRequest new];
+            abort.bucketName = request.bucketName;
+            abort.objectKey = request.objectKey;
+            abort.uploadId = request.uploadId;
+            [[self abortMultipartUpload:abort] waitUntilFinished];
             return errorTask;
         }
         
@@ -865,6 +870,7 @@
     __block int partCount;
     __block OSSTask *errorTask;
     __block NSString *uploadId;
+    __block BOOL isCancel;
     NSObject * lock = [[NSObject alloc] init];
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
@@ -1017,10 +1023,6 @@
             [operation addExecutionBlock:^{
                 @autoreleasepool {
                     
-                    if(errorTask){
-                        return;
-                    }
-                    
                     NSFileHandle * handle = [NSFileHandle fileHandleForReadingAtPath:[request.uploadingFileURL path]];
                     [handle seekToFileOffset:(i-1) * request.partSize];
                     int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
@@ -1038,7 +1040,6 @@
                     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                     [uploadPartTask waitUntilFinished];
                     if (uploadPartTask.error) {
-                        [queue cancelAllOperations];
                         errorTask = uploadPartTask;
                     } else {
                         OSSUploadPartResult * result = uploadPartTask.result;
@@ -1047,22 +1048,17 @@
                         partInfo.eTag = result.eTag;
                         @synchronized(lock){
                             [alreadyUploadPart addObject:partInfo];
-                            if([alreadyUploadPart count] == partCount){
-                                request.uploadProgress(uploadFileSize - (request.partSize * (partCount-1)), expectedUploadLength, expectedUploadLength);
-                            }else{
-                                request.uploadProgress(request.partSize, request.partSize * [alreadyUploadPart count], expectedUploadLength);
-                            }
+                            uploadedLength += readLength;
+                            request.uploadProgress(readLength, uploadedLength, expectedUploadLength);
                         }
                     }
                     
                     if (request.isCancelled) {
                         @synchronized(lock){
-                            if(errorTask == NULL){
+                            if(!isCancel){
+                                isCancel = YES;
                                 [queue cancelAllOperations];
                                 errorTask = [OSSTask taskWithError:cancelError];
-                                if(request.deleteUploadIdOnCancelling){
-                                    [self abortResumableMultipartUpload:request];
-                                }
                             }
                         }
                     }
@@ -1074,6 +1070,9 @@
         [queue waitUntilAllOperationsAreFinished];
         
         if(errorTask != NULL && errorTask.error){
+            if(request.deleteUploadIdOnCancelling){
+                [self abortResumableMultipartUpload:request];
+            }
             return errorTask;
         }
         
