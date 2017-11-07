@@ -1011,9 +1011,6 @@
         
         for (int i = 1; i <= partCount; i++) {
             
-            if(errorTask != NULL && errorTask.error){
-                return errorTask;
-            }
             
             if ([alreadyUploadIndex containsObject:@(i)]) {
                 continue;
