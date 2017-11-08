@@ -279,6 +279,9 @@
     if (request.uploadProgress) {
         requestDelegate.uploadProgress = request.uploadProgress;
     }
+    if (request.uploadRetryCallback) {
+        requestDelegate.retryCallback = request.uploadRetryCallback;
+    }
     if (request.contentDisposition) {
         [headerParams setObject:request.contentDisposition forKey:OSSHttpHeaderContentDisposition];
     }
@@ -309,6 +312,9 @@
 
 - (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    if (request.uploadRetryCallback) {
+        requestDelegate.retryCallback = request.uploadRetryCallback;
+    }
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionary];
     if (request.acl) {
         headerParams[@"x-oss-object-acl"] = request.acl;

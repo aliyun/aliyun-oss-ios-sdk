@@ -538,6 +538,9 @@
 
             /* retry recursively */
             [delegate reset];
+            if(delegate.retryCallback){
+                delegate.retryCallback();
+            }
             [self dataTaskWithDelegate:delegate];
         } else {
             delegate.completionHandler([delegate.responseParser constructResultObject], nil);
