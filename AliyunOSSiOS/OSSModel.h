@@ -1269,6 +1269,10 @@ The result class of listing uploaded parts.
  */
 @property (nonatomic, assign) int64_t partSize;
 
+@property (nonatomic, assign) BOOL isCanceled;
+
+@property (nonatomic, strong) NSError * cancelError;
+
 /**
  Upload progress callback.
  It runs at the background thread (not UI thread).
@@ -1294,6 +1298,7 @@ The result class of listing uploaded parts.
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
 
 - (void)cancel;
 @end
@@ -1301,63 +1306,14 @@ The result class of listing uploaded parts.
 /**
  The request class of resumable upload.
  */
-@interface OSSResumableUploadRequest : OSSRequest
+@interface OSSResumableUploadRequest : OSSMultipartUploadRequest
 
-/**
- The upload Id 
- */
-@property (nonatomic, strong) NSString * uploadId;
-
-/**
- Bucket name
- */
-@property (nonatomic, strong) NSString * bucketName;
-
-/**
- Object object
- */
-@property (nonatomic, strong) NSString * objectKey;
 
 /**
  directory path about create record uploadId file 
  */
 @property (nonatomic, strong) NSString * recordDirectoryPath;
 
-/**
- The local file path to upload from.
- */
-@property (nonatomic, strong) NSURL * uploadingFileURL;
-
-/**
- The part size, minimal value is 100KB.
- */
-@property (nonatomic, assign) int64_t partSize;
-
-/**
- Upload progress callback.
- It runs at the background thread (not UI thread).
- */
-@property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
-
-/**
- The callback parmeters
- */
-@property (nonatomic, strong) NSDictionary * callbackParam;
-
-/**
- The callback variables
- */
-@property (nonatomic, strong) NSDictionary * callbackVar;
-
-/**
- Content type
- */
-@property (nonatomic, strong) NSString * contentType;
-
-/**
- The metadata header
- */
-@property (nonatomic, strong) NSDictionary * completeMetaHeader;
 
 /**
  need or not delete uploadId with cancel
@@ -1369,8 +1325,8 @@ The result class of listing uploaded parts.
  */
 @property (atomic, weak) OSSRequest * runningChildrenRequest;
 
-- (void)cancel;
 @end
+
 
 /**
  The result class of resumable uploading
