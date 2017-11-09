@@ -884,12 +884,6 @@
                                                              code:OSSClientErrorCodeInvalidArgument
                                                          userInfo:@{OSSErrorMessageTOKEN: @"Part size must be set bigger than 100KB"}]];
         }
-        
-        if (request.recordDirectoryPath == nil){
-            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                              code:OSSClientErrorCodeInvalidArgument
-                                                          userInfo:@{OSSErrorMessageTOKEN: @"recordDirectoryPath must be set"}]];
-        }
 
         static dispatch_once_t onceToken;
         static NSError * cancelError;
@@ -910,44 +904,25 @@
         NSArray * uploadedPart = nil;
         __block NSString *recordFilePath = nil;
         
-        //read saved uploadId
-        NSString *recordPathMd5 = [OSSUtil fileMD5String:[request.uploadingFileURL path]];
-        NSData *data = [[NSString stringWithFormat:@"%@%@%@%lld",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
-        NSString *recordFileName = [OSSUtil dataMD5String:data];
-        recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        if([fileManager fileExistsAtPath:recordFilePath]){
-            NSFileHandle * read = [NSFileHandle fileHandleForReadingAtPath:recordFilePath];
-            uploadId = [[NSString alloc] initWithData:[read readDataToEndOfFile] encoding:NSUTF8StringEncoding];
-            [read closeFile];
-        }else{
-            [fileManager createFileAtPath:recordFilePath contents:nil attributes:nil];
-        }
-
-        if(uploadId == nil){
-            OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
-            init.bucketName = request.bucketName;
-            init.objectKey = request.objectKey;
-            init.contentType = request.contentType;
-            init.objectMeta = request.completeMetaHeader;
-            OSSTask * initTask = [self multipartUploadInit:init];
-            [[initTask continueWithBlock:^id(OSSTask *task) {
-                OSSInitMultipartUploadResult * result = task.result;
-                request.uploadId = result.uploadId;
-                //saved uploadId
-                if(recordFilePath){
-                    NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
-                    [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
-                    [write closeFile];
-                }
-                return nil;
-            }] waitUntilFinished];
-        }else{
-            request.uploadId = uploadId;
+        if (request.recordDirectoryPath != nil){
+            //read saved uploadId
+            NSString *recordPathMd5 = [OSSUtil fileMD5String:[request.uploadingFileURL path]];
+            NSData *data = [[NSString stringWithFormat:@"%@%@%@%lld",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *recordFileName = [OSSUtil dataMD5String:data];
+            recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if([fileManager fileExistsAtPath:recordFilePath]){
+                NSFileHandle * read = [NSFileHandle fileHandleForReadingAtPath:recordFilePath];
+                uploadId = [[NSString alloc] initWithData:[read readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+                [read closeFile];
+            }else{
+                [fileManager createFileAtPath:recordFilePath contents:nil attributes:nil];
+            }
+            
             OSSListPartsRequest * listParts = [OSSListPartsRequest new];
             listParts.bucketName = request.bucketName;
             listParts.objectKey = request.objectKey;
-            listParts.uploadId = request.uploadId;
+            listParts.uploadId = uploadId;
             OSSTask * listPartsTask = [self listParts:listParts];
             request.runningChildrenRequest = listParts;
             [listPartsTask waitUntilFinished];
@@ -982,7 +957,32 @@
                 }
             }
         }
-
+        
+        if(uploadId == nil){
+            OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+            init.bucketName = request.bucketName;
+            init.objectKey = request.objectKey;
+            init.contentType = request.contentType;
+            init.objectMeta = request.completeMetaHeader;
+            OSSTask * initTask = [self multipartUploadInit:init];
+            [[initTask continueWithBlock:^id(OSSTask *task) {
+                if(task.error){
+                    return task;
+                }
+                OSSInitMultipartUploadResult * result = task.result;
+                uploadId = result.uploadId;
+                //saved uploadId
+                if(recordFilePath){
+                    NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
+                    [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
+                    [write closeFile];
+                }
+                return nil;
+            }] waitUntilFinished];
+        }
+        
+        request.uploadId = uploadId;
+        
         if (request.isCancelled) {
             if(request.deleteUploadIdOnCancelling){
                 [self abortResumableMultipartUpload:request];
