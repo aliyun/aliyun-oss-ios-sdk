@@ -1151,6 +1151,7 @@ uploadedLength:(int64_t *)uploadedLength
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
     
+    __block BOOL isCancel;
     
     for (int i = 1; i <= partCout; i++) {
     
@@ -1159,18 +1160,18 @@ uploadedLength:(int64_t *)uploadedLength
             continue;
         }
         
-        
-        
         NSBlockOperation * operation = [[NSBlockOperation alloc] init];
         [operation addExecutionBlock:^{
             @autoreleasepool {
+                
                 if (request.isCancelled) {
                     @synchronized(lock){
-                        if(!request.isCancelled){
-                            request.isCancelled = YES;
+                        if(!isCancel){
+                            isCancel = YES;
                             [queue cancelAllOperations];
                             *errorTask = [OSSTask taskWithError:request.cancelError];
                         }
+                        return;
                     }
                 }
                 
