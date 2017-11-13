@@ -569,7 +569,9 @@ static NSObject * lock;
             abort.bucketName = request.bucketName;
             abort.objectKey = request.objectKey;
             abort.uploadId = [[NSString alloc] initWithData:[[NSFileHandle fileHandleForReadingAtPath:recordFilePath] readDataToEndOfFile] encoding:NSUTF8StringEncoding];
-            [fileManager removeItemAtPath:recordFilePath error:nil];
+            
+            NSError *error;
+            [fileManager removeItemAtPath:recordFilePath error:&error];
             
             return [self abortMultipartUpload:abort];
         }
@@ -1099,14 +1101,16 @@ uploadedLength:(int64_t *)uploadedLength
     headRequest.objectKey = objectKey;
     OSSTask * headTask = [self headObject:headRequest];
     [headTask waitUntilFinished];
-    NSError * headError = headTask.error;
+    NSError *headError = headTask.error;
     if (!headError) {
         return YES;
     } else {
         if ([headError.domain isEqualToString: OSSServerErrorDomain] && headError.code == -404) {
             return NO;
         } else {
-            *error = headError;
+            if (error != nil) {
+                *error = headError;
+            }
             return NO;
         }
     }

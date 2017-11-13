@@ -155,9 +155,12 @@ static NSTimeInterval _clockSkew = 0.0;
 
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
     if (!self.accessKey || !self.secretKey) {
-        *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                     code:OSSClientErrorCodeSignFailed
-                                 userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
+        if (error != nil) {
+            *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                         code:OSSClientErrorCodeSignFailed
+                                     userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
+        }
+        
         return nil;
     }
     NSString * sign = [OSSUtil calBase64Sha1WithData:content withSecret:self.secretKey];
@@ -227,10 +230,15 @@ static NSTimeInterval _clockSkew = 0.0;
 
         validToken = self.cachedToken;
     }
-    if (!validToken) {
-        *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                     code:OSSClientErrorCodeSignFailed
-                                 userInfo:@{OSSErrorMessageTOKEN: @"Can't get a federation token"}];
+    if (!validToken)
+    {
+        if (error != nil)
+        {
+            *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                         code:OSSClientErrorCodeSignFailed
+                                     userInfo:@{OSSErrorMessageTOKEN: @"Can't get a federation token"}];
+        }
+        
         return nil;
     }
     return validToken;
