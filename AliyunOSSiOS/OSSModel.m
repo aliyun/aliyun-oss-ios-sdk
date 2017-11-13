@@ -718,7 +718,9 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 - (void)cancel {
     [super cancel];
-    [_runningChildrenRequest cancel];
+    if(_runningChildrenRequest){
+        [_runningChildrenRequest cancel];
+    }
 }
 
 @end

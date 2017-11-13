@@ -1608,7 +1608,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    resumableUpload.partSize = 1024 * 1024;
+    resumableUpload.partSize = 256 * 1024;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
@@ -1623,6 +1623,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }];
+    
     [NSThread sleepForTimeInterval:1];
     [resumableUpload cancel];
     [resumeTask waitUntilFinished];
@@ -1874,9 +1875,9 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNotNil(task.error);
-        XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
-        NSLog(@"task.error: %@", task.error);
+        XCTAssertNil(task.error);
+        NSString * recordFilePath = [self getRecordFilePath:resumableUpload];
+        XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }] waitUntilFinished];
 }
@@ -2187,7 +2188,6 @@ id<OSSCredentialProvider>  credential, credentialFed;
         dispatch_async(test_queue, ^{
             NSString * docDir = [self getDocumentDirectory];
             NSString * fileToUpload = [NSString stringWithFormat:@"%@/%@", docDir, @"file10m"];
-            __block float progValue = 0;
             [client resumableUploadFile:fileToUpload
                         withContentType:@"application/octet-stream"
                          withObjectMeta:nil
@@ -2203,8 +2203,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
                                     }
                                 }
                             } onProgress:^(float progress) {
-                                NSLog(@"1. progress: %f", progress);
-                                progValue = progress;
+                                NSLog(@"%d. progress: %f", i, progress);
                             }];
         });
     }

@@ -1269,8 +1269,6 @@ The result class of listing uploaded parts.
  */
 @property (nonatomic, assign) int64_t partSize;
 
-@property (nonatomic, strong) NSError * cancelError;
-
 /**
  Upload progress callback.
  It runs at the background thread (not UI thread).
