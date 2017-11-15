@@ -220,7 +220,7 @@
         }
         OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
         resumableUpload.bucketName = bucketName;
-        resumableUpload.deleteUploadIdOnCancelling = false;//cancel not delete record file
+        resumableUpload.deleteUploadIdOnCancelling = NO;//cancel not delete record file
         resumableUpload.contentType = contentType;
         resumableUpload.completeMetaHeader = meta;
         NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];

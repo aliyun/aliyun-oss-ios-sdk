@@ -18,14 +18,14 @@
 
 @end
 
-NSString * const TEST_BUCKET = @"ios-sdk-test-1";
+NSString * const TEST_BUCKET = @"sdk-demo001";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
-NSString * const ENDPOINT = @"https://oss-cn-beijing.aliyuncs.com";
+NSString * const ENDPOINT = @"https://oss-cn-qingdao.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"oss-demo.aliyuncs.com:23450";
 NSString * const CNAME = @"http://************************/";
-NSString * const StsTokenURL = @"http://0.0.0.0:12555/sts/getsts";
+NSString * const StsTokenURL = @"http://*.*.*.*:****/sts/getsts";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
@@ -46,6 +46,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         fileSizeArray = @[@1024, @10240, @102400, @1024000, @10240000, @102400000, @1024, @1024];
         [self initOSSClient];
         [self initLocalFiles];
+        [self initUploadFile];
         test_queue = dispatch_queue_create("com.aliyun.oss.test", DISPATCH_QUEUE_CONCURRENT);
     });
 }
@@ -76,6 +77,33 @@ id<OSSCredentialProvider>  credential, credentialFed;
     }
     NSLog(@"main bundle: %@", mainDir);
 }
+
+- (void)initUploadFile{
+    NSString * uploadFile = @"wangwang";
+    NSString * type = @"zip";
+    NSFileManager * fm = [NSFileManager defaultManager];
+    NSString * mainDir = [self getDocumentDirectory];
+    NSString * newFilePath = [mainDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", uploadFile, type]];
+    if ([fm fileExistsAtPath:newFilePath]) {
+        return;
+    }
+
+    //获取bundle中的资源内容
+    NSString * uploadPath = [[NSBundle mainBundle] pathForResource:uploadFile ofType:type];
+
+    NSLog(@"uploadPath: %@, newFilePath: %@", uploadPath, newFilePath);
+    NSData *data = [NSData dataWithContentsOfFile:uploadPath];
+    
+    BOOL result = [data writeToFile:newFilePath atomically:YES];
+
+    if (result) {
+        NSLog(@"write upload file success");
+    }else {
+        NSLog(@"write upload file failed");
+    }
+    
+}
+
 
 - (NSString *)getDocumentDirectory {
     NSString * path = NSHomeDirectory();
@@ -1418,7 +1446,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testMultipartUpload_normal {
-    
+    NSString * uploadFile = @"wangwang.zip";
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     multipartUploadRequest.bucketName = TEST_BUCKET;
@@ -1429,7 +1457,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     NSString * docDir = [self getDocumentDirectory];
-    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     OSSTask * multipartTask = [client multipartUpload:multipartUploadRequest];
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
@@ -1477,7 +1505,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testResumableUpload_normal {
-
+    NSString * uploadFile = @"wangwang.zip";
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.contentType = @"application/octet-stream";
@@ -1490,7 +1518,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     NSString * docDir = [self getDocumentDirectory];
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
@@ -1604,6 +1632,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
+    BOOL isDelete = NO;
+    resumableUpload.deleteUploadIdOnCancelling = isDelete;
     NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.contentType = @"application/octet-stream";
@@ -1620,7 +1650,12 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSLog(@"error: %@", task.error);
         XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
         NSString * recordFilePath = [self getRecordFilePath:resumableUpload];
-        XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
+        if (isDelete){
+            XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
+        }else{
+            XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
+        }
+        
         return nil;
     }];
     
@@ -1643,7 +1678,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
-    resumableUpload.deleteUploadIdOnCancelling = false;
+    resumableUpload.deleteUploadIdOnCancelling = NO;
     NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.contentType = @"application/octet-stream";
@@ -1700,12 +1735,12 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testResumbleUpload_cancel_resumble {
-    
+    NSString * uploadFile = @"wangwang.zip";
     __block bool cancel = false;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
-    resumableUpload.deleteUploadIdOnCancelling = false;
+    resumableUpload.deleteUploadIdOnCancelling = NO;
     NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.contentType = @"application/octet-stream";
@@ -1718,7 +1753,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         }
     };
     NSString * docDir = [self getDocumentDirectory];
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     [resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
@@ -1741,7 +1776,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 256 * 1024;
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
@@ -1785,12 +1820,12 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testResumableUpload_resume_upload {
-    
+    NSString * uploadFile = @"wangwang.zip";
     NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
-    resumableUpload.deleteUploadIdOnCancelling = false;
+    resumableUpload.deleteUploadIdOnCancelling = NO;
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
@@ -1798,12 +1833,12 @@ id<OSSCredentialProvider>  credential, credentialFed;
     __weak OSSResumableUploadRequest * upload = resumableUpload;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        if (totalByteSent > totalBytesExpectedToSend / 2) {
+        if (totalByteSent > totalBytesExpectedToSend / 3) {
             [upload cancel];
         }
     };
     NSString * docDir = [self getDocumentDirectory];
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
         NSLog(@"error: %@", task.error);
@@ -1819,7 +1854,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 256 * 1024;
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
@@ -1863,6 +1898,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testResumableUploadWithNotSetRecordPath{
+    NSString * uploadFile = @"wangwang.zip";
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
@@ -1872,7 +1908,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     NSString * docDir = [self getDocumentDirectory];
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
+    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -2407,8 +2443,8 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
 - (void)testCompatResumableUpload {
     NSString * docDir = [self getDocumentDirectory];
-    NSString * fileToUpload = [NSString stringWithFormat:@"%@/%@", docDir, @"file10m"];
-    NSString * objectKey = @"resumableUpload";
+    NSString * fileToUpload = [NSString stringWithFormat:@"%@/%@", docDir, @"wangwang.zip"];
+    NSString * objectKey = @"resumableUpload0001";
     __block float progValue = 0;
     OSSTaskHandler * taskHandler = [client resumableUploadFile:fileToUpload
                                                withContentType:@"application/octet-stream"

@@ -840,7 +840,6 @@ static NSObject * lock;
         });
         
         __block int64_t uploadedLength = 0;
-        //        __block BOOL isCancel;
         __block OSSTask * errorTask;
         __block NSString *uploadId;
         
