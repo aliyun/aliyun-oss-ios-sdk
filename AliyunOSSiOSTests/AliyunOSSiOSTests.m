@@ -520,7 +520,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
-    request.isAuthenticationRequired = false;
+    request.isAuthenticationRequired = NO;
     OSSTask * task = [client getObject:request];
     [task waitUntilFinished];
 
@@ -538,7 +538,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
-    request.isAuthenticationRequired = false;
+    request.isAuthenticationRequired = NO;
     task = [client getObject:request];
     [task waitUntilFinished];
 
@@ -1059,13 +1059,13 @@ id<OSSCredentialProvider>  credential, credentialFed;
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSHeadObjectResult * result = task.result;
-        __block BOOL exist = false;
+        __block BOOL exist = NO;
         [result.objectMeta enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             NSString * theKey = key;
             NSString * theValue = obj;
             if ([theKey isEqualToString:@"x-oss-meta-name1"]) {
                 XCTAssertEqualObjects(@"value1", theValue);
-                exist = true;
+                exist = YES;
             }
         }];
         XCTAssertTrue(exist);
@@ -1674,7 +1674,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 }
 
 - (void)testResumbleUpload_abort {
-    __block bool cancel = false;
+    __block bool cancel = NO;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
@@ -1687,7 +1687,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         if(totalByteSent >= totalBytesExpectedToSend /2){
-            cancel = true;
+            cancel = YES;
         }
     };
     NSString * docDir = [self getDocumentDirectory];
@@ -1736,7 +1736,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
 - (void)testResumbleUpload_cancel_resumble {
     NSString * uploadFile = @"wangwang.zip";
-    __block bool cancel = false;
+    __block bool cancel = NO;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = TEST_BUCKET;
     resumableUpload.objectKey = MultipartUploadObjectKey;
@@ -1749,7 +1749,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         if(totalByteSent >= totalBytesExpectedToSend /2){
-            cancel = true;
+            cancel = YES;
         }
     };
     NSString * docDir = [self getDocumentDirectory];
