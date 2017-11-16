@@ -878,9 +878,7 @@ static NSObject * lock;
                 if (listPartsTask.error) {
                     if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -1 * 404) {
                         OSSLogVerbose(@"local record existes but the remote record is deleted");
-                        return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                                          code:OSSClientErrorCodeCannotResumeUpload
-                                                                      userInfo:@{OSSErrorMessageTOKEN: @"This uploadid is no long exist on server side, can not resume"}]];
+                        uploadId = nil;
                     } else {
                         return listPartsTask;
                     }
@@ -922,10 +920,22 @@ static NSObject * lock;
                 OSSInitMultipartUploadResult * result = task.result;
                 uploadId = result.uploadId;
                 //saved uploadId
-                if(recordFilePath){
-                    NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
-                    [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
-                    [write closeFile];
+                if(recordFilePath)
+                {
+                    NSFileManager *defaultFileManager = [NSFileManager defaultManager];
+                    if (![defaultFileManager fileExistsAtPath:recordFilePath]) {
+                        BOOL succeed = [defaultFileManager createFileAtPath:recordFilePath contents:nil attributes:nil];
+                        if (succeed) {
+                            OSSLogDebug(@"file create succeed!");
+                            NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
+                            [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
+                            [write closeFile];
+
+                        }else
+                        {
+                            OSSLogDebug(@"file create failed!");
+                        }
+                    };
                 }
                 return nil;
             }] waitUntilFinished];
