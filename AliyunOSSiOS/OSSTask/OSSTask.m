@@ -62,10 +62,9 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
 
 - (instancetype)initWithResult:(id)result {
     self = [super init];
-    if (!self) return self;
-
-    [self trySetResult:result];
-
+    if (self) {
+        [self trySetResult:result];
+    }
     return self;
 }
 
@@ -98,7 +97,7 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
 
 #pragma mark - Task Class methods
 
-+ (instancetype)taskWithResult:(nullable id)result {
++ (instancetype)taskWithResult:(_Nullable id)result {
     return [[self alloc] initWithResult:result];
 }
 

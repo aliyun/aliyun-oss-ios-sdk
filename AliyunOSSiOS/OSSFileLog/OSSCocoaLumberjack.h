@@ -59,8 +59,8 @@
 #import <Foundation/Foundation.h>
 
 // Disable legacy macros
-#ifndef DD_LEGACY_MACROS
-    #define DD_LEGACY_MACROS 0
+#ifndef OSSDD_LEGACY_MACROS
+    #define OSSDD_LEGACY_MACROS 0
 #endif
 
 // Core
