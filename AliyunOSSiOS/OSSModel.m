@@ -449,6 +449,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         }else{
             tempUserAgent = customUserAgent;
         }
+    }else{
+        customUserAgent = _userAgent;
     }
     return tempUserAgent;
 }
