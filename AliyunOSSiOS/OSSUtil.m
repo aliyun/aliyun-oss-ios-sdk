@@ -1092,9 +1092,9 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-- (BOOL)isEmpty
+- (BOOL)notEmpty
 {
-    return [self.trim isEqualToString:@""];
+    return ![self.trim isEqualToString:@""];
 }
 
 @end

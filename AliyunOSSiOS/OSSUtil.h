@@ -44,6 +44,6 @@
 @interface NSString(OSSUtils)
 
 - (NSString *)trim;
-- (BOOL)isEmpty;
+- (BOOL)notEmpty;
 
 @end
