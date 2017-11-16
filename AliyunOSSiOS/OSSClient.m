@@ -84,7 +84,7 @@ static NSObject * lock;
         }
     }];
 
-    id<OSSRequestInterceptor> uaSetting = [OSSUASettingInterceptor new];
+    id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:self.clientConfiguration];
     [request.interceptors addObject:uaSetting];
 
     /* check if the authentication is required */
