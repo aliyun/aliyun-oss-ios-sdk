@@ -97,7 +97,7 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
 
 #pragma mark - Task Class methods
 
-+ (instancetype)taskWithResult:(id)result {
++ (instancetype)taskWithResult:(_Nullable id)result {
     return [[self alloc] initWithResult:result];
 }
 
