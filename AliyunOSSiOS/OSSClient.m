@@ -919,23 +919,24 @@ static NSObject * lock;
                 }
                 OSSInitMultipartUploadResult * result = task.result;
                 uploadId = result.uploadId;
+                
                 //saved uploadId
-                if(recordFilePath)
+                if(!recordFilePath.isEmpty)
                 {
                     NSFileManager *defaultFileManager = [NSFileManager defaultManager];
                     if (![defaultFileManager fileExistsAtPath:recordFilePath]) {
                         BOOL succeed = [defaultFileManager createFileAtPath:recordFilePath contents:nil attributes:nil];
                         if (succeed) {
                             OSSLogDebug(@"file create succeed!");
-                            NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
-                            [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
-                            [write closeFile];
-
                         }else
                         {
                             OSSLogDebug(@"file create failed!");
+                            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeNotKnown userInfo:@{OSSErrorMessageTOKEN: @"local uploadId file create failed!"}]];
                         }
-                    };
+                    }
+                    NSFileHandle * write = [NSFileHandle fileHandleForWritingAtPath:recordFilePath];
+                    [write writeData:[result.uploadId dataUsingEncoding:NSUTF8StringEncoding]];
+                    [write closeFile];
                 }
                 return nil;
             }] waitUntilFinished];

@@ -40,3 +40,10 @@
 + (NSString*)buildNetWorkConnectedMsg;
 + (NSString*)buildOperatorMsg;
 @end
+
+@interface NSString(OSSUtils)
+
+- (NSString *)trim;
+- (BOOL)isEmpty;
+
+@end

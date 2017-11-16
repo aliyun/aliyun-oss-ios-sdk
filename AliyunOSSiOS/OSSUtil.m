@@ -1084,5 +1084,17 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return currentCountry;
 }
 
+@end
+
+@implementation NSString(OSSUtils)
+
+- (NSString *)trim
+{
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+- (BOOL)isEmpty
+{
+    return [self.trim isEqualToString:@""];
+}
 
 @end
