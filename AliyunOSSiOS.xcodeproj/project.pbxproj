@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
-		21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */; };
 		21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE11BA9AC3600C2A6BA /* OSSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE21BA9AC3600C2A6BA /* OSSClient.m */; };
 		21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE31BA9AC3600C2A6BA /* OSSCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -78,6 +77,11 @@
 		D17588F91FBC1CA5001EFFE9 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D17588F81FBC1CA5001EFFE9 /* wangwang.zip */; };
 		D17588FC1FBC1DE2001EFFE9 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D17588F81FBC1CA5001EFFE9 /* wangwang.zip */; };
 		D1C3D8BD1F667021002F840A /* python in Resources */ = {isa = PBXBuildFile; fileRef = D1C3D8BC1F667021002F840A /* python */; };
+		D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437631FBC2A0C009AE466 /* OSSTaskTests.m */; };
+		D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376C1FBC371E009AE466 /* OSSExecutorTests.m */; };
+		D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */; };
+		D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */; };
+		D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437721FBC59AD009AE466 /* OSSLogTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +113,6 @@
 		21028BC01BA9ABF500C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21028BC71BA9ABF600C2A6BA /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21028BCD1BA9ABF600C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
 		21028BE11BA9AC3600C2A6BA /* OSSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSClient.h; sourceTree = "<group>"; };
 		21028BE21BA9AC3600C2A6BA /* OSSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSClient.m; sourceTree = "<group>"; };
 		21028BE31BA9AC3600C2A6BA /* OSSCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCompat.h; sourceTree = "<group>"; };
@@ -182,6 +185,11 @@
 		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 		D17588F81FBC1CA5001EFFE9 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = wangwang.zip; path = ../AliyunOSSiOSTests/wangwang.zip; sourceTree = "<group>"; };
 		D1C3D8BC1F667021002F840A /* python */ = {isa = PBXFileReference; lastKnownFileType = folder; path = python; sourceTree = SOURCE_ROOT; };
+		D84437631FBC2A0C009AE466 /* OSSTaskTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSTaskTests.m; sourceTree = "<group>"; };
+		D844376C1FBC371E009AE466 /* OSSExecutorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSExecutorTests.m; sourceTree = "<group>"; };
+		D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTests.m; sourceTree = "<group>"; };
+		D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
+		D84437721FBC59AD009AE466 /* OSSLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,8 +296,12 @@
 		21028BCB1BA9ABF600C2A6BA /* AliyunOSSiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */,
+				D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */,
 				21028BCC1BA9ABF600C2A6BA /* Supporting Files */,
+				D84437631FBC2A0C009AE466 /* OSSTaskTests.m */,
+				D844376C1FBC371E009AE466 /* OSSExecutorTests.m */,
+				D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */,
+				D84437721FBC59AD009AE466 /* OSSLogTests.m */,
 			);
 			path = AliyunOSSiOSTests;
 			sourceTree = "<group>";
@@ -608,7 +620,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */,
+				D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */,
+				D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */,
+				D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */,
+				D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */,
+				D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
