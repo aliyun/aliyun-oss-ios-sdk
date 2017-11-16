@@ -1251,6 +1251,53 @@ id<OSSCredentialProvider>  credential, credentialFed;
     [tcs.task waitUntilFinished];
 }
 
+- (void)testUserAgentConfig {
+    OSSClientConfiguration * conf = [OSSClientConfiguration new];
+    
+    conf.userAgentMark = @"customUserAgent";
+    
+    OSSClient * testProxyClient = [[OSSClient alloc] initWithEndpoint:ENDPOINT
+                                                   credentialProvider:client.credentialProvider
+                                                  clientConfiguration:conf];
+    
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    
+    OSSTask * task = [testProxyClient getObject:request];
+    
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSClientConfiguration * conf1 = [OSSClientConfiguration new];
+    
+    conf1.userAgentMark = @"customUserAgentOther";
+    
+    [testProxyClient setClientConfiguration:conf1];
+    
+    OSSGetObjectRequest * request1 = [OSSGetObjectRequest new];
+    request1.bucketName = TEST_BUCKET;
+    request1.objectKey = @"file1m";
+    
+    request1.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    
+    OSSTask * task1 = [testProxyClient getObject:request1];
+    
+    [[task1 continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+}
+
 - (void)testPresignConstrainURL {
     OSSTask * tk = [client presignConstrainURLWithBucketName:TEST_BUCKET
                                                  withObjectKey:@"file1k"

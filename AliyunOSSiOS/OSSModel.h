@@ -11,6 +11,7 @@
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
 @class OSSTask;
+@class OSSClientConfiguration;
 
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
@@ -223,6 +224,11 @@ Sets the session Id for background file transmission
 @property (nonatomic, strong) NSNumber * proxyPort;
 
 /**
+ Sets UA
+ */
+@property (nonatomic, strong) NSString * userAgentMark;
+
+/**
  Sets CName excluded list.
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
@@ -246,6 +252,8 @@ Sets the session Id for background file transmission
  Updates the UA when creating the request.
  */
 @interface OSSUASettingInterceptor : NSObject <OSSRequestInterceptor>
+@property (nonatomic, weak) OSSClientConfiguration *clientConfiguration;
+- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *) clientConfiguration;
 @end
 
 /**
