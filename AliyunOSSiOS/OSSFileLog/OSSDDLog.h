@@ -16,8 +16,8 @@
 #import <Foundation/Foundation.h>
 
 // Enable 1.9.x legacy macros if imported directly
-#ifndef DD_LEGACY_MACROS
-    #define DD_LEGACY_MACROS 1
+#ifndef OSSDD_LEGACY_MACROS
+    #define OSSDD_LEGACY_MACROS 1
 #endif
 
 #if OS_OBJECT_USE_OBJC
@@ -724,7 +724,7 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  * }
  * ```
  **/
-@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) OSSDDLogLevel ddLogLevel;
+@property (class, nonatomic, readwrite, setter=ddSetLogLevel:) OSSDDLogLevel ossLogLevel;
 
 @end
 

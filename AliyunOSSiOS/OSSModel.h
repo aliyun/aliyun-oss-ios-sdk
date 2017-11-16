@@ -1256,12 +1256,12 @@ The result class of listing uploaded parts.
 @end
 
 /**
- The request class of resumable upload.
+ The request class of multipart upload.
  */
-@interface OSSResumableUploadRequest : OSSRequest
+@interface OSSMultipartUploadRequest : OSSRequest
 
 /**
- The upload Id 
+ The upload Id
  */
 @property (nonatomic, strong) NSString * uploadId;
 
@@ -1302,17 +1302,43 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
+ Content type
+ */
+@property (nonatomic, strong) NSString * contentType;
+
+/**
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+
+- (void)cancel;
+@end
+
+/**
+ The request class of resumable upload.
+ */
+@interface OSSResumableUploadRequest : OSSMultipartUploadRequest
+
+
+/**
+ directory path about create record uploadId file 
+ */
+@property (nonatomic, strong) NSString * recordDirectoryPath;
+
+
+/**
+ need or not delete uploadId with cancel
+ */
+@property (nonatomic, assign) BOOL deleteUploadIdOnCancelling;
 
 /**
  All running children requests
  */
 @property (atomic, weak) OSSRequest * runningChildrenRequest;
 
-- (void)cancel;
 @end
+
 
 /**
  The result class of resumable uploading

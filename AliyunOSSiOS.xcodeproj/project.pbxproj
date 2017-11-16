@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		21028BC81BA9ABF600C2A6BA /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
-		21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */; };
 		21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE11BA9AC3600C2A6BA /* OSSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028BF91BA9AC3600C2A6BA /* OSSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BE21BA9AC3600C2A6BA /* OSSClient.m */; };
 		21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BE31BA9AC3600C2A6BA /* OSSCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -75,7 +74,14 @@
 		4CE524771F6267BB00DD3DCF /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE524761F6267BB00DD3DCF /* Constant.m */; };
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D17588F91FBC1CA5001EFFE9 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D17588F81FBC1CA5001EFFE9 /* wangwang.zip */; };
+		D17588FC1FBC1DE2001EFFE9 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D17588F81FBC1CA5001EFFE9 /* wangwang.zip */; };
 		D1C3D8BD1F667021002F840A /* python in Resources */ = {isa = PBXBuildFile; fileRef = D1C3D8BC1F667021002F840A /* python */; };
+		D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437631FBC2A0C009AE466 /* OSSTaskTests.m */; };
+		D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376C1FBC371E009AE466 /* OSSExecutorTests.m */; };
+		D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */; };
+		D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */; };
+		D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437721FBC59AD009AE466 /* OSSLogTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +99,13 @@
 			remoteGlobalIDString = 21028BBB1BA9ABF500C2A6BA;
 			remoteInfo = AliyunOSSiOS;
 		};
+		D17588FA1FBC1D2F001EFFE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21028BB31BA9ABF500C2A6BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C30B7B91F6136EB00CDAD9B;
+			remoteInfo = DemoByOC;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -100,7 +113,6 @@
 		21028BC01BA9ABF500C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21028BC71BA9ABF600C2A6BA /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21028BCD1BA9ABF600C2A6BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
 		21028BE11BA9AC3600C2A6BA /* OSSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSClient.h; sourceTree = "<group>"; };
 		21028BE21BA9AC3600C2A6BA /* OSSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSClient.m; sourceTree = "<group>"; };
 		21028BE31BA9AC3600C2A6BA /* OSSCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSCompat.h; sourceTree = "<group>"; };
@@ -171,7 +183,13 @@
 		4CE524751F6267BB00DD3DCF /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
 		4CE524761F6267BB00DD3DCF /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
 		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
+		D17588F81FBC1CA5001EFFE9 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = wangwang.zip; path = ../AliyunOSSiOSTests/wangwang.zip; sourceTree = "<group>"; };
 		D1C3D8BC1F667021002F840A /* python */ = {isa = PBXFileReference; lastKnownFileType = folder; path = python; sourceTree = SOURCE_ROOT; };
+		D84437631FBC2A0C009AE466 /* OSSTaskTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSTaskTests.m; sourceTree = "<group>"; };
+		D844376C1FBC371E009AE466 /* OSSExecutorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSExecutorTests.m; sourceTree = "<group>"; };
+		D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTests.m; sourceTree = "<group>"; };
+		D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
+		D84437721FBC59AD009AE466 /* OSSLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,8 +296,12 @@
 		21028BCB1BA9ABF600C2A6BA /* AliyunOSSiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				21028BCE1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m */,
+				D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */,
 				21028BCC1BA9ABF600C2A6BA /* Supporting Files */,
+				D84437631FBC2A0C009AE466 /* OSSTaskTests.m */,
+				D844376C1FBC371E009AE466 /* OSSExecutorTests.m */,
+				D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */,
+				D84437721FBC59AD009AE466 /* OSSLogTests.m */,
 			);
 			path = AliyunOSSiOSTests;
 			sourceTree = "<group>";
@@ -378,6 +400,7 @@
 		4C30B7BC1F6136EB00CDAD9B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D17588F81FBC1CA5001EFFE9 /* wangwang.zip */,
 				4C30B7BD1F6136EB00CDAD9B /* main.m */,
 			);
 			name = "Supporting Files";
@@ -464,6 +487,7 @@
 			);
 			dependencies = (
 				21028BCA1BA9ABF600C2A6BA /* PBXTargetDependency */,
+				D17588FB1FBC1D2F001EFFE9 /* PBXTargetDependency */,
 			);
 			name = AliyunOSSiOSTests;
 			productName = AliyunOSSiOSTests;
@@ -503,10 +527,12 @@
 					};
 					21028BC61BA9ABF600C2A6BA = {
 						CreatedOnToolsVersion = 6.4;
+						ProvisioningStyle = Manual;
+						TestTargetID = 4C30B7B91F6136EB00CDAD9B;
 					};
 					4C30B7B91F6136EB00CDAD9B = {
 						CreatedOnToolsVersion = 8.3.3;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -542,6 +568,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D17588F91FBC1CA5001EFFE9 /* wangwang.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +579,7 @@
 				D1C3D8BD1F667021002F840A /* python in Resources */,
 				4C30B7CC1F6136EB00CDAD9B /* LaunchScreen.storyboard in Resources */,
 				4C30B7C91F6136EB00CDAD9B /* Assets.xcassets in Resources */,
+				D17588FC1FBC1DE2001EFFE9 /* wangwang.zip in Resources */,
 				4C30B7C71F6136EB00CDAD9B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,7 +620,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21028BCF1BA9ABF600C2A6BA /* AliyunOSSiOSTests.m in Sources */,
+				D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */,
+				D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */,
+				D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */,
+				D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */,
+				D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +653,11 @@
 			isa = PBXTargetDependency;
 			target = 21028BBB1BA9ABF500C2A6BA /* AliyunOSSiOS */;
 			targetProxy = 4CE5246E1F623CF700DD3DCF /* PBXContainerItemProxy */;
+		};
+		D17588FB1FBC1D2F001EFFE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C30B7B91F6136EB00CDAD9B /* DemoByOC */;
+			targetProxy = D17588FA1FBC1D2F001EFFE9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -813,7 +850,7 @@
 		21028BD61BA9ABF600C2A6BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 5KG9AE2U9K;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -826,14 +863,16 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DemoByOC.app/DemoByOC";
 			};
 			name = Debug;
 		};
 		21028BD71BA9ABF600C2A6BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 5KG9AE2U9K;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = AliyunOSSiOSTests/Info.plist;
@@ -842,7 +881,9 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alibaba.sdk.ios.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DemoByOC.app/DemoByOC";
 			};
 			name = Release;
 		};
@@ -854,7 +895,7 @@
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 5KG9AE2U9K;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = DemoByOC/DemoByOC.pch;
 				INFOPLIST_FILE = DemoByOC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -862,6 +903,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC001;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -873,7 +915,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				DEVELOPMENT_TEAM = 5KG9AE2U9K;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = DemoByOC/DemoByOC.pch;
 				INFOPLIST_FILE = DemoByOC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -881,6 +923,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = aliyun.DemoByOC001;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
