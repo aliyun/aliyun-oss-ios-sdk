@@ -508,6 +508,8 @@
         return task;
     }] continueWithBlock:^id(OSSTask *task) {
         if (task.error) {
+            
+            
             OSSNetworkingRetryType retryType = [delegate.retryHandler shouldRetry:delegate.currentRetryCount
                                                                   requestDelegate:delegate
                                                                          response:httpResponse
@@ -535,12 +537,15 @@
             NSTimeInterval suspendTime = [delegate.retryHandler timeIntervalForRetry:delegate.currentRetryCount retryType:retryType];
             delegate.currentRetryCount++;
             [NSThread sleepForTimeInterval:suspendTime];
-
-            /* retry recursively */
-            [delegate reset];
+            
             if(delegate.retryCallback){
                 delegate.retryCallback();
             }
+            
+
+            /* retry recursively */
+            [delegate reset];
+            
             [self dataTaskWithDelegate:delegate];
         } else {
             delegate.completionHandler([delegate.responseParser constructResultObject], nil);
