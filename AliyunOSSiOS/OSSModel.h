@@ -52,7 +52,7 @@ typedef void (^OSSNetworkingCompletionHandlerBlock) (id responseObject, NSError 
 typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
 typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
-typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
+typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
 
 /**
  Categories NSString
@@ -152,7 +152,7 @@ TODOTODO
  */
 @interface OSSFederationCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) OSSFederationToken * cachedToken;
-@property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)();
+@property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)(void);
 
 /**
  During the task execution, this method is called to get the new STS token.

@@ -93,4 +93,25 @@
     XCTAssertEqual(logger2.level, OSSDDLogLevelDebug);
 }
 
+- (void)testLogForAppTerminate{
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillTerminateNotification object:nil];
+}
+
+- (void)testLog
+{
+    [[OSSDDLog sharedInstance] log:NO level:OSSDDLogLevelVerbose flag:OSSDDLogFlagVerbose context:0 file:__FILE__ function:__PRETTY_FUNCTION__ line:__LINE__ tag:nil format:@"[Debug]: %@",@"test 1"];
+    
+    OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init]; // File Logger
+    fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
+    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
+    [OSSDDLog addLogger:fileLogger];
+    
+    OSSDDLogMessage *message = [[OSSDDLogMessage alloc] init];
+    [fileLogger logMessage:[message copy]];
+    id<OSSDDLogFormatter> formatter = [fileLogger logFormatter];
+    NSLog(@"OSSDDLogFormatter: %@",formatter);
+    
+    [OSSDDLog removeLogger:[[OSSDDLog allLoggers] firstObject]];
+}
+
 @end
