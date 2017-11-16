@@ -64,7 +64,8 @@
 		4C30B7C71F6136EB00CDAD9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C30B7C51F6136EB00CDAD9B /* Main.storyboard */; };
 		4C30B7C91F6136EB00CDAD9B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C30B7C81F6136EB00CDAD9B /* Assets.xcassets */; };
 		4C30B7CC1F6136EB00CDAD9B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C30B7CA1F6136EB00CDAD9B /* LaunchScreen.storyboard */; };
-		4C30B7F31F61405600CDAD9B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */; };
+		4C5A5AA01FBD8245004E1782 /* OssService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5A5A9C1FBD8245004E1782 /* OssService.m */; };
+		4C5A5AA11FBD8245004E1782 /* ImageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5A5A9E1FBD8245004E1782 /* ImageService.m */; };
 		4C7D8BB91F8CC741005D3040 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
 		4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */; };
 		4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */; };
@@ -158,8 +159,10 @@
 		4C30B7C81F6136EB00CDAD9B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C30B7CB1F6136EB00CDAD9B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4C30B7CD1F6136EB00CDAD9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4C30B7F11F61405600CDAD9B /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
-		4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
+		4C5A5A9C1FBD8245004E1782 /* OssService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OssService.m; sourceTree = "<group>"; };
+		4C5A5A9D1FBD8245004E1782 /* ImageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageService.h; sourceTree = "<group>"; };
+		4C5A5A9E1FBD8245004E1782 /* ImageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageService.m; sourceTree = "<group>"; };
+		4C5A5A9F1FBD8245004E1782 /* OssService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OssService.h; sourceTree = "<group>"; };
 		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSNSLogger.h; sourceTree = "<group>"; };
@@ -383,8 +386,10 @@
 		4C30B7ED1F61370500CDAD9B /* samples */ = {
 			isa = PBXGroup;
 			children = (
-				4C30B7F11F61405600CDAD9B /* GetObjcetSample.h */,
-				4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */,
+				4C5A5A9D1FBD8245004E1782 /* ImageService.h */,
+				4C5A5A9E1FBD8245004E1782 /* ImageService.m */,
+				4C5A5A9F1FBD8245004E1782 /* OssService.h */,
+				4C5A5A9C1FBD8245004E1782 /* OssService.m */,
 			);
 			name = samples;
 			sourceTree = "<group>";
@@ -596,8 +601,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CE524771F6267BB00DD3DCF /* Constant.m in Sources */,
-				4C30B7F31F61405600CDAD9B /* GetObjcetSample.m in Sources */,
+				4C5A5AA11FBD8245004E1782 /* ImageService.m in Sources */,
 				4C30B7C41F6136EB00CDAD9B /* ViewController.m in Sources */,
+				4C5A5AA01FBD8245004E1782 /* OssService.m in Sources */,
 				4C30B7C11F6136EB00CDAD9B /* AppDelegate.m in Sources */,
 				4C30B7BE1F6136EB00CDAD9B /* main.m in Sources */,
 			);

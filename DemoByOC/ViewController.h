@@ -1,19 +1,20 @@
 //
 //  ViewController.h
-//  DemoByOC
+//  OssIOSDemo
 //
-//  Created by jingdan on 2017/9/7.
-//  Copyright © 2017年 zhouzhuo. All rights reserved.
+//  Created by 凌琨 on 15/12/15.
+//  Copyright © 2015年 Ali. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
-@property UIActivityIndicatorView *activityIndicatorView;
-@property UIScrollView * scrollView;
-@property NSInteger width;
-@property NSInteger height;
+- (void)showMessage:(NSString*)putType
+       inputMessage:(NSString*)message;
+
+- (void)saveAndDisplayImage:(NSData *)objectData
+          downloadObjectKey:(NSString *)objectKey;
 
 @end
 
