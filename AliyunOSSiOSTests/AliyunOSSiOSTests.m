@@ -18,21 +18,21 @@
 
 @end
 
-NSString * const TEST_BUCKET = @"ios-sdk-test-1";
+NSString * const TEST_BUCKET = @"king-soft";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
 NSString * const ENDPOINT = @"https://oss-cn-beijing.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"oss-demo.aliyuncs.com:23450";
 NSString * const CNAME = @"http://************************/";
-NSString * const StsTokenURL = @"http://0.0.0.0:12555/sts/getsts";
+NSString * const StsTokenURL = @"http://30.40.11.11:9090/sts/getsts";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
-id<OSSCredentialProvider>  credential, credentialFed;
+id<OSSCredentialProvider>  credential, credentialFed, authCredential;
 
 @implementation oss_ios_sdk_newTests
 
@@ -95,7 +95,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
 
     credential = [self newStsTokenCredentialProvider];
     credentialFed = [self newFederationCredentialProvider];
-    
+    authCredential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:StsTokenURL];
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
@@ -104,7 +104,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.maxConcurrentRequestCount = 5;
 
     // switches to another credential provider.
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authCredential clientConfiguration:conf];
 }
 
 
@@ -188,9 +188,9 @@ id<OSSCredentialProvider>  credential, credentialFed;
                                                                 options:kNilOptions
                                                                   error:nil];
         
-        NSString * accessKey = [object[@"Credentials"] objectForKey:@"AccessKeyId"];
-        NSString * secretKey = [object[@"Credentials"] objectForKey:@"AccessKeySecret"];
-        NSString * token = [object[@"Credentials"] objectForKey:@"SecurityToken"];
+        NSString * accessKey = [object objectForKey:@"AccessKeyId"];
+        NSString * secretKey = [object objectForKey:@"AccessKeySecret"];
+        NSString * token = [object objectForKey:@"SecurityToken"];
         OSSLogDebug(@"token: %@ %@ %@", accessKey, secretKey, token);
 
         return [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:accessKey secretKeyId:secretKey securityToken:token];

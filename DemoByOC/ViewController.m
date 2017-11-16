@@ -9,19 +9,17 @@
 #import "ViewController.h"
 #import "AliyunOSSiOS.h"
 #import "GetObjcetSample.h"
-#import "StstokenSample.h"
-
+static NSString* const url = @"http://30.40.11.11:9090/sts/getsts";//本地服务地址
+//如何启动本地服务可参加python 目录下httpserver.py中注释说明。*.*.*.* 为本机ip地址。****为开启本机服务的端口地址
 @interface ViewController ()
 
 - (void)createButtonWithName:(NSString*)name LocationY:(CGFloat)y ClickFunc:(SEL)func Container:(UIView*) group;
-- (void)initOSSClientWithAk:(NSString*)ak Sk:(NSString*)sk Token:(NSString*)token;
-
-- (void)initSTSToken;
+- (void)initOSSClientWithAk;
 
 @end
 
 static OSSClient * client;
-static OSSStsTokenCredentialProvider * provider;
+static id<OSSCredentialProvider> provider;
 NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
 
 @implementation ViewController
@@ -42,25 +40,19 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
     [self.activityIndicatorView setBackgroundColor:[UIColor lightGrayColor]];
     
     [self createButtonWithName:@"get_object" LocationY:50 ClickFunc:@selector(getObject:) Container:self.scrollView];
-    [self createButtonWithName:@"sts_token" LocationY:90 ClickFunc:@selector(getStsToken:) Container:self.scrollView];
-    
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 130, self.width-20, 300)];
-    self.textView.editable = NO;
-    
-    [self.scrollView addSubview:self.textView];
     
     [self.view addSubview:self.scrollView];
     
     [self.view addSubview:self.activityIndicatorView];
     
     //please init local sts server firstly。 please check python/*.py for more info.
-    [self initSTSToken];
+    [self initOSSClientWithAk];
     
 }
 
-- (void)initOSSClientWithAk:(NSString *)ak Sk:(NSString *)sk Token:(NSString *)token{
+- (void)initOSSClientWithAk{
     [OSSLog enableLog];
-    provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:ak secretKeyId:sk securityToken:token];
+    provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:url];
     
     OSSClientConfiguration * conf = [[OSSClientConfiguration alloc] init];
     conf.maxRetryCount = 2;
@@ -114,47 +106,5 @@ NSString* const ENDPOINT = @"http://oss-cn-hangzhou.aliyuncs.com";
         }
     }];
 }
-
-- (void)initSTSToken{
-    [[[StstokenSample alloc] init] getStsToken:^(NSDictionary *dict){
-        
-        if(provider == nil || client == nil){
-            [self initOSSClientWithAk:dict[@"AccessKeyId"] Sk:dict[@"AccessKeySecret"] Token:dict[@"SecurityToken"]];
-        }else{
-            //给provider设置
-            [provider setAccessKeyId:dict[@"AccessKeyId"]];
-            [provider setSecretKeyId:dict[@"AccessKeySecret"]];
-            [provider setSecurityToken:dict[@"SecurityToken"]];
-        }
-        
-    }];
-}
-
-
-- (void)getStsToken:(id)sender{
-    [self.activityIndicatorView startAnimating];
-    [[[StstokenSample alloc] init] getStsToken:^(NSDictionary *dict){
-        
-        if(provider == nil || client == nil){
-            [self initOSSClientWithAk:dict[@"AccessKeyId"] Sk:dict[@"AccessKeySecret"] Token:dict[@"SecurityToken"]];
-        }else{
-            //给provider设置
-            [provider setAccessKeyId:dict[@"AccessKeyId"]];
-            [provider setSecretKeyId:dict[@"AccessKeySecret"]];
-            [provider setSecurityToken:dict[@"SecurityToken"]];
-        }
-        
-        
-        //以下内容只是用于展示事例
-        NSMutableString *string = [[NSMutableString alloc] init];
-        for (id key in dict){//只是打印下日志
-            NSLog(@"%@：%@", key,dict[key]);
-            [string appendString:[NSString stringWithFormat:@"%@：%@\n\n", key,dict[key]]];
-        }
-        [self.activityIndicatorView stopAnimating];
-        [self.textView setText:string];
-    }];
-}
-
 
 @end

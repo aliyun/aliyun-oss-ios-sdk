@@ -265,6 +265,55 @@ static NSTimeInterval _clockSkew = 0.0;
 
 @end
 
+@implementation OSSAuthCredentialProvider
+
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl
+{
+    self = [super initWithFederationTokenGetter:^OSSFederationToken * {
+        NSURL * url = [NSURL URLWithString:self.authServerUrl];
+        NSURLRequest * request = [NSURLRequest requestWithURL:url];
+        OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+        NSURLSession * session = [NSURLSession sharedSession];
+        NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                        if (error) {
+                                                            [tcs setError:error];
+                                                            return;
+                                                        }
+                                                        [tcs setResult:data];
+                                                    }];
+        [sessionTask resume];
+        [tcs.task waitUntilFinished];
+        if (tcs.task.error) {
+            return nil;
+        } else {
+            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
+                                                                    options:kNilOptions
+                                                                      error:nil];
+            int statusCode = [[object objectForKey:@"StatusCode"] intValue];
+            if (statusCode == 200) {
+                OSSFederationToken * token = [OSSFederationToken new];
+                // All the entries below are mandatory.
+                token.tAccessKey = [object objectForKey:@"AccessKeyId"];
+                token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
+                token.tToken = [object objectForKey:@"SecurityToken"];
+                token.expirationTimeInGMTFormat = [object objectForKey:@"Expiration"];
+                OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"Expiration"]);
+                return token;
+            }else{
+                return nil;
+            }
+            
+        }
+    }];
+    if(self){
+        self.authServerUrl = authServerUrl;
+    }
+    return self;
+}
+
+@end
+
 NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsession";
 
 @implementation OSSClientConfiguration

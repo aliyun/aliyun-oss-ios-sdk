@@ -12,7 +12,6 @@
 
 @property UIActivityIndicatorView *activityIndicatorView;
 @property UIScrollView * scrollView;
-@property UITextView * textView;
 @property NSInteger width;
 @property NSInteger height;
 

@@ -177,6 +177,14 @@ TODOTODO
 @end
 
 /**
+ auth credential provider.
+ */
+@interface OSSAuthCredentialProvider : OSSFederationCredentialProvider
+@property (nonatomic, strong) NSString * authServerUrl;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
+@end
+
+/**
  OSSClient side configuration.
  */
 @interface OSSClientConfiguration : NSObject
