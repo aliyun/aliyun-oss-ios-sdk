@@ -84,8 +84,8 @@ static NSObject * lock;
         [self.clientConfiguration.cnameExcludeList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString * exclude = obj;
             if ([self.endpoint hasSuffix:exclude]) {
-                request.allNeededMessage.isHostInCnameExcludeList = true;
-                *stop = true;
+                request.allNeededMessage.isHostInCnameExcludeList = YES;
+                *stop = YES;
             }
         }];
     }
@@ -1030,7 +1030,7 @@ uploadedLength:(int64_t *)uploadedLength
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
     
-    __block bool isCancel = false;
+    __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
     for (int i = 1; i <= partCout; i++) {
     
@@ -1045,7 +1045,7 @@ uploadedLength:(int64_t *)uploadedLength
                 if (request.isCancelled) {
                     @synchronized(lock){
                         if(!isCancel){
-                            isCancel = true;
+                            isCancel = YES;
                             errorTask = [OSSTask taskWithError:cancelError];
                             [queue cancelAllOperations];
                         }
