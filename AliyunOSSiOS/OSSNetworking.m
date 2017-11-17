@@ -495,7 +495,7 @@
             }
             NSString * notSuccessResponseBody = [[NSString alloc] initWithData:delegate.httpRequestNotSuccessResponseBody encoding:NSUTF8StringEncoding];
             OSSLogError(@"http error response: %@", notSuccessResponseBody);
-            NSDictionary * dict = [NSDictionary dictionaryWithXMLString:notSuccessResponseBody];
+            NSDictionary * dict = [NSDictionary oss_dictionaryWithXMLString:notSuccessResponseBody];
 
             return [OSSTask taskWithError:[NSError errorWithDomain:OSSServerErrorDomain
                                                              code:(-1 * httpResponse.statusCode)
