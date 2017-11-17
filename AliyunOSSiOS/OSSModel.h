@@ -11,6 +11,7 @@
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
 @class OSSTask;
+@class OSSClientConfiguration;
 
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
@@ -52,7 +53,7 @@ typedef void (^OSSNetworkingCompletionHandlerBlock) (id responseObject, NSError 
 typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
 typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
-typedef OSSFederationToken * (^OSSGetFederationTokenBlock) ();
+typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
 
 /**
  Categories NSString
@@ -152,7 +153,7 @@ TODOTODO
  */
 @interface OSSFederationCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) OSSFederationToken * cachedToken;
-@property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)();
+@property (nonatomic, copy) OSSFederationToken * (^federationTokenGetter)(void);
 
 /**
  During the task execution, this method is called to get the new STS token.
@@ -224,6 +225,11 @@ Sets the session Id for background file transmission
 @property (nonatomic, strong) NSNumber * proxyPort;
 
 /**
+ Sets UA
+ */
+@property (nonatomic, strong) NSString * userAgentMark;
+
+/**
  Sets CName excluded list.
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
@@ -247,6 +253,8 @@ Sets the session Id for background file transmission
  Updates the UA when creating the request.
  */
 @interface OSSUASettingInterceptor : NSObject <OSSRequestInterceptor>
+@property (nonatomic, weak) OSSClientConfiguration *clientConfiguration;
+- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *) clientConfiguration;
 @end
 
 /**
@@ -1239,12 +1247,12 @@ The result class of listing uploaded parts.
 @end
 
 /**
- The request class of resumable upload.
+ The request class of multipart upload.
  */
-@interface OSSResumableUploadRequest : OSSRequest
+@interface OSSMultipartUploadRequest : OSSRequest
 
 /**
- The upload Id 
+ The upload Id
  */
 @property (nonatomic, strong) NSString * uploadId;
 
@@ -1285,17 +1293,43 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * callbackVar;
 
 /**
+ Content type
+ */
+@property (nonatomic, strong) NSString * contentType;
+
+/**
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+
+- (void)cancel;
+@end
+
+/**
+ The request class of resumable upload.
+ */
+@interface OSSResumableUploadRequest : OSSMultipartUploadRequest
+
+
+/**
+ directory path about create record uploadId file 
+ */
+@property (nonatomic, strong) NSString * recordDirectoryPath;
+
+
+/**
+ need or not delete uploadId with cancel
+ */
+@property (nonatomic, assign) BOOL deleteUploadIdOnCancelling;
 
 /**
  All running children requests
  */
 @property (atomic, weak) OSSRequest * runningChildrenRequest;
 
-- (void)cancel;
 @end
+
 
 /**
  The result class of resumable uploading

@@ -1043,7 +1043,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (BOOL)hasPhoneFreeSpace{
-    NSError *error = nil;
+    NSError *error;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
     if(error) return NO;
     long long space = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
@@ -1084,5 +1084,17 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return currentCountry;
 }
 
+@end
+
+@implementation NSString(OSSUtils)
+
+- (NSString *)oss_trim
+{
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+- (BOOL)oss_notEmpty
+{
+    return ![self.oss_trim isEqualToString:@""];
+}
 
 @end

@@ -25,6 +25,7 @@
 @class OSSAbortMultipartUploadRequest;
 @class OSSAppendObjectRequest;
 @class OSSResumableUploadRequest;
+@class OSSMultipartUploadRequest;
 @class OSSTask;
 @class OSSExecutor;
 
@@ -210,6 +211,8 @@ Aborts the multipart upload by the specified upload Id.
  */
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
+- (OSSTask *)abortResumableMultipartUpload:(OSSResumableUploadRequest *)request;
+
 #pragma mark extention method
 
 /**
@@ -252,6 +255,11 @@ Aborts the multipart upload by the specified upload Id.
                              withObjectKey:(NSString *)objectKey
                              withParameters:(NSDictionary *)parameters;
 
+/**
+ TODOTODO
+ Multipart upload API
+ */
+- (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request;
 /**
  TODOTODO
  Resumable upload API

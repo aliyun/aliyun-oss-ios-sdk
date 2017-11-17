@@ -6,7 +6,7 @@
 //  Copyright © 2016 xuyecan. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for AliyunOSSiOS.
 FOUNDATION_EXPORT double AliyunOSSiOSVersionNumber;

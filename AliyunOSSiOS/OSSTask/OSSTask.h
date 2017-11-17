@@ -60,7 +60,7 @@ typedef __nullable id(^OSSContinuationBlock)(OSSTask<ResultType> *task);
  Creates a task that is already completed with the given result.
  @param result The result for the task.
  */
-+ (instancetype)taskWithResult:(nullable ResultType)result;
++ (instancetype)taskWithResult:(_Nullable ResultType)result;
 
 /*!
  Creates a task that is already completed with the given error.
@@ -127,7 +127,7 @@ typedef __nullable id(^OSSContinuationBlock)(OSSTask<ResultType> *task);
  If block returns a OSSTask, then the task returned from
  this method will not be completed until that task is completed.
  */
-+ (instancetype)taskFromExecutor:(OSSExecutor *)executor withBlock:(nullable id (^)())block;
++ (instancetype)taskFromExecutor:(OSSExecutor *)executor withBlock:(nullable id (^)(void))block;
 
 // Properties that will be set on the task once it is completed.
 

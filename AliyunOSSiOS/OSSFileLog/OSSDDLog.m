@@ -14,8 +14,8 @@
 //   prior written permission of Deusty, LLC.
 
 // Disable legacy macros
-#ifndef DD_LEGACY_MACROS
-    #define DD_LEGACY_MACROS 0
+#ifndef OSSDD_LEGACY_MACROS
+    #define OSSDD_LEGACY_MACROS 0
 #endif
 
 #import "OSSDDLog.h"
@@ -43,11 +43,11 @@
 // So we use a primitive logging macro around NSLog.
 // We maintain the NS prefix on the macros to be explicit about the fact that we're using NSLog.
 
-#ifndef DD_DEBUG
-    #define DD_DEBUG NO
+#ifndef OSSDD_DEBUG
+    #define OSSDD_DEBUG NO
 #endif
 
-#define NSLogDebug(frmt, ...) do{ if(DD_DEBUG) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define OSSNSLogDebug(frmt, ...) do{ if(OSSDD_DEBUG) NSLog((frmt), ##__VA_ARGS__); } while(0)
 
 // Specifies the maximum queue size of the logging thread.
 //
@@ -60,8 +60,8 @@
 // If a thread attempts to issue a log statement when the queue is already maxed out,
 // the issuing thread will block until the queue size drops below the max again.
 
-#ifndef DDLOG_MAX_QUEUE_SIZE
-    #define DDLOG_MAX_QUEUE_SIZE 1000 // Should not exceed INT32_MAX
+#ifndef OSSDDLOG_MAX_QUEUE_SIZE
+    #define OSSDDLOG_MAX_QUEUE_SIZE 1000 // Should not exceed INT32_MAX
 #endif
 
 // The "global logging queue" refers to [DDLog loggingQueue].
@@ -149,7 +149,7 @@ static NSUInteger _numProcessors;
     static dispatch_once_t OSSDDLogOnceToken;
     
     dispatch_once(&OSSDDLogOnceToken, ^{
-        NSLogDebug(@"OSSDDLog: Using grand central dispatch");
+        OSSNSLogDebug(@"OSSDDLog: Using grand central dispatch");
         
         _loggingQueue = dispatch_queue_create("oss.cocoa.lumberjack", NULL);
         _loggingGroup = dispatch_group_create();
@@ -157,14 +157,14 @@ static NSUInteger _numProcessors;
         void *nonNullValue = GlobalLoggingQueueIdentityKey; // Whatever, just not null
         dispatch_queue_set_specific(_loggingQueue, GlobalLoggingQueueIdentityKey, nonNullValue, NULL);
         
-        _queueSemaphore = dispatch_semaphore_create(DDLOG_MAX_QUEUE_SIZE);
+        _queueSemaphore = dispatch_semaphore_create(OSSDDLOG_MAX_QUEUE_SIZE);
         
         // Figure out how many processors are available.
         // This may be used later for an optimization on uniprocessor machines.
         
         _numProcessors = MAX([NSProcessInfo processInfo].processorCount, (NSUInteger) 1);
         
-        NSLogDebug(@"DDLog: numProcessors = %@", @(_numProcessors));
+        OSSNSLogDebug(@"DDLog: numProcessors = %@", @(_numProcessors));
     });
 }
 
@@ -534,7 +534,7 @@ static NSUInteger _numProcessors;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 + (BOOL)isRegisteredClass:(Class)class {
-    SEL getterSel = @selector(ddLogLevel);
+    SEL getterSel = @selector(ossLogLevel);
     SEL setterSel = @selector(ddSetLogLevel:);
 
 #if TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
@@ -663,7 +663,7 @@ static NSUInteger _numProcessors;
 
 + (OSSDDLogLevel)levelForClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
-        return [aClass ddLogLevel];
+        return [aClass ossLogLevel];
     }
     return (OSSDDLogLevel)-1;
 }
@@ -755,7 +755,7 @@ static NSUInteger _numProcessors;
     }
     
     if (loggerNode == nil) {
-        NSLogDebug(@"DDLog: Request to remove logger which wasn't added");
+        OSSNSLogDebug(@"DDLog: Request to remove logger which wasn't added");
         return;
     }
     

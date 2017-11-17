@@ -14,8 +14,8 @@
 //   prior written permission of Deusty, LLC.
 
 // Disable legacy macros
-#ifndef DD_LEGACY_MACROS
-    #define DD_LEGACY_MACROS 0
+#ifndef OSSDD_LEGACY_MACROS
+    #define OSSDD_LEGACY_MACROS 0
 #endif
 
 #import "OSSDDLog.h"
@@ -23,22 +23,22 @@
 /**
  * The constant/variable/method responsible for controlling the current log level.
  **/
-#ifndef LOG_LEVEL_DEF
-    #define LOG_LEVEL_DEF ossLogLevel
+#ifndef OSSLOG_LEVEL_DEF
+    #define OSSLOG_LEVEL_DEF ossLogLevel
 #endif
 
 /**
  * Whether async should be used by log messages, excluding error messages that are always sent sync.
  **/
-#ifndef LOG_ASYNC_ENABLED
-    #define LOG_ASYNC_ENABLED YES
+#ifndef OSSLOG_ASYNC_ENABLED
+    #define OSSLOG_ASYNC_ENABLED YES
 #endif
 
 /**
  * These are the two macros that all other macros below compile into.
  * These big multiline macros makes all the other macros easier to read.
  **/
-#define LOG_MACRO(isAsynchronous, lvl, flg, ctx, atag, fnct, frmt, ...) \
+#define OSSLOG_MACRO(isAsynchronous, lvl, flg, ctx, atag, fnct, frmt, ...) \
         [OSSDDLog log : isAsynchronous                                     \
              level : lvl                                                \
               flag : flg                                                \
@@ -68,15 +68,15 @@
  *
  * We also define shorthand versions for asynchronous and synchronous logging.
  **/
-#define LOG_MAYBE(async, lvl, flg, ctx, tag, fnct, frmt, ...) \
-        do { if(lvl & flg) LOG_MACRO(async, lvl, flg, ctx, tag, fnct, frmt, ##__VA_ARGS__); } while(0)
+#define OSSLOG_MAYBE(async, lvl, flg, ctx, tag, fnct, frmt, ...) \
+        do { if(lvl & flg) OSSLOG_MACRO(async, lvl, flg, ctx, tag, fnct, frmt, ##__VA_ARGS__); } while(0)
 
 /**
  * Ready to use log macros with no context or tag.
  **/
-#define OSSDDLogError(frmt, ...)   LOG_MAYBE(NO,                LOG_LEVEL_DEF, OSSDDLogFlagError,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define OSSDDLogWarn(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, OSSDDLogFlagWarning, 0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define OSSDDLogInfo(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, OSSDDLogFlagInfo,    0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define OSSDDLogDebug(frmt, ...)   LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, OSSDDLogFlagDebug,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define OSSDDLogVerbose(frmt, ...) LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, OSSDDLogFlagVerbose, 0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define OSSDDLogError(frmt, ...)   OSSLOG_MAYBE(NO,                OSSLOG_LEVEL_DEF, OSSDDLogFlagError,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define OSSDDLogWarn(frmt, ...)    OSSLOG_MAYBE(OSSLOG_ASYNC_ENABLED, OSSLOG_LEVEL_DEF, OSSDDLogFlagWarning, 0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define OSSDDLogInfo(frmt, ...)    OSSLOG_MAYBE(OSSLOG_ASYNC_ENABLED, OSSLOG_LEVEL_DEF, OSSDDLogFlagInfo,    0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define OSSDDLogDebug(frmt, ...)   OSSLOG_MAYBE(OSSLOG_ASYNC_ENABLED, OSSLOG_LEVEL_DEF, OSSDDLogFlagDebug,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define OSSDDLogVerbose(frmt, ...) OSSLOG_MAYBE(OSSLOG_ASYNC_ENABLED, OSSLOG_LEVEL_DEF, OSSDDLogFlagVerbose, 0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 

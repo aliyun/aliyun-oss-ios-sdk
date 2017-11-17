@@ -155,9 +155,12 @@ static NSTimeInterval _clockSkew = 0.0;
 
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
     if (!self.accessKey || !self.secretKey) {
-        *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                     code:OSSClientErrorCodeSignFailed
-                                 userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
+        if (error != nil) {
+            *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                         code:OSSClientErrorCodeSignFailed
+                                     userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
+        }
+        
         return nil;
     }
     NSString * sign = [OSSUtil calBase64Sha1WithData:content withSecret:self.secretKey];
@@ -227,10 +230,15 @@ static NSTimeInterval _clockSkew = 0.0;
 
         validToken = self.cachedToken;
     }
-    if (!validToken) {
-        *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                     code:OSSClientErrorCodeSignFailed
-                                 userInfo:@{OSSErrorMessageTOKEN: @"Can't get a federation token"}];
+    if (!validToken)
+    {
+        if (error != nil)
+        {
+            *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                         code:OSSClientErrorCodeSignFailed
+                                     userInfo:@{OSSErrorMessageTOKEN: @"Can't get a federation token"}];
+        }
+        
         return nil;
     }
     return validToken;
@@ -419,22 +427,40 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 @implementation OSSUASettingInterceptor
 
-- (NSString *)getUserAgent {
+- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *)clientConfiguration{
+    if (self = [super init]) {
+        self.clientConfiguration = clientConfiguration;
+    }
+    return self;
+}
+
+- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
+    NSString * userAgent = [self getUserAgent:self.clientConfiguration.userAgentMark];
+    [request.headerParams setObject:userAgent forKey:@"User-Agent"];
+    return [OSSTask taskWithResult:nil];
+}
+
+
+- (NSString *)getUserAgent:(NSString *)customUserAgent {
     static NSString * _userAgent = nil;
     static dispatch_once_t once;
+    NSString * tempUserAgent = nil;
     dispatch_once(&once, ^{
         NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
         NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
         NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-        _userAgent = [NSString stringWithFormat:@"%@/%@/%@/%@/%@", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+       _userAgent = [NSString stringWithFormat:@"%@/%@(/%@/%@/%@)", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
     });
-    return _userAgent;
-}
-
-- (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
-    NSString * userAgent = [self getUserAgent];
-    [request.headerParams setObject:userAgent forKey:@"User-Agent"];
-    return [OSSTask taskWithResult:nil];
+    if(customUserAgent){
+        if(_userAgent){
+            tempUserAgent = [[_userAgent stringByAppendingString:@"/"] stringByAppendingString:customUserAgent];
+        }else{
+            tempUserAgent = customUserAgent;
+        }
+    }else{
+        tempUserAgent = _userAgent;
+    }
+    return tempUserAgent;
 }
 
 @end
@@ -691,7 +717,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSListPartsResult
 @end
 
-@implementation OSSResumableUploadRequest
+@implementation OSSMultipartUploadRequest
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -702,7 +728,25 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 - (void)cancel {
     [super cancel];
-    [_runningChildrenRequest cancel];
+}
+
+@end
+
+@implementation OSSResumableUploadRequest
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.deleteUploadIdOnCancelling = YES;
+        self.partSize = 256 * 1024;
+    }
+    return self;
+}
+
+- (void)cancel {
+    [super cancel];
+    if(_runningChildrenRequest){
+        [_runningChildrenRequest cancel];
+    }
 }
 
 @end
