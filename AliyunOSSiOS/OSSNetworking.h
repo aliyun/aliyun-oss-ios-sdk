@@ -88,6 +88,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 @property (nonatomic, copy) OSSNetworkingDownloadProgressBlock downloadProgress;
+@property (nonatomic, copy) OSSNetworkingRetryBlock retryCallback;
 @property (nonatomic, copy) OSSNetworkingCompletionHandlerBlock completionHandler;
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveData;
 

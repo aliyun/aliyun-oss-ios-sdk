@@ -82,6 +82,9 @@
 		D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */; };
 		D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */; };
 		D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437721FBC59AD009AE466 /* OSSLogTests.m */; };
+		D89C27AD1FBDABCE009B3794 /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */; };
+		D89C27AF1FBDB1B4009B3794 /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D89C27AE1FBDB1B4009B3794 /* runsheng.xml */; };
+		D89C27B11FBDB212009B3794 /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -190,6 +193,9 @@
 		D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTests.m; sourceTree = "<group>"; };
 		D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
 		D84437721FBC59AD009AE466 /* OSSLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
+		D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
+		D89C27AE1FBDB1B4009B3794 /* runsheng.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
+		D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionaryTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +308,8 @@
 				D844376C1FBC371E009AE466 /* OSSExecutorTests.m */,
 				D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */,
 				D84437721FBC59AD009AE466 /* OSSLogTests.m */,
+				D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */,
+				D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */,
 			);
 			path = AliyunOSSiOSTests;
 			sourceTree = "<group>";
@@ -402,6 +410,7 @@
 			children = (
 				D17588F81FBC1CA5001EFFE9 /* wangwang.zip */,
 				4C30B7BD1F6136EB00CDAD9B /* main.m */,
+				D89C27AE1FBDB1B4009B3794 /* runsheng.xml */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -519,7 +528,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = zhouzhuo;
 				TargetAttributes = {
 					21028BBB1BA9ABF500C2A6BA = {
@@ -579,6 +588,7 @@
 				D1C3D8BD1F667021002F840A /* python in Resources */,
 				4C30B7CC1F6136EB00CDAD9B /* LaunchScreen.storyboard in Resources */,
 				4C30B7C91F6136EB00CDAD9B /* Assets.xcassets in Resources */,
+				D89C27AF1FBDB1B4009B3794 /* runsheng.xml in Resources */,
 				D17588FC1FBC1DE2001EFFE9 /* wangwang.zip in Resources */,
 				4C30B7C71F6136EB00CDAD9B /* Main.storyboard in Resources */,
 			);
@@ -620,8 +630,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D89C27AD1FBDABCE009B3794 /* OSSReachabilityTests.m in Sources */,
 				D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */,
 				D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */,
+				D89C27B11FBDB212009B3794 /* OSSXMLDictionaryTests.m in Sources */,
 				D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */,
 				D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */,
 				D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */,
@@ -690,14 +702,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -742,14 +760,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

@@ -70,25 +70,19 @@ static NSObject * lock;
 
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
     /* if content-type haven't been set, we set one */
-    if ((!request.allNeededMessage.contentType
-         || [[request.allNeededMessage.contentType stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]
-                                                                                                        isEqualToString:@""])
+    if (!request.allNeededMessage.contentType.oss_notEmpty
         && ([request.allNeededMessage.httpMethod isEqualToString:@"POST"] || [request.allNeededMessage.httpMethod isEqualToString:@"PUT"])) {
 
-        request.allNeededMessage.contentType = [OSSUtil detemineMimeTypeForFilePath:request.uploadingFileURL.path
-                                                                         uploadName:request.allNeededMessage.objectKey];
+        request.allNeededMessage.contentType = [OSSUtil detemineMimeTypeForFilePath:request.uploadingFileURL.path               uploadName:request.allNeededMessage.objectKey];
     }
 
     // Checks if the endpoint is in the excluded CName list.
-    if ([self.clientConfiguration.cnameExcludeList count] > 0) {
-        [self.clientConfiguration.cnameExcludeList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString * exclude = obj;
-            if ([self.endpoint hasSuffix:exclude]) {
-                request.allNeededMessage.isHostInCnameExcludeList = YES;
-                *stop = YES;
-            }
-        }];
-    }
+    [self.clientConfiguration.cnameExcludeList enumerateObjectsUsingBlock:^(NSString *exclude, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([self.endpoint hasSuffix:exclude]) {
+            request.allNeededMessage.isHostInCnameExcludeList = YES;
+            *stop = YES;
+        }
+    }];
 
     id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:self.clientConfiguration];
     [request.interceptors addObject:uaSetting];
@@ -281,6 +275,9 @@ static NSObject * lock;
     if (request.uploadProgress) {
         requestDelegate.uploadProgress = request.uploadProgress;
     }
+    if (request.uploadRetryCallback) {
+        requestDelegate.retryCallback = request.uploadRetryCallback;
+    }
     if (request.contentDisposition) {
         [headerParams setObject:request.contentDisposition forKey:OSSHttpHeaderContentDisposition];
     }
@@ -311,6 +308,9 @@ static NSObject * lock;
 
 - (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    if (request.uploadRetryCallback) {
+        requestDelegate.retryCallback = request.uploadRetryCallback;
+    }
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionary];
     if (request.acl) {
         headerParams[@"x-oss-object-acl"] = request.acl;
@@ -921,7 +921,7 @@ static NSObject * lock;
                 uploadId = result.uploadId;
                 
                 //saved uploadId
-                if(!recordFilePath.isEmpty)
+                if(recordFilePath.oss_notEmpty)
                 {
                     NSFileManager *defaultFileManager = [NSFileManager defaultManager];
                     if (![defaultFileManager fileExistsAtPath:recordFilePath]) {

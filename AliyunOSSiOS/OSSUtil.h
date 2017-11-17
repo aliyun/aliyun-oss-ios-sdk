@@ -43,7 +43,7 @@
 
 @interface NSString(OSSUtils)
 
-- (NSString *)trim;
-- (BOOL)isEmpty;
+- (NSString *)oss_trim;
+- (BOOL)oss_notEmpty;
 
 @end
