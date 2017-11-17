@@ -28,11 +28,11 @@
 - (void)testForXMLDictionary{
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"runsheng" ofType:@"xml"];
-    NSDictionary *dict = [NSDictionary dictionaryWithXMLFile:filePath];
-    NSLog(@"xml: %@",[dict XMLString]);
-    NSArray *array = [dict arrayValueForKeyPath:@"string-array"];
-    NSString *string = [dict stringValueForKeyPath:@"item"];
-    NSDictionary *dict1= [dict dictionaryValueForKeyPath:@"title"];
+    NSDictionary *dict = [NSDictionary oss_dictionaryWithXMLFile:filePath];
+    NSLog(@"xml: %@",[dict oss_XMLString]);
+    NSArray *array = [dict oss_arrayValueForKeyPath:@"string-array"];
+    NSString *string = [dict oss_stringValueForKeyPath:@"item"];
+    NSDictionary *dict1= [dict oss_dictionaryValueForKeyPath:@"title"];
     
     NSLog(@"array:%@,string:%@,dict1:%@",array,string,dict1);
     
