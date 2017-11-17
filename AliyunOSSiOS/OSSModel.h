@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
 
 typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
 typedef void (^OSSNetworkingDownloadProgressBlock) (int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
+typedef void (^OSSNetworkingRetryBlock) (void);
 typedef void (^OSSNetworkingCompletionHandlerBlock) (id responseObject, NSError *error);
 typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
@@ -648,26 +649,6 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @property (nonatomic, strong) NSDictionary * objectMeta;
 @end
 
-/**
- The request class to update the object ACL.
- */
-@interface OSSPutObjectACLRequest : OSSRequest
-
-/**
- Bucket name
- */
-@property (nonatomic, strong) NSString * bucketName;
-
-/**
- Object name
- */
-@property (nonatomic, strong) NSString * objectKey;
-
-/**
- */
-@property (nonatomic, strong) NSString * acl;
-
-@end
 
 /**
  The response class to update the object ACL.
@@ -756,6 +737,24 @@ It's a unique Id represents this request. This is used for troubleshooting when 
  It runs in background thread (not UI thread).
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
+
+/**
+ The upload retry callback.
+ It runs in background thread (not UI thread).
+ */
+@property (nonatomic, copy) OSSNetworkingRetryBlock uploadRetryCallback;
+ 
+@end
+
+/**
+ The request class to update the object ACL.
+ */
+@interface OSSPutObjectACLRequest : OSSPutObjectRequest
+
+/**
+ */
+@property (nonatomic, strong) NSString * acl;
+
 @end
 
 /**
