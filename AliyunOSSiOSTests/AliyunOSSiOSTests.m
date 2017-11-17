@@ -18,7 +18,7 @@
 
 @end
 
-NSString * const TEST_BUCKET = @"testbucket";
+NSString * const TEST_BUCKET = @"sdk-demo001";
 
 NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
 NSString * const ENDPOINT = @"https://oss-cn-qingdao.aliyuncs.com";
@@ -367,6 +367,17 @@ id<OSSCredentialProvider>  credential, credentialFed;
         NSLog(@"Result - requestId: %@, headerFields: %@",
               result.requestId,
               result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+    
+    
+    OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
+    head.bucketName = TEST_BUCKET;
+    head.objectKey = uploadObject;
+    [[[client headObject:head] continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSHeadObjectResult * headResult = task.result;
+        XCTAssertNotNil([headResult.objectMeta objectForKey:@"Content-Type"]);
         return nil;
     }] waitUntilFinished];
     
