@@ -1,0 +1,58 @@
+<!--   Copyright w3school.com.cn  -->
+<!--  W3School.com.cn bookstore comment example  -->
+<bookstore>
+    <title> hello world </title>
+    <string-array name="languages">
+        <item>C语言</item>
+        <item>Java </item>
+        <item>C#</item>
+        <item>PHP</item>
+        <item>HTML</item>
+    </string-array>
+    
+    <book category="CHILDREN">
+        <title lang="en">Harry Potter</title>
+        <author>J K. Rowling</author>
+        <year>2005</year>
+        <price>29.99</price>
+        <!-- (Book 6) (Hardcover) -->
+    </book>
+    <book category="COOKING">
+        <title lang="en">Everyday Italian</title>
+        <author>Giada De Laurentiis</author>
+        <year>2005</year>
+        <price>30.00</price>
+        <!-- 125 Simple and Delicious Recipes (Hardcover) -->
+    </book>
+    <book category="WEB">
+        <title lang="en">Learning XML</title>
+        <author>Erik T. Ray</author>
+        <year>2003</year>
+        <price>39.95</price>
+        <!-- Second Edition, (Paperback) -->
+    </book>
+    <book category="WEB">
+        <title lang="en">XQuery Kick Start</title>
+        <author>James McGovern</author>
+        <author>Per Bothner</author>
+        <author>Kurt Cagle</author>
+        <author>James Linn</author>
+        <author>Vaidyanathan Nagarajan</author>
+        <year>2003</year>
+        <price>49.99</price>
+        <!-- (Paperback) -->
+    </book>
+    <![CDATA[
+        function matchwo(a,b)
+        {
+        if (a < b && a < 0) then
+        {
+        return 1;
+        }
+        else
+        {
+        return 0;
+        }
+        }
+    ]]>
+</bookstore>

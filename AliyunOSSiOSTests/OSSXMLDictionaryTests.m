@@ -27,16 +27,23 @@
 
 - (void)testForXMLDictionary{
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"runsheng" ofType:@"xml"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
     NSDictionary *dict = [NSDictionary oss_dictionaryWithXMLFile:filePath];
     NSLog(@"xml: %@",[dict oss_XMLString]);
-    NSArray *array = [dict oss_arrayValueForKeyPath:@"string-array"];
-    NSString *string = [dict oss_stringValueForKeyPath:@"item"];
-    NSDictionary *dict1= [dict oss_dictionaryValueForKeyPath:@"title"];
+    NSArray *string_array = [dict oss_arrayValueForKeyPath:@"string-array"];
+    NSString *title = [dict oss_stringValueForKeyPath:@"title"];
+    NSDictionary *book= [dict oss_dictionaryValueForKeyPath:@"book"];
     
-    NSLog(@"array:%@,string:%@,dict1:%@",array,string,dict1);
+    NSLog(@"string_array:%@,title:%@,book:%@",string_array,title,book);
     
     XCTAssertNotNil(dict);
+    
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[NSData dataWithContentsOfFile:filePath]];
+    dict = [NSDictionary oss_dictionaryWithXMLParser:parser];
+    
+    OSSXMLDictionaryParser *ossParser = [OSSXMLDictionaryParser sharedInstance];
+    ossParser.preserveComments = YES;
+    dict = [ossParser dictionaryWithParser:parser];
 }
 
 @end

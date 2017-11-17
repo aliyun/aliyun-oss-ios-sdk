@@ -30,6 +30,7 @@
     struct sockaddr sockaddr = {0};
     
     OSSReachability *reachability = [OSSReachability reachabilityWithAddress:&sockaddr];
+    
     reachability = [OSSReachability reachabilityForInternetConnection];
     [reachability startNotifier];
     [reachability connectionRequired];
