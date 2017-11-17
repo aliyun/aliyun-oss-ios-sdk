@@ -82,29 +82,29 @@ static NSString *const OSSXMLDictionaryAttributePrefix = @"_";
 
 @interface NSDictionary (OSSXMLDictionary)
 
-+ (NSDictionary *)dictionaryWithXMLParser:(NSXMLParser *)parser;
-+ (NSDictionary *)dictionaryWithXMLData:(NSData *)data;
-+ (NSDictionary *)dictionaryWithXMLString:(NSString *)string;
-+ (NSDictionary *)dictionaryWithXMLFile:(NSString *)path;
++ (NSDictionary *)oss_dictionaryWithXMLParser:(NSXMLParser *)parser;
++ (NSDictionary *)oss_dictionaryWithXMLData:(NSData *)data;
++ (NSDictionary *)oss_dictionaryWithXMLString:(NSString *)string;
++ (NSDictionary *)oss_dictionaryWithXMLFile:(NSString *)path;
 
-- (NSDictionary *)attributes;
-- (NSDictionary *)childNodes;
-- (NSArray *)comments;
-- (NSString *)nodeName;
-- (NSString *)innerText;
-- (NSString *)innerXML;
-- (NSString *)XMLString;
+- (NSDictionary *)oss_attributes;
+- (NSDictionary *)oss_childNodes;
+- (NSArray *)oss_comments;
+- (NSString *)oss_nodeName;
+- (NSString *)oss_innerText;
+- (NSString *)oss_innerXML;
+- (NSString *)oss_XMLString;
 
-- (NSArray *)arrayValueForKeyPath:(NSString *)keyPath;
-- (NSString *)stringValueForKeyPath:(NSString *)keyPath;
-- (NSDictionary *)dictionaryValueForKeyPath:(NSString *)keyPath;
+- (NSArray *)oss_arrayValueForKeyPath:(NSString *)keyPath;
+- (NSString *)oss_stringValueForKeyPath:(NSString *)keyPath;
+- (NSDictionary *)oss_dictionaryValueForKeyPath:(NSString *)keyPath;
 
 @end
 
 
 @interface NSString (OSSXMLDictionary)
 
-- (NSString *)XMLEncodedString;
+- (NSString *)oss_XMLEncodedString;
 
 @end
 

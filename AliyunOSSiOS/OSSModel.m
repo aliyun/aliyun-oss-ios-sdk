@@ -881,7 +881,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:getServiceResult];
             }
             if (_collectingData) {
-                NSDictionary * parseDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
                 if (parseDict) {
                     getServiceResult.ownerId = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSIDXMLTOKEN];
@@ -925,7 +925,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:getBucketACLResult];
             }
             if (_collectingData) {
-                NSDictionary * parseDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
                 if (parseDict) {
                     getBucketACLResult.aclGranted = [[parseDict objectForKey:OSSAccessControlListXMLTOKEN] objectForKey:OSSGrantXMLTOKEN];
@@ -948,7 +948,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:getBucketResult];
             }
             if (_collectingData) {
-                NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get bucket dict: %@", parsedDict);
 
                 if (parsedDict) {
@@ -1068,8 +1068,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:copyObjectResult];
             }
             if (_collectingData) {
-                OSSLogVerbose(@"copy object dict: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
-                NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"copy object dict: %@", [NSDictionary oss_dictionaryWithXMLData:_collectingData]);
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 if (parsedDict) {
                     copyObjectResult.lastModifed = [parsedDict objectForKey:OSSLastModifiedXMLTOKEN];
                     copyObjectResult.eTag = [parsedDict objectForKey:OSSETagXMLTOKEN];
@@ -1084,7 +1084,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:initMultipartUploadResult];
             }
             if (_collectingData) {
-                NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"init multipart upload result: %@", parsedDict);
                 if (parsedDict) {
                     initMultipartUploadResult.uploadId = [parsedDict objectForKey:OSSUploadIdXMLTOKEN];
@@ -1114,8 +1114,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             }
             if (_collectingData) {
                 if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/xml"]) {
-                    OSSLogVerbose(@"complete multipart upload result: %@", [NSDictionary dictionaryWithXMLData:_collectingData]);
-                    NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                    OSSLogVerbose(@"complete multipart upload result: %@", [NSDictionary oss_dictionaryWithXMLData:_collectingData]);
+                    NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                     if (parsedDict) {
                         completeMultipartUploadResult.location = [parsedDict objectForKey:OSSLocationXMLTOKEN];
                         completeMultipartUploadResult.eTag = [parsedDict objectForKey:OSSETagXMLTOKEN];
@@ -1133,7 +1133,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:listPartsReuslt];
             }
             if (_collectingData) {
-                NSDictionary * parsedDict = [NSDictionary dictionaryWithXMLData:_collectingData];
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"list multipart upload result: %@", parsedDict);
                 if (parsedDict) {
                     listPartsReuslt.nextPartNumberMarker = [[parsedDict objectForKey:OSSNextPartNumberMarkerXMLTOKEN] intValue];
