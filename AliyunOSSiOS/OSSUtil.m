@@ -1088,13 +1088,13 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
 @implementation NSString(OSSUtils)
 
-- (NSString *)trim
+- (NSString *)oss_trim
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-- (BOOL)notEmpty
+- (BOOL)oss_notEmpty
 {
-    return ![self.trim isEqualToString:@""];
+    return ![self.oss_trim isEqualToString:@""];
 }
 
 @end
