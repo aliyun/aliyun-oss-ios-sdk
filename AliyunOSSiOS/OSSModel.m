@@ -15,22 +15,6 @@
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
 
-@implementation NSString (OSS)
-
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString {
-    if ([self hasSuffix:@"/"]) {
-        return [NSString stringWithFormat:@"%@%@", self, aString];
-    } else {
-        return [NSString stringWithFormat:@"%@/%@", self, aString];
-    }
-}
-
-- (NSString *)oss_trim {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-@end
-
 @implementation NSDictionary (OSS)
 
 - (NSString *)base64JsonString {

@@ -41,9 +41,10 @@
 + (NSString*)buildOperatorMsg;
 @end
 
-@interface NSString(OSSUtils)
+@interface NSString (OSS)
 
 - (NSString *)oss_trim;
-- (BOOL)oss_notEmpty;
+- (BOOL)oss_isNotEmpty;
+- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)path;
 
 @end

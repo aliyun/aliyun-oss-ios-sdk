@@ -70,7 +70,7 @@ static NSObject * lock;
 
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
     /* if content-type haven't been set, we set one */
-    if (!request.allNeededMessage.contentType.oss_notEmpty
+    if (!request.allNeededMessage.contentType.oss_isNotEmpty
         && ([request.allNeededMessage.httpMethod isEqualToString:@"POST"] || [request.allNeededMessage.httpMethod isEqualToString:@"PUT"])) {
 
         request.allNeededMessage.contentType = [OSSUtil detemineMimeTypeForFilePath:request.uploadingFileURL.path               uploadName:request.allNeededMessage.objectKey];
@@ -921,7 +921,7 @@ static NSObject * lock;
                 uploadId = result.uploadId;
                 
                 //saved uploadId
-                if(recordFilePath.oss_notEmpty)
+                if(recordFilePath.oss_isNotEmpty)
                 {
                     NSFileManager *defaultFileManager = [NSFileManager defaultManager];
                     if (![defaultFileManager fileExistsAtPath:recordFilePath]) {

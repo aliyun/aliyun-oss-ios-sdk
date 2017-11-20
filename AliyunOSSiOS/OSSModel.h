@@ -56,14 +56,6 @@ typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSErr
 typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
 
 /**
- Categories NSString
- */
-@interface NSString (OSS)
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
-- (NSString *)oss_trim;
-@end
-
-/**
  Categories NSDictionary
  */
 @interface NSDictionary (OSS)
