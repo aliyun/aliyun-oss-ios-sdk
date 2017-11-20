@@ -131,8 +131,10 @@ static NSTimeInterval _clockSkew = 0.0;
 }
 
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
-    if (!self.accessKey || !self.secretKey) {
-        if (error != nil) {
+    if (![self.accessKey oss_isNotEmpty] || ![self.secretKey oss_isNotEmpty])
+    {
+        if (error != nil)
+        {
             *error = [NSError errorWithDomain:OSSClientErrorDomain
                                          code:OSSClientErrorCodeSignFailed
                                      userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
