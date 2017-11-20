@@ -7,7 +7,7 @@
 This document mainly describes how to install and use the OSS iOS SDK. This document assumes that you have already activated the Alibaba Cloud OSS service and created an *AccessKeyID* and an *AccessKeySecret*. In the document, *ID* refers to the *AccessKeyID* and *KEY* indicates the *AccessKeySecret*. If you have not yet activated or do not know about the OSS service, log on to the [OSS Product Homepage](http://www.aliyun.com/product/oss) for more help.
 
 ## Environment requirements
-- iOS ***7.0*** or above. 
+- iOS ***8.0*** or above. 
 - You must have registered an Alibaba Cloud account with the OSS activated.
 
 ## Installation
@@ -39,7 +39,7 @@ In Xcode, drag the OSS iOS SDK framework and drop it to your target, and select 
 If your project manages dependencies using a Pod, add the following dependency to the Podfile. In this case, you do not need to import the OSS iOS SDK framework.
 
 ```
-pod 'AliyunOSSiOS', '~> 2.6.2'
+pod 'AliyunOSSiOS', '~> 2.7.0'
 ```
 
 CocoaPods is an outstanding dependency manager. Recommended official reference documents: [CocoaPods Installation and Usage Tutorial]((http://code4app.com/article/cocoapods-install-usage)).
