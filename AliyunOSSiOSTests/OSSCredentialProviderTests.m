@@ -162,4 +162,56 @@
     XCTAssertNil(signError);
 }
 
+- (void)testCustomSignerCredentialProvider
+{
+    NSURL * url = [NSURL URLWithString:RIGHT_PROVIDER_SERVER];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                    if (error) {
+                                                        [tcs setError:error];
+                                                        return;
+                                                    }
+                                                    [tcs setResult:data];
+                                                }];
+    [sessionTask resume];
+    [tcs.task waitUntilFinished];
+    
+    XCTAssertNil(tcs.task.error);
+    NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
+                                                            options:kNilOptions
+                                                              error:nil];
+    NSDictionary *credentials = object[@"Credentials"];
+    XCTAssertNotNil(credentials);
+    OSSFederationToken * token = [OSSFederationToken new];
+    // All the entries below are mandatory.
+    token.tAccessKey = credentials[@"AccessKeyId"];
+    token.tSecretKey = credentials[@"AccessKeySecret"];
+    token.tToken = credentials[@"SecurityToken"];
+    token.expirationTimeInGMTFormat = credentials[@"Expiration"];
+    
+    OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
+        /** 用户将需要签名的字符串上传给自己的业务服务器，服务器进行签名之后返回给客户端 */
+        NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
+        return signedContent;
+    }];
+    
+    NSError *error;
+    NSString *signedString = [provider sign:@"hello world" error:&error];
+    NSLog(@"signedString: %@",signedString);
+    XCTAssertNil(error);
+}
+
+-(void)testPlainTextAKSKPairCredentialProvider
+{
+    // invalid credentialProvider
+    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:nil secretKey:nil];
+    NSError *error;
+    NSString *signedString = [provider sign:@"hello world" error:&error];
+    NSLog(@"signedString: %@",signedString);
+    XCTAssertNotNil(error);
+}
+
 @end
