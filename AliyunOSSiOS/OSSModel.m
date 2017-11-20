@@ -40,13 +40,6 @@ NSString * const serverReturnDateFormat = @"EEE, dd MMM yyyy HH:mm:ss z";
 
 static NSTimeInterval _clockSkew = 0.0;
 
-+ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime {
-    NSTimeInterval deviceTime = [[NSDate date] timeIntervalSince1970];
-    @synchronized (self) {
-        _clockSkew = deviceTime - standardTime;
-    }
-}
-
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew {
     @synchronized(self) {
         _clockSkew = clockSkew;
