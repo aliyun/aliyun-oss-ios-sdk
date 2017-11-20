@@ -25,7 +25,7 @@ NSString * const ENDPOINT = @"https://oss-cn-qingdao.aliyuncs.com";
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"oss-demo.aliyuncs.com:23450";
 NSString * const CNAME = @"http://************************/";
-NSString * const StsTokenURL = @"http://*.*.*.*:****/sts/getsts";
+NSString * const StsTokenURL = @"http://30.40.38.122:5566/sts/getsts";
 
 static NSArray * fileNameArray;
 static NSArray * fileSizeArray;
@@ -338,6 +338,55 @@ id<OSSCredentialProvider>  credential, credentialFed;
     }
 }
 
+- (void)testA_putObjectWithoutContentType {
+    NSString * uploadFile = @"wangwang.zip";
+    NSString * uploadObject = @"noContentType.zip";
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = uploadObject;
+    
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+    
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.contentType = @"";
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+    
+    
+    OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
+    head.bucketName = TEST_BUCKET;
+    head.objectKey = uploadObject;
+    [[[client headObject:head] continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSHeadObjectResult * headResult = task.result;
+        XCTAssertNotNil([headResult.objectMeta objectForKey:@"Content-Type"]);
+        return nil;
+    }] waitUntilFinished];
+    
+    
+    BOOL isEqual = [self isFileOnOSSBucket:TEST_BUCKET objectKey:uploadObject equalsToLocalFile:fileURL.path];
+    XCTAssertTrue(isEqual);
+}
+
+
 - (void)testA_putObjectWithContentType {
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -383,6 +432,43 @@ id<OSSCredentialProvider>  credential, credentialFed;
     XCTAssertTrue(isEqual);
 }
 
+- (void)testA_PutObjectWithErrorRetry {
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    
+    [NSDate oss_setClockSkew: 30 * 60];
+    
+    request.uploadRetryCallback = ^{
+        NSLog(@"put object call retry");
+    };
+    
+    NSString * docDir = [self getDocumentDirectory];
+    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
+    
+    request.uploadingData = [readFile readDataToEndOfFile];
+    request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    OSSTask * task = [client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+        }
+        OSSPutObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        NSLog(@"Result - requestId: %@, headerFields: %@",
+              result.requestId,
+              result.httpResponseHeaderFields);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testA_putObjectFromNSData {
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
@@ -396,6 +482,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        
     };
 
     OSSTask * task = [client putObject:request];
@@ -1179,10 +1266,14 @@ id<OSSCredentialProvider>  credential, credentialFed;
     }] waitUntilFinished];
 }
 
+
+
+
 - (void)testPutObjectWithCheckingDataMd5 {
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = TEST_BUCKET;
     request.objectKey = @"file1m";
+    
 
     NSString * docDir = [self getDocumentDirectory];
     NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
@@ -1225,6 +1316,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        
     };
 
     OSSTask * task = [client putObject:request];
