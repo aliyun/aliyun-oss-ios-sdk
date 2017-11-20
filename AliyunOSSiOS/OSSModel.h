@@ -403,7 +403,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
  The bucket location
  For more information about OSS datacenter and endpoint, please check out <a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
  */
-@property (nonatomic, strong) NSString * location;
+@property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
 
 /**
  Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.
