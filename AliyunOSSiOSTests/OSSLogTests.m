@@ -104,6 +104,11 @@
     OSSDDFileLogger *fileLogger = [[OSSDDFileLogger alloc] init]; // File Logger
     fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
     fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
+    fileLogger.logFileManager.maximumNumberOfLogFiles = 8;
+    
+    fileLogger.logFileManager.logFilesDiskQuota = 1024 * 1024;
+    fileLogger.logFileManager.logFilesDiskQuota = 1024 * 1024 * 2;
+    
     [OSSDDLog addLogger:fileLogger];
     
     OSSDDLogMessage *message = [[OSSDDLogMessage alloc] init];

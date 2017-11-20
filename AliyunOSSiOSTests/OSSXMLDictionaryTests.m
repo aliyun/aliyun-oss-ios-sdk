@@ -34,16 +34,23 @@
     NSString *title = [dict oss_stringValueForKeyPath:@"title"];
     NSDictionary *book= [dict oss_dictionaryValueForKeyPath:@"book"];
     
+    XCTAssertNotNil(string_array);
+    XCTAssertNotNil(title);
+    XCTAssertNotNil(book);
+    
     NSLog(@"string_array:%@,title:%@,book:%@",string_array,title,book);
     
     XCTAssertNotNil(dict);
     
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[NSData dataWithContentsOfFile:filePath]];
     dict = [NSDictionary oss_dictionaryWithXMLParser:parser];
+    XCTAssertNotNil(dict);
     
-    OSSXMLDictionaryParser *ossParser = [OSSXMLDictionaryParser sharedInstance];
-    ossParser.preserveComments = YES;
-    dict = [ossParser dictionaryWithParser:parser];
+    NSXMLParser *newParser = [[NSXMLParser alloc] initWithData:[NSData dataWithContentsOfFile:filePath]];
+    OSSXMLDictionaryParser *ossXMLParser = [[OSSXMLDictionaryParser sharedInstance] copy];
+    ossXMLParser.preserveComments = YES;
+    dict = [ossXMLParser dictionaryWithParser:newParser];
+    XCTAssertNotNil(dict);
 }
 
 @end
