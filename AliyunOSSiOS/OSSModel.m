@@ -277,6 +277,11 @@ static NSTimeInterval _clockSkew = 0.0;
 
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl
 {
+    return [self initWithAuthServerUrl:authServerUrl responseDecoder:nil];
+}
+
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder
+{
     self = [super initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:self.authServerUrl];
         NSURLRequest * request = [NSURLRequest requestWithURL:url];
@@ -295,7 +300,11 @@ static NSTimeInterval _clockSkew = 0.0;
         if (tcs.task.error) {
             return nil;
         } else {
-            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
+            NSData* data = tcs.task.result;
+            if(decoder){
+                data = decoder(data);
+            }
+            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:kNilOptions
                                                                       error:nil];
             int statusCode = [[object objectForKey:@"StatusCode"] intValue];
