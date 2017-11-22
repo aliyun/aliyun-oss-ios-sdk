@@ -71,7 +71,7 @@
 		4CE524711F623EDF00DD3DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4CE524731F623F5D00DD3DCF /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
-		4CE524771F6267BB00DD3DCF /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE524761F6267BB00DD3DCF /* Constant.m */; };
+		4CE524771F6267BB00DD3DCF /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE524761F6267BB00DD3DCF /* Config.m */; };
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D17588F91FBC1CA5001EFFE9 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D17588F81FBC1CA5001EFFE9 /* wangwang.zip */; };
@@ -183,8 +183,8 @@
 		4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSNSLogger.h; sourceTree = "<group>"; };
 		4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSNSLogger.m; sourceTree = "<group>"; };
 		4CE524741F62641D00DD3DCF /* DemoByOC.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoByOC.pch; sourceTree = "<group>"; };
-		4CE524751F6267BB00DD3DCF /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
-		4CE524761F6267BB00DD3DCF /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
+		4CE524751F6267BB00DD3DCF /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		4CE524761F6267BB00DD3DCF /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Config.m; sourceTree = "<group>"; };
 		9418946B1DEB4A7800FFB760 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 		D17588F81FBC1CA5001EFFE9 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = wangwang.zip; path = ../AliyunOSSiOSTests/wangwang.zip; sourceTree = "<group>"; };
 		D1C3D8BC1F667021002F840A /* python */ = {isa = PBXFileReference; lastKnownFileType = folder; path = python; sourceTree = SOURCE_ROOT; };
@@ -399,8 +399,8 @@
 				4C30B7CD1F6136EB00CDAD9B /* Info.plist */,
 				4C30B7BC1F6136EB00CDAD9B /* Supporting Files */,
 				4CE524741F62641D00DD3DCF /* DemoByOC.pch */,
-				4CE524751F6267BB00DD3DCF /* Constant.h */,
-				4CE524761F6267BB00DD3DCF /* Constant.m */,
+				4CE524751F6267BB00DD3DCF /* Config.h */,
+				4CE524761F6267BB00DD3DCF /* Config.m */,
 			);
 			path = DemoByOC;
 			sourceTree = "<group>";
@@ -644,7 +644,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CE524771F6267BB00DD3DCF /* Constant.m in Sources */,
+				4CE524771F6267BB00DD3DCF /* Config.m in Sources */,
 				4C5A5AA11FBD8245004E1782 /* ImageService.m in Sources */,
 				4C30B7C41F6136EB00CDAD9B /* ViewController.m in Sources */,
 				4C5A5AA01FBD8245004E1782 /* OssService.m in Sources */,

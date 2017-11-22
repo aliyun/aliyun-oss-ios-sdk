@@ -11,7 +11,9 @@
 extern NSString* const BUCKET_NAME;
 extern NSString* const UPLOAD_OBJECT_KEY;
 extern NSString* const DOWNLOAD_OBJECT_KEY;
+extern NSString* const endPoint;
+extern NSString* const imageEndPoint;
+extern NSString* const callbackAddress;
 
-
-@interface Constant : NSObject
+@interface Config : NSObject
 @end

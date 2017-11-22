@@ -62,10 +62,6 @@
     [self setButtonBorder:_ossButtonResize];
     [self setButtonBorder:_ossButtonWatermark];
     
-    NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
-    NSString * const imageEndPoint = @"http://img-cn-beijing.aliyuncs.com";
-    NSString * const callbackAddress = @"http://oss-demo.aliyuncs.com:23450";
-    
     // init ossService
     service = [[OssService alloc] initWithViewController:self withEndPoint:endPoint];
     [service setCallbackAddress:callbackAddress];
