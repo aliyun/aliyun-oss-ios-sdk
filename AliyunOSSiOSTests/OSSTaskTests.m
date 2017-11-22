@@ -8,11 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "OSSTask.h"
-#import "OSSCancellationTokenSource.h"
-#import "OSSCancellationToken.h"
-#import "OSSExecutor.h"
-#import "OSSTaskCompletionSource.h"
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 
 @interface OSSTaskTests : XCTestCase
 

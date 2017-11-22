@@ -7,9 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSLog.h"
-#import "OSSUtil.h"
-#import "OSSDDLog.h"
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 
 
 @interface OSSLogTests : XCTestCase

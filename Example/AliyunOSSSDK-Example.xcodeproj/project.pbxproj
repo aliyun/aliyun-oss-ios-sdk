@@ -1,0 +1,600 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D87182BA1FC55611000DD9EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182B91FC55611000DD9EC /* AppDelegate.m */; };
+		D87182BD1FC55611000DD9EC /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182BC1FC55611000DD9EC /* RootViewController.m */; };
+		D87182C21FC55611000DD9EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87182C11FC55611000DD9EC /* Assets.xcassets */; };
+		D87182C81FC55611000DD9EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182C71FC55611000DD9EC /* main.m */; };
+		D87182E01FC55940000DD9EC /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182DD1FC55940000DD9EC /* GetObjcetSample.m */; };
+		D87182E11FC55940000DD9EC /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182DE1FC55940000DD9EC /* StstokenSample.m */; };
+		D87182E61FC55CC4000DD9EC /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182E51FC55CC4000DD9EC /* OSSConstants.m */; };
+		D87182F71FC55F3F000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
+		D87182F91FC55F46000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
+		D87182FB1FC560DE000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
+		D87183931FC56ACA000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */; };
+		D87183941FC56ACA000DD9EC /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */; };
+		D871839C1FC56D4A000DD9EC /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D87183981FC56D4A000DD9EC /* sts.py */; };
+		D871839D1FC56D4A000DD9EC /* sts.pyc in Resources */ = {isa = PBXBuildFile; fileRef = D87183991FC56D4A000DD9EC /* sts.pyc */; };
+		D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D871839A1FC56D4A000DD9EC /* httpserver.py */; };
+		D871839F1FC56D4A000DD9EC /* httpserver.pyc in Resources */ = {isa = PBXBuildFile; fileRef = D871839B1FC56D4A000DD9EC /* httpserver.pyc */; };
+		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
+		D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BA1FC572C6000DD9EC /* OSSLogTests.m */; };
+		D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */; };
+		D87183C41FC572C6000DD9EC /* OSSTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */; };
+		D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */; };
+		D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */; };
+		D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */; };
+		D87183C81FC572C6000DD9EC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D87183C01FC572C6000DD9EC /* Info.plist */; };
+		D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */; };
+		D87183CC1FC57366000DD9EC /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D87183CA1FC57366000DD9EC /* runsheng.xml */; };
+		D87183CD1FC57366000DD9EC /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D87183CA1FC57366000DD9EC /* runsheng.xml */; };
+		D87183CE1FC57366000DD9EC /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D87183CB1FC57366000DD9EC /* wangwang.zip */; };
+		D87183CF1FC57366000DD9EC /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D87183CB1FC57366000DD9EC /* wangwang.zip */; };
+		D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
+		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
+		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D87183AC1FC56F12000DD9EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D87182AD1FC55611000DD9EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D87182B41FC55611000DD9EC;
+			remoteInfo = "AliyunOSSSDK-Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D87183911FC56ABD000DD9EC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D87183941FC56ACA000DD9EC /* AliyunOSSiOS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D87182B81FC55611000DD9EC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D87182B91FC55611000DD9EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D87182BB1FC55611000DD9EC /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		D87182BC1FC55611000DD9EC /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		D87182C11FC55611000DD9EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D87182C61FC55611000DD9EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D87182C71FC55611000DD9EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D87182DC1FC55940000DD9EC /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
+		D87182DD1FC55940000DD9EC /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
+		D87182DE1FC55940000DD9EC /* StstokenSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StstokenSample.m; sourceTree = "<group>"; };
+		D87182DF1FC55940000DD9EC /* StstokenSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StstokenSample.h; sourceTree = "<group>"; };
+		D87182E21FC55A4E000DD9EC /* AliyunOSSSDK-Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AliyunOSSSDK-Example-Prefix.pch"; sourceTree = "<group>"; };
+		D87182E41FC55CC3000DD9EC /* OSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSConstants.h; sourceTree = "<group>"; };
+		D87182E51FC55CC4000DD9EC /* OSSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSConstants.m; sourceTree = "<group>"; };
+		D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D87182F81FC55F46000DD9EC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		D87183981FC56D4A000DD9EC /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
+		D87183991FC56D4A000DD9EC /* sts.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = sts.pyc; sourceTree = "<group>"; };
+		D871839A1FC56D4A000DD9EC /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
+		D871839B1FC56D4A000DD9EC /* httpserver.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = httpserver.pyc; sourceTree = "<group>"; };
+		D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D87183BA1FC572C6000DD9EC /* OSSLogTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
+		D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
+		D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSTaskTests.m; sourceTree = "<group>"; };
+		D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCancellationTests.m; sourceTree = "<group>"; };
+		D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSExecutorTests.m; sourceTree = "<group>"; };
+		D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionaryTests.m; sourceTree = "<group>"; };
+		D87183C01FC572C6000DD9EC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
+		D87183CA1FC57366000DD9EC /* runsheng.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
+		D87183CB1FC57366000DD9EC /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D87182B21FC55611000DD9EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87183931FC56ACA000DD9EC /* AliyunOSSiOS.framework in Frameworks */,
+				D87182FB1FC560DE000DD9EC /* CoreTelephony.framework in Frameworks */,
+				D87182F71FC55F3F000DD9EC /* SystemConfiguration.framework in Frameworks */,
+				D87182F91FC55F46000DD9EC /* libresolv.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D87183A41FC56F12000DD9EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */,
+				D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */,
+				D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */,
+				D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D87182AC1FC55611000DD9EC = {
+			isa = PBXGroup;
+			children = (
+				D87182B71FC55611000DD9EC /* AliyunOSSSDK-Example */,
+				D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */,
+				D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */,
+				D87182B61FC55611000DD9EC /* Products */,
+				D87182F51FC55F35000DD9EC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		D87182B61FC55611000DD9EC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */,
+				D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D87182B71FC55611000DD9EC /* AliyunOSSSDK-Example */ = {
+			isa = PBXGroup;
+			children = (
+				D87183971FC56D4A000DD9EC /* Scripts */,
+				D87182CF1FC5577E000DD9EC /* Classes */,
+				D87182CE1FC55747000DD9EC /* Supporting Files */,
+				D87182E31FC55C51000DD9EC /* Resources */,
+			);
+			path = "AliyunOSSSDK-Example";
+			sourceTree = "<group>";
+		};
+		D87182CE1FC55747000DD9EC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D87182C11FC55611000DD9EC /* Assets.xcassets */,
+				D87182C61FC55611000DD9EC /* Info.plist */,
+				D87182C71FC55611000DD9EC /* main.m */,
+				D87182E21FC55A4E000DD9EC /* AliyunOSSSDK-Example-Prefix.pch */,
+				D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D87182CF1FC5577E000DD9EC /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D87182D51FC558F7000DD9EC /* Samples */,
+				D87182E51FC55CC4000DD9EC /* OSSConstants.m */,
+				D87182E41FC55CC3000DD9EC /* OSSConstants.h */,
+				D87182B81FC55611000DD9EC /* AppDelegate.h */,
+				D87182B91FC55611000DD9EC /* AppDelegate.m */,
+				D87182BB1FC55611000DD9EC /* RootViewController.h */,
+				D87182BC1FC55611000DD9EC /* RootViewController.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		D87182D51FC558F7000DD9EC /* Samples */ = {
+			isa = PBXGroup;
+			children = (
+				D87182DC1FC55940000DD9EC /* GetObjcetSample.h */,
+				D87182DD1FC55940000DD9EC /* GetObjcetSample.m */,
+				D87182DF1FC55940000DD9EC /* StstokenSample.h */,
+				D87182DE1FC55940000DD9EC /* StstokenSample.m */,
+			);
+			path = Samples;
+			sourceTree = "<group>";
+		};
+		D87182E31FC55C51000DD9EC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D87183CA1FC57366000DD9EC /* runsheng.xml */,
+				D87183CB1FC57366000DD9EC /* wangwang.zip */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D87182F51FC55F35000DD9EC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */,
+				D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */,
+				D87182F81FC55F46000DD9EC /* libresolv.tbd */,
+				D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D87183971FC56D4A000DD9EC /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				D87183981FC56D4A000DD9EC /* sts.py */,
+				D87183991FC56D4A000DD9EC /* sts.pyc */,
+				D871839A1FC56D4A000DD9EC /* httpserver.py */,
+				D871839B1FC56D4A000DD9EC /* httpserver.pyc */,
+			);
+			name = Scripts;
+			path = ../../Scripts;
+			sourceTree = "<group>";
+		};
+		D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				D87183BA1FC572C6000DD9EC /* OSSLogTests.m */,
+				D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */,
+				D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */,
+				D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */,
+				D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */,
+				D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */,
+				D87183C01FC572C6000DD9EC /* Info.plist */,
+				D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */,
+			);
+			name = AliyunOSSiOSTests;
+			path = ../AliyunOSSiOSTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D87182CB1FC55611000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-Example" */;
+			buildPhases = (
+				D87182B11FC55611000DD9EC /* Sources */,
+				D87182B21FC55611000DD9EC /* Frameworks */,
+				D87182B31FC55611000DD9EC /* Resources */,
+				D87183911FC56ABD000DD9EC /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AliyunOSSSDK-Example";
+			productName = "AliyunOSSSDK-Example";
+			productReference = D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D87183A61FC56F12000DD9EC /* AliyunOSSiOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D87183AE1FC56F12000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSiOSTests" */;
+			buildPhases = (
+				D87183A31FC56F12000DD9EC /* Sources */,
+				D87183A41FC56F12000DD9EC /* Frameworks */,
+				D87183A51FC56F12000DD9EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D87183AD1FC56F12000DD9EC /* PBXTargetDependency */,
+			);
+			name = AliyunOSSiOSTests;
+			productName = AliyunOSSiOSTests;
+			productReference = D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D87182AD1FC55611000DD9EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0910;
+				ORGANIZATIONNAME = "阿里云";
+				TargetAttributes = {
+					D87182B41FC55611000DD9EC = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Manual;
+					};
+					D87183A61FC56F12000DD9EC = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Manual;
+						TestTargetID = D87182B41FC55611000DD9EC;
+					};
+				};
+			};
+			buildConfigurationList = D87182B01FC55611000DD9EC /* Build configuration list for PBXProject "AliyunOSSSDK-Example" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D87182AC1FC55611000DD9EC;
+			productRefGroup = D87182B61FC55611000DD9EC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */,
+				D87183A61FC56F12000DD9EC /* AliyunOSSiOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D87182B31FC55611000DD9EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87182C21FC55611000DD9EC /* Assets.xcassets in Resources */,
+				D87183CC1FC57366000DD9EC /* runsheng.xml in Resources */,
+				D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */,
+				D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */,
+				D871839F1FC56D4A000DD9EC /* httpserver.pyc in Resources */,
+				D871839C1FC56D4A000DD9EC /* sts.py in Resources */,
+				D871839D1FC56D4A000DD9EC /* sts.pyc in Resources */,
+				D87183CE1FC57366000DD9EC /* wangwang.zip in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D87183A51FC56F12000DD9EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87183C81FC572C6000DD9EC /* Info.plist in Resources */,
+				D87183CF1FC57366000DD9EC /* wangwang.zip in Resources */,
+				D87183CD1FC57366000DD9EC /* runsheng.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D87182B11FC55611000DD9EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87182BD1FC55611000DD9EC /* RootViewController.m in Sources */,
+				D87182E01FC55940000DD9EC /* GetObjcetSample.m in Sources */,
+				D87182C81FC55611000DD9EC /* main.m in Sources */,
+				D87182E61FC55CC4000DD9EC /* OSSConstants.m in Sources */,
+				D87182E11FC55940000DD9EC /* StstokenSample.m in Sources */,
+				D87182BA1FC55611000DD9EC /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D87183A31FC56F12000DD9EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */,
+				D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */,
+				D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */,
+				D87183C41FC572C6000DD9EC /* OSSTaskTests.m in Sources */,
+				D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */,
+				D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */,
+				D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D87183AD1FC56F12000DD9EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */;
+			targetProxy = D87183AC1FC56F12000DD9EC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D87182C91FC55611000DD9EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D87182CA1FC55611000DD9EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D87182CC1FC55611000DD9EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/AliyunOSSSDK-Example-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D87182CD1FC55611000DD9EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/AliyunOSSSDK-Example-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D87183AF1FC56F12000DD9EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "$(SRCROOT)/../AliyunOSSiOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.oss.AliyunOSSiOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-Example.app/AliyunOSSSDK-Example";
+			};
+			name = Debug;
+		};
+		D87183B01FC56F12000DD9EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "$(SRCROOT)/../AliyunOSSiOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.oss.AliyunOSSiOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-Example.app/AliyunOSSSDK-Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D87182B01FC55611000DD9EC /* Build configuration list for PBXProject "AliyunOSSSDK-Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D87182C91FC55611000DD9EC /* Debug */,
+				D87182CA1FC55611000DD9EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D87182CB1FC55611000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D87182CC1FC55611000DD9EC /* Debug */,
+				D87182CD1FC55611000DD9EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D87183AE1FC56F12000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSiOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D87183AF1FC56F12000DD9EC /* Debug */,
+				D87183B01FC56F12000DD9EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D87182AD1FC55611000DD9EC /* Project object */;
+}

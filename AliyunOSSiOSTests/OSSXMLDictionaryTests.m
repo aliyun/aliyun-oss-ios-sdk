@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSXMLDictionary.h"
+#import <AliyunOSSiOS/OSSXMLDictionary.h>
 
 @interface OSSXMLDictionaryTests : XCTestCase
 
