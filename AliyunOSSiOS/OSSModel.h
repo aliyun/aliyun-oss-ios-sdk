@@ -54,6 +54,7 @@ typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
 typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
 typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
+typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 
 /**
  Categories NSString
@@ -175,6 +176,16 @@ TODOTODO
 - (instancetype)initWithAccessKeyId:(NSString *)accessKeyId
                         secretKeyId:(NSString *)secretKeyId
                       securityToken:(NSString *)securityToken;
+@end
+
+/**
+ auth credential provider.
+ */
+@interface OSSAuthCredentialProvider : OSSFederationCredentialProvider
+@property (nonatomic, strong) NSString * authServerUrl;
+@property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder;
 @end
 
 /**
