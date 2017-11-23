@@ -21,9 +21,7 @@
 		D87183941FC56ACA000DD9EC /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */; };
 		D871839C1FC56D4A000DD9EC /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D87183981FC56D4A000DD9EC /* sts.py */; };
-		D871839D1FC56D4A000DD9EC /* sts.pyc in Resources */ = {isa = PBXBuildFile; fileRef = D87183991FC56D4A000DD9EC /* sts.pyc */; };
 		D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D871839A1FC56D4A000DD9EC /* httpserver.py */; };
-		D871839F1FC56D4A000DD9EC /* httpserver.pyc in Resources */ = {isa = PBXBuildFile; fileRef = D871839B1FC56D4A000DD9EC /* httpserver.pyc */; };
 		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
 		D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BA1FC572C6000DD9EC /* OSSLogTests.m */; };
 		D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */; };
@@ -88,9 +86,7 @@
 		D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D87183981FC56D4A000DD9EC /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
-		D87183991FC56D4A000DD9EC /* sts.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = sts.pyc; sourceTree = "<group>"; };
 		D871839A1FC56D4A000DD9EC /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
-		D871839B1FC56D4A000DD9EC /* httpserver.pyc */ = {isa = PBXFileReference; lastKnownFileType = file; path = httpserver.pyc; sourceTree = "<group>"; };
 		D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87183BA1FC572C6000DD9EC /* OSSLogTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
@@ -223,9 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				D87183981FC56D4A000DD9EC /* sts.py */,
-				D87183991FC56D4A000DD9EC /* sts.pyc */,
 				D871839A1FC56D4A000DD9EC /* httpserver.py */,
-				D871839B1FC56D4A000DD9EC /* httpserver.pyc */,
 			);
 			name = Scripts;
 			path = ../../Scripts;
@@ -334,9 +328,7 @@
 				D87183CC1FC57366000DD9EC /* runsheng.xml in Resources */,
 				D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */,
 				D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */,
-				D871839F1FC56D4A000DD9EC /* httpserver.pyc in Resources */,
 				D871839C1FC56D4A000DD9EC /* sts.py in Resources */,
-				D871839D1FC56D4A000DD9EC /* sts.pyc in Resources */,
 				D87183CE1FC57366000DD9EC /* wangwang.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
