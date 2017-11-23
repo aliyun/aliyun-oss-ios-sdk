@@ -7,21 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D87182BA1FC55611000DD9EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182B91FC55611000DD9EC /* AppDelegate.m */; };
-		D87182BD1FC55611000DD9EC /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182BC1FC55611000DD9EC /* RootViewController.m */; };
-		D87182C21FC55611000DD9EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87182C11FC55611000DD9EC /* Assets.xcassets */; };
-		D87182C81FC55611000DD9EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182C71FC55611000DD9EC /* main.m */; };
-		D87182E01FC55940000DD9EC /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182DD1FC55940000DD9EC /* GetObjcetSample.m */; };
-		D87182E11FC55940000DD9EC /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182DE1FC55940000DD9EC /* StstokenSample.m */; };
-		D87182E61FC55CC4000DD9EC /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D87182E51FC55CC4000DD9EC /* OSSConstants.m */; };
-		D87182F71FC55F3F000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
-		D87182F91FC55F46000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
-		D87182FB1FC560DE000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
-		D87183931FC56ACA000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */; };
-		D87183941FC56ACA000DD9EC /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */; };
-		D871839C1FC56D4A000DD9EC /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D87183981FC56D4A000DD9EC /* sts.py */; };
-		D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D871839A1FC56D4A000DD9EC /* httpserver.py */; };
+		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
+		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
+		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
+		D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58531FC680850022761B /* OSSSignTests.m */; };
+		D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BE1FC6B3100022761B /* OSSConstants.m */; };
+		D83D58CE1FC6B3100022761B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BF1FC6B3100022761B /* ViewController.m */; };
+		D83D58CF1FC6B3100022761B /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C11FC6B3100022761B /* StstokenSample.m */; };
+		D83D58D01FC6B3100022761B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C21FC6B3100022761B /* GetObjcetSample.m */; };
+		D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C51FC6B3100022761B /* AppDelegate.m */; };
+		D83D58D21FC6B3100022761B /* ImageService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C81FC6B3100022761B /* ImageService.m */; };
+		D83D58D31FC6B3100022761B /* OssService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C91FC6B3100022761B /* OssService.m */; };
+		D83D58D51FC6B41C0022761B /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D58D41FC6B41C0022761B /* AliyunOSSiOS.framework */; };
+		D83D58D61FC6B41C0022761B /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83D58D41FC6B41C0022761B /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D83D58D81FC6B4350022761B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
+		D83D58D91FC6B43E0022761B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
+		D83D58DA1FC6B4450022761B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
+		D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D83D58DD1FC6B61F0022761B /* Assets.xcassets */; };
+		D83D58E21FC6B61F0022761B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58DF1FC6B61F0022761B /* main.m */; };
+		D83D58E31FC6B61F0022761B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E01FC6B61F0022761B /* Info.plist */; };
+		D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E41FC6B6D90022761B /* Main.storyboard */; };
+		D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E61FC6B6D90022761B /* LaunchScreen.storyboard */; };
 		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
 		D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BA1FC572C6000DD9EC /* OSSLogTests.m */; };
 		D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */; };
@@ -31,33 +37,19 @@
 		D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */; };
 		D87183C81FC572C6000DD9EC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D87183C01FC572C6000DD9EC /* Info.plist */; };
 		D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */; };
-		D87183CC1FC57366000DD9EC /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D87183CA1FC57366000DD9EC /* runsheng.xml */; };
-		D87183CD1FC57366000DD9EC /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D87183CA1FC57366000DD9EC /* runsheng.xml */; };
-		D87183CE1FC57366000DD9EC /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D87183CB1FC57366000DD9EC /* wangwang.zip */; };
-		D87183CF1FC57366000DD9EC /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D87183CB1FC57366000DD9EC /* wangwang.zip */; };
 		D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		D87183AC1FC56F12000DD9EC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D87182AD1FC55611000DD9EC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D87182B41FC55611000DD9EC;
-			remoteInfo = "AliyunOSSSDK-Example";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		D87183911FC56ABD000DD9EC /* Embed Frameworks */ = {
+		D83D58D71FC6B41C0022761B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D87183941FC56ACA000DD9EC /* AliyunOSSiOS.framework in Embed Frameworks */,
+				D83D58D61FC6B41C0022761B /* AliyunOSSiOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,28 +57,36 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D87182B81FC55611000DD9EC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		D87182B91FC55611000DD9EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D87182BB1FC55611000DD9EC /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		D87182BC1FC55611000DD9EC /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		D87182C11FC55611000DD9EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D87182C61FC55611000DD9EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D87182C71FC55611000DD9EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D87182DC1FC55940000DD9EC /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
-		D87182DD1FC55940000DD9EC /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
-		D87182DE1FC55940000DD9EC /* StstokenSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StstokenSample.m; sourceTree = "<group>"; };
-		D87182DF1FC55940000DD9EC /* StstokenSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StstokenSample.h; sourceTree = "<group>"; };
-		D87182E21FC55A4E000DD9EC /* AliyunOSSSDK-Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AliyunOSSSDK-Example-Prefix.pch"; sourceTree = "<group>"; };
-		D87182E41FC55CC3000DD9EC /* OSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSConstants.h; sourceTree = "<group>"; };
-		D87182E51FC55CC4000DD9EC /* OSSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSConstants.m; sourceTree = "<group>"; };
+		D83D58501FC680840022761B /* OSSRangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSRangeTests.m; sourceTree = "<group>"; };
+		D83D58511FC680840022761B /* OSSCredentialProviderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCredentialProviderTests.m; sourceTree = "<group>"; };
+		D83D58521FC680850022761B /* OSSModelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSModelTests.m; sourceTree = "<group>"; };
+		D83D58531FC680850022761B /* OSSSignTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSSignTests.m; sourceTree = "<group>"; };
+		D83D58A61FC6B2850022761B /* AliyunOSSSDK-iOS-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-iOS-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D83D58BD1FC6B3100022761B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D83D58BE1FC6B3100022761B /* OSSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSConstants.m; sourceTree = "<group>"; };
+		D83D58BF1FC6B3100022761B /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D83D58C11FC6B3100022761B /* StstokenSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StstokenSample.m; sourceTree = "<group>"; };
+		D83D58C21FC6B3100022761B /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
+		D83D58C31FC6B3100022761B /* StstokenSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StstokenSample.h; sourceTree = "<group>"; };
+		D83D58C41FC6B3100022761B /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
+		D83D58C51FC6B3100022761B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D83D58C61FC6B3100022761B /* OSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSConstants.h; sourceTree = "<group>"; };
+		D83D58C81FC6B3100022761B /* ImageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageService.m; sourceTree = "<group>"; };
+		D83D58C91FC6B3100022761B /* OssService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OssService.m; sourceTree = "<group>"; };
+		D83D58CA1FC6B3100022761B /* ImageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageService.h; sourceTree = "<group>"; };
+		D83D58CB1FC6B3100022761B /* OssService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OssService.h; sourceTree = "<group>"; };
+		D83D58CC1FC6B3100022761B /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D83D58D41FC6B41C0022761B /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D83D58DD1FC6B61F0022761B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D83D58DE1FC6B61F0022761B /* AliyunOSSSDK-iOS-Example-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AliyunOSSSDK-iOS-Example-Prefix.pch"; sourceTree = "<group>"; };
+		D83D58DF1FC6B61F0022761B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D83D58E01FC6B61F0022761B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D83D58E51FC6B6D90022761B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "AliyunOSSSDK-iOS-Example/Base.lproj/Main.storyboard"; sourceTree = SOURCE_ROOT; };
+		D83D58E71FC6B6D90022761B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "AliyunOSSSDK-iOS-Example/Base.lproj/LaunchScreen.storyboard"; sourceTree = SOURCE_ROOT; };
 		D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D87182F81FC55F46000DD9EC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		D87183981FC56D4A000DD9EC /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
-		D871839A1FC56D4A000DD9EC /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
 		D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AliyunOSSiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87183BA1FC572C6000DD9EC /* OSSLogTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
@@ -97,19 +97,17 @@
 		D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionaryTests.m; sourceTree = "<group>"; };
 		D87183C01FC572C6000DD9EC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
-		D87183CA1FC57366000DD9EC /* runsheng.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
-		D87183CB1FC57366000DD9EC /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D87182B21FC55611000DD9EC /* Frameworks */ = {
+		D83D58A31FC6B2850022761B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87183931FC56ACA000DD9EC /* AliyunOSSiOS.framework in Frameworks */,
-				D87182FB1FC560DE000DD9EC /* CoreTelephony.framework in Frameworks */,
-				D87182F71FC55F3F000DD9EC /* SystemConfiguration.framework in Frameworks */,
-				D87182F91FC55F46000DD9EC /* libresolv.tbd in Frameworks */,
+				D83D58DA1FC6B4450022761B /* libresolv.tbd in Frameworks */,
+				D83D58D91FC6B43E0022761B /* CoreTelephony.framework in Frameworks */,
+				D83D58D81FC6B4350022761B /* SystemConfiguration.framework in Frameworks */,
+				D83D58D51FC6B41C0022761B /* AliyunOSSiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,12 +125,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D83D58A71FC6B2850022761B /* AliyunOSSSDK-iOS-Example */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58DC1FC6B61F0022761B /* Supporting Files */,
+				D83D58BC1FC6B3100022761B /* Classes */,
+			);
+			path = "AliyunOSSSDK-iOS-Example";
+			sourceTree = "<group>";
+		};
+		D83D58BC1FC6B3100022761B /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58BD1FC6B3100022761B /* AppDelegate.h */,
+				D83D58C51FC6B3100022761B /* AppDelegate.m */,
+				D83D58C61FC6B3100022761B /* OSSConstants.h */,
+				D83D58BE1FC6B3100022761B /* OSSConstants.m */,
+				D83D58CC1FC6B3100022761B /* ViewController.h */,
+				D83D58BF1FC6B3100022761B /* ViewController.m */,
+				D83D58C01FC6B3100022761B /* Samples */,
+				D83D58C71FC6B3100022761B /* Services */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		D83D58C01FC6B3100022761B /* Samples */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58C11FC6B3100022761B /* StstokenSample.m */,
+				D83D58C21FC6B3100022761B /* GetObjcetSample.m */,
+				D83D58C31FC6B3100022761B /* StstokenSample.h */,
+				D83D58C41FC6B3100022761B /* GetObjcetSample.h */,
+			);
+			path = Samples;
+			sourceTree = "<group>";
+		};
+		D83D58C71FC6B3100022761B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58C81FC6B3100022761B /* ImageService.m */,
+				D83D58C91FC6B3100022761B /* OssService.m */,
+				D83D58CA1FC6B3100022761B /* ImageService.h */,
+				D83D58CB1FC6B3100022761B /* OssService.h */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D83D58DC1FC6B61F0022761B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58E61FC6B6D90022761B /* LaunchScreen.storyboard */,
+				D83D58E41FC6B6D90022761B /* Main.storyboard */,
+				D83D58DD1FC6B61F0022761B /* Assets.xcassets */,
+				D83D58DE1FC6B61F0022761B /* AliyunOSSSDK-iOS-Example-Prefix.pch */,
+				D83D58DF1FC6B61F0022761B /* main.m */,
+				D83D58E01FC6B61F0022761B /* Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		D87182AC1FC55611000DD9EC = {
 			isa = PBXGroup;
 			children = (
-				D87182B71FC55611000DD9EC /* AliyunOSSSDK-Example */,
+				D83D58D41FC6B41C0022761B /* AliyunOSSiOS.framework */,
 				D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */,
 				D87183921FC56ACA000DD9EC /* AliyunOSSiOS.framework */,
+				D83D58A71FC6B2850022761B /* AliyunOSSSDK-iOS-Example */,
 				D87182B61FC55611000DD9EC /* Products */,
 				D87182F51FC55F35000DD9EC /* Frameworks */,
 			);
@@ -141,67 +199,10 @@
 		D87182B61FC55611000DD9EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */,
 				D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */,
+				D83D58A61FC6B2850022761B /* AliyunOSSSDK-iOS-Example.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D87182B71FC55611000DD9EC /* AliyunOSSSDK-Example */ = {
-			isa = PBXGroup;
-			children = (
-				D87183971FC56D4A000DD9EC /* Scripts */,
-				D87182CF1FC5577E000DD9EC /* Classes */,
-				D87182CE1FC55747000DD9EC /* Supporting Files */,
-				D87182E31FC55C51000DD9EC /* Resources */,
-			);
-			path = "AliyunOSSSDK-Example";
-			sourceTree = "<group>";
-		};
-		D87182CE1FC55747000DD9EC /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				D87182C11FC55611000DD9EC /* Assets.xcassets */,
-				D87182C61FC55611000DD9EC /* Info.plist */,
-				D87182C71FC55611000DD9EC /* main.m */,
-				D87182E21FC55A4E000DD9EC /* AliyunOSSSDK-Example-Prefix.pch */,
-				D87183951FC56BA6000DD9EC /* Launch Screen.storyboard */,
-			);
-			path = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		D87182CF1FC5577E000DD9EC /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				D87182D51FC558F7000DD9EC /* Samples */,
-				D87182E51FC55CC4000DD9EC /* OSSConstants.m */,
-				D87182E41FC55CC3000DD9EC /* OSSConstants.h */,
-				D87182B81FC55611000DD9EC /* AppDelegate.h */,
-				D87182B91FC55611000DD9EC /* AppDelegate.m */,
-				D87182BB1FC55611000DD9EC /* RootViewController.h */,
-				D87182BC1FC55611000DD9EC /* RootViewController.m */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		D87182D51FC558F7000DD9EC /* Samples */ = {
-			isa = PBXGroup;
-			children = (
-				D87182DC1FC55940000DD9EC /* GetObjcetSample.h */,
-				D87182DD1FC55940000DD9EC /* GetObjcetSample.m */,
-				D87182DF1FC55940000DD9EC /* StstokenSample.h */,
-				D87182DE1FC55940000DD9EC /* StstokenSample.m */,
-			);
-			path = Samples;
-			sourceTree = "<group>";
-		};
-		D87182E31FC55C51000DD9EC /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				D87183CA1FC57366000DD9EC /* runsheng.xml */,
-				D87183CB1FC57366000DD9EC /* wangwang.zip */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		D87182F51FC55F35000DD9EC /* Frameworks */ = {
@@ -215,19 +216,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D87183971FC56D4A000DD9EC /* Scripts */ = {
-			isa = PBXGroup;
-			children = (
-				D87183981FC56D4A000DD9EC /* sts.py */,
-				D871839A1FC56D4A000DD9EC /* httpserver.py */,
-			);
-			name = Scripts;
-			path = ../../Scripts;
-			sourceTree = "<group>";
-		};
 		D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				D83D58511FC680840022761B /* OSSCredentialProviderTests.m */,
+				D83D58521FC680850022761B /* OSSModelTests.m */,
+				D83D58501FC680840022761B /* OSSRangeTests.m */,
+				D83D58531FC680850022761B /* OSSSignTests.m */,
 				D87183BA1FC572C6000DD9EC /* OSSLogTests.m */,
 				D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */,
 				D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */,
@@ -244,22 +239,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */ = {
+		D83D58A51FC6B2850022761B /* AliyunOSSSDK-iOS-Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D87182CB1FC55611000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-Example" */;
+			buildConfigurationList = D83D58B91FC6B2850022761B /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-iOS-Example" */;
 			buildPhases = (
-				D87182B11FC55611000DD9EC /* Sources */,
-				D87182B21FC55611000DD9EC /* Frameworks */,
-				D87182B31FC55611000DD9EC /* Resources */,
-				D87183911FC56ABD000DD9EC /* Embed Frameworks */,
+				D83D58A21FC6B2850022761B /* Sources */,
+				D83D58A31FC6B2850022761B /* Frameworks */,
+				D83D58A41FC6B2850022761B /* Resources */,
+				D83D58D71FC6B41C0022761B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "AliyunOSSSDK-Example";
-			productName = "AliyunOSSSDK-Example";
-			productReference = D87182B51FC55611000DD9EC /* AliyunOSSSDK-Example.app */;
+			name = "AliyunOSSSDK-iOS-Example";
+			productName = "AliyunOSSSDK-iOS-Example";
+			productReference = D83D58A61FC6B2850022761B /* AliyunOSSSDK-iOS-Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D87183A61FC56F12000DD9EC /* AliyunOSSiOSTests */ = {
@@ -273,7 +268,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D87183AD1FC56F12000DD9EC /* PBXTargetDependency */,
 			);
 			name = AliyunOSSiOSTests;
 			productName = AliyunOSSiOSTests;
@@ -289,7 +283,7 @@
 				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "阿里云";
 				TargetAttributes = {
-					D87182B41FC55611000DD9EC = {
+					D83D58A51FC6B2850022761B = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
 					};
@@ -313,23 +307,21 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */,
 				D87183A61FC56F12000DD9EC /* AliyunOSSiOSTests */,
+				D83D58A51FC6B2850022761B /* AliyunOSSSDK-iOS-Example */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D87182B31FC55611000DD9EC /* Resources */ = {
+		D83D58A41FC6B2850022761B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87182C21FC55611000DD9EC /* Assets.xcassets in Resources */,
-				D87183CC1FC57366000DD9EC /* runsheng.xml in Resources */,
-				D871839E1FC56D4A000DD9EC /* httpserver.py in Resources */,
-				D87183961FC56BA6000DD9EC /* Launch Screen.storyboard in Resources */,
-				D871839C1FC56D4A000DD9EC /* sts.py in Resources */,
-				D87183CE1FC57366000DD9EC /* wangwang.zip in Resources */,
+				D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */,
+				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
+				D83D58E31FC6B61F0022761B /* Info.plist in Resources */,
+				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,24 +330,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				D87183C81FC572C6000DD9EC /* Info.plist in Resources */,
-				D87183CF1FC57366000DD9EC /* wangwang.zip in Resources */,
-				D87183CD1FC57366000DD9EC /* runsheng.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D87182B11FC55611000DD9EC /* Sources */ = {
+		D83D58A21FC6B2850022761B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87182BD1FC55611000DD9EC /* RootViewController.m in Sources */,
-				D87182E01FC55940000DD9EC /* GetObjcetSample.m in Sources */,
-				D87182C81FC55611000DD9EC /* main.m in Sources */,
-				D87182E61FC55CC4000DD9EC /* OSSConstants.m in Sources */,
-				D87182E11FC55940000DD9EC /* StstokenSample.m in Sources */,
-				D87182BA1FC55611000DD9EC /* AppDelegate.m in Sources */,
+				D83D58D31FC6B3100022761B /* OssService.m in Sources */,
+				D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */,
+				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
+				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
+				D83D58CF1FC6B3100022761B /* StstokenSample.m in Sources */,
+				D83D58D01FC6B3100022761B /* GetObjcetSample.m in Sources */,
+				D83D58E21FC6B61F0022761B /* main.m in Sources */,
+				D83D58CE1FC6B3100022761B /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +357,11 @@
 			files = (
 				D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */,
 				D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */,
+				D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */,
 				D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */,
+				D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */,
+				D83D58581FC681F90022761B /* OSSModelTests.m in Sources */,
+				D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */,
 				D87183C41FC572C6000DD9EC /* OSSTaskTests.m in Sources */,
 				D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */,
 				D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */,
@@ -375,15 +371,60 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		D87183AD1FC56F12000DD9EC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D87182B41FC55611000DD9EC /* AliyunOSSSDK-Example */;
-			targetProxy = D87183AC1FC56F12000DD9EC /* PBXContainerItemProxy */;
+/* Begin PBXVariantGroup section */
+		D83D58E41FC6B6D90022761B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D83D58E51FC6B6D90022761B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
 		};
-/* End PBXTargetDependency section */
+		D83D58E61FC6B6D90022761B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D83D58E71FC6B6D90022761B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D83D58BA1FC6B2850022761B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-iOS-Example/Supporting Files/AliyunOSSSDK-iOS-Example-Prefix.pch";
+				INFOPLIST_FILE = "AliyunOSSSDK-iOS-Example/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-iOS-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D83D58BB1FC6B2850022761B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-iOS-Example/Supporting Files/AliyunOSSSDK-iOS-Example-Prefix.pch";
+				INFOPLIST_FILE = "AliyunOSSSDK-iOS-Example/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-iOS-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		D87182C91FC55611000DD9EC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -488,44 +529,13 @@
 			};
 			name = Release;
 		};
-		D87182CC1FC55611000DD9EC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/AliyunOSSSDK-Example-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		D87182CD1FC55611000DD9EC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/AliyunOSSSDK-Example-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/AliyunOSSSDK-Example/Supporting Files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-Example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		D87183AF1FC56F12000DD9EC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
 				INFOPLIST_FILE = "$(SRCROOT)/../AliyunOSSiOSTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -544,6 +554,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PLATFORM_DIR)/Developer/Library/Frameworks";
 				INFOPLIST_FILE = "$(SRCROOT)/../AliyunOSSiOSTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -559,20 +570,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D83D58B91FC6B2850022761B /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-iOS-Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D83D58BA1FC6B2850022761B /* Debug */,
+				D83D58BB1FC6B2850022761B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D87182B01FC55611000DD9EC /* Build configuration list for PBXProject "AliyunOSSSDK-Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D87182C91FC55611000DD9EC /* Debug */,
 				D87182CA1FC55611000DD9EC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D87182CB1FC55611000DD9EC /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-Example" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D87182CC1FC55611000DD9EC /* Debug */,
-				D87182CD1FC55611000DD9EC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

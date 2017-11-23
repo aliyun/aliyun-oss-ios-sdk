@@ -23,9 +23,9 @@ def getSts():
 	# 构建Aliyun Client时需要设置AccessKeyId和AccessKeySevcret
 	# STS是Global Service, API入口位于华东 1 (杭州) , 这里Region填写"cn-hangzhou"
 	# clt = client.AcsClient('<access-key-id>','<access-key-secret>','cn-hangzhou')
-	AccessKeyID = "************************"
-	AccessKeySecret = "************************"
-	roleArn = "************************"
+	AccessKeyID = "LTAIQTCIPlFVB3DG"
+	AccessKeySecret = "vdKZvoyoDcOdFksbRVDQRS657TiP8w"
+	roleArn = "acs:ram::1431805896704807:role/runsheng-role"
 	clt = client.AcsClient(AccessKeyID,AccessKeySecret,'cn-hangzhou')
 	# 构造"AssumeRole"请求
 	request = AssumeRoleRequest.AssumeRoleRequest()
@@ -34,7 +34,7 @@ def getSts():
 	# RoleSessionName 是临时Token的会话名称，自己指定用于标识你的用户，主要用于审计，或者用于区分Token颁发给谁
 	# 但是注意RoleSessionName的长度和规则，不要有空格，只能有'-' '.' '@' 字母和数字等字符
 	# 具体规则请参考API文档中的格式要求
-	request.set_RoleSessionName('roleSessionName')
+	request.set_RoleSessionName('runsheng')
 
 	#OSS Policy settings  could not set by default
 	#can read https://help.aliyun.com/document_detail/56288.html

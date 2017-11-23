@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cg2-7I-Nog"/>
+                        <viewControllerLayoutGuide type="bottom" id="dBc-aF-aDR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="t84-ci-pGw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VT5-oY-efh">
+                                <rect key="frame" x="189" y="254" width="62" height="30"/>
+                                <state key="normal" title="选择图片"/>
+                                <connections>
+                                    <action selector="onOssButtonSelectPic:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6kQ-TN-hog"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CcC-4x-oji">
+                                <rect key="frame" x="78" y="258" width="90" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="74I-xq-vxi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="gur-1B-HA6"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="文件名" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9WH-s3-Jn8">
+                                <rect key="frame" x="16" y="259" width="52" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="普通上传下载" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wul-YY-MEk">
+                                <rect key="frame" x="16" y="309" width="104" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略宽度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="J3n-eg-YMM">
+                                <rect key="frame" x="16" y="409" width="78.5" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="YC7-nh-UdS"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入水印文字" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hgl-Ju-rZG">
+                                <rect key="frame" x="16" y="465" width="121" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="rBP-1M-61Y"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="文字大小" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wP0-o6-a06">
+                                <rect key="frame" x="145" y="465" width="78.5" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="4rk-eI-Ahq"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略高度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdz-al-aWO">
+                                <rect key="frame" x="102.5" y="409" width="78.5" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Zkp-YZ-EoE"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PP1-ni-nde">
+                                <rect key="frame" x="195.5" y="409" width="62" height="30"/>
+                                <state key="normal" title="图片缩略"/>
+                                <connections>
+                                    <action selector="onOssButtonResize:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RzU-bN-H3z"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dnm-Xy-yaF">
+                                <rect key="frame" x="227" y="309" width="31" height="30"/>
+                                <state key="normal" title="下载"/>
+                                <connections>
+                                    <action selector="onOssButtonNormalGet:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1Ps-9d-vgd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B93-Ob-URi">
+                                <rect key="frame" x="265" y="254" width="31" height="30"/>
+                                <state key="normal" title="取消"/>
+                                <connections>
+                                    <action selector="onOssButtonCancel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cg0-kV-bM3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y0X-4s-l0c">
+                                <rect key="frame" x="240" y="465" width="62" height="30"/>
+                                <state key="normal" title="文字水印"/>
+                                <connections>
+                                    <action selector="onOssButtonWatermark:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4He-He-1lU"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Wi-GC-405">
+                                <rect key="frame" x="11" y="20" width="354" height="223"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="223" id="ESY-j0-zhe"/>
+                                    <constraint firstAttribute="width" constant="354" id="HTW-DJ-Qd6"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e2n-IK-bCa">
+                                <rect key="frame" x="172" y="309" width="31" height="30"/>
+                                <state key="normal" title="上传"/>
+                                <connections>
+                                    <action selector="onOssButtonNormalPut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="IRT-U5-kKI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="57G-Kx-2aQ">
+                                <rect key="frame" x="273" y="309" width="31" height="30"/>
+                                <state key="normal" title="取消"/>
+                                <connections>
+                                    <action selector="onOssButtonNormalCancel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Gva-gD-JqJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="9WH-s3-Jn8" firstAttribute="top" secondItem="2Wi-GC-405" secondAttribute="bottom" constant="16" id="1bV-2o-Wbh"/>
+                            <constraint firstItem="e2n-IK-bCa" firstAttribute="centerX" secondItem="t84-ci-pGw" secondAttribute="centerX" id="2GH-HE-krc"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="J3n-eg-YMM" secondAttribute="leading" id="3Xw-LX-vsA"/>
+                            <constraint firstAttribute="trailing" secondItem="PP1-ni-nde" secondAttribute="trailing" constant="117.5" id="5OH-Jy-8Hz"/>
+                            <constraint firstItem="57G-Kx-2aQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="dnm-Xy-yaF" secondAttribute="trailing" constant="8" symbolic="YES" id="7OB-JF-DSX"/>
+                            <constraint firstItem="CcC-4x-oji" firstAttribute="leading" secondItem="9WH-s3-Jn8" secondAttribute="trailing" constant="10" id="9L7-jM-efI"/>
+                            <constraint firstItem="J3n-eg-YMM" firstAttribute="top" secondItem="wul-YY-MEk" secondAttribute="bottom" constant="79" id="Acf-ym-Uwe"/>
+                            <constraint firstItem="y0X-4s-l0c" firstAttribute="top" secondItem="wP0-o6-a06" secondAttribute="top" id="Fwv-xd-nqH"/>
+                            <constraint firstItem="zdz-al-aWO" firstAttribute="top" secondItem="J3n-eg-YMM" secondAttribute="top" id="G5l-hr-ySN"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="wul-YY-MEk" secondAttribute="leading" id="GCK-vP-ruz"/>
+                            <constraint firstItem="hgl-Ju-rZG" firstAttribute="top" secondItem="J3n-eg-YMM" secondAttribute="bottom" constant="26" id="HGQ-DC-kFR"/>
+                            <constraint firstItem="VT5-oY-efh" firstAttribute="leading" secondItem="CcC-4x-oji" secondAttribute="trailing" constant="21" id="KI0-is-kO5"/>
+                            <constraint firstItem="B93-Ob-URi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VT5-oY-efh" secondAttribute="trailing" constant="8" symbolic="YES" id="MBh-hF-1vQ"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="hgl-Ju-rZG" secondAttribute="leading" id="NN1-Ap-756"/>
+                            <constraint firstAttribute="trailing" secondItem="57G-Kx-2aQ" secondAttribute="trailing" constant="71" id="ODQ-WT-Dv5"/>
+                            <constraint firstItem="y0X-4s-l0c" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wP0-o6-a06" secondAttribute="trailing" symbolic="YES" id="PL6-e1-fL6"/>
+                            <constraint firstAttribute="trailing" secondItem="B93-Ob-URi" secondAttribute="trailing" constant="79" id="QPp-7a-zKc"/>
+                            <constraint firstItem="zdz-al-aWO" firstAttribute="leading" secondItem="J3n-eg-YMM" secondAttribute="trailing" constant="8" id="R8n-y6-jQW"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="wul-YY-MEk" secondAttribute="trailingMargin" id="TNO-jS-yue"/>
+                            <constraint firstItem="57G-Kx-2aQ" firstAttribute="top" secondItem="2Wi-GC-405" secondAttribute="bottom" constant="66" id="Vza-mN-Cxw"/>
+                            <constraint firstItem="wul-YY-MEk" firstAttribute="top" secondItem="9WH-s3-Jn8" secondAttribute="bottom" constant="29.5" id="bCX-4u-YZe"/>
+                            <constraint firstAttribute="trailing" secondItem="y0X-4s-l0c" secondAttribute="trailing" constant="73" id="bOz-gV-edu"/>
+                            <constraint firstItem="PP1-ni-nde" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zdz-al-aWO" secondAttribute="trailing" constant="8" symbolic="YES" id="cLw-oe-qWp"/>
+                            <constraint firstItem="PP1-ni-nde" firstAttribute="top" secondItem="zdz-al-aWO" secondAttribute="top" id="cqN-7U-I3T"/>
+                            <constraint firstItem="VT5-oY-efh" firstAttribute="centerY" secondItem="CcC-4x-oji" secondAttribute="centerY" id="fbz-Vj-PsJ"/>
+                            <constraint firstItem="wP0-o6-a06" firstAttribute="leading" secondItem="hgl-Ju-rZG" secondAttribute="trailing" constant="8" id="fm3-QU-W2B"/>
+                            <constraint firstItem="2Wi-GC-405" firstAttribute="top" secondItem="cg2-7I-Nog" secondAttribute="bottom" id="glS-TT-DGh"/>
+                            <constraint firstItem="dnm-Xy-yaF" firstAttribute="top" secondItem="e2n-IK-bCa" secondAttribute="top" id="jFQ-fb-4m1"/>
+                            <constraint firstItem="e2n-IK-bCa" firstAttribute="top" secondItem="wul-YY-MEk" secondAttribute="top" id="nfe-6G-8I7"/>
+                            <constraint firstItem="dnm-Xy-yaF" firstAttribute="leading" secondItem="e2n-IK-bCa" secondAttribute="trailing" constant="24" id="okh-Dx-C5Y"/>
+                            <constraint firstItem="2Wi-GC-405" firstAttribute="centerX" secondItem="t84-ci-pGw" secondAttribute="centerX" id="qya-DO-1tx"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="9WH-s3-Jn8" secondAttribute="leading" id="tJn-Pt-gNU"/>
+                            <constraint firstItem="wP0-o6-a06" firstAttribute="top" secondItem="hgl-Ju-rZG" secondAttribute="top" id="u59-Bp-gIj"/>
+                            <constraint firstItem="B93-Ob-URi" firstAttribute="centerY" secondItem="VT5-oY-efh" secondAttribute="centerY" id="uve-0Q-lzW"/>
+                            <constraint firstItem="CcC-4x-oji" firstAttribute="centerY" secondItem="9WH-s3-Jn8" secondAttribute="centerY" id="yX4-j8-emh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="inputViewBottom" destination="glS-TT-DGh" id="MMx-rM-qR5"/>
+                        <outlet property="ossButtonCancel" destination="B93-Ob-URi" id="NLE-K8-Vuy"/>
+                        <outlet property="ossButtonNormalCancel" destination="57G-Kx-2aQ" id="h3g-0V-Thg"/>
+                        <outlet property="ossButtonNormalGet" destination="dnm-Xy-yaF" id="Fyn-Dl-DAa"/>
+                        <outlet property="ossButtonNormalPut" destination="e2n-IK-bCa" id="V40-b8-UcT"/>
+                        <outlet property="ossButtonResize" destination="PP1-ni-nde" id="1YJ-jt-v94"/>
+                        <outlet property="ossButtonSelectPic" destination="VT5-oY-efh" id="mgU-ns-Wsc"/>
+                        <outlet property="ossButtonWatermark" destination="y0X-4s-l0c" id="Vc7-KE-qh3"/>
+                        <outlet property="ossImageView" destination="2Wi-GC-405" id="n0T-Sz-7kk"/>
+                        <outlet property="ossTextFileName" destination="CcC-4x-oji" id="cZZ-ep-Mmf"/>
+                        <outlet property="ossTextHeight" destination="zdz-al-aWO" id="I8r-cQ-ObL"/>
+                        <outlet property="ossTextSize" destination="wP0-o6-a06" id="fKg-89-8pb"/>
+                        <outlet property="ossTextWaterMark" destination="hgl-Ju-rZG" id="vw9-Ry-8AU"/>
+                        <outlet property="ossTextWidth" destination="J3n-eg-YMM" id="pxV-ba-Yck"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138.40000000000001" y="204.64767616191907"/>
+        </scene>
+    </scenes>
+</document>

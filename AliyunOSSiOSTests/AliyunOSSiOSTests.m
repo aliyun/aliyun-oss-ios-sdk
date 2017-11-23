@@ -15,16 +15,10 @@
 
 @end
 
-<<<<<<< HEAD
 NSString * const TEST_BUCKET = @"test_bucket";
 
 NSString * const PUBLIC_BUCKET = @"public_bucket";
 NSString * const ENDPOINT = @"endpoint";
-=======
-NSString * const TEST_BUCKET = @"sdk-demo001";
-NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
-NSString * const ENDPOINT = @"https://oss-cn-qingdao.aliyuncs.com";
->>>>>>> master
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"callback_url";
 NSString * const CNAME = @"cname";
@@ -125,13 +119,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
     
     credential = [self newStsTokenCredentialProvider];
     credentialFed = [self newFederationCredentialProvider];
-<<<<<<< HEAD
-    
-    
-=======
     authCredential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:StsTokenURL];
-
->>>>>>> master
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;

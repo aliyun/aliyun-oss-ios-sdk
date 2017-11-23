@@ -11,8 +11,6 @@
 NSString * const BUCKET_NAME = @"<bucket_name>";
 NSString * const UPLOAD_OBJECT_KEY = @"sampleObject";
 NSString * const DOWNLOAD_OBJECT_KEY = @"sampleObject";
-
-@implementation Constant
-
-
-@end
+NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
+NSString * const imageEndPoint = @"http://img-cn-beijing.aliyuncs.com";
+NSString * const callbackAddress = @"http://oss-demo.aliyuncs.com:23450";
