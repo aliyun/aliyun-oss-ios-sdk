@@ -7,10 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSModel.h"
-#import "OSSTaskCompletionSource.h"
-#import "OSSTask.h"
-#import "OSSUtil.h"
+#import <AliyunOSSiOS/OSSModel.h>
+#import <AliyunOSSiOS/OSSTaskCompletionSource.h>
+#import <AliyunOSSiOS/OSSTask.h>
+#import <AliyunOSSiOS/OSSUtil.h>
 
 #define RIGHT_PROVIDER_SERVER @"http://30.40.38.15:3015/sts/getsts"
 #define WRONG_PROVIDER_SERVER @"http://30.40.38.78:3015/sts/getsts"

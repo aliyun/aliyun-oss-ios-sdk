@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PROJECT_NAME='AliyunOSSiOS'
+PROJECT_NAME='AliyunOSSSDK iOS'
 SRCROOT='.'
 
 # Sets the target folders and the final framework product.

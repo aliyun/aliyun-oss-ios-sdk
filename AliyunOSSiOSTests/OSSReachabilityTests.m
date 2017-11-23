@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSReachability.h"
+#import <AliyunOSSiOS/OSSReachability.h>
 
 @interface OSSReachabilityTests : XCTestCase
 

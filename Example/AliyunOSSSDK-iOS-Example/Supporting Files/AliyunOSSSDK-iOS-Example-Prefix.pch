@@ -1,0 +1,17 @@
+//
+//  AliyunOSSSDK-Example-Prefix.pch
+//  AliyunOSSSDK-Example
+//
+//  Created by 怀叙 on 2017/11/22.
+//  Copyright © 2017年 阿里云. All rights reserved.
+//
+
+#ifndef AliyunOSSSDK_Example_Prefix_pch
+#define AliyunOSSSDK_Example_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import "OSSConstants.h"
+
+#endif /* AliyunOSSSDK_Example_Prefix_pch */

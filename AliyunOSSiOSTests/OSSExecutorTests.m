@@ -7,8 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSTask.h"
-#import "OSSExecutor.h"
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 
 @interface OSSExecutorTests : XCTestCase
 

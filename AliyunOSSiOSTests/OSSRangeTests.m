@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSModel.h"
+#import <AliyunOSSiOS/OSSModel.h>
 
 @interface OSSRangeTests : XCTestCase
 

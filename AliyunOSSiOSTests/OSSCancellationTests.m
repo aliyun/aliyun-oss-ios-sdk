@@ -7,9 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OSSCancellationTokenSource.h"
-#import "OSSCancellationTokenRegistration.h"
-#import "OSSCancellationToken.h"
+#import <AliyunOSSiOS/OSSCancellationTokenSource.h>
+#import <AliyunOSSiOS/OSSCancellationTokenRegistration.h>
+#import <AliyunOSSiOS/OSSCancellationToken.h>
 
 @interface OSSCancellationTests : XCTestCase
 
