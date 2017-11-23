@@ -55,17 +55,6 @@
 
 @implementation OSSXMLDictionaryParser
 
-+ (OSSXMLDictionaryParser *)sharedInstance
-{
-    static dispatch_once_t once;
-    static OSSXMLDictionaryParser *sharedInstance;
-    dispatch_once(&once, ^{
-        
-        sharedInstance = [[OSSXMLDictionaryParser alloc] init];
-    });
-    return sharedInstance;
-}
-
 - (id)init
 {
     if ((self = [super init]))
@@ -94,10 +83,26 @@
     return copy;
 }
 
+#pragma mark - Public Methods
+
++ (OSSXMLDictionaryParser *)sharedInstance
+{
+    static dispatch_once_t once;
+    static OSSXMLDictionaryParser *sharedInstance;
+    dispatch_once(&once, ^{
+        
+        sharedInstance = [[OSSXMLDictionaryParser alloc] init];
+    });
+    return sharedInstance;
+}
+
 - (NSDictionary *)dictionaryWithParser:(NSXMLParser *)parser
 {
     [parser setDelegate:self];
-    [parser parse];
+    BOOL succeed = [parser parse];
+#ifdef DEBUG
+    NSLog(@"%@",(succeed?@"YES":@"NO"));
+#endif
     id result = _root;
     _root = nil;
     _stack = nil;
@@ -122,6 +127,8 @@
 	NSData *data = [NSData dataWithContentsOfFile:path];
 	return [self dictionaryWithData:data];
 }
+
+#pragma mark - Private Methods
 
 + (NSString *)XMLStringForNode:(id)node withNodeName:(NSString *)nodeName
 {	
@@ -196,6 +203,32 @@
 		[_text appendString:text];
 	}
 }
+
+- (NSString *)nameForNode:(NSDictionary *)node inDictionary:(NSDictionary *)dict
+{
+    if (node.oss_nodeName)
+    {
+        return node.oss_nodeName;
+    }
+    else
+    {
+        for (NSString *name in dict)
+        {
+            id object = dict[name];
+            if (object == node)
+            {
+                return name;
+            }
+            else if ([object isKindOfClass:[NSArray class]] && [object containsObject:node])
+            {
+                return name;
+            }
+        }
+    }
+    return nil;
+}
+
+#pragma mark - NSXMLParserDelegate mehods
 
 - (void)parser:(__unused NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName attributes:(NSDictionary *)attributeDict
 {	
@@ -284,30 +317,6 @@
 		}
 		[_stack addObject:node];
 	}
-}
-
-- (NSString *)nameForNode:(NSDictionary *)node inDictionary:(NSDictionary *)dict
-{
-	if (node.oss_nodeName)
-	{
-		return node.oss_nodeName;
-	}
-	else
-	{
-		for (NSString *name in dict)
-		{
-			id object = dict[name];
-			if (object == node)
-			{
-				return name;
-			}
-			else if ([object isKindOfClass:[NSArray class]] && [object containsObject:node])
-			{
-				return name;
-			}
-		}
-	}
-	return nil;
 }
 
 - (void)parser:(__unused NSXMLParser *)parser didEndElement:(__unused NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName

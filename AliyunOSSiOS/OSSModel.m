@@ -15,22 +15,6 @@
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
 
-@implementation NSString (OSS)
-
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString {
-    if ([self hasSuffix:@"/"]) {
-        return [NSString stringWithFormat:@"%@%@", self, aString];
-    } else {
-        return [NSString stringWithFormat:@"%@/%@", self, aString];
-    }
-}
-
-- (NSString *)oss_trim {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-@end
-
 @implementation NSDictionary (OSS)
 
 - (NSString *)base64JsonString {
@@ -55,13 +39,6 @@
 NSString * const serverReturnDateFormat = @"EEE, dd MMM yyyy HH:mm:ss z";
 
 static NSTimeInterval _clockSkew = 0.0;
-
-+ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime {
-    NSTimeInterval deviceTime = [[NSDate date] timeIntervalSince1970];
-    @synchronized (self) {
-        _clockSkew = deviceTime - standardTime;
-    }
-}
 
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew {
     @synchronized(self) {
@@ -154,8 +131,10 @@ static NSTimeInterval _clockSkew = 0.0;
 }
 
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
-    if (!self.accessKey || !self.secretKey) {
-        if (error != nil) {
+    if (![self.accessKey oss_isNotEmpty] || ![self.secretKey oss_isNotEmpty])
+    {
+        if (error != nil)
+        {
             *error = [NSError errorWithDomain:OSSClientErrorDomain
                                          code:OSSClientErrorCodeSignFailed
                                      userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];

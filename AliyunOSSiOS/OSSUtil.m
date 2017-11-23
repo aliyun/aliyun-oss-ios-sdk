@@ -1086,15 +1086,24 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
 @end
 
-@implementation NSString(OSSUtils)
+@implementation NSString (OSS)
 
-- (NSString *)oss_trim
-{
+- (NSString *)oss_trim {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-- (BOOL)oss_notEmpty
+
+- (BOOL)oss_isNotEmpty
 {
-    return ![self.oss_trim isEqualToString:@""];
+    return ![[self oss_trim] isEqualToString:@""];
+}
+
+- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString
+{
+    if ([self hasSuffix:@"/"]) {
+        return [NSString stringWithFormat:@"%@%@", self, aString];
+    } else {
+        return [NSString stringWithFormat:@"%@/%@", self, aString];
+    }
 }
 
 @end

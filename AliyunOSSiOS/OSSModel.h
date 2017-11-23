@@ -57,14 +57,6 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
 typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 
 /**
- Categories NSString
- */
-@interface NSString (OSS)
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
-- (NSString *)oss_trim;
-@end
-
-/**
  Categories NSDictionary
  */
 @interface NSDictionary (OSS)
@@ -75,7 +67,6 @@ typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
  Categories NSDate
  */
 @interface NSDate (OSS)
-+ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime;
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
 + (NSDate *)oss_dateFromString:(NSString *)string;
 + (NSDate *)oss_clockSkewFixedDate;
@@ -423,7 +414,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
  The bucket location
  For more information about OSS datacenter and endpoint, please check out <a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
  */
-@property (nonatomic, strong) NSString * location;
+@property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
 
 /**
  Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.

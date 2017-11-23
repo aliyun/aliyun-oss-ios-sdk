@@ -21,7 +21,7 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
  */
 - (OSSTaskHandler *)uploadData:(NSData *)data
                withContentType:(NSString *)contentType
-                withObjectMeta:(NSDictionary *)meta
+                withObjectMeta:(NSDictionary * _Nullable)meta
                   toBucketName:(NSString *)bucketName
                    toObjectKey:(NSString *)objectKey
                    onCompleted:(void(^)(BOOL, NSError *))onCompleted

@@ -83,8 +83,12 @@
 		D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */; };
 		D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437721FBC59AD009AE466 /* OSSLogTests.m */; };
 		D89C27AD1FBDABCE009B3794 /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */; };
-		D89C27AF1FBDB1B4009B3794 /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D89C27AE1FBDB1B4009B3794 /* runsheng.xml */; };
+		D89C27AF1FBDB1B4009B3794 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D89C27AE1FBDB1B4009B3794 /* test.xml */; };
 		D89C27B11FBDB212009B3794 /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */; };
+		D8EECB5F1FC272CC0072B75D /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EECB5E1FC272CC0072B75D /* OSSModelTests.m */; };
+		D8EECB651FC27D500072B75D /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EECB641FC27D500072B75D /* OSSRangeTests.m */; };
+		D8EECB671FC2834F0072B75D /* OSSSignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EECB661FC2834F0072B75D /* OSSSignTests.m */; };
+		D8EECB691FC286990072B75D /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EECB681FC286990072B75D /* OSSCredentialProviderTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,8 +198,12 @@
 		D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSiOSTests.m; sourceTree = "<group>"; };
 		D84437721FBC59AD009AE466 /* OSSLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSLogTests.m; sourceTree = "<group>"; };
 		D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
-		D89C27AE1FBDB1B4009B3794 /* runsheng.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
+		D89C27AE1FBDB1B4009B3794 /* test.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionaryTests.m; sourceTree = "<group>"; };
+		D8EECB5E1FC272CC0072B75D /* OSSModelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSModelTests.m; sourceTree = "<group>"; };
+		D8EECB641FC27D500072B75D /* OSSRangeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSRangeTests.m; sourceTree = "<group>"; };
+		D8EECB661FC2834F0072B75D /* OSSSignTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSSignTests.m; sourceTree = "<group>"; };
+		D8EECB681FC286990072B75D /* OSSCredentialProviderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSCredentialProviderTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +318,10 @@
 				D84437721FBC59AD009AE466 /* OSSLogTests.m */,
 				D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */,
 				D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */,
+				D8EECB5E1FC272CC0072B75D /* OSSModelTests.m */,
+				D8EECB641FC27D500072B75D /* OSSRangeTests.m */,
+				D8EECB661FC2834F0072B75D /* OSSSignTests.m */,
+				D8EECB681FC286990072B75D /* OSSCredentialProviderTests.m */,
 			);
 			path = AliyunOSSiOSTests;
 			sourceTree = "<group>";
@@ -410,7 +422,7 @@
 			children = (
 				D17588F81FBC1CA5001EFFE9 /* wangwang.zip */,
 				4C30B7BD1F6136EB00CDAD9B /* main.m */,
-				D89C27AE1FBDB1B4009B3794 /* runsheng.xml */,
+				D89C27AE1FBDB1B4009B3794 /* test.xml */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -588,7 +600,7 @@
 				D1C3D8BD1F667021002F840A /* python in Resources */,
 				4C30B7CC1F6136EB00CDAD9B /* LaunchScreen.storyboard in Resources */,
 				4C30B7C91F6136EB00CDAD9B /* Assets.xcassets in Resources */,
-				D89C27AF1FBDB1B4009B3794 /* runsheng.xml in Resources */,
+				D89C27AF1FBDB1B4009B3794 /* test.xml in Resources */,
 				D17588FC1FBC1DE2001EFFE9 /* wangwang.zip in Resources */,
 				4C30B7C71F6136EB00CDAD9B /* Main.storyboard in Resources */,
 			);
@@ -633,9 +645,13 @@
 				D89C27AD1FBDABCE009B3794 /* OSSReachabilityTests.m in Sources */,
 				D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */,
 				D844376D1FBC371E009AE466 /* OSSExecutorTests.m in Sources */,
+				D8EECB5F1FC272CC0072B75D /* OSSModelTests.m in Sources */,
+				D8EECB691FC286990072B75D /* OSSCredentialProviderTests.m in Sources */,
 				D89C27B11FBDB212009B3794 /* OSSXMLDictionaryTests.m in Sources */,
 				D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */,
+				D8EECB651FC27D500072B75D /* OSSRangeTests.m in Sources */,
 				D84437641FBC2A0C009AE466 /* OSSTaskTests.m in Sources */,
+				D8EECB671FC2834F0072B75D /* OSSSignTests.m in Sources */,
 				D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
