@@ -8,10 +8,10 @@
 
 #import "OSSConstants.h"
 
-NSString * const BUCKET_NAME = @"huaixu-private";
-NSString * const UPLOAD_OBJECT_KEY = @"sampleObject";
-NSString * const DOWNLOAD_OBJECT_KEY = @"sampleObject";
+NSString * const BUCKET_NAME = @"bucket_name";
+NSString * const UPLOAD_OBJECT_KEY = @"upload_object_key";
+NSString * const DOWNLOAD_OBJECT_KEY = @"download_object_key";
 NSString * const endPoint = @"http://oss-cn-shenzhen.aliyuncs.com";
 NSString * const imageEndPoint = @"http://img-cn-shenzhen.aliyuncs.com";
 NSString * const callbackAddress = @"http://oss-demo.aliyuncs.com:23450";
-NSString * const STS_AUTH_URL = @"http://30.40.38.59:3018/sts/getsts";
+NSString * const STS_AUTH_URL = @"http://*.*.*.*:****/sts/getsts";
