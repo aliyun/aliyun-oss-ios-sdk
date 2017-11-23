@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/huaixu/Desktop/SDK/aliyun-oss-ios-sdk/AliyunOSSSDK.xcodeproj">
+      location = "group:AliyunOSSSDK.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Example/AliyunOSSSDK-Example.xcodeproj">
