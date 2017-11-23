@@ -15,10 +15,16 @@
 
 @end
 
+<<<<<<< HEAD
 NSString * const TEST_BUCKET = @"test_bucket";
 
 NSString * const PUBLIC_BUCKET = @"public_bucket";
 NSString * const ENDPOINT = @"endpoint";
+=======
+NSString * const TEST_BUCKET = @"sdk-demo001";
+NSString * const PUBLIC_BUCKET = @"public-read-write-android1";
+NSString * const ENDPOINT = @"https://oss-cn-qingdao.aliyuncs.com";
+>>>>>>> master
 NSString * const MultipartUploadObjectKey = @"multipart";
 NSString * const CALLBACK_URL = @"callback_url";
 NSString * const CNAME = @"cname";
@@ -29,7 +35,7 @@ static NSArray * fileSizeArray;
 static OSSClient * client;
 static dispatch_queue_t test_queue;
 
-id<OSSCredentialProvider>  credential, credentialFed;
+id<OSSCredentialProvider>  credential, credentialFed, authCredential;
 
 @implementation oss_ios_sdk_newTests
 
@@ -119,8 +125,13 @@ id<OSSCredentialProvider>  credential, credentialFed;
     
     credential = [self newStsTokenCredentialProvider];
     credentialFed = [self newFederationCredentialProvider];
+<<<<<<< HEAD
     
     
+=======
+    authCredential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:StsTokenURL];
+
+>>>>>>> master
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;
@@ -128,7 +139,7 @@ id<OSSCredentialProvider>  credential, credentialFed;
     conf.maxConcurrentRequestCount = 5;
     
     // switches to another credential provider.
-    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:credential clientConfiguration:conf];
+    client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authCredential clientConfiguration:conf];
 }
 
 
@@ -212,9 +223,9 @@ id<OSSCredentialProvider>  credential, credentialFed;
                                                                 options:kNilOptions
                                                                   error:nil];
         
-        NSString * accessKey = [object[@"Credentials"] objectForKey:@"AccessKeyId"];
-        NSString * secretKey = [object[@"Credentials"] objectForKey:@"AccessKeySecret"];
-        NSString * token = [object[@"Credentials"] objectForKey:@"SecurityToken"];
+        NSString * accessKey = [object objectForKey:@"AccessKeyId"];
+        NSString * secretKey = [object objectForKey:@"AccessKeySecret"];
+        NSString * token = [object objectForKey:@"SecurityToken"];
         OSSLogDebug(@"token: %@ %@ %@", accessKey, secretKey, token);
         
         return [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:accessKey secretKeyId:secretKey securityToken:token];
@@ -2921,6 +2932,72 @@ id<OSSCredentialProvider>  credential, credentialFed;
     NSArray *arr = [[fileLogger logFileManager] sortedLogFileInfos];
     unsigned long long filesize = [arr[0] fileSize];
     return filesize;
+}
+
+- (void)testOSSAuthCredentialProvider {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    
+    id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:StsTokenURL];
+    
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:provider];
+    
+    OSSTask * task = [client getObject:request];
+    
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertEqual(1024000, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testOSSAuthCredentialProviderWithDecoder {
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = TEST_BUCKET;
+    request.objectKey = @"file1m";
+    
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    
+    id<OSSCredentialProvider> provider =
+    [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:StsTokenURL responseDecoder:^NSData *(NSData *data) {
+        NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSData* decodeData = [str dataUsingEncoding:NSUTF8StringEncoding];
+        if (decodeData) {
+            return decodeData;
+        }
+        return data;
+    }];
+    
+    OSSClient * client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:provider];
+    
+    OSSTask * task = [client getObject:request];
+    
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectResult * result = task.result;
+        XCTAssertEqual(200, result.httpResponseCode);
+        XCTAssertEqual(1024000, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
+              result.requestId,
+              result.httpResponseHeaderFields,
+              (unsigned long)[result.downloadedData length]);
+        return nil;
+    }] waitUntilFinished];
 }
 
 @end

@@ -500,53 +500,6 @@ NSString * __nullable OSSDDExtractFileNameWithoutExtension(const char *filePath,
  */
 @property (nonatomic, copy, readonly) NSArray<OSSDDLoggerInformation *> *allLoggersWithLevel;
 
-/**
- * Registered Dynamic Logging
- *
- * These methods allow you to obtain a list of classes that are using registered dynamic logging,
- * and also provides methods to get and set their log level during run time.
- **/
-
-/**
- *  Returns an array with the classes that are using registered dynamic logging
- */
-@property (class, nonatomic, copy, readonly) NSArray<Class> *registeredClasses;
-
-/**
- *  Returns an array with the classes names that are using registered dynamic logging
- */
-@property (class, nonatomic, copy, readonly) NSArray<NSString*> *registeredClassNames;
-
-/**
- *  Returns the current log level for a certain class
- *
- *  @param aClass `Class` param
- */
-+ (OSSDDLogLevel)levelForClass:(Class)aClass;
-
-/**
- *  Returns the current log level for a certain class
- *
- *  @param aClassName string param
- */
-+ (OSSDDLogLevel)levelForClassWithName:(NSString *)aClassName;
-
-/**
- *  Set the log level for a certain class
- *
- *  @param level  the new level
- *  @param aClass `Class` param
- */
-+ (void)setLevel:(OSSDDLogLevel)level forClass:(Class)aClass;
-
-/**
- *  Set the log level for a certain class
- *
- *  @param level      the new level
- *  @param aClassName string param
- */
-+ (void)setLevel:(OSSDDLogLevel)level forClassWithName:(NSString *)aClassName;
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

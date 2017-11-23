@@ -54,14 +54,7 @@ typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
 typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
 typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
-
-/**
- Categories NSString
- */
-@interface NSString (OSS)
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString;
-- (NSString *)oss_trim;
-@end
+typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 
 /**
  Categories NSDictionary
@@ -74,7 +67,6 @@ typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
  Categories NSDate
  */
 @interface NSDate (OSS)
-+ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime;
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
 + (NSDate *)oss_dateFromString:(NSString *)string;
 + (NSDate *)oss_clockSkewFixedDate;
@@ -175,6 +167,16 @@ TODOTODO
 - (instancetype)initWithAccessKeyId:(NSString *)accessKeyId
                         secretKeyId:(NSString *)secretKeyId
                       securityToken:(NSString *)securityToken;
+@end
+
+/**
+ auth credential provider.
+ */
+@interface OSSAuthCredentialProvider : OSSFederationCredentialProvider
+@property (nonatomic, strong) NSString * authServerUrl;
+@property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder;
 @end
 
 /**
@@ -412,7 +414,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
  The bucket location
  For more information about OSS datacenter and endpoint, please check out <a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
  */
-@property (nonatomic, strong) NSString * location;
+@property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
 
 /**
  Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.

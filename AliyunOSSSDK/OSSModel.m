@@ -15,22 +15,6 @@
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
 
-@implementation NSString (OSS)
-
-- (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)aString {
-    if ([self hasSuffix:@"/"]) {
-        return [NSString stringWithFormat:@"%@%@", self, aString];
-    } else {
-        return [NSString stringWithFormat:@"%@/%@", self, aString];
-    }
-}
-
-- (NSString *)oss_trim {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-@end
-
 @implementation NSDictionary (OSS)
 
 - (NSString *)base64JsonString {
@@ -55,13 +39,6 @@
 NSString * const serverReturnDateFormat = @"EEE, dd MMM yyyy HH:mm:ss z";
 
 static NSTimeInterval _clockSkew = 0.0;
-
-+ (void)oss_setStandardTimeIntervalSince1970:(NSTimeInterval)standardTime {
-    NSTimeInterval deviceTime = [[NSDate date] timeIntervalSince1970];
-    @synchronized (self) {
-        _clockSkew = deviceTime - standardTime;
-    }
-}
 
 + (void)oss_setClockSkew:(NSTimeInterval)clockSkew {
     @synchronized(self) {
@@ -154,8 +131,10 @@ static NSTimeInterval _clockSkew = 0.0;
 }
 
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
-    if (!self.accessKey || !self.secretKey) {
-        if (error != nil) {
+    if (![self.accessKey oss_isNotEmpty] || ![self.secretKey oss_isNotEmpty])
+    {
+        if (error != nil)
+        {
             *error = [NSError errorWithDomain:OSSClientErrorDomain
                                          code:OSSClientErrorCodeSignFailed
                                      userInfo:@{OSSErrorMessageTOKEN: @"accessKey or secretKey can't be null"}];
@@ -269,6 +248,64 @@ static NSTimeInterval _clockSkew = 0.0;
 - (NSString *)sign:(NSString *)content error:(NSError **)error {
     NSString * sign = [OSSUtil calBase64Sha1WithData:content withSecret:self.secretKeyId];
     return [NSString stringWithFormat:@"OSS %@:%@", self.accessKeyId, sign];
+}
+
+@end
+
+@implementation OSSAuthCredentialProvider
+
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl
+{
+    return [self initWithAuthServerUrl:authServerUrl responseDecoder:nil];
+}
+
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder
+{
+    self = [super initWithFederationTokenGetter:^OSSFederationToken * {
+        NSURL * url = [NSURL URLWithString:self.authServerUrl];
+        NSURLRequest * request = [NSURLRequest requestWithURL:url];
+        OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+        NSURLSession * session = [NSURLSession sharedSession];
+        NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                        if (error) {
+                                                            [tcs setError:error];
+                                                            return;
+                                                        }
+                                                        [tcs setResult:data];
+                                                    }];
+        [sessionTask resume];
+        [tcs.task waitUntilFinished];
+        if (tcs.task.error) {
+            return nil;
+        } else {
+            NSData* data = tcs.task.result;
+            if(decoder){
+                data = decoder(data);
+            }
+            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:kNilOptions
+                                                                      error:nil];
+            int statusCode = [[object objectForKey:@"StatusCode"] intValue];
+            if (statusCode == 200) {
+                OSSFederationToken * token = [OSSFederationToken new];
+                // All the entries below are mandatory.
+                token.tAccessKey = [object objectForKey:@"AccessKeyId"];
+                token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
+                token.tToken = [object objectForKey:@"SecurityToken"];
+                token.expirationTimeInGMTFormat = [object objectForKey:@"Expiration"];
+                OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"Expiration"]);
+                return token;
+            }else{
+                return nil;
+            }
+            
+        }
+    }];
+    if(self){
+        self.authServerUrl = authServerUrl;
+    }
+    return self;
 }
 
 @end
