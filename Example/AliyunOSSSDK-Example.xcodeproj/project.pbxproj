@@ -30,6 +30,8 @@
 		D83D58EC1FC6C0C70022761B /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D83D58F21FC6C1F40022761B /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58EE1FC6C1F40022761B /* sts.py */; };
 		D83D58F41FC6C1F40022761B /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F01FC6C1F40022761B /* httpserver.py */; };
+		D83D58FB1FC700C70022761B /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* runsheng.xml */; };
+		D83D58FC1FC700C70022761B /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
 		D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BA1FC572C6000DD9EC /* OSSLogTests.m */; };
 		D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */; };
@@ -43,6 +45,16 @@
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D83D58F61FC6FFA20022761B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D87182AD1FC55611000DD9EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D83D58A51FC6B2850022761B;
+			remoteInfo = "AliyunOSSSDK-iOS-Example";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		D83D58D71FC6B41C0022761B /* Embed Frameworks */ = {
@@ -87,6 +99,8 @@
 		D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83D58EE1FC6C1F40022761B /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
 		D83D58F01FC6C1F40022761B /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
+		D83D58F91FC700C70022761B /* runsheng.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
+		D83D58FA1FC700C70022761B /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D87182F81FC55F46000DD9EC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -131,6 +145,7 @@
 		D83D58A71FC6B2850022761B /* AliyunOSSSDK-iOS-Example */ = {
 			isa = PBXGroup;
 			children = (
+				D83D58F81FC700C70022761B /* Resources */,
 				D83D58DC1FC6B61F0022761B /* Supporting Files */,
 				D83D58BC1FC6B3100022761B /* Classes */,
 			);
@@ -195,6 +210,15 @@
 			);
 			name = Scripts;
 			path = ../Scripts;
+			sourceTree = "<group>";
+		};
+		D83D58F81FC700C70022761B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D83D58F91FC700C70022761B /* runsheng.xml */,
+				D83D58FA1FC700C70022761B /* wangwang.zip */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		D87182AC1FC55611000DD9EC = {
@@ -281,6 +305,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D83D58F71FC6FFA20022761B /* PBXTargetDependency */,
 			);
 			name = AliyunOSSiOSTests;
 			productName = AliyunOSSiOSTests;
@@ -303,7 +328,7 @@
 					D87183A61FC56F12000DD9EC = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
-						TestTargetID = D87182B41FC55611000DD9EC;
+						TestTargetID = D83D58A51FC6B2850022761B;
 					};
 				};
 			};
@@ -332,6 +357,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */,
+				D83D58FC1FC700C70022761B /* wangwang.zip in Resources */,
+				D83D58FB1FC700C70022761B /* runsheng.xml in Resources */,
 				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
 				D83D58E31FC6B61F0022761B /* Info.plist in Resources */,
 				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,
@@ -385,6 +412,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D83D58F71FC6FFA20022761B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D83D58A51FC6B2850022761B /* AliyunOSSSDK-iOS-Example */;
+			targetProxy = D83D58F61FC6FFA20022761B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D83D58E41FC6B6D90022761B /* Main.storyboard */ = {
@@ -559,7 +594,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-Example.app/AliyunOSSSDK-Example";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-iOS-Example.app/AliyunOSSSDK-iOS-Example";
 			};
 			name = Debug;
 		};
@@ -578,7 +613,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-Example.app/AliyunOSSSDK-Example";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AliyunOSSSDK-iOS-Example.app/AliyunOSSSDK-iOS-Example";
 			};
 			name = Release;
 		};
