@@ -1,14 +1,15 @@
 #!/bin/sh
 
-PROJECT_NAME='AliyunOSSSDK iOS'
+PROJECT_NAME='AliyunOSSSDK'
+TARGET_NAME="AliyunOSSSDK iOS"
 SRCROOT='.'
 
 # Sets the target folders and the final framework product.
-FMK_NAME=${PROJECT_NAME}
+FMK_NAME='AliyunOSSiOS'
 
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
-INSTALL_DIR=${SRCROOT}/Products/${PROJECT_NAME}.framework
+INSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework
 
 # Working dir will be deleted after the framework creation.
 WRK_DIR=./build
@@ -19,8 +20,8 @@ SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework
 # Clean and Building both architectures.
 # xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphoneos clean build
 # xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphonesimulator clean build
-xcodebuild -configuration Release -project "${FMK_NAME}.xcodeproj" -scheme "${FMK_NAME}" -sdk iphoneos clean archive SYMROOT="${WRK_DIR}"
-xcodebuild -configuration Release -project "${FMK_NAME}.xcodeproj" -scheme "${FMK_NAME}" -sdk iphonesimulator clean build SYMROOT="${WRK_DIR}"
+xcodebuild -configuration Release -project "${PROJECT_NAME}.xcodeproj" -scheme "${TARGET_NAME}" -sdk iphoneos clean archive SYMROOT="${WRK_DIR}"
+xcodebuild -configuration Release -project "${PROJECT_NAME}.xcodeproj" -scheme "${TARGET_NAME}" -sdk iphonesimulator clean build SYMROOT="${WRK_DIR}"
 
 # Cleaning the oldest.
 if [ -d "${INSTALL_DIR}" ]
