@@ -39,8 +39,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
     
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file10m", @"file100m", @"fileDirA/", @"fileDirB/"];
-        fileSizeArray = @[@1024, @10240, @102400, @1024000, @10240000, @102400000, @1024, @1024];
+        fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file5m", @"file10m", @"fileDirA/", @"fileDirB/"];
+        fileSizeArray = @[@1024, @10240, @102400, @(1024 * 1024 * 1), @(1024 * 1024 * 5), @(1024 * 1024 * 10), @1024, @1024];
         [self initOSSClient];
         [self initLocalFiles];
         [self initUploadFile];
@@ -252,7 +252,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
     
     getService = [OSSGetServiceRequest new];
     getService.maxKeys = 10;
-    getService.prefix = @"prefixName";
+    getService.prefix = @"huaixu";
     [[[client getService:getService] continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         OSSGetServiceResult * result = task.result;
@@ -505,7 +505,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         return;
     }
     
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 16; i++) {
         OSSPutObjectRequest * request = [OSSPutObjectRequest new];
         request.bucketName = TEST_BUCKET;
         request.objectKey = @"file1m";
@@ -517,7 +517,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         request.uploadingData = [readFile readDataToEndOfFile];
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-            // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+            NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         };
         
         OSSTask * task = [client putObject:request];
@@ -753,8 +753,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
@@ -808,7 +808,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         
         // if onRecieveData is setting, it will not return whole data
         XCTAssertEqual(0, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
@@ -883,7 +883,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [recieveData length]);
+        XCTAssertEqual(1024 * 1024, [recieveData length]);
         NSLog(@"Result - requestId: %@, headerFields: %@",
               result.requestId,
               result.httpResponseHeaderFields);
@@ -911,7 +911,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@",
               result.requestId,
               result.httpResponseHeaderFields);
@@ -919,7 +919,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertTrue([fm fileExistsAtPath:request.downloadToFileURL.path]);
         int64_t fileLength = [[[fm attributesOfItemAtPath:request.downloadToFileURL.path
                                                     error:nil] objectForKey:NSFileSize] longLongValue];
-        XCTAssertEqual(1024000, fileLength);
+        XCTAssertEqual(1024 * 1024, fileLength);
         return nil;
     }] waitUntilFinished];
 }
@@ -938,7 +938,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
         XCTAssertNil(result.downloadedData);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@",
               result.requestId,
               result.httpResponseHeaderFields);
@@ -946,7 +946,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
     }] waitUntilFinished];
     
     uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:request.downloadToFileURL.path error:nil] fileSize];
-    XCTAssertEqual(1024 * 1000, fileSize);
+    XCTAssertEqual(1024 * 1024, fileSize);
     XCTAssertTrue([self isFileOnOSSBucket:TEST_BUCKET objectKey:@"file1m" equalsToLocalFile:request.downloadToFileURL.path]);
     
     request = [OSSGetObjectRequest new];
@@ -987,7 +987,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
             NSLog(@"ObjectMeta: %@ - %@", key, [result.objectMeta objectForKey:key]);
         }
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqualObjects(@"1024000", [result.httpResponseHeaderFields objectForKey:@"Content-Length"]);
+        XCTAssertEqualObjects(@"1048576", [result.httpResponseHeaderFields objectForKey:@"Content-Length"]);
         return nil;
     }] waitUntilFinished];
 }
@@ -2106,8 +2106,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
@@ -2138,8 +2138,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
@@ -2291,15 +2291,15 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         dispatch_async(test_queue, ^{
             OSSGetObjectRequest * request = [OSSGetObjectRequest new];
             request.bucketName = TEST_BUCKET;
-            request.objectKey = @"file10m";
+            request.objectKey = @"file5m";
             
             OSSTask * task = [client getObject:request];
             [[task continueWithBlock:^id(OSSTask *task) {
                 XCTAssertNil(task.error);
                 OSSGetObjectResult * result = task.result;
                 XCTAssertEqual(200, result.httpResponseCode);
-                XCTAssertEqual(10240000, [result.downloadedData length]);
-                XCTAssertEqualObjects(@"10240000", [result.objectMeta objectForKey:@"Content-Length"]);
+                XCTAssertEqual(1024 * 1024 * 5, [result.downloadedData length]);
+                XCTAssertEqualObjects(@"5242880", [result.objectMeta objectForKey:@"Content-Length"]);
                 NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
                       result.requestId,
                       result.httpResponseHeaderFields,
@@ -2330,15 +2330,15 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         dispatch_async(test_queue, ^{
             OSSGetObjectRequest * request = [OSSGetObjectRequest new];
             request.bucketName = TEST_BUCKET;
-            request.objectKey = @"file10m";
+            request.objectKey = @"file5m";
             
             OSSTask * task = [client getObject:request];
             [[task continueWithBlock:^id(OSSTask *task) {
                 XCTAssertNil(task.error);
                 OSSGetObjectResult * result = task.result;
                 XCTAssertEqual(200, result.httpResponseCode);
-                XCTAssertEqual(10240000, [result.downloadedData length]);
-                XCTAssertEqualObjects(@"10240000", [result.objectMeta objectForKey:@"Content-Length"]);
+                XCTAssertEqual(1024 * 1024 * 5, [result.downloadedData length]);
+                XCTAssertEqualObjects(@"5242880", [result.objectMeta objectForKey:@"Content-Length"]);
                 NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
                       result.requestId,
                       result.httpResponseHeaderFields,
@@ -2687,7 +2687,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
                          onCompleted:^(NSData *data, NSError *error) {
                              XCTAssertNotNil(data);
                              [tcs setResult:nil];
-                             XCTAssertEqual(1024000, [data length]);
+                             XCTAssertEqual(1024 * 1024, [data length]);
                          } onProgress:^(float progress) {
                              NSLog(@"Progress: %f", progress);
                          }];
@@ -2712,7 +2712,7 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
                              XCTAssertTrue([fm fileExistsAtPath:saveToFile]);
                              int64_t fileSize = [[[fm attributesOfItemAtPath:saveToFile
                                                                        error:nil] objectForKey:NSFileSize] longLongValue];
-                             XCTAssertEqual(1024000, fileSize);
+                             XCTAssertEqual(1024 * 1024, fileSize);
                          } onProgress:^(float progress) {
                              NSLog(@"Progress: %f", progress);
                          }];
@@ -2941,8 +2941,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
@@ -2978,8 +2978,8 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
         XCTAssertNil(task.error);
         OSSGetObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024000, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1024000", [result.objectMeta objectForKey:@"Content-Length"]);
+        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
+        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
         NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
               result.requestId,
               result.httpResponseHeaderFields,
