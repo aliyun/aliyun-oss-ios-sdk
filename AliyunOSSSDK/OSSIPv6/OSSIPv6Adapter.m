@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "OSSIPv6Adapter.h"
 #import "OSSIPv6PrefixResolver.h"
 #import "OSSReachabilityManager.h"
@@ -24,6 +23,10 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/sysctl.h>
+
+#if TARGET_OS_IOS
+#import <UIKit/UIApplication.h>
+#endif
 
 #define UNKNOWN_STACK         0
 #define SUPPORT_IPV4_STACK    1
