@@ -24,12 +24,11 @@
 #include <sys/socket.h>
 #include <sys/sysctl.h>
 
-#if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
+#if TARGET_OS_IOS
 #import <UIKit/UIApplication.h>
-#else
+#elif TARGET_OS_OSX
 #import <AppKit/NSApplication.h>
 #endif
-
 
 #define UNKNOWN_STACK         0
 #define SUPPORT_IPV4_STACK    1
