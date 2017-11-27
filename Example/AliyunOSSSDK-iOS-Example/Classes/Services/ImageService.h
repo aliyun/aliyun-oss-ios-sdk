@@ -2,7 +2,7 @@
 //  ImageService.h
 //  OssIOSDemo
 //  使用图片服务处理图片
-//  Created by 凌琨 on 15/12/15.
+//  Created by jingdan on 17/11/23.
 //  Copyright © 2015年 Ali. All rights reserved.
 //
 #ifndef ImageService_h
