@@ -246,7 +246,7 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
 #if TARGET_OS_IOS
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     logsDir = [paths[0] stringByAppendingPathComponent:@"OSSLogs"];
-#else
+#elif TARGET_OS_OSX
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *suffixPath = [NSString stringWithFormat:@"Logs/%@/OSSLogs",[self applicationName]];
     logsDir = [paths[0] stringByAppendingPathComponent:suffixPath];

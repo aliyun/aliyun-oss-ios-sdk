@@ -13,7 +13,7 @@
 
 #if TARGET_OS_IOS
 #define OSSUAPrefix                             @"aliyun-sdk-ios"
-#else
+#elif TARGET_OS_OSX
 #define OSSUAPrefix                             @"aliyun-sdk-mac"
 #endif
 #define OSSSDKVersion                           @"2.7.1"

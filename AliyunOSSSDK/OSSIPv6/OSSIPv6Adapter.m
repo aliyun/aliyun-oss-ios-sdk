@@ -53,7 +53,7 @@
         NSString *notificationName;
 #if TARGET_OS_IOS
         notificationName = UIApplicationDidBecomeActiveNotification;
-#else
+#elif TARGET_OS_OSX
         notificationName = NSApplicationDidBecomeActiveNotification;
 #endif
 
