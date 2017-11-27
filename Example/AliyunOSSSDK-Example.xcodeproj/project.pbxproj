@@ -30,7 +30,7 @@
 		D83D58EC1FC6C0C70022761B /* AliyunOSSiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D83D58F21FC6C1F40022761B /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58EE1FC6C1F40022761B /* sts.py */; };
 		D83D58F41FC6C1F40022761B /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F01FC6C1F40022761B /* httpserver.py */; };
-		D83D58FB1FC700C70022761B /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* runsheng.xml */; };
+		D83D58FB1FC700C70022761B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
 		D83D58FC1FC700C70022761B /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
 		D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BA1FC572C6000DD9EC /* OSSLogTests.m */; };
@@ -44,6 +44,8 @@
 		D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
+		D8C41A641FCC002C0091699B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
+		D8C41A651FCC003A0091699B /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,7 +101,7 @@
 		D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83D58EE1FC6C1F40022761B /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
 		D83D58F01FC6C1F40022761B /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
-		D83D58F91FC700C70022761B /* runsheng.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = runsheng.xml; sourceTree = "<group>"; };
+		D83D58F91FC700C70022761B /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		D83D58FA1FC700C70022761B /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D87182F81FC55F46000DD9EC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
@@ -215,7 +217,7 @@
 		D83D58F81FC700C70022761B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D83D58F91FC700C70022761B /* runsheng.xml */,
+				D83D58F91FC700C70022761B /* test.xml */,
 				D83D58FA1FC700C70022761B /* wangwang.zip */,
 			);
 			path = Resources;
@@ -358,7 +360,7 @@
 			files = (
 				D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */,
 				D83D58FC1FC700C70022761B /* wangwang.zip in Resources */,
-				D83D58FB1FC700C70022761B /* runsheng.xml in Resources */,
+				D83D58FB1FC700C70022761B /* test.xml in Resources */,
 				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
 				D83D58E31FC6B61F0022761B /* Info.plist in Resources */,
 				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,
@@ -370,7 +372,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D87183C81FC572C6000DD9EC /* Info.plist in Resources */,
+				D8C41A641FCC002C0091699B /* test.xml in Resources */,
 				D83D58F21FC6C1F40022761B /* sts.py in Resources */,
+				D8C41A651FCC003A0091699B /* wangwang.zip in Resources */,
 				D83D58F41FC6C1F40022761B /* httpserver.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
