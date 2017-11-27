@@ -13,8 +13,6 @@
 		D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58531FC680850022761B /* OSSSignTests.m */; };
 		D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BE1FC6B3100022761B /* OSSConstants.m */; };
 		D83D58CE1FC6B3100022761B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BF1FC6B3100022761B /* ViewController.m */; };
-		D83D58CF1FC6B3100022761B /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C11FC6B3100022761B /* StstokenSample.m */; };
-		D83D58D01FC6B3100022761B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C21FC6B3100022761B /* GetObjcetSample.m */; };
 		D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C51FC6B3100022761B /* AppDelegate.m */; };
 		D83D58D21FC6B3100022761B /* ImageService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C81FC6B3100022761B /* ImageService.m */; };
 		D83D58D31FC6B3100022761B /* OssService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C91FC6B3100022761B /* OssService.m */; };
@@ -81,10 +79,6 @@
 		D83D58BD1FC6B3100022761B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D83D58BE1FC6B3100022761B /* OSSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSConstants.m; sourceTree = "<group>"; };
 		D83D58BF1FC6B3100022761B /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		D83D58C11FC6B3100022761B /* StstokenSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StstokenSample.m; sourceTree = "<group>"; };
-		D83D58C21FC6B3100022761B /* GetObjcetSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetObjcetSample.m; sourceTree = "<group>"; };
-		D83D58C31FC6B3100022761B /* StstokenSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StstokenSample.h; sourceTree = "<group>"; };
-		D83D58C41FC6B3100022761B /* GetObjcetSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetObjcetSample.h; sourceTree = "<group>"; };
 		D83D58C51FC6B3100022761B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D83D58C61FC6B3100022761B /* OSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSConstants.h; sourceTree = "<group>"; };
 		D83D58C81FC6B3100022761B /* ImageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageService.m; sourceTree = "<group>"; };
@@ -163,21 +157,9 @@
 				D83D58BE1FC6B3100022761B /* OSSConstants.m */,
 				D83D58CC1FC6B3100022761B /* ViewController.h */,
 				D83D58BF1FC6B3100022761B /* ViewController.m */,
-				D83D58C01FC6B3100022761B /* Samples */,
 				D83D58C71FC6B3100022761B /* Services */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		D83D58C01FC6B3100022761B /* Samples */ = {
-			isa = PBXGroup;
-			children = (
-				D83D58C11FC6B3100022761B /* StstokenSample.m */,
-				D83D58C21FC6B3100022761B /* GetObjcetSample.m */,
-				D83D58C31FC6B3100022761B /* StstokenSample.h */,
-				D83D58C41FC6B3100022761B /* GetObjcetSample.h */,
-			);
-			path = Samples;
 			sourceTree = "<group>";
 		};
 		D83D58C71FC6B3100022761B /* Services */ = {
@@ -390,8 +372,6 @@
 				D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */,
 				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
 				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
-				D83D58CF1FC6B3100022761B /* StstokenSample.m in Sources */,
-				D83D58D01FC6B3100022761B /* GetObjcetSample.m in Sources */,
 				D83D58E21FC6B61F0022761B /* main.m in Sources */,
 				D83D58CE1FC6B3100022761B /* ViewController.m in Sources */,
 			);
