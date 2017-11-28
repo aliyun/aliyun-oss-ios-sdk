@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
+		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
+		D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D827E4141FCD0FC60085380C /* Assets.xcassets */; };
+		D827E4181FCD0FC60085380C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D827E4161FCD0FC60085380C /* Main.storyboard */; };
+		D827E41B1FCD0FC60085380C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E41A1FCD0FC60085380C /* main.m */; };
+		D827E4221FCD101F0085380C /* OSSWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4211FCD101F0085380C /* OSSWindow.m */; };
+		D827E4241FCD11B00085380C /* AliyunOSSOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4231FCD11B00085380C /* AliyunOSSOSX.framework */; };
+		D827E4251FCD11B00085380C /* AliyunOSSOSX.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4231FCD11B00085380C /* AliyunOSSOSX.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D827E4281FCD11BD0085380C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4271FCD11BD0085380C /* SystemConfiguration.framework */; };
+		D827E42A1FCD11C40085380C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4291FCD11C40085380C /* CoreTelephony.framework */; };
+		D827E42C1FCD11CC0085380C /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E42B1FCD11CC0085380C /* libresolv.tbd */; };
 		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
 		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
@@ -57,6 +68,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D827E4261FCD11B10085380C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D827E4251FCD11B00085380C /* AliyunOSSOSX.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D83D58D71FC6B41C0022761B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -71,6 +93,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D827E40F1FCD0FC60085380C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D827E4111FCD0FC60085380C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D827E4121FCD0FC60085380C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D827E4141FCD0FC60085380C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D827E4171FCD0FC60085380C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D827E4191FCD0FC60085380C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D827E41A1FCD0FC60085380C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D827E4201FCD101F0085380C /* OSSWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSWindow.h; sourceTree = "<group>"; };
+		D827E4211FCD101F0085380C /* OSSWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSWindow.m; sourceTree = "<group>"; };
+		D827E4231FCD11B00085380C /* AliyunOSSOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D827E4271FCD11BD0085380C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		D827E4291FCD11C40085380C /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
+		D827E42B1FCD11CC0085380C /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		D83D58501FC680840022761B /* OSSRangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSRangeTests.m; sourceTree = "<group>"; };
 		D83D58511FC680840022761B /* OSSCredentialProviderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCredentialProviderTests.m; sourceTree = "<group>"; };
 		D83D58521FC680850022761B /* OSSModelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSModelTests.m; sourceTree = "<group>"; };
@@ -113,6 +150,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D827E4091FCD0FC60085380C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D827E42C1FCD11CC0085380C /* libresolv.tbd in Frameworks */,
+				D827E42A1FCD11C40085380C /* CoreTelephony.framework in Frameworks */,
+				D827E4281FCD11BD0085380C /* SystemConfiguration.framework in Frameworks */,
+				D827E4241FCD11B00085380C /* AliyunOSSOSX.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D83D58A31FC6B2850022761B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -138,6 +186,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D827E40D1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example */ = {
+			isa = PBXGroup;
+			children = (
+				D827E40E1FCD0FC60085380C /* AppDelegate.h */,
+				D827E40F1FCD0FC60085380C /* AppDelegate.m */,
+				D827E4111FCD0FC60085380C /* ViewController.h */,
+				D827E4121FCD0FC60085380C /* ViewController.m */,
+				D827E4141FCD0FC60085380C /* Assets.xcassets */,
+				D827E4161FCD0FC60085380C /* Main.storyboard */,
+				D827E4191FCD0FC60085380C /* Info.plist */,
+				D827E41A1FCD0FC60085380C /* main.m */,
+				D827E4201FCD101F0085380C /* OSSWindow.h */,
+				D827E4211FCD101F0085380C /* OSSWindow.m */,
+			);
+			path = "AliyunOSSSDK-OSX-Example";
+			sourceTree = "<group>";
+		};
 		D83D58A71FC6B2850022761B /* AliyunOSSSDK-iOS-Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -208,9 +273,11 @@
 		D87182AC1FC55611000DD9EC = {
 			isa = PBXGroup;
 			children = (
+				D827E4231FCD11B00085380C /* AliyunOSSOSX.framework */,
 				D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */,
 				D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */,
 				D83D58A71FC6B2850022761B /* AliyunOSSSDK-iOS-Example */,
+				D827E40D1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example */,
 				D87182B61FC55611000DD9EC /* Products */,
 				D83D58ED1FC6C1F40022761B /* Scripts */,
 				D87182F51FC55F35000DD9EC /* Frameworks */,
@@ -222,6 +289,7 @@
 			children = (
 				D87183A71FC56F12000DD9EC /* AliyunOSSiOSTests.xctest */,
 				D83D58A61FC6B2850022761B /* AliyunOSSSDK-iOS-Example.app */,
+				D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -229,6 +297,9 @@
 		D87182F51FC55F35000DD9EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D827E42B1FCD11CC0085380C /* libresolv.tbd */,
+				D827E4291FCD11C40085380C /* CoreTelephony.framework */,
+				D827E4271FCD11BD0085380C /* SystemConfiguration.framework */,
 				D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */,
 				D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */,
 				D87182F81FC55F46000DD9EC /* libresolv.tbd */,
@@ -260,6 +331,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D827E40B1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D827E41F1FCD0FC60085380C /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-OSX-Example" */;
+			buildPhases = (
+				D827E4081FCD0FC60085380C /* Sources */,
+				D827E4091FCD0FC60085380C /* Frameworks */,
+				D827E40A1FCD0FC60085380C /* Resources */,
+				D827E4261FCD11B10085380C /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AliyunOSSSDK-OSX-Example";
+			productName = "AliyunOSSSDK-OSX-Example";
+			productReference = D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */;
+			productType = "com.apple.product-type.application";
+		};
 		D83D58A51FC6B2850022761B /* AliyunOSSSDK-iOS-Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D83D58B91FC6B2850022761B /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-iOS-Example" */;
@@ -305,6 +394,15 @@
 				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "阿里云";
 				TargetAttributes = {
+					D827E40B1FCD0FC60085380C = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
 					D83D58A51FC6B2850022761B = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Manual;
@@ -331,11 +429,21 @@
 			targets = (
 				D87183A61FC56F12000DD9EC /* AliyunOSSiOSTests */,
 				D83D58A51FC6B2850022761B /* AliyunOSSSDK-iOS-Example */,
+				D827E40B1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D827E40A1FCD0FC60085380C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */,
+				D827E4181FCD0FC60085380C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D83D58A41FC6B2850022761B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -364,6 +472,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D827E4081FCD0FC60085380C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D827E4131FCD0FC60085380C /* ViewController.m in Sources */,
+				D827E41B1FCD0FC60085380C /* main.m in Sources */,
+				D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */,
+				D827E4221FCD101F0085380C /* OSSWindow.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D83D58A21FC6B2850022761B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -406,6 +525,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		D827E4161FCD0FC60085380C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D827E4171FCD0FC60085380C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		D83D58E41FC6B6D90022761B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -425,6 +552,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D827E41D1FCD0FC60085380C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "AliyunOSSSDK-OSX-Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-OSX-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D827E41E1FCD0FC60085380C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "AliyunOSSSDK-OSX-Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-OSX-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		D83D58BA1FC6B2850022761B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -508,6 +673,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -557,6 +723,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -604,6 +771,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D827E41F1FCD0FC60085380C /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-OSX-Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D827E41D1FCD0FC60085380C /* Debug */,
+				D827E41E1FCD0FC60085380C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D83D58B91FC6B2850022761B /* Build configuration list for PBXNativeTarget "AliyunOSSSDK-iOS-Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
