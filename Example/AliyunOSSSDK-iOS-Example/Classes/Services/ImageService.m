@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AliyunOSSiOS/OSSService.h>
-#import "OssService.h"
 #import "ImageService.h"
 
 // 字体，默认文泉驿正黑

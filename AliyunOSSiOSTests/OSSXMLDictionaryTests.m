@@ -32,13 +32,13 @@
     NSLog(@"xml: %@",[dict oss_XMLString]);
     NSArray *string_array = [dict oss_arrayValueForKeyPath:@"string-array"];
     NSString *title = [dict oss_stringValueForKeyPath:@"title"];
-    NSDictionary *book= [dict oss_dictionaryValueForKeyPath:@"book"];
+    NSDictionary *note= [dict oss_dictionaryValueForKeyPath:@"note"];
     
     XCTAssertNotNil(string_array);
     XCTAssertNotNil(title);
-    XCTAssertNotNil(book);
+    XCTAssertNotNil(note);
     
-    NSLog(@"string_array:%@,title:%@,book:%@",string_array,title,book);
+    NSLog(@"string_array:%@,title:%@,book:%@",string_array,title,note);
     
     XCTAssertNotNil(dict);
     

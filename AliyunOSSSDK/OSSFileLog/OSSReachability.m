@@ -11,7 +11,6 @@
 #import <netdb.h>
 #import <sys/socket.h>
 #import <netinet/in.h>
-
 #import <CoreFoundation/CoreFoundation.h>
 
 #import "OSSReachability.h"
@@ -22,11 +21,15 @@
 
 NSString *ossReachabilityChangedNotification = @"ossNetworkReachabilityChangedNotification";
 
+#ifndef kShouldPrintReachabilityFlags
+#if TARGET_OS_IOS
+#define kShouldPrintReachabilityFlags 1
+#else
+#define kShouldPrintReachabilityFlags 0
+#endif
+#endif
 
 #pragma mark - Supporting functions
-
-#define kShouldPrintReachabilityFlags 1
-
 static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char* comment)
 {
 #if kShouldPrintReachabilityFlags
@@ -198,13 +201,16 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
         }
     }
 
-	if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
-	{
-		/*
+#if TARGET_OS_IOS
+    if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
+    {
+        /*
          ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
          */
-		returnValue = ReachableViaWWAN;
-	}
+        returnValue = ReachableViaWWAN;
+    }
+#endif
+
     
 	return returnValue;
 }
