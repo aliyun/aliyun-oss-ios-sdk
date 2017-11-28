@@ -49,10 +49,8 @@
 //     STS鉴权模式可通过https://help.aliyun.com/document_detail/31920.html文档了解更多
 //     主账号方式
 //    id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithAccessKeyId:@"Aliyun_AK" secretKeyId:@"Aliyun_SK"];
-//     STS鉴权模式有两种方式。
-//     1.通过鉴权服务器返回的STS_AK,STS_SK,STS_TOKEN构造一个CredentialProvider。
-//    id<OSSCredentialProvider> credential = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"STS_AK" secretKeyId:@"STS_SK" securityToken:@"STS_TOKEN"];
-//     2.直接访问鉴权服务器
+//     STS鉴权模式
+//     2.直接访问鉴权服务器（推荐，token过期后可以自动更新）
     id<OSSCredentialProvider> credential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:STS_AUTH_URL];
     client = [[OSSClient alloc] initWithEndpoint:endPoint credentialProvider:credential];
 }
