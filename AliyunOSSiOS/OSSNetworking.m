@@ -577,7 +577,20 @@
     /* background upload task will not call back didRecieveResponse.
        so if we recieve response data after background uploading file,
        we consider it as error response message since a successful uploading request will not response any data */
-    if (delegate.isHttpRequestNotSuccessResponse || delegate.isBackgroundUploadFileTask) {
+    if (delegate.isBackgroundUploadFileTask)
+    {
+        //判断当前的statusCode是否成功
+        NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)dataTask.response;
+        if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 && httpResponse.statusCode != 203) {
+            [delegate.responseParser consumeHttpResponse:httpResponse];
+            delegate.isHttpRequestNotSuccessResponse = NO;
+        }else
+        {
+            delegate.isHttpRequestNotSuccessResponse = YES;
+        }
+    }
+
+    if (delegate.isHttpRequestNotSuccessResponse) {
         [delegate.httpRequestNotSuccessResponseBody appendData:data];
     } else {
         if (delegate.onRecieveData) {
