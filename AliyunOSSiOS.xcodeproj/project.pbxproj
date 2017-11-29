@@ -21,10 +21,10 @@
 		21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEB1BA9AC3600C2A6BA /* OSSService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEC1BA9AC3600C2A6BA /* OSSUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C041BA9AC3600C2A6BA /* OSSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BED1BA9AC3600C2A6BA /* OSSUtil.m */; };
-		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; };
+		21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 21028BEE1BA9AC3600C2A6BA /* OSSXMLDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21028C061BA9AC3600C2A6BA /* OSSXMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 21028BEF1BA9AC3600C2A6BA /* OSSXMLDictionary.m */; };
 		214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B821CD57D07004F8083 /* OSSDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */; };
+		214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B881CD5E2F9004F8083 /* OSSHttpdns.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B8B1CD5E2F9004F8083 /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B891CD5E2F9004F8083 /* OSSHttpdns.m */; };
 		214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B8C1CD5FE17004F8083 /* OSSBolts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1B9B1CD5FE17004F8083 /* OSSBolts.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B8D1CD5FE17004F8083 /* OSSBolts.m */; };
@@ -40,22 +40,22 @@
 		214E1BA51CD5FE17004F8083 /* OSSTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B971CD5FE17004F8083 /* OSSTask.m */; };
 		214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 214E1B981CD5FE17004F8083 /* OSSTaskCompletionSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		214E1BA71CD5FE17004F8083 /* OSSTaskCompletionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 214E1B991CD5FE17004F8083 /* OSSTaskCompletionSource.m */; };
-		216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E01CF1835F0086458F /* OSSIPv6Adapter.h */; };
+		216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E01CF1835F0086458F /* OSSIPv6Adapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		216256E71CF1835F0086458F /* OSSIPv6Adapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E11CF1835F0086458F /* OSSIPv6Adapter.m */; };
-		216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E21CF1835F0086458F /* OSSIPv6PrefixResolver.h */; };
+		216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E21CF1835F0086458F /* OSSIPv6PrefixResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		216256E91CF1835F0086458F /* OSSIPv6PrefixResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E31CF1835F0086458F /* OSSIPv6PrefixResolver.m */; };
-		216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E41CF1835F0086458F /* OSSReachabilityManager.h */; };
+		216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 216256E41CF1835F0086458F /* OSSReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		216256EB1CF1835F0086458F /* OSSReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 216256E51CF1835F0086458F /* OSSReachabilityManager.m */; };
 		216256F11CF1B2840086458F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		216256F21CF1B28A0086458F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		4C2B586F1F8CE9AA008CBCE1 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
-		4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */; };
-		4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */; };
+		4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F111F8C70E300B12B57 /* OSSCocoaLumberjack.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F131F8C70E300B12B57 /* OSSDDLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C2F1F271F8C70E300B12B57 /* OSSDDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F141F8C70E300B12B57 /* OSSDDLog.m */; };
-		4C2F1F281F8C70E300B12B57 /* OSSFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */; };
+		4C2F1F281F8C70E300B12B57 /* OSSFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F151F8C70E300B12B57 /* OSSFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C2F1F291F8C70E300B12B57 /* OSSFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F161F8C70E300B12B57 /* OSSFileLogger.m */; };
-		4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */; };
-		4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */; };
+		4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F181F8C70E300B12B57 /* OSSLogMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2F1F301F8CB9C600B12B57 /* OSSReachability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C2F1F331F8CB9C600B12B57 /* OSSReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F1F311F8CB9C600B12B57 /* OSSReachability.m */; };
 		4C30B7BE1F6136EB00CDAD9B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7BD1F6136EB00CDAD9B /* main.m */; };
 		4C30B7C11F6136EB00CDAD9B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7C01F6136EB00CDAD9B /* AppDelegate.m */; };
@@ -66,7 +66,7 @@
 		4C30B7F01F61372400CDAD9B /* StstokenSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7EF1F61372400CDAD9B /* StstokenSample.m */; };
 		4C30B7F31F61405600CDAD9B /* GetObjcetSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C30B7F21F61405600CDAD9B /* GetObjcetSample.m */; };
 		4C7D8BB91F8CC741005D3040 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
-		4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */; };
+		4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC152D61F9ED29B00EE12D9 /* OSSNSLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CC152D91F9ED29B00EE12D9 /* OSSNSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC152D71F9ED29B00EE12D9 /* OSSNSLogger.m */; };
 		4CE524711F623EDF00DD3DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EC1CF1B1210086458F /* libresolv.tbd */; };
 		4CE524721F623EE700DD3DCF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
@@ -82,6 +82,8 @@
 		D844376F1FBC37C4009AE466 /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D844376E1FBC37C4009AE466 /* OSSCancellationTests.m */; };
 		D84437711FBC46FC009AE466 /* AliyunOSSiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437701FBC46FC009AE466 /* AliyunOSSiOSTests.m */; };
 		D84437731FBC59AD009AE466 /* OSSLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D84437721FBC59AD009AE466 /* OSSLogTests.m */; };
+		D88DAE821FCE5101005C675F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21028BC01BA9ABF500C2A6BA /* Info.plist */; };
+		D88DAE831FCE5134005C675F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */; };
 		D89C27AD1FBDABCE009B3794 /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27AC1FBDABCE009B3794 /* OSSReachabilityTests.m */; };
 		D89C27AF1FBDB1B4009B3794 /* runsheng.xml in Resources */ = {isa = PBXBuildFile; fileRef = D89C27AE1FBDB1B4009B3794 /* runsheng.xml */; };
 		D89C27B11FBDB212009B3794 /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D89C27B01FBDB212009B3794 /* OSSXMLDictionaryTests.m */; };
@@ -203,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88DAE831FCE5134005C675F /* CoreTelephony.framework in Frameworks */,
 				4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,29 +437,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C2F1F281F8C70E300B12B57 /* OSSFileLogger.h in Headers */,
+				4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */,
+				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
+				216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */,
+				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
+				4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */,
+				4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */,
+				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
+				4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */,
+				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
+				4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */,
 				9418946C1DEB4A7800FFB760 /* AliyunOSSiOS.h in Headers */,
 				214E1BA41CD5FE17004F8083 /* OSSTask.h in Headers */,
 				214E1B831CD57D07004F8083 /* OSSDefine.h in Headers */,
 				21028BFA1BA9AC3600C2A6BA /* OSSCompat.h in Headers */,
-				4C2F1F321F8CB9C600B12B57 /* OSSReachability.h in Headers */,
 				21028BFE1BA9AC3600C2A6BA /* OSSModel.h in Headers */,
 				21028BF81BA9AC3600C2A6BA /* OSSClient.h in Headers */,
-				216256E61CF1835F0086458F /* OSSIPv6Adapter.h in Headers */,
-				216256E81CF1835F0086458F /* OSSIPv6PrefixResolver.h in Headers */,
 				21028C021BA9AC3600C2A6BA /* OSSService.h in Headers */,
 				214E1BA61CD5FE17004F8083 /* OSSTaskCompletionSource.h in Headers */,
-				214E1B8A1CD5E2F9004F8083 /* OSSHttpdns.h in Headers */,
 				214E1BA01CD5FE17004F8083 /* OSSCancellationTokenSource.h in Headers */,
 				214E1B9E1CD5FE17004F8083 /* OSSCancellationTokenRegistration.h in Headers */,
-				4C2F1F241F8C70E300B12B57 /* OSSCocoaLumberjack.h in Headers */,
-				4CC152D81F9ED29B00EE12D9 /* OSSNSLogger.h in Headers */,
 				214E1B9A1CD5FE17004F8083 /* OSSBolts.h in Headers */,
 				214E1B9C1CD5FE17004F8083 /* OSSCancellationToken.h in Headers */,
-				216256EA1CF1835F0086458F /* OSSReachabilityManager.h in Headers */,
 				214E1BA21CD5FE17004F8083 /* OSSExecutor.h in Headers */,
-				4C2F1F261F8C70E300B12B57 /* OSSDDLog.h in Headers */,
-				21028C051BA9AC3600C2A6BA /* OSSXMLDictionary.h in Headers */,
-				4C2F1F2B1F8C70E300B12B57 /* OSSLogMacros.h in Headers */,
 				21028C031BA9AC3600C2A6BA /* OSSUtil.h in Headers */,
 				21028BFC1BA9AC3600C2A6BA /* OSSLog.h in Headers */,
 				21028C001BA9AC3600C2A6BA /* OSSNetworking.h in Headers */,
@@ -570,6 +573,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88DAE821FCE5101005C675F /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
