@@ -738,11 +738,25 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 + (instancetype)partInfoWithPartNum:(int32_t)partNum
                                eTag:(NSString *)eTag
                                size:(int64_t)size {
-    OSSPartInfo * instance = [OSSPartInfo new];
-    instance.partNum = partNum;
-    instance.eTag = eTag;
-    instance.size = size;
-    return instance;
+    return [self partInfoWithPartNum:partNum
+                                eTag:eTag
+                                size:size
+                               crc64:0];
+}
+
++ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size crc64:(uint64_t)crc64
+{
+    OSSPartInfo *parInfo = [OSSPartInfo new];
+    parInfo.partNum = partNum;
+    parInfo.eTag = eTag;
+    parInfo.size = size;
+    parInfo.crc64 = crc64;
+    return parInfo;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSPartInfo<%p>:{partNum: %d,eTag: %@,partSize: %lld,crc64: %llu}",self,self.partNum,self.eTag,self.size,self.crc64];
 }
 
 @end
