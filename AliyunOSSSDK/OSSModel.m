@@ -576,6 +576,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @end
 
 @implementation OSSResult
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSResult<%p> : {httpResponseCode: %ld, requestId: %@, httpResponseHeaderFields: %@, local_crc64ecma: %@}",self,(long)self.httpResponseCode,self.requestId,self.httpResponseHeaderFields,self.localCRC64ecma];
+}
+
 @end
 
 @implementation OSSGetServiceRequest
