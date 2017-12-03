@@ -903,8 +903,13 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     result.httpResponseHeaderFields = [NSDictionary dictionaryWithDictionary:[_response allHeaderFields]];
     [[_response allHeaderFields] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         NSString * keyString = (NSString *)key;
-        if ([keyString isEqualToString:@"x-oss-request-id"]) {
+        if ([keyString isEqualToString:@"x-oss-request-id"])
+        {
             result.requestId = obj;
+        }
+        else if ([keyString isEqualToString:@"x-oss-hash-crc64ecma"])
+        {
+            result.remoteCRC64ecma = obj;
         }
     }];
 }
