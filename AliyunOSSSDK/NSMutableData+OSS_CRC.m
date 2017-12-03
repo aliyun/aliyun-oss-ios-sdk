@@ -16,9 +16,4 @@
     return aos_crc64(0, self.mutableBytes, self.length);
 }
 
-- (uint64_t)oss_crc64ForCombineCRC1:(uint64_t)crc1 CRC2:(uint64_t)crc2 length:(size_t)len2
-{
-    return aos_crc64_combine(crc1, crc2, len2);
-}
-
 @end

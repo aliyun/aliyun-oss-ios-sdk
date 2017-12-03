@@ -17,6 +17,7 @@
 #import "OSSReachability.h"
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import "aos_crc64.h"
 
 NSString * const ALIYUN_HOST_SUFFIX = @".aliyuncs.com";
 NSString * const ALIYUN_OSS_TEST_ENDPOINT = @".aliyun-inc.com";
@@ -1088,6 +1089,11 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     }
     
     return currentCountry;
+}
+
++ (uint64_t)oss_crc64ForCombineCRC1:(uint64_t)crc1 CRC2:(uint64_t)crc2 length:(size_t)len2
+{
+    return aos_crc64_combine(crc1, crc2, len2);
 }
 
 @end
