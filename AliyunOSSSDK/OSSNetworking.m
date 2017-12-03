@@ -576,7 +576,6 @@
     /* background upload task will not call back didRecieveResponse.
        so if we recieve response data after background uploading file,
        we consider it as error response message since a successful uploading request will not response any data */
-    NSString *receivedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if (delegate.isBackgroundUploadFileTask)
     {
         //判断当前的statuscode是否成功
