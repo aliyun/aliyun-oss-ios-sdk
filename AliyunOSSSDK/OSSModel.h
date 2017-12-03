@@ -243,6 +243,11 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
 
+/**
+ 是否开启crc校验(当同时设置了此选项和请求中的checkCRC开关时，以请求中的checkCRC开关为准)
+ */
+@property (nonatomic, assign) BOOL checkCRC;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
@@ -306,6 +311,12 @@ Sets the session Id for background file transmission
 @property (nonatomic, assign) BOOL isCancelled;
 
 /**
+ 开启crc校验的标志位(默认值0代表未设置,此时会以clientConfiguration中的开关为准,1代表开启crc64
+ 验证,2代表关闭crc64的验证。
+ */
+@property (nonatomic, assign) OSSRequestCRCFlag crcFlag;
+
+/**
  Cancels the request
  */
 - (void)cancel;
@@ -331,6 +342,17 @@ The request Id. It's the value of header x-oss-request-id, which is created from
 It's a unique Id represents this request. This is used for troubleshooting when you contact OSS support.
  */
 @property (nonatomic, strong) NSString * requestId;
+
+/**
+ It's the value of header x-oss-hash-crc64ecma, which is created from OSS server.
+ */
+@property (nonatomic, copy) NSString *remoteCRC64ecma;
+
+/**
+ It's the value of local Data.
+ */
+@property (nonatomic, copy) NSString *localCRC64ecma;
+
 @end
 
 /**
