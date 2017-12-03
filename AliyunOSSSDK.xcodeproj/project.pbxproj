@@ -112,6 +112,14 @@
 		D8C41B441FCC2FD20091699B /* OSSDDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183361FC56358000DD9EC /* OSSDDLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D8C41B451FCC2FD20091699B /* OSSCocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183371FC56358000DD9EC /* OSSCocoaLumberjack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D8C41B491FCC2FD20091699B /* OSSService.h in Headers */ = {isa = PBXBuildFile; fileRef = D871833B1FC56358000DD9EC /* OSSService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8C5E5411FCE915000613BA5 /* aos_crc64.h in Headers */ = {isa = PBXBuildFile; fileRef = D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D8C5E5421FCE915000613BA5 /* aos_crc64.h in Headers */ = {isa = PBXBuildFile; fileRef = D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D8C5E5431FCE915000613BA5 /* aos_crc64.c in Sources */ = {isa = PBXBuildFile; fileRef = D8C5E5401FCE915000613BA5 /* aos_crc64.c */; };
+		D8C5E5441FCE915000613BA5 /* aos_crc64.c in Sources */ = {isa = PBXBuildFile; fileRef = D8C5E5401FCE915000613BA5 /* aos_crc64.c */; };
+		D8C5E54D1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */ = {isa = PBXBuildFile; fileRef = D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8C5E54E1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */ = {isa = PBXBuildFile; fileRef = D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D8C5E54F1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */; };
+		D8C5E5501FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -174,6 +182,10 @@
 		D87183391FC56358000DD9EC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D871833A1FC56358000DD9EC /* OSSUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSUtil.m; sourceTree = "<group>"; };
 		D871833B1FC56358000DD9EC /* OSSService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSService.h; sourceTree = "<group>"; };
+		D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aos_crc64.h; sourceTree = "<group>"; };
+		D8C5E5401FCE915000613BA5 /* aos_crc64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aos_crc64.c; sourceTree = "<group>"; };
+		D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+OSS_CRC.h"; sourceTree = "<group>"; };
+		D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData+OSS_CRC.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +269,10 @@
 				D87183391FC56358000DD9EC /* Info.plist */,
 				D871833A1FC56358000DD9EC /* OSSUtil.m */,
 				D871833B1FC56358000DD9EC /* OSSService.h */,
+				D8C5E5401FCE915000613BA5 /* aos_crc64.c */,
+				D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */,
+				D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */,
+				D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -343,8 +359,10 @@
 				D8C41B3E1FCC2FD20091699B /* OSSNSLogger.h in Headers */,
 				D8C41B3F1FCC2FD20091699B /* OSSReachability.h in Headers */,
 				D8C41B411FCC2FD20091699B /* OSSFileLogger.h in Headers */,
+				D8C5E54D1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
 				D8C41B441FCC2FD20091699B /* OSSDDLog.h in Headers */,
 				D8C41B451FCC2FD20091699B /* OSSCocoaLumberjack.h in Headers */,
+				D8C5E5411FCE915000613BA5 /* aos_crc64.h in Headers */,
 				D8C41B491FCC2FD20091699B /* OSSService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,7 +396,9 @@
 				D80C82071FC8256F008E3900 /* OSSNSLogger.h in Headers */,
 				D80C82031FC8255F008E3900 /* OSSDefine.h in Headers */,
 				D80C82011FC82559008E3900 /* OSSHttpdns.h in Headers */,
+				D8C5E54E1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
 				D80C81FD1FC82549008E3900 /* OSSUtil.h in Headers */,
+				D8C5E5421FCE915000613BA5 /* aos_crc64.h in Headers */,
 				D80C81FC1FC82546008E3900 /* OSSCompat.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,7 +450,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0910;
-				ORGANIZATIONNAME = zhouzhuo;
+				ORGANIZATIONNAME = "阿里云";
 				TargetAttributes = {
 					21028BBB1BA9ABF500C2A6BA = {
 						CreatedOnToolsVersion = 6.4;
@@ -484,6 +504,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C5E5431FCE915000613BA5 /* aos_crc64.c in Sources */,
 				D8C41AE61FCC2F920091699B /* OSSNetworking.m in Sources */,
 				D8C41AE71FCC2F920091699B /* OSSHttpdns.m in Sources */,
 				D8C41AE91FCC2F920091699B /* OSSClient.m in Sources */,
@@ -500,6 +521,7 @@
 				D8C41B011FCC2F920091699B /* OSSCancellationToken.m in Sources */,
 				D8C41B071FCC2F920091699B /* OSSCancellationTokenSource.m in Sources */,
 				D8C41B081FCC2F920091699B /* OSSExecutor.m in Sources */,
+				D8C5E54F1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */,
 				D8C41B0A1FCC2F920091699B /* OSSXMLDictionary.m in Sources */,
 				D8C41B0E1FCC2F920091699B /* OSSDDLog.m in Sources */,
 				D8C41B101FCC2F920091699B /* OSSReachability.m in Sources */,
@@ -513,6 +535,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C5E5441FCE915000613BA5 /* aos_crc64.c in Sources */,
 				D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */,
 				D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */,
 				D8C41AAA1FCC284F0091699B /* OSSClient.m in Sources */,
@@ -529,6 +552,7 @@
 				D8C41AC21FCC284F0091699B /* OSSCancellationToken.m in Sources */,
 				D8C41AC81FCC28500091699B /* OSSCancellationTokenSource.m in Sources */,
 				D8C41AC91FCC28500091699B /* OSSExecutor.m in Sources */,
+				D8C5E5501FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */,
 				D8C41ACB1FCC28500091699B /* OSSXMLDictionary.m in Sources */,
 				D8C41ACF1FCC28500091699B /* OSSDDLog.m in Sources */,
 				D8C41AD11FCC28500091699B /* OSSReachability.m in Sources */,
