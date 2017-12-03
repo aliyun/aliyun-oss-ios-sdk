@@ -41,9 +41,16 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
     OSSClientErrorCodeNilUploadid,
     OSSClientErrorCodeTaskCancelled,
     OSSClientErrorCodeNetworkError,
+    OSSClientErrorCodeInvalidCRC,
     OSSClientErrorCodeCannotResumeUpload,
     OSSClientErrorCodeExcpetionCatched,
     OSSClientErrorCodeNotKnown
+};
+
+typedef NS_ENUM(NSUInteger, OSSRequestCRCFlag) {
+    OSSRequestCRCUninitialized,
+    OSSRequestCRCOpen,
+    OSSRequestCRCClosed
 };
 
 typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
