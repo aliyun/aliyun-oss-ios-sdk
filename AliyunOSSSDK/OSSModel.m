@@ -12,6 +12,7 @@
 #import "OSSNetworking.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
+#import "NSMutableData+OSS_CRC.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIDevice.h>
 #endif
@@ -1076,6 +1077,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             }
             if (_collectingData) {
                 getObejctResult.downloadedData = _collectingData;
+                NSMutableData *downloadData = [NSMutableData dataWithData:getObejctResult.downloadedData];
+                getObejctResult.localCRC64ecma = [NSString stringWithFormat:@"%llu",[downloadData oss_crc64]];
             }
             return getObejctResult;
         }
