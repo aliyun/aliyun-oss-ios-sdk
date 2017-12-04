@@ -1125,4 +1125,21 @@ uploadedLength:(int64_t *)uploadedLength
         }
     }
 }
+
+- (void)enableCRC64WithFlag:(OSSRequestCRCFlag)flag requestDelegate:(OSSNetworkingRequestDelegate *)delegate
+{
+    switch (flag) {
+        case OSSRequestCRCOpen:
+            delegate.enableCRC = YES;
+            break;
+        case OSSRequestCRCClosed:
+            delegate.enableCRC = NO;
+            break;
+        default:
+            delegate.enableCRC = self.clientConfiguration.checkCRC;
+            break;
+    }
+
+}
+
 @end
