@@ -341,12 +341,22 @@ static NSObject * lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request {
+- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request
+{
+    return [self appendObject:request withCrc64ecma:nil];
+}
+
+- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request withCrc64ecma:(nullable NSString *)crc64ecma
+{
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
-
-    if (request.uploadingData) {
+    requestDelegate.lastCRC = crc64ecma;
+    
+    if (request.uploadingData)
+    {
         requestDelegate.uploadingData = request.uploadingData;
+        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
+        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
     }
     if (request.uploadingFileURL) {
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
@@ -370,17 +380,18 @@ static NSObject * lock;
                                     [@(request.appendPosition) stringValue], @"position", nil];
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeAppendObject];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
-                                                httpMethod:@"POST"
-                                                bucketName:request.bucketName
-                                                 objectKey:request.objectKey
-                                                      type:request.contentType
-                                                       md5:request.contentMd5
-                                                     range:nil
-                                                      date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
-                                              headerParams:headerParams
-                                                    querys:querys];
+                                                                                 httpMethod:@"POST"
+                                                                                 bucketName:request.bucketName
+                                                                                  objectKey:request.objectKey
+                                                                                       type:request.contentType
+                                                                                        md5:request.contentMd5
+                                                                                      range:nil
+                                                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
+                                                                               headerParams:headerParams
+                                                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeAppendObject;
-
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
