@@ -1137,6 +1137,8 @@ uploadedLength:(int64_t *)uploadedLength
                     uploadPart.uploadId = request.uploadId;
                     uploadPart.uploadPartData = uploadPartData;
                     uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
+                    uploadPart.crcFlag = request.crcFlag;
+                    
                     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                     [uploadPartTask waitUntilFinished];
                     if (uploadPartTask.error) {
@@ -1146,6 +1148,16 @@ uploadedLength:(int64_t *)uploadedLength
                         OSSPartInfo * partInfo = [OSSPartInfo new];
                         partInfo.partNum = i;
                         partInfo.eTag = result.eTag;
+                        partInfo.size = readLength;
+                        uint64_t crc64OfPart;
+                        @try {
+                            NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
+                            [scanner scanUnsignedLongLong:&crc64OfPart];
+                            partInfo.crc64 = crc64OfPart;
+                        } @catch (NSException *exception) {
+                            OSSLogError(@"multipart upload error with nil remote crc64!");
+                        }
+                        
                         @synchronized(lock){
                             [alreadyUploadPart addObject:partInfo];
                             *uploadedLength += readLength;
