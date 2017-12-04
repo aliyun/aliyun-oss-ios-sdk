@@ -719,6 +719,16 @@ static NSObject * lock;
 }
 
 - (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request {
+    if (request.crcFlag == OSSRequestCRCUninitialized)
+    {
+        if (self.clientConfiguration.checkCRC)
+        {
+            request.crcFlag = OSSRequestCRCOpen;
+        }else
+        {
+            request.crcFlag = OSSRequestCRCClosed;
+        }
+    }
     
     __block int64_t expectedUploadLength = 0;
     __block int partCount;
@@ -746,6 +756,7 @@ static NSObject * lock;
         
         __block int64_t uploadedLength = 0;
         
+        // 1.初始化上传条件,获取UploadId用于后续的每一片上传
         OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
         init.bucketName = request.bucketName;
         init.objectKey = request.objectKey;
@@ -777,7 +788,7 @@ static NSObject * lock;
             return [OSSTask taskWithError:cancelError];
         }
         
-        NSMutableArray * alreadyUploadPart = [NSMutableArray new];
+        NSMutableArray<OSSPartInfo *> *alreadyUploadPart = [NSMutableArray new];
         
         errorTask = [self upload:request
                      uploadIndex:nil
@@ -796,17 +807,31 @@ static NSObject * lock;
             return errorTask;
         }
         
-        [alreadyUploadPart sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            OSSPartInfo *partInfo1 = obj1;
-            OSSPartInfo *partInfo2 = obj2;
-            if(partInfo1.partNum < partInfo2.partNum){
+        [alreadyUploadPart sortUsingComparator:^NSComparisonResult(OSSPartInfo *part1,OSSPartInfo* part2) {
+            if(part1.partNum < part2.partNum){
                 return NSOrderedAscending;
-            }else if(partInfo1.partNum > partInfo2.partNum){
+            }else if(part1.partNum > part2.partNum){
                 return NSOrderedDescending;
             }else{
                 return NSOrderedSame;
             }
         }];
+        
+        // 如果开启了crc64的校验
+        uint64_t local_crc64 = 0;
+        if (request.crcFlag == OSSRequestCRCOpen)
+        {
+            for (NSUInteger index = 0; index< alreadyUploadPart.count; index++)
+            {
+                if (local_crc64 != 0) {
+                    local_crc64 = [OSSUtil oss_crc64ForCombineCRC1:local_crc64 CRC2:alreadyUploadPart[index].crc64 length:(size_t)alreadyUploadPart[index].size];
+                }else
+                {
+                    local_crc64 = alreadyUploadPart[index].crc64;
+                }
+            }
+        }
+        
         OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
         complete.bucketName = request.bucketName;
         complete.objectKey = request.objectKey;
@@ -824,15 +849,32 @@ static NSObject * lock;
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
         
-        if (completeTask.error) {
+        if (completeTask.error)
+        {
             return completeTask;
-        } else {
+        } else
+        {
             OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-            return [OSSTask taskWithResult:completeResult];
+            if (request.crcFlag == OSSRequestCRCOpen)
+            {
+                uint64_t remote_crc64 = 0;
+                NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
+                if ([scanner scanUnsignedLongLong:&remote_crc64])
+                {
+                    if (remote_crc64 != local_crc64)
+                    {
+                        NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",local_crc64,remote_crc64];
+                        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                             code:OSSClientErrorCodeInvalidCRC
+                                                         userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
+                        return [OSSTask taskWithError:error];
+                    }
+                }
+            }
+            return [OSSTask taskWithResult:completeTask.result];
         }
     }];
 }
-
 
 
 - (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request {
