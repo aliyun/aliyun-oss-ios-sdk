@@ -55,13 +55,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [self setButtonBorder:_ossButtonSelectPic];
-    [self setButtonBorder:_ossButtonCancel];
-    [self setButtonBorder:_ossButtonNormalPut];
-    [self setButtonBorder:_ossButtonNormalGet];
-    [self setButtonBorder:_ossButtonNormalCancel];
-    [self setButtonBorder:_ossButtonResize];
-    [self setButtonBorder:_ossButtonWatermark];
+//    [self setButtonBorder:_ossButtonSelectPic];
+//    [self setButtonBorder:_ossButtonCancel];
+//    [self setButtonBorder:_ossButtonNormalPut];
+//    [self setButtonBorder:_ossButtonNormalGet];
+//    [self setButtonBorder:_ossButtonNormalCancel];
+//    [self setButtonBorder:_ossButtonResize];
+//    [self setButtonBorder:_ossButtonWatermark];
     
     // init ossService
     service = [[OssService alloc] initWithViewController:self withEndPoint:endPoint];
