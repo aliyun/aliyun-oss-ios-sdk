@@ -15,6 +15,7 @@
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"
+#import "NSMutableData+OSS_CRC.h"
 
 /**
  * extend OSSRequest to include the ref to networking request object
