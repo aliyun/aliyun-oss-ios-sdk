@@ -402,12 +402,10 @@
                 if ([weakRequest.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty]) {
                     uint64_t last_crc64,local_crc64;
                     NSScanner *scanner = [NSScanner scannerWithString:weakRequest.lastCRC];
-                    BOOL transformable = [scanner scanUnsignedLongLong:&last_crc64];
-                    OSSLogError(@"weakRequest.lastCRC can not be transformable!");
+                    [scanner scanUnsignedLongLong:&last_crc64];
                     
                     scanner = [NSScanner scannerWithString:result.localCRC64ecma];
-                    transformable = [scanner scanUnsignedLongLong:&local_crc64];
-                    OSSLogError(@"result.localCRC64ecma can not be transformable!");
+                    [scanner scanUnsignedLongLong:&local_crc64];
                     
                     NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:weakRequest.internalRequest.URL resolvingAgainstBaseURL:YES];
                     NSArray<NSString *> *params = [urlComponents.query componentsSeparatedByString:@"&"];
