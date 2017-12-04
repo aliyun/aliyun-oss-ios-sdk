@@ -530,6 +530,7 @@ static NSObject * lock;
                                               headerParams:headerParams
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeCompleteMultipartUpload;
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
