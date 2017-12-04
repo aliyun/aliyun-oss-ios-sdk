@@ -472,11 +472,12 @@ static NSObject * lock;
 
 - (OSSTask *)uploadPart:(OSSUploadPartRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
-
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:[@(request.partNumber) stringValue], @"partNumber",
                                     request.uploadId, @"uploadId", nil];
     if (request.uploadPartData) {
         requestDelegate.uploadingData = request.uploadPartData;
+        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadPartData];
+        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
     }
     if (request.uploadPartFileURL) {
         requestDelegate.uploadingFileURL = request.uploadPartFileURL;
@@ -496,6 +497,7 @@ static NSObject * lock;
                                               headerParams:nil
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeUploadPart;
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
