@@ -1099,7 +1099,7 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  The Part information. It's called by CompleteMultipartUpload().
  */
-@interface OSSPartInfo : NSObject
+@interface OSSPartInfo : NSObject<NSCopying>
 
 /**
  The part number in this part upload.

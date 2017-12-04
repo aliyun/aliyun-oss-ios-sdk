@@ -755,6 +755,16 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return parInfo;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+    OSSPartInfo *instance = [[[self class] allocWithZone:zone] init];
+    instance.partNum = self.partNum;
+    instance.eTag = self.eTag;
+    instance.size = self.size;
+    instance.crc64 = self.crc64;
+    return instance;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"OSSPartInfo<%p>:{partNum: %d,eTag: %@,partSize: %lld,crc64: %llu}",self,self.partNum,self.eTag,self.size,self.crc64];
