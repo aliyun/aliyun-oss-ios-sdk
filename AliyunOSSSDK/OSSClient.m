@@ -502,7 +502,8 @@ static NSObject * lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request {
+- (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request
+{
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionary];
     if (request.partInfos) {
@@ -831,50 +832,54 @@ static NSObject * lock;
                 }
             }
         }
-        
-        OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
-        complete.bucketName = request.bucketName;
-        complete.objectKey = request.objectKey;
-        complete.uploadId = request.uploadId;
-        complete.partInfos = alreadyUploadPart;
-        complete.crcFlag = request.crcFlag;
-        if (request.callbackParam != nil) {
-            complete.callbackParam = request.callbackParam;
-        }
-        if (request.callbackVar != nil) {
-            complete.callbackVar = request.callbackVar;
-        }
-        if (request.completeMetaHeader != nil) {
-            complete.completeMetaHeader = request.completeMetaHeader;
-        }
-        OSSTask * completeTask = [self completeMultipartUpload:complete];
-        [completeTask waitUntilFinished];
-        
-        if (completeTask.error)
+        return [self processCompleteMultipartUpload:request partInfos:[alreadyUploadPart copy] clientCrc64:local_crc64];
+    }];
+}
+
+- (OSSTask *)processCompleteMultipartUpload:(OSSMultipartUploadRequest *)request partInfos:(NSArray<OSSPartInfo *> *)partInfos clientCrc64:(uint64_t)clientCrc64
+{
+    OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
+    complete.bucketName = request.bucketName;
+    complete.objectKey = request.objectKey;
+    complete.uploadId = request.uploadId;
+    complete.partInfos = partInfos;
+    complete.crcFlag = request.crcFlag;
+    if (request.callbackParam != nil) {
+        complete.callbackParam = request.callbackParam;
+    }
+    if (request.callbackVar != nil) {
+        complete.callbackVar = request.callbackVar;
+    }
+    if (request.completeMetaHeader != nil) {
+        complete.completeMetaHeader = request.completeMetaHeader;
+    }
+    OSSTask * completeTask = [self completeMultipartUpload:complete];
+    [completeTask waitUntilFinished];
+    
+    if (completeTask.error)
+    {
+        return completeTask;
+    } else
+    {
+        OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
+        if (complete.crcFlag == OSSRequestCRCOpen)
         {
-            return completeTask;
-        } else
-        {
-            OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-            if (complete.crcFlag == OSSRequestCRCOpen)
+            uint64_t remote_crc64 = 0;
+            NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
+            if ([scanner scanUnsignedLongLong:&remote_crc64])
             {
-                uint64_t remote_crc64 = 0;
-                NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
-                if ([scanner scanUnsignedLongLong:&remote_crc64])
+                if (remote_crc64 != clientCrc64)
                 {
-                    if (remote_crc64 != local_crc64)
-                    {
-                        NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",local_crc64,remote_crc64];
-                        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                                             code:OSSClientErrorCodeInvalidCRC
-                                                         userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
-                        return [OSSTask taskWithError:error];
-                    }
+                    NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",clientCrc64,remote_crc64];
+                    NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                         code:OSSClientErrorCodeInvalidCRC
+                                                     userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
+                    return [OSSTask taskWithError:error];
                 }
             }
-            return [OSSTask taskWithResult:completeTask.result];
         }
-    }];
+        return [OSSTask taskWithResult:completeTask.result];
+    }
 }
 
 
