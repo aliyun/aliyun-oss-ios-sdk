@@ -252,16 +252,19 @@ static NSObject * lock;
                                               headerParams:nil
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeGetObject;
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
-- (OSSTask *)putObject:(OSSPutObjectRequest *)request {
+- (OSSTask *)putObject:(OSSPutObjectRequest *)request
+{
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
-
     if (request.uploadingData) {
         requestDelegate.uploadingData = request.uploadingData;
+        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
+        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
     }
     if (request.uploadingFileURL) {
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
@@ -302,7 +305,8 @@ static NSObject * lock;
                                               headerParams:headerParams
                                                     querys:nil];
     requestDelegate.operType = OSSOperationTypePutObject;
-
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
