@@ -837,6 +837,7 @@ static NSObject * lock;
         complete.objectKey = request.objectKey;
         complete.uploadId = request.uploadId;
         complete.partInfos = alreadyUploadPart;
+        complete.crcFlag = request.crcFlag;
         if (request.callbackParam != nil) {
             complete.callbackParam = request.callbackParam;
         }
@@ -855,7 +856,7 @@ static NSObject * lock;
         } else
         {
             OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-            if (request.crcFlag == OSSRequestCRCOpen)
+            if (complete.crcFlag == OSSRequestCRCOpen)
             {
                 uint64_t remote_crc64 = 0;
                 NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
