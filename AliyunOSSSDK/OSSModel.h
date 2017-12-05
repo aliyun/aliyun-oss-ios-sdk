@@ -246,7 +246,7 @@ Sets the session Id for background file transmission
 /**
  是否开启crc校验(当同时设置了此选项和请求中的checkCRC开关时，以请求中的checkCRC开关为准)
  */
-@property (nonatomic, assign) BOOL checkCRC;
+@property (nonatomic, assign) BOOL crc64Verifiable;
 
 @end
 
@@ -1384,6 +1384,8 @@ The result class of listing uploaded parts.
 @interface OSSHttpResponseParser : NSObject
 @property (nonatomic, strong) NSURL * downloadingFileURL;
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveBlock;
+/** 是否开启crc64校验 */
+@property (nonatomic, assign) BOOL crc64Verifiable;
 
 - (instancetype)initForOperationType:(OSSOperationType)operationType;
 - (void)consumeHttpResponse:(NSHTTPURLResponse *)response;

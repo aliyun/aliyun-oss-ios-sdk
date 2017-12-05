@@ -103,7 +103,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 /**
  是否开启crc校验,version2.7.2开始添加
  */
-@property (nonatomic, assign) BOOL enableCRC;
+@property (nonatomic, assign) BOOL crc64Verifiable;
 
 
 

@@ -851,6 +851,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     NSFileHandle * _fileHandle;
     NSMutableData * _collectingData;
     NSHTTPURLResponse * _response;
+    uint64_t _crc64ecma;
 }
 
 - (void)reset {
@@ -870,40 +871,61 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     _response = response;
 }
 
-- (OSSTask *)consumeHttpResponseBody:(NSData *)data {
-
+- (OSSTask *)consumeHttpResponseBody:(NSData *)data
+{
+    if (_crc64Verifiable&&(_operationTypeForThisParser == OSSOperationTypeGetObject))
+    {
+        NSMutableData *mutableData = [NSMutableData dataWithData:data];
+        if (_crc64ecma != 0)
+        {
+            _crc64ecma = [OSSUtil oss_crc64ForCombineCRC1:_crc64ecma
+                                                     CRC2:[mutableData oss_crc64]
+                                                   length:mutableData.length];
+        }else
+        {
+            _crc64ecma = [mutableData oss_crc64];
+        }
+    }
+    
     if (self.onRecieveBlock) {
         self.onRecieveBlock(data);
         return [OSSTask taskWithResult:nil];
     }
 
     NSError * error;
-    if (self.downloadingFileURL) {
-        if (!_fileHandle) {
+    if (self.downloadingFileURL)
+    {
+        if (!_fileHandle)
+        {
             NSFileManager * fm = [NSFileManager defaultManager];
             NSString * dirName = [[self.downloadingFileURL path] stringByDeletingLastPathComponent];
-            if (![fm fileExistsAtPath:dirName]) {
+            if (![fm fileExistsAtPath:dirName])
+            {
                 [fm createDirectoryAtPath:dirName withIntermediateDirectories:YES attributes:nil error:&error];
             }
-            if (![fm fileExistsAtPath:dirName] || error) {
+            if (![fm fileExistsAtPath:dirName] || error)
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create dir at %@", dirName]}]];
             }
             [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
-            if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
+            if (![fm fileExistsAtPath:[self.downloadingFileURL path]])
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create file at %@", [self.downloadingFileURL path]]}]];
             }
             _fileHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadingFileURL error:&error];
-            if (error) {
+            if (error)
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:[error userInfo]]];
             }
             [_fileHandle writeData:data];
-        } else {
+        } else
+        {
             @try {
                 [_fileHandle writeData:data];
             }
@@ -913,17 +935,22 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                                                              userInfo:@{OSSErrorMessageTOKEN: [exception description]}]];
             }
         }
-    } else {
-        if (!_collectingData) {
+    } else
+    {
+        if (!_collectingData)
+        {
             _collectingData = [[NSMutableData alloc] initWithData:data];
-        } else {
+        }
+        else
+        {
             [_collectingData appendData:data];
         }
     }
     return [OSSTask taskWithResult:nil];
 }
 
-- (void)parseResponseHeader:(NSHTTPURLResponse *)response toResultObject:(OSSResult *)result {
+- (void)parseResponseHeader:(NSHTTPURLResponse *)response toResultObject:(OSSResult *)result
+{
     result.httpResponseCode = [_response statusCode];
     result.httpResponseHeaderFields = [NSDictionary dictionaryWithDictionary:[_response allHeaderFields]];
     [[_response allHeaderFields] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -939,7 +966,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     }];
 }
 
-- (NSDictionary *)parseResponseHeaderToGetMeta:(NSHTTPURLResponse *)response {
+- (NSDictionary *)parseResponseHeaderToGetMeta:(NSHTTPURLResponse *)response
+{
     NSMutableDictionary * meta = [NSMutableDictionary new];
 
     /* define a constant array to contain all meta header name */
@@ -960,22 +988,28 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return meta;
 }
 
-- (id)constructResultObject {
-    if (self.onRecieveBlock) {
+- (id)constructResultObject
+{
+    if (self.onRecieveBlock)
+    {
         return nil;
     }
 
-    switch (_operationTypeForThisParser) {
-
-        case OSSOperationTypeGetService: {
+    switch (_operationTypeForThisParser)
+    {
+        case OSSOperationTypeGetService:
+        {
             OSSGetServiceResult * getServiceResult = [OSSGetServiceResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getServiceResult];
             }
-            if (_collectingData) {
+            if (_collectingData)
+            {
                 NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
-                if (parseDict) {
+                if (parseDict)
+                {
                     getServiceResult.ownerId = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSIDXMLTOKEN];
                     getServiceResult.ownerDispName = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSDisplayNameXMLTOKEN];
                     getServiceResult.prefix = [parseDict objectForKey:OSSPrefixXMLTOKEN];
@@ -997,9 +1031,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return getServiceResult;
         }
 
-        case OSSOperationTypeCreateBucket: {
+        case OSSOperationTypeCreateBucket:
+        {
             OSSCreateBucketResult * createBucketResult = [OSSCreateBucketResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:createBucketResult];
                 [_response.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                     if ([((NSString *)key) isEqualToString:@"Location"]) {
@@ -1011,22 +1047,27 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return createBucketResult;
         }
 
-        case OSSOperationTypeGetBucketACL: {
+        case OSSOperationTypeGetBucketACL:
+        {
             OSSGetBucketACLResult * getBucketACLResult = [OSSGetBucketACLResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getBucketACLResult];
             }
-            if (_collectingData) {
+            if (_collectingData)
+            {
                 NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
-                if (parseDict) {
+                if (parseDict)
+                {
                     getBucketACLResult.aclGranted = [[parseDict objectForKey:OSSAccessControlListXMLTOKEN] objectForKey:OSSGrantXMLTOKEN];
                 }
             }
             return getBucketACLResult;
         }
 
-        case OSSOperationTypeDeleteBucket: {
+        case OSSOperationTypeDeleteBucket:
+        {
             OSSDeleteBucketResult * deleteBucketResult = [OSSDeleteBucketResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:deleteBucketResult];
@@ -1034,7 +1075,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return deleteBucketResult;
         }
 
-        case OSSOperationTypeGetBucket: {
+        case OSSOperationTypeGetBucket:
+        {
             OSSGetBucketResult * getBucketResult = [OSSGetBucketResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:getBucketResult];
@@ -1080,36 +1122,45 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return getBucketResult;
         }
 
-        case OSSOperationTypeHeadObject: {
+        case OSSOperationTypeHeadObject:
+        {
             OSSHeadObjectResult * headObjectResult = [OSSHeadObjectResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:headObjectResult];
                 headObjectResult.objectMeta = [self parseResponseHeaderToGetMeta:_response];
             }
             return headObjectResult;
         }
 
-        case OSSOperationTypeGetObject: {
+        case OSSOperationTypeGetObject:
+        {
             OSSGetObjectResult * getObejctResult = [OSSGetObjectResult new];
             OSSLogDebug(@"GetObjectResponse: %@", _response);
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getObejctResult];
                 getObejctResult.objectMeta = [self parseResponseHeaderToGetMeta:_response];
+                if (_crc64ecma != 0)
+                {
+                    getObejctResult.localCRC64ecma = [NSString stringWithFormat:@"%llu",_crc64ecma];
+                }
             }
             if (_fileHandle) {
                 [_fileHandle closeFile];
             }
+            
             if (_collectingData) {
                 getObejctResult.downloadedData = _collectingData;
-                NSMutableData *downloadData = [NSMutableData dataWithData:getObejctResult.downloadedData];
-                getObejctResult.localCRC64ecma = [NSString stringWithFormat:@"%llu",[downloadData oss_crc64]];
             }
             return getObejctResult;
         }
 
-        case OSSOperationTypePutObject: {
+        case OSSOperationTypePutObject:
+        {
             OSSPutObjectResult * putObjectResult = [OSSPutObjectResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:putObjectResult];
                 [_response.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                     if ([((NSString *)key) isEqualToString:@"Etag"]) {
@@ -1124,7 +1175,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return putObjectResult;
         }
 
-        case OSSOperationTypeAppendObject: {
+        case OSSOperationTypeAppendObject:
+        {
             OSSAppendObjectResult * appendObjectResult = [OSSAppendObjectResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:appendObjectResult];

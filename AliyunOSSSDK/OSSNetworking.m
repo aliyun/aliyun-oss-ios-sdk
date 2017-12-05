@@ -373,90 +373,102 @@
             [taskCompletionSource setError:error];
         }else
         {
-            OSSResult *result = (OSSResult *)responseObject;
-            BOOL hasRange = [weakRequest.internalRequest valueForHTTPHeaderField:@"Range"] != nil;
-            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:weakRequest.internalRequest.URL resolvingAgainstBaseURL:YES];
-            BOOL hasXOSSProcess = [urlComponents.query containsString:@"x-oss-process"];
-            BOOL enableCRC = weakRequest.enableCRC;
-            // 3.判断如果未开启crc校验,或者headerFields里面有Range字段或者参数表中存在
-            //   x-oss-process字段,都将不进行crc校验
-            if (!enableCRC || hasRange || hasXOSSProcess)
-            {
-                [taskCompletionSource setResult:responseObject];
-            }
-            else
-            {
-                // 如果是上传文件请求,则将本地计算好的值赋值给Result
-                if (!result.localCRC64ecma.oss_isNotEmpty)
-                {
-                    result.localCRC64ecma = weakRequest.contentCRC;
-                }
-                
-                if (!result.localCRC64ecma.oss_isNotEmpty && weakRequest.uploadingFileURL)
-                {
-                    NSMutableData *localData = [[NSMutableData alloc] initWithContentsOfURL:weakRequest.uploadingFileURL];
-                    result.localCRC64ecma = [NSString stringWithFormat:@"%llu",[localData oss_crc64]];
-                }
-                
-                // 针对append接口或者分片上传，需要多次计算crc值
-                if ([weakRequest.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty]) {
-                    uint64_t last_crc64,local_crc64;
-                    NSScanner *scanner = [NSScanner scannerWithString:weakRequest.lastCRC];
-                    [scanner scanUnsignedLongLong:&last_crc64];
-                    
-                    scanner = [NSScanner scannerWithString:result.localCRC64ecma];
-                    [scanner scanUnsignedLongLong:&local_crc64];
-                    
-                    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:weakRequest.internalRequest.URL resolvingAgainstBaseURL:YES];
-                    NSArray<NSString *> *params = [urlComponents.query componentsSeparatedByString:@"&"];
-                    
-                    __block NSString *positionValue;
-                    [params enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if ([obj rangeOfString:@"position="].location == 0)
-                        {
-                            *stop = YES;
-                            positionValue = [obj substringFromIndex:9];
-                        }
-                    }];
-                    
-                    uint64_t position = [positionValue longLongValue];
-                    NSString *next_append_position = [result.httpResponseHeaderFields objectForKey:@"x-oss-next-append-position"];
-                    uint64_t length = [next_append_position longLongValue] - position;
-                    
-                    uint64_t crc_local = [OSSUtil oss_crc64ForCombineCRC1:last_crc64 CRC2:local_crc64 length:(size_t)length];
-                    result.localCRC64ecma = [NSString stringWithFormat:@"%llu",crc_local];
-                    OSSLogVerbose(@"crc_local: %llu, crc_remote: %@,last_position: %llu,nextAppendPosition: %llu,length:  %llu",crc_local,result.remoteCRC64ecma,position,[next_append_position longLongValue],length);
-                }
-                // 4.如果服务端未返回crc信息，默认是成功的
-                if (!result.remoteCRC64ecma.oss_isNotEmpty)
-                {
-                    [taskCompletionSource setResult:responseObject];
-                }
-                // 5.如果服务器和本机计算的crc值不一致,则报crc校验失败;否则,认为上传任务执行成功
-                else if (result.remoteCRC64ecma.oss_isNotEmpty && result.localCRC64ecma.oss_isNotEmpty)
-                {
-                    if ([result.remoteCRC64ecma isEqualToString:result.localCRC64ecma])
-                    {
-                        [taskCompletionSource setResult:responseObject];
-                    }else
-                    {
-                        NSString *errorMessage = [NSString stringWithFormat:@"crc validation fails(local_crc64ecma: %@,remote_crc64ecma: %@)",result.localCRC64ecma,result.remoteCRC64ecma];
-                        
-                        NSError *crcError = [NSError errorWithDomain:OSSClientErrorDomain
-                                                                code:OSSClientErrorCodeInvalidCRC
-                                                            userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
-                        [taskCompletionSource setError:crcError];
-                    }
-                }
-                else
-                {
-                    [taskCompletionSource setResult:responseObject];
-                }
-            }
+            [self checkForCrc64WithResult:responseObject
+                          requestDelegate:weakRequest
+                     taskCompletionSource:taskCompletionSource];
         }
     };
     [self dataTaskWithDelegate:request];
     return taskCompletionSource.task;
+}
+
+- (void)checkForCrc64WithResult:(nonnull id)response requestDelegate:(OSSNetworkingRequestDelegate *)delegate taskCompletionSource:(OSSTaskCompletionSource *)source
+{
+    OSSResult *result = (OSSResult *)response;
+    BOOL hasRange = [delegate.internalRequest valueForHTTPHeaderField:@"Range"] != nil;
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:delegate.internalRequest.URL resolvingAgainstBaseURL:YES];
+    BOOL hasXOSSProcess = [urlComponents.query containsString:@"x-oss-process"];
+    BOOL enableCRC = delegate.crc64Verifiable;
+    // 3.判断如果未开启crc校验,或者headerFields里面有Range字段或者参数表中存在
+    //   x-oss-process字段,都将不进行crc校验
+    if (!enableCRC || hasRange || hasXOSSProcess)
+    {
+        [source setResult:response];
+    }
+    else
+    {
+        /**
+         * 如果是上传文件请求,则将本地计算好的crc64值赋值给Result的localCrc64ecma,
+         * 注意当使用文件路径上传时无法验证crc64,涉及uploadTaskWithRequest:fromFile,此时
+         * 不支持crc64校验
+         */
+        if (!result.localCRC64ecma.oss_isNotEmpty)
+        {
+            result.localCRC64ecma = delegate.contentCRC;
+        }
+        
+        if (!result.localCRC64ecma.oss_isNotEmpty && delegate.uploadingFileURL)
+        {
+            NSMutableData *localData = [[NSMutableData alloc] initWithContentsOfURL:delegate.uploadingFileURL];
+            result.localCRC64ecma = [NSString stringWithFormat:@"%llu",[localData oss_crc64]];
+        }
+        
+        // 针对append接口或者分片上传，需要多次计算crc值
+        if ([delegate.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty])
+        {
+            uint64_t last_crc64,local_crc64;
+            NSScanner *scanner = [NSScanner scannerWithString:delegate.lastCRC];
+            [scanner scanUnsignedLongLong:&last_crc64];
+            
+            scanner = [NSScanner scannerWithString:result.localCRC64ecma];
+            [scanner scanUnsignedLongLong:&local_crc64];
+            
+            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:delegate.internalRequest.URL resolvingAgainstBaseURL:YES];
+            NSArray<NSString *> *params = [urlComponents.query componentsSeparatedByString:@"&"];
+            
+            __block NSString *positionValue;
+            [params enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj rangeOfString:@"position="].location == 0)
+                {
+                    *stop = YES;
+                    positionValue = [obj substringFromIndex:9];
+                }
+            }];
+            
+            uint64_t position = [positionValue longLongValue];
+            NSString *next_append_position = [result.httpResponseHeaderFields objectForKey:@"x-oss-next-append-position"];
+            uint64_t length = [next_append_position longLongValue] - position;
+            
+            uint64_t crc_local = [OSSUtil oss_crc64ForCombineCRC1:last_crc64 CRC2:local_crc64 length:(size_t)length];
+            result.localCRC64ecma = [NSString stringWithFormat:@"%llu",crc_local];
+            OSSLogVerbose(@"crc_local: %llu, crc_remote: %@,last_position: %llu,nextAppendPosition: %llu,length:  %llu",crc_local,result.remoteCRC64ecma,position,[next_append_position longLongValue],length);
+        }
+        // 4.如果服务端未返回crc信息，默认是成功的
+        if (!result.remoteCRC64ecma.oss_isNotEmpty)
+        {
+            [source setResult:response];
+        }
+        // 5.如果服务器和本机计算的crc值不一致,则报crc校验失败;否则,认为上传任务执行成功
+        else if (result.remoteCRC64ecma.oss_isNotEmpty && result.localCRC64ecma.oss_isNotEmpty)
+        {
+            if ([result.remoteCRC64ecma isEqualToString:result.localCRC64ecma])
+            {
+                [source setResult:response];
+            }else
+            {
+                NSString *errorMessage = [NSString stringWithFormat:@"crc validation fails(local_crc64ecma: %@,remote_crc64ecma: %@)",result.localCRC64ecma,result.remoteCRC64ecma];
+                
+                NSError *crcError = [NSError errorWithDomain:OSSClientErrorDomain
+                                                        code:OSSClientErrorCodeInvalidCRC
+                                                    userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
+                [source setError:crcError];
+            }
+        }
+        else
+        {
+            [source setResult:response];
+        }
+    }
 }
 
 - (void)dataTaskWithDelegate:(OSSNetworkingRequestDelegate *)requestDelegate {

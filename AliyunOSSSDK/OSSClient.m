@@ -242,7 +242,12 @@ static NSObject * lock;
     if (request.xOssProcess) {
          querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.xOssProcess, @"x-oss-process", nil];
     }
-    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetObject];
+    
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetObject];
+    responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
+    
+    requestDelegate.responseParser = responseParser;
     requestDelegate.responseParser.downloadingFileURL = request.downloadToFileURL;
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"GET"
@@ -255,7 +260,6 @@ static NSObject * lock;
                                               headerParams:nil
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeGetObject;
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -296,7 +300,12 @@ static NSObject * lock;
     if (request.cacheControl) {
         [headerParams setObject:request.cacheControl forKey:OSSHttpHeaderCacheControl];
     }
-    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObject];
+    
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObject];
+    responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
+    requestDelegate.responseParser = responseParser;
+    
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"PUT"
                                                 bucketName:request.bucketName
@@ -308,7 +317,6 @@ static NSObject * lock;
                                               headerParams:headerParams
                                                     querys:nil];
     requestDelegate.operType = OSSOperationTypePutObject;
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -380,7 +388,12 @@ static NSObject * lock;
     }
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", @"append",
                                     [@(request.appendPosition) stringValue], @"position", nil];
-    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeAppendObject];
+    
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeAppendObject];
+    responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
+    requestDelegate.responseParser = responseParser;
+    
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                                                  httpMethod:@"POST"
                                                                                  bucketName:request.bucketName
@@ -392,7 +405,6 @@ static NSObject * lock;
                                                                                headerParams:headerParams
                                                                                      querys:querys];
     requestDelegate.operType = OSSOperationTypeAppendObject;
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -487,7 +499,12 @@ static NSObject * lock;
     if (request.uploadPartProgress) {
         requestDelegate.uploadProgress = request.uploadPartProgress;
     }
-    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeUploadPart];
+    
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeUploadPart];
+    responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
+    requestDelegate.responseParser = responseParser;
+    
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"PUT"
                                                 bucketName:request.bucketName
@@ -499,7 +516,6 @@ static NSObject * lock;
                                               headerParams:nil
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeUploadPart;
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -521,7 +537,12 @@ static NSObject * lock;
         [headerParams addEntriesFromDictionary:request.completeMetaHeader];
     }
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
-    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCompleteMultipartUpload];
+    
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCompleteMultipartUpload];
+    responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
+    requestDelegate.responseParser = responseParser;
+    
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"POST"
                                                 bucketName:request.bucketName
@@ -533,7 +554,6 @@ static NSObject * lock;
                                               headerParams:headerParams
                                                     querys:querys];
     requestDelegate.operType = OSSOperationTypeCompleteMultipartUpload;
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
@@ -724,7 +744,7 @@ static NSObject * lock;
 - (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request {
     if (request.crcFlag == OSSRequestCRCUninitialized)
     {
-        if (self.clientConfiguration.checkCRC)
+        if (self.clientConfiguration.crc64Verifiable)
         {
             request.crcFlag = OSSRequestCRCOpen;
         }else
@@ -1342,13 +1362,13 @@ static NSObject * lock;
 {
     switch (flag) {
         case OSSRequestCRCOpen:
-            delegate.enableCRC = YES;
+            delegate.crc64Verifiable = YES;
             break;
         case OSSRequestCRCClosed:
-            delegate.enableCRC = NO;
+            delegate.crc64Verifiable = NO;
             break;
         default:
-            delegate.enableCRC = self.clientConfiguration.checkCRC;
+            delegate.crc64Verifiable = self.clientConfiguration.crc64Verifiable;
             break;
     }
 
