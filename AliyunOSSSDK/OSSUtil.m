@@ -1118,4 +1118,14 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     }
 }
 
++ (NSString *)oss_documentDirectory
+{
+    static NSString *documentDirectory = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        documentDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    });
+    return documentDirectory;
+}
+
 @end
