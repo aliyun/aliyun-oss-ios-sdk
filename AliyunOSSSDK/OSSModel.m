@@ -755,6 +755,25 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return parInfo;
 }
 
+- (nonnull NSDictionary *)entityToDictionary
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:@(_partNum) forKey:@"partNum"];
+    if (_eTag)
+    {
+        [dict setValue:_eTag forKey:@"eTag"];
+    }
+    [dict setValue:@(_size) forKey:@"size"];
+    [dict setValue:@(_crc64) forKey:@"crc64"];
+    return [dict copy];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSPartInfo<%p>:{partNum: %d,eTag: %@,partSize: %lld,crc64: %llu}",self,self.partNum,self.eTag,self.size,self.crc64];
+}
+
+#pragma marks - Protocol Methods
 - (id)copyWithZone:(nullable NSZone *)zone
 {
     OSSPartInfo *instance = [[[self class] allocWithZone:zone] init];
@@ -763,11 +782,6 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     instance.size = self.size;
     instance.crc64 = self.crc64;
     return instance;
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"OSSPartInfo<%p>:{partNum: %d,eTag: %@,partSize: %lld,crc64: %llu}",self,self.partNum,self.eTag,self.size,self.crc64];
 }
 
 @end
