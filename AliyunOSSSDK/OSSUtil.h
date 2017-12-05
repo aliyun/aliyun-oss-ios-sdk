@@ -39,6 +39,12 @@
 + (NSData *)fileMD5:(NSString *)path;
 + (NSString*)buildNetWorkConnectedMsg;
 + (NSString*)buildOperatorMsg;
+
+/**
+ * @brief: combine crc1 and crc2
+ */
++ (uint64_t)oss_crc64ForCombineCRC1:(uint64_t)crc1 CRC2:(uint64_t)crc2 length:(size_t)len2;
+
 @end
 
 @interface NSString (OSS)
@@ -46,5 +52,6 @@
 - (NSString *)oss_trim;
 - (BOOL)oss_isNotEmpty;
 - (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)path;
++ (NSString *)oss_documentDirectory;
 
 @end
