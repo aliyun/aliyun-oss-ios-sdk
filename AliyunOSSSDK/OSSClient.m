@@ -757,7 +757,7 @@ static NSObject * lock;
                                           userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled!"}];
         });
         
-        __block int64_t uploadedLength = 0;
+        __block uint64_t uploadedLength = 0;
         
         // 1.初始化上传条件,获取UploadId用于后续的每一片上传
         OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
@@ -863,6 +863,16 @@ static NSObject * lock;
         return completeTask;
     } else
     {
+        NSString *localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:request.uploadId];
+        if (localPartInfosPath)
+        {
+            NSError *deleteError;
+            if (![[NSFileManager defaultManager] removeItemAtPath:localPartInfosPath error:&deleteError])
+            {
+                OSSLogError(@"delete localPartInfosPath failed!Error: %@",deleteError);
+            }
+        }
+        
         OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
         if (complete.crcFlag == OSSRequestCRCOpen)
         {
