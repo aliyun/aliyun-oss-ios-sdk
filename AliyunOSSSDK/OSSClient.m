@@ -1006,7 +1006,7 @@ static NSObject * lock;
         }
         
         NSString *localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
-        NSArray *localPartInfos = [NSArray arrayWithContentsOfFile:localPartInfosPath];
+        NSDictionary *localPartInfos = [NSDictionary dictionaryWithContentsOfFile:localPartInfosPath];
 
         NSMutableArray<OSSPartInfo *> *uploadedPartInfos = [NSMutableArray new];
         NSMutableArray * alreadyUploadIndex = [NSMutableArray new];
@@ -1020,13 +1020,12 @@ static NSObject * lock;
                                                                  eTag:eTag
                                                                  size:size
                                                                 crc64:0];
-            for (NSDictionary *dict in localPartInfos) {
-                if ([[dict[@"partNum"] stringValue] isEqualToString:[partInfo objectForKey:OSSPartNumberXMLTOKEN]])
-                {
-                    info.crc64 = [dict[@"crc64"] unsignedLongLongValue];
-                }
+            NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%d",partNumber]];
+            if (tPartInfo)
+            {
+                info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
             }
-            
+
             [uploadedPartInfos addObject:info];
             [alreadyUploadIndex addObject:@(info.partNum)];
         }];
@@ -1082,6 +1081,7 @@ static NSObject * lock;
         complete.objectKey = request.objectKey;
         complete.uploadId = request.uploadId;
         complete.partInfos = uploadedPartInfos;
+        complete.crcFlag = request.crcFlag;
         if (request.callbackParam != nil) {
             complete.callbackParam = request.callbackParam;
         }
@@ -1096,13 +1096,8 @@ static NSObject * lock;
 
         if (completeTask.error) {
             return completeTask;
-        } else {
-            OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-            OSSResumableUploadResult * result = [OSSResumableUploadResult new];
-            result.requestId = completeResult.requestId;
-            result.httpResponseCode = completeResult.httpResponseCode;
-            result.httpResponseHeaderFields = completeResult.httpResponseHeaderFields;
-            result.serverReturnJsonString = completeResult.serverReturnJsonString;
+        } else
+        {
             if(recordFilePath)
             {
                 NSError *deleteError;
@@ -1120,6 +1115,29 @@ static NSObject * lock;
                     OSSLogError(@"delete localPartInfosPath failed!Error: %@",deleteError);
                 }
             }
+            OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
+            if (complete.crcFlag == OSSRequestCRCOpen)
+            {
+                uint64_t remote_crc64 = 0;
+                NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
+                if ([scanner scanUnsignedLongLong:&remote_crc64])
+                {
+                    if (remote_crc64 != local_crc64)
+                    {
+                        NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",local_crc64,remote_crc64];
+                        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                             code:OSSClientErrorCodeInvalidCRC
+                                                         userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
+                        return [OSSTask taskWithError:error];
+                    }
+                }
+            }
+            
+            OSSResumableUploadResult * result = [OSSResumableUploadResult new];
+            result.requestId = completeResult.requestId;
+            result.httpResponseCode = completeResult.httpResponseCode;
+            result.httpResponseHeaderFields = completeResult.httpResponseHeaderFields;
+            result.serverReturnJsonString = completeResult.serverReturnJsonString;
             
             return [OSSTask taskWithResult:result];
         }
@@ -1228,7 +1246,7 @@ static NSObject * lock;
     
     __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
-    __block NSMutableArray *localPartInfos = [NSMutableArray array];
+    __block NSMutableDictionary *localPartInfos = [NSMutableDictionary dictionary];
     __block NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name];
     __block NSString *partInfosPath = [partInfosDirectory stringByAppendingPathComponent:request.uploadId];
 ;
@@ -1310,14 +1328,8 @@ static NSObject * lock;
                             {
                                 OSSLogError(@"create localPartInfos file failed!path is %@",partInfosPath);
                             }
-                            
                             NSDictionary *partInfoDict = [partInfo entityToDictionary];
-                            [localPartInfos addObject:partInfoDict];
-                            if (![localPartInfos writeToFile:partInfosPath atomically:YES])
-                            {
-                                OSSLogError(@"write localPartInfos file failed!");
-                            }
-                            
+                            [localPartInfos setObject:partInfoDict forKey:[NSString stringWithFormat:@"%d",i]];
                             [alreadyUploadPart addObject:partInfo];
                             *uploadedLength += readLength;
                             request.uploadProgress(readLength, *uploadedLength, uploadFileSize);
@@ -1330,6 +1342,10 @@ static NSObject * lock;
     }
     
     [queue waitUntilAllOperationsAreFinished];
+    if (![localPartInfos writeToFile:partInfosPath atomically:YES])
+    {
+        OSSLogError(@"write localPartInfos file failed!");
+    }
     
     return errorTask;
 }
