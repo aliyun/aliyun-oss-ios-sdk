@@ -606,14 +606,26 @@ static NSObject * lock;
         NSString *recordFileName = [OSSUtil dataMD5String:data];
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        if([fileManager fileExistsAtPath:recordFilePath]){
+        NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:request.uploadId];
+        
+        if([fileManager fileExistsAtPath:recordFilePath])
+        {
             OSSAbortMultipartUploadRequest * abort = [OSSAbortMultipartUploadRequest new];
             abort.bucketName = request.bucketName;
             abort.objectKey = request.objectKey;
             abort.uploadId = [[NSString alloc] initWithData:[[NSFileHandle fileHandleForReadingAtPath:recordFilePath] readDataToEndOfFile] encoding:NSUTF8StringEncoding];
             
             NSError *error;
-            [fileManager removeItemAtPath:recordFilePath error:&error];
+            if (![fileManager removeItemAtPath:recordFilePath error:&error])
+            {
+                OSSLogError(@"%@",error);
+            }
+            
+            NSError *otherError;
+            if (![fileManager removeItemAtPath:partInfosFilePath error:&otherError])
+            {
+                OSSLogError(@"%@",otherError);
+            }
             
             return [self abortMultipartUpload:abort];
         }
