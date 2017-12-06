@@ -528,9 +528,10 @@
     }];
 }
 
-#pragma mark - delegate method
+#pragma mark - NSURLSessionTaskDelegate Methods
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(sessionTask.taskIdentifier)];
     [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
 
@@ -645,14 +646,54 @@
     }];
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(task.taskIdentifier)];
-    if (delegate.uploadProgress) {
+    if (delegate.uploadProgress)
+    {
         delegate.uploadProgress(bytesSent, totalBytesSent, totalBytesExpectedToSend);
     }
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler
+{
+    if (!challenge) {
+        return;
+    }
+    
+    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    NSURLCredential *credential = nil;
+    
+    /*
+     * Gets the host name
+     */
+    
+    NSString * host = [[task.currentRequest allHTTPHeaderFields] objectForKey:@"Host"];
+    if (!host) {
+        host = task.currentRequest.URL.host;
+    }
+    
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        if ([self evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:host]) {
+            disposition = NSURLSessionAuthChallengeUseCredential;
+            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        }
+    } else {
+        disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    }
+    // Uses the default evaluation for other challenges.
+    completionHandler(disposition,credential);
+}
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
+{
+    
+}
+
+#pragma mark - NSURLSessionDataDelegate Methods
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
     /* background upload task will not call back didRecieveResponse */
@@ -666,7 +707,8 @@
     completionHandler(NSURLSessionResponseAllow);
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
     /* background upload task will not call back didRecieveResponse.
@@ -709,6 +751,8 @@
     }
 }
 
+#pragma mark - Private Methods
+
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust forDomain:(NSString *)domain {
     /*
      * Creates the policies for certificate verification.
@@ -719,13 +763,13 @@
     } else {
         [policies addObject:(__bridge_transfer id)SecPolicyCreateBasicX509()];
     }
-
+    
     /*
      * Sets the policies to server's certificate
      */
     SecTrustSetPolicies(serverTrust, (__bridge CFArrayRef)policies);
-
-
+    
+    
     /*
      * Evaulates if the current serverTrust is trustable.
      * It's officially suggested that the serverTrust could be passed when result = kSecTrustResultUnspecified or kSecTrustResultProceed.
@@ -734,39 +778,8 @@
      */
     SecTrustResultType result;
     SecTrustEvaluate(serverTrust, &result);
-
+    
     return (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed);
 }
 
-/*
- * NSURLSession
- */
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler {
-    if (!challenge) {
-        return;
-    }
-
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    NSURLCredential *credential = nil;
-
-    /*
-     * Gets the host name
-     */
-
-    NSString * host = [[task.currentRequest allHTTPHeaderFields] objectForKey:@"Host"];
-    if (!host) {
-        host = task.currentRequest.URL.host;
-    }
-
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        if ([self evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:host]) {
-            disposition = NSURLSessionAuthChallengeUseCredential;
-            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        }
-    } else {
-        disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    }
-    // Uses the default evaluation for other challenges.
-    completionHandler(disposition,credential);
-}
 @end
