@@ -872,9 +872,6 @@ static NSObject * lock;
     if (request.callbackVar != nil) {
         complete.callbackVar = request.callbackVar;
     }
-    if (request.completeMetaHeader != nil) {
-        complete.completeMetaHeader = request.completeMetaHeader;
-    }
     OSSTask * completeTask = [self completeMultipartUpload:complete];
     [completeTask waitUntilFinished];
     
@@ -1088,9 +1085,7 @@ static NSObject * lock;
         if (request.callbackVar != nil) {
             complete.callbackVar = request.callbackVar;
         }
-        if (request.completeMetaHeader != nil) {
-            complete.completeMetaHeader = request.completeMetaHeader;
-        }
+        
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
 
