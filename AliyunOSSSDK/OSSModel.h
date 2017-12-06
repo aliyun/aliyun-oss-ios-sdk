@@ -1118,7 +1118,7 @@ It's the MD5 value for put object request. If the object is created by other API
 
 @property (nonatomic, assign) uint64_t crc64;
 
-+ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size __attribute__((deprecated("Use partInfoWithPartNum:eTag:size:crc64 to instead!")));
++ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size __attribute__((deprecated("Use partInfoWithPartNum:eTag:size:crc64: to instead!")));
 + (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size crc64:(uint64_t)crc64;
 
 - (nonnull NSDictionary *)entityToDictionary;
