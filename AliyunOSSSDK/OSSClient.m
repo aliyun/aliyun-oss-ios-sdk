@@ -866,6 +866,9 @@ static NSObject * lock;
     complete.uploadId = request.uploadId;
     complete.partInfos = partInfos;
     complete.crcFlag = request.crcFlag;
+    if (request.completeMetaHeader != nil) {
+        complete.completeMetaHeader = request.completeMetaHeader;
+    }
     if (request.callbackParam != nil) {
         complete.callbackParam = request.callbackParam;
     }
@@ -1090,6 +1093,9 @@ static NSObject * lock;
         complete.uploadId = request.uploadId;
         complete.partInfos = uploadedPartInfos;
         complete.crcFlag = request.crcFlag;
+        if (request.completeMetaHeader != nil) {
+            complete.completeMetaHeader = request.completeMetaHeader;
+        }
         if (request.callbackParam != nil) {
             complete.callbackParam = request.callbackParam;
         }
