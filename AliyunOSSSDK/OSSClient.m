@@ -914,6 +914,17 @@ static NSObject * lock;
 
 - (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request
 {
+    if (request.crcFlag == OSSRequestCRCUninitialized)
+    {
+        if (self.clientConfiguration.crc64Verifiable)
+        {
+            request.crcFlag = OSSRequestCRCOpen;
+        }else
+        {
+            request.crcFlag = OSSRequestCRCClosed;
+        }
+    }
+    
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
         if (!request.objectKey || !request.bucketName || !request.uploadingFileURL) {
             return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
