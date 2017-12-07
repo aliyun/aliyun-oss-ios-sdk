@@ -242,20 +242,17 @@ unsigned long long const osskDDDefaultLogFilesDiskQuota   = 5 * 1024 * 1024; // 
  * If the logs directory doesn't exist, this method automatically creates it.
  **/
 - (NSString *)defaultLogsDirectory {
-#if TARGET_OS_IPHONE
+    NSString *logsDir;
+#if TARGET_OS_IOS
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *baseDir = paths.firstObject;
-    NSString *logsDirectory = [baseDir stringByAppendingPathComponent:@"OSSLogs"];
-
-#else
-    NSString *appName = [[NSProcessInfo processInfo] processName];
+    logsDir = [paths[0] stringByAppendingPathComponent:@"OSSLogs"];
+#elif TARGET_OS_OSX
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? paths[0] : NSTemporaryDirectory();
-    NSString *logsDirectory = [[basePath stringByAppendingPathComponent:@"OSSLogs"] stringByAppendingPathComponent:appName];
-
+    NSString *suffixPath = [NSString stringWithFormat:@"Logs/%@/OSSLogs",[self applicationName]];
+    logsDir = [paths[0] stringByAppendingPathComponent:suffixPath];
 #endif
-
-    return logsDirectory;
+    
+    return logsDir;
 }
 
 - (NSString *)logsDirectory {

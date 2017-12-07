@@ -45,6 +45,12 @@
  *    @brief    初始化获取OSSClient
  */
 - (void)ossInit {
+//     移动终端是一个不受信任的环境，使用主账号AK，SK直接保存在终端用来加签请求，存在极高的风险。建议只在测试时使用明文设置模式，业务应用推荐使用STS鉴权模式。
+//     STS鉴权模式可通过https://help.aliyun.com/document_detail/31920.html文档了解更多
+//     主账号方式
+//    id<OSSCredentialProvider> credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithAccessKeyId:@"Aliyun_AK" secretKeyId:@"Aliyun_SK"];
+//     STS鉴权模式
+//     2.直接访问鉴权服务器（推荐，token过期后可以自动更新）
     id<OSSCredentialProvider> credential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:STS_AUTH_URL];
     client = [[OSSClient alloc] initWithEndpoint:endPoint credentialProvider:credential];
 }

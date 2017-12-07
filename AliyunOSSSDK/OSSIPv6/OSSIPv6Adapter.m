@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "OSSIPv6Adapter.h"
 #import "OSSIPv6PrefixResolver.h"
 #import "OSSReachabilityManager.h"
@@ -24,6 +23,12 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/sysctl.h>
+
+#if TARGET_OS_IOS
+#import <UIKit/UIApplication.h>
+#elif TARGET_OS_OSX
+#import <AppKit/NSApplication.h>
+#endif
 
 #define UNKNOWN_STACK         0
 #define SUPPORT_IPV4_STACK    1
@@ -44,12 +49,19 @@
     if (self = [super init]) {
         isIPv6Only = NO;
         isIPv6OnlyResolved = NO;
+        
+        NSString *notificationName;
+#if TARGET_OS_IOS
+        notificationName = UIApplicationDidBecomeActiveNotification;
+#elif TARGET_OS_OSX
+        notificationName = NSApplicationDidBecomeActiveNotification;
+#endif
 
         // When App switches to active status, refresh the IPv6-only check.
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
         [defaultCenter addObserver:self
                           selector:@selector(appDidBecomeActiveFunc)
-                              name:UIApplicationDidBecomeActiveNotification
+                              name:notificationName
                             object:nil];
     }
     return self;

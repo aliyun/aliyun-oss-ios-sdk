@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 #import "ImageService.h"
-#import "OssService.h"
 #import "OSSConstants.h"
+#import <AliyunOSSiOS/OSSService.h>
 
 @interface ViewController ()
 {

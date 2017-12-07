@@ -22,7 +22,6 @@
 #import <sys/socket.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-#import <UIKit/UIDevice.h>
 
 static char *const OSSReachabilityQueueIdentifier = "com.alibaba.oss.network.ReachabilityQueue";
 static dispatch_queue_t reachabilityQueue;

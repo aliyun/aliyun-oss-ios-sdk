@@ -11,6 +11,17 @@ Environment Requirement：
 
 Update Logs:
 
+2017/11/27
+- Release 2.7.1
+1.feat : add auth credential provider
+2.fix : fix buildFramework.sh
+3.fix : fix backgroundUploadTask’s completion handler
+
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.7.1'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
+
+
 2017/10/26
 - Release 2.6.4
 1.	add write log on local

@@ -12,8 +12,8 @@
 #import <AliyunOSSiOS/OSSTask.h>
 #import <AliyunOSSiOS/OSSUtil.h>
 
-#define RIGHT_PROVIDER_SERVER @"http://30.40.38.15:3015/sts/getsts"
-#define WRONG_PROVIDER_SERVER @"http://30.40.38.78:3015/sts/getsts"
+#define RIGHT_PROVIDER_SERVER @"http://*.*.*.*:****/sts/getsts"
+#define WRONG_PROVIDER_SERVER @"http://*.*.*.*:****/sts/getsts"
 
 @interface OSSCredentialProviderTests : XCTestCase
 
@@ -54,14 +54,13 @@
             NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                                     options:kNilOptions
                                                                       error:nil];
-            NSDictionary *credentials = object[@"Credentials"];
-            XCTAssertNotNil(credentials);
+            XCTAssertNotNil(object);
             OSSFederationToken * token = [OSSFederationToken new];
             // All the entries below are mandatory.
-            token.tAccessKey = credentials[@"AccessKeyId"];
-            token.tSecretKey = credentials[@"AccessKeySecret"];
-            token.tToken = credentials[@"SecurityToken"];
-            token.expirationTimeInGMTFormat = credentials[@"Expiration"];
+            token.tAccessKey = object[@"AccessKeyId"];
+            token.tSecretKey = object[@"AccessKeySecret"];
+            token.tToken = object[@"SecurityToken"];
+            token.expirationTimeInGMTFormat = object[@"Expiration"];
             NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
             return token;
         }
@@ -101,14 +100,13 @@
             NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                                     options:kNilOptions
                                                                       error:nil];
-            NSDictionary *credentials = object[@"Credentials"];
-            XCTAssertNotNil(credentials);
+            XCTAssertNotNil(object);
             OSSFederationToken * token = [OSSFederationToken new];
             // All the entries below are mandatory.
-            token.tAccessKey = credentials[@"AccessKeyId"];
-            token.tSecretKey = credentials[@"AccessKeySecret"];
-            token.tToken = credentials[@"SecurityToken"];
-            token.expirationTimeInGMTFormat = credentials[@"Expiration"];
+            token.tAccessKey = object[@"AccessKeyId"];
+            token.tSecretKey = object[@"AccessKeySecret"];
+            token.tToken = object[@"SecurityToken"];
+            token.expirationTimeInGMTFormat = object[@"Expiration"];
             NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
             return token;
         }
@@ -141,16 +139,15 @@
     NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                             options:kNilOptions
                                                               error:nil];
-    NSDictionary *credentials = object[@"Credentials"];
-    XCTAssertNotNil(credentials);
+    XCTAssertNotNil(object);
     OSSFederationToken * token = [OSSFederationToken new];
     // All the entries below are mandatory.
-    token.tAccessKey = credentials[@"AccessKeyId"];
-    token.tSecretKey = credentials[@"AccessKeySecret"];
-    token.tToken = credentials[@"SecurityToken"];
-    token.expirationTimeInGMTFormat = credentials[@"Expiration"];
+    token.tAccessKey = object[@"AccessKeyId"];
+    token.tSecretKey = object[@"AccessKeySecret"];
+    token.tToken = object[@"SecurityToken"];
+    token.expirationTimeInGMTFormat = object[@"Expiration"];
     NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
-    OSSStsTokenCredentialProvider *provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:credentials[@"AccessKeyId"] secretKeyId:credentials[@"AccessKeySecret"] securityToken:credentials[@"SecurityToken"]];
+    OSSStsTokenCredentialProvider *provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:object[@"AccessKeyId"] secretKeyId:object[@"AccessKeySecret"] securityToken:object[@"SecurityToken"]];
     OSSFederationToken *federationToken = [provider getToken];
     XCTAssertNotNil(federationToken.tAccessKey);
     XCTAssertNotNil(federationToken.tSecretKey);
@@ -183,14 +180,13 @@
     NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
                                                             options:kNilOptions
                                                               error:nil];
-    NSDictionary *credentials = object[@"Credentials"];
-    XCTAssertNotNil(credentials);
+    XCTAssertNotNil(object);
     OSSFederationToken * token = [OSSFederationToken new];
     // All the entries below are mandatory.
-    token.tAccessKey = credentials[@"AccessKeyId"];
-    token.tSecretKey = credentials[@"AccessKeySecret"];
-    token.tToken = credentials[@"SecurityToken"];
-    token.expirationTimeInGMTFormat = credentials[@"Expiration"];
+    token.tAccessKey = object[@"AccessKeyId"];
+    token.tSecretKey = object[@"AccessKeySecret"];
+    token.tToken = object[@"SecurityToken"];
+    token.expirationTimeInGMTFormat = object[@"Expiration"];
     
     OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
         /** 用户将需要签名的字符串上传给自己的业务服务器，服务器进行签名之后返回给客户端 */

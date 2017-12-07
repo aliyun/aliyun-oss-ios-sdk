@@ -5,8 +5,6 @@
 //  Created by zhouzhuo on 8/16/15.
 //  Copyright (c) 2015 aliyun.com. All rights reserved.
 //
-
-#import <UIKit/UIKit.h>
 #import "OSSDefine.h"
 #import "OSSModel.h"
 #import "OSSBolts.h"
@@ -14,6 +12,9 @@
 #import "OSSNetworking.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
+#if TARGET_OS_IOS
+#import <UIKit/UIDevice.h>
+#endif
 
 @implementation NSDictionary (OSS)
 
@@ -479,23 +480,27 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 
 - (NSString *)getUserAgent:(NSString *)customUserAgent {
-    static NSString * _userAgent = nil;
+    static NSString * userAgent = nil;
     static dispatch_once_t once;
     NSString * tempUserAgent = nil;
     dispatch_once(&once, ^{
+        NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
+#if TARGET_OS_IOS
         NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
         NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
-        NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-       _userAgent = [NSString stringWithFormat:@"%@/%@(/%@/%@/%@)", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+        userAgent = [NSString stringWithFormat:@"%@/%@(/%@/%@/%@)", OSSUAPrefix, OSSSDKVersion, systemName, systemVersion, localeIdentifier];
+#elif TARGET_OS_OSX
+        userAgent = [NSString stringWithFormat:@"%@/%@(/%@/%@/%@)", OSSUAPrefix, OSSSDKVersion, @"OSX", [NSProcessInfo processInfo].operatingSystemVersionString, localeIdentifier];
+#endif
     });
     if(customUserAgent){
-        if(_userAgent){
-            tempUserAgent = [[_userAgent stringByAppendingString:@"/"] stringByAppendingString:customUserAgent];
+        if(userAgent){
+            tempUserAgent = [[userAgent stringByAppendingString:@"/"] stringByAppendingString:customUserAgent];
         }else{
             tempUserAgent = customUserAgent;
         }
     }else{
-        tempUserAgent = _userAgent;
+        tempUserAgent = userAgent;
     }
     return tempUserAgent;
 }

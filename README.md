@@ -1,4 +1,4 @@
-﻿# Alibaba Cloud OSS SDK for iOS
+# Alibaba Cloud OSS SDK for iOS
 
 ## [README of Chinese](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README-CN.md)
 
@@ -39,7 +39,7 @@ In Xcode, drag the OSS iOS SDK framework and drop it to your target, and select 
 If your project manages dependencies using a Pod, add the following dependency to the Podfile. In this case, you do not need to import the OSS iOS SDK framework.
 
 ```
-pod 'AliyunOSSiOS', '~> 2.7.0'
+pod 'AliyunOSSiOS', '~> 2.7.1'
 ```
 
 CocoaPods is an outstanding dependency manager. Recommended official reference documents: [CocoaPods Installation and Usage Tutorial]((http://code4app.com/article/cocoapods-install-usage)).

@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "AliyunOSSiOS"
 
-  s.version      = "2.7.0"
+  s.version      = "2.7.1"
 
   s.summary      = "An iOS SDK for Aliyun Object Storage Service"
 
@@ -25,7 +25,8 @@ Pod::Spec.new do |s|
 
   s.source_files = 'AliyunOSSSDK/*.{h,m}', 'AliyunOSSSDK/OSSTask/*.{h,m}','AliyunOSSSDK/OSSFileLog/*.{h,m}', 'AliyunOSSSDK/OSSIPv6/*.{h,m}'
 
-  s.frameworks = 'SystemConfiguration','CoreTelephony'
+  s.ios.frameworks = 'SystemConfiguration','CoreTelephony'
+  s.osx.frameworks = 'SystemConfiguration','CoreTelephony'
 
   s.library   = 'resolv'
 
