@@ -250,7 +250,9 @@
 
 // 取消断点续传
 - (IBAction)onOssButtonResumablePutCancel:(UIButton *)sender {
-    
+    _ossTextFileName.text = @"";
+    _uploadFilePath = @"";
+    [_service normalRequestCancel];
 }
 
 // 追加上传
@@ -262,21 +264,23 @@
         [self showMessage:@"填写错误" inputMessage:@"上传文件不能为空！"];
         return;
     }
+    NSString * objectKey = _ossTextFileName.text;
+    [_service appendUpload:objectKey localFilePath:_uploadFilePath];
 }
 
 // 创建bucket
 - (IBAction)onOssButtonCreateBucket:(UIButton *)sender {
-    
+    [_service createBucket];
 }
 
 // 删除bucket
 - (IBAction)onOssButtonDeleteBucket:(UIButton *)sender {
-    
+    [_service deleteBucket];
 }
 
 // 列举object
 - (IBAction)onOssButtonListObjcet:(UIButton *)sender {
-    
+    [_service listObject];
 }
 
 /**

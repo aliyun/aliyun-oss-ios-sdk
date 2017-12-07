@@ -180,6 +180,7 @@
 - (void)normalRequestCancel {
     [self requestCancel:_putRequest];
     [self requestCancel:_getRequest];
+    [self requestCancel:_resumableRequest];
 }
 
 - (void)requestCancel:(OSSRequest *)request {
@@ -248,19 +249,135 @@
  追加上传
  */
 - (void)appendUpload:(NSString *)objectKey localFilePath:(NSString *)filePath {
+    OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
+    delete.bucketName = BUCKET_NAME;
+    delete.objectKey = objectKey;
+    OSSTask * task = [_client deleteObject:delete];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        return nil;
+    }] waitUntilFinished];
     
+    OSSAppendObjectRequest * request = [OSSAppendObjectRequest new];
+    request.bucketName = BUCKET_NAME;
+    request.objectKey = objectKey;
+    request.appendPosition = 0;
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    task = [_client appendObject:request];
+    [task continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:-1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"追加上传"];
+                [data setInputMessage:@"Failed!"];
+                [self setCallback:data];
+            });
+        } else {
+            OSSAppendObjectResult * result = task.result;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"追加上传"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+            NSLog(@"Result - requestId: %@, headerFields: %@",
+                  result.requestId,
+                  result.httpResponseHeaderFields);
+        }
+        return nil;
+    }];
 }
 /**
  创建bucket
  */
 - (void)createBucket {
     
+    OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
+    create.bucketName = @"ios-test-bucket";
+    create.xOssACL = @"public-read";
+    
+    [[[_client createBucket:create] continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"创建bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        } else {
+            NSLog(@"error: %@", task.error);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
+    delete.bucketName = @"ios-test-bucket";
+    
+    [[_client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"删除bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        }
+        return nil;
+    }];
 }
 /**
  删除bucket
  */
 - (void)deleteBucket {
     
+    OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
+    create.bucketName = @"ios-test-bucket";
+    create.xOssACL = @"public-read";
+    
+    [[[_client createBucket:create] continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"创建bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        } else {
+            NSLog(@"error: %@", task.error);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
+    delete.bucketName = @"ios-test-bucket";
+    
+    [[_client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"删除bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        }
+        return nil;
+    }];
 }
 /**
  列举object
