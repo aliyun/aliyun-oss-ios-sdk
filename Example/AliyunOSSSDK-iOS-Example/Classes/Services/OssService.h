@@ -9,10 +9,12 @@
 #define OssService_h
 #import <AliyunOSSiOS/OSSService.h>
 #import "ViewController.h"
-@interface OssService : NSObject
+@class DataCallback;
 
-- (id)initWithViewController:(ViewController *)view
-                withEndPoint:(NSString *)enpoint;
+@interface OssService : NSObject
+@property (nonatomic, strong) DataCallback * callback;
+
+- (id)initWithEndPoint:(NSString *)enpoint;
 
 - (void)setCallbackAddress:(NSString *)address;
 
@@ -22,6 +24,16 @@
 - (void)asyncGetImage:(NSString *)objectKey;
 
 - (void)normalRequestCancel;
+
+- (void)resumableUpload:(NSString *)objectKey localFilePath:(NSString *)filePath;
+
+- (void)appendUpload:(NSString *)objectKey localFilePath:(NSString *)filePath;
+
+- (void)createBucket;
+
+- (void)deleteBucket;
+
+- (void)listObject;
 
 @end
 
