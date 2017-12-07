@@ -201,6 +201,9 @@
     _resumableRequest.bucketName = BUCKET_NAME;
     _resumableRequest.objectKey = objectKey;
     _resumableRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    _resumableRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
     OSSTask * task = [_client resumableUpload:_resumableRequest];
     [task continueWithBlock:^id(OSSTask *task)  {
         OSSResumableUploadResult * result = task.result;

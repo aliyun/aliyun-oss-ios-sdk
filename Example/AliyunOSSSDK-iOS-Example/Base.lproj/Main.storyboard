@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,14 +22,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1J-IR-M9e">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1J-IR-M9e">
                                 <rect key="frame" x="195" y="254" width="62" height="30"/>
                                 <state key="normal" title="选择图片"/>
                                 <connections>
                                     <action selector="onOssButtonSelectPic:" destination="jrl-LR-ALf" eventType="touchUpInside" id="QzJ-O5-Nhw"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="unZ-gL-zRz">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="unZ-gL-zRz">
                                 <rect key="frame" x="78" y="258" width="90" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="2Mr-zy-yPJ"/>
@@ -40,19 +40,19 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="t4u-Fb-tgd"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="文件名" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NMq-er-YK5">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="文件名" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NMq-er-YK5">
                                 <rect key="frame" x="16" y="259" width="52" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="普通上传下载" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fY5-bi-xLP">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="普通上传下载" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fY5-bi-xLP">
                                 <rect key="frame" x="16" y="300" width="104" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略宽度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HPe-Fv-2H5">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略宽度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HPe-Fv-2H5">
                                 <rect key="frame" x="16" y="341" width="79" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -60,7 +60,7 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="Ga0-PZ-KlF"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入水印文字" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L6N-s3-fvF">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入水印文字" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L6N-s3-fvF">
                                 <rect key="frame" x="16" y="381" width="121" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -68,7 +68,7 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="Bfn-1B-Vet"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="文字大小" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fC0-Fv-DOy">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="文字大小" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fC0-Fv-DOy">
                                 <rect key="frame" x="145" y="381" width="79" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -76,7 +76,7 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="ecc-ZX-KXk"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略高度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2l1-kO-u42">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略高度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2l1-kO-u42">
                                 <rect key="frame" x="103" y="341" width="79" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -84,109 +84,108 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="BS8-ne-9iX"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWd-Av-N8U">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWd-Av-N8U">
                                 <rect key="frame" x="196" y="341" width="62" height="30"/>
                                 <state key="normal" title="图片缩略"/>
                                 <connections>
                                     <action selector="onOssButtonResize:" destination="jrl-LR-ALf" eventType="touchUpInside" id="CqO-eT-NyW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jgi-Is-fxv">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jgi-Is-fxv">
                                 <rect key="frame" x="227" y="300" width="31" height="30"/>
                                 <state key="normal" title="下载"/>
                                 <connections>
                                     <action selector="onOssButtonNormalGet:" destination="jrl-LR-ALf" eventType="touchUpInside" id="thO-Um-26k"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JdC-4m-t1M">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JdC-4m-t1M">
                                 <rect key="frame" x="265" y="254" width="31" height="30"/>
                                 <state key="normal" title="取消"/>
                                 <connections>
                                     <action selector="onOssButtonCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="chR-b0-xSq"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNm-Gl-Hkx">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNm-Gl-Hkx">
                                 <rect key="frame" x="240" y="381" width="62" height="30"/>
                                 <state key="normal" title="文字水印"/>
                                 <connections>
                                     <action selector="onOssButtonWatermark:" destination="jrl-LR-ALf" eventType="touchUpInside" id="ox5-l2-HdY"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oSW-1o-zHG">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oSW-1o-zHG">
                                 <rect key="frame" x="11" y="20" width="354" height="223"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="354" id="NjS-gS-g7W"/>
-                                    <constraint firstAttribute="height" constant="223" id="fm7-Kv-nux"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="223" id="c8P-DL-gO6"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-gy-LrS">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-gy-LrS">
                                 <rect key="frame" x="172" y="300" width="31" height="30"/>
                                 <state key="normal" title="上传"/>
                                 <connections>
                                     <action selector="onOssButtonNormalPut:" destination="jrl-LR-ALf" eventType="touchUpInside" id="TzU-Tk-gre"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ng6-dg-j7g">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ng6-dg-j7g">
                                 <rect key="frame" x="279" y="300" width="31" height="30"/>
                                 <state key="normal" title="取消"/>
                                 <connections>
                                     <action selector="onOssButtonNormalCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="rS3-b3-LLO"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="断点续传" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SDU-F7-7qf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="断点续传" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SDU-F7-7qf">
                                 <rect key="frame" x="15" y="436" width="70" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcX-Ni-RnY">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcX-Ni-RnY">
                                 <rect key="frame" x="135" y="431" width="31" height="30"/>
                                 <state key="normal" title="上传"/>
                                 <connections>
                                     <action selector="onOssButtonResumablePut:" destination="jrl-LR-ALf" eventType="touchUpInside" id="Za9-X6-qlN"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpB-Y8-Ida">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpB-Y8-Ida">
                                 <rect key="frame" x="204" y="432" width="31" height="30"/>
                                 <state key="normal" title="取消"/>
                                 <connections>
                                     <action selector="onOssButtonResumablePutCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="IsD-3b-4Zx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lgw-op-6Si">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lgw-op-6Si">
                                 <rect key="frame" x="135" y="481" width="31" height="30"/>
                                 <state key="normal" title="上传"/>
                                 <connections>
                                     <action selector="onOssButtonAppendPut:" destination="jrl-LR-ALf" eventType="touchUpInside" id="Evi-uF-etX"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="追加上传" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mE-Ok-Qej">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="追加上传" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mE-Ok-Qej">
                                 <rect key="frame" x="15" y="486" width="70" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bucket管理" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ly-up-bT7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="bucket管理" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ly-up-bT7">
                                 <rect key="frame" x="15" y="525" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5M-cr-Vug">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5M-cr-Vug">
                                 <rect key="frame" x="157" y="520" width="31" height="30"/>
                                 <state key="normal" title="创建"/>
                                 <connections>
                                     <action selector="onOssButtonCreateBucket:" destination="jrl-LR-ALf" eventType="touchUpInside" id="Jmc-r3-P78"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wuS-ca-uD4">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wuS-ca-uD4">
                                 <rect key="frame" x="227" y="520" width="31" height="30"/>
                                 <state key="normal" title="删除"/>
                                 <connections>
                                     <action selector="onOssButtonDeleteBucket:" destination="jrl-LR-ALf" eventType="touchUpInside" id="vHx-mv-SMX"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="列表" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCu-ik-qZe">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="列表" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCu-ik-qZe">
                                 <rect key="frame" x="15" y="565" width="360" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="G5S-qa-Hu0"/>
@@ -195,7 +194,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YXH-gS-t1T">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YXH-gS-t1T">
                                 <rect key="frame" x="92" y="563" width="63" height="30"/>
                                 <state key="normal" title="listobject"/>
                                 <connections>
@@ -216,7 +215,6 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3Ly-up-bT7" secondAttribute="trailing" id="7qA-cz-Qdc"/>
                             <constraint firstItem="oSW-1o-zHG" firstAttribute="top" secondItem="L08-sz-ndx" secondAttribute="bottom" id="8gk-zX-QLU"/>
                             <constraint firstAttribute="leadingMargin" secondItem="NMq-er-YK5" secondAttribute="leading" id="BeW-mF-R6r"/>
-                            <constraint firstItem="NMq-er-YK5" firstAttribute="top" secondItem="oSW-1o-zHG" secondAttribute="bottom" constant="16" id="C5R-rk-Sp1"/>
                             <constraint firstItem="Jgi-Is-fxv" firstAttribute="top" secondItem="bbY-gy-LrS" secondAttribute="top" id="CmA-3l-ico"/>
                             <constraint firstItem="JdC-4m-t1M" firstAttribute="leading" secondItem="A1J-IR-M9e" secondAttribute="trailing" constant="8" symbolic="YES" id="Du5-cU-NAO"/>
                             <constraint firstAttribute="trailing" secondItem="wuS-ca-uD4" secondAttribute="trailing" constant="117" id="EBA-LU-2Km"/>
@@ -240,6 +238,7 @@
                             <constraint firstItem="SDU-F7-7qf" firstAttribute="top" secondItem="L6N-s3-fvF" secondAttribute="bottom" constant="25" id="VWb-NT-EdE"/>
                             <constraint firstItem="e5M-cr-Vug" firstAttribute="leading" secondItem="3Ly-up-bT7" secondAttribute="trailing" constant="55" id="XLM-Fz-oKB"/>
                             <constraint firstItem="2l1-kO-u42" firstAttribute="leading" secondItem="HPe-Fv-2H5" secondAttribute="trailing" constant="8" id="Yov-vC-EYf"/>
+                            <constraint firstItem="A1J-IR-M9e" firstAttribute="top" secondItem="oSW-1o-zHG" secondAttribute="bottom" constant="11" id="Zic-oX-NkR"/>
                             <constraint firstItem="oSW-1o-zHG" firstAttribute="centerX" secondItem="Mo3-C7-4iC" secondAttribute="centerX" id="aXv-Wa-hok"/>
                             <constraint firstAttribute="trailing" secondItem="JdC-4m-t1M" secondAttribute="trailing" constant="79" id="ae3-dR-MGg"/>
                             <constraint firstItem="3Ly-up-bT7" firstAttribute="leading" secondItem="Mo3-C7-4iC" secondAttribute="leading" constant="15" id="awv-jl-jYq"/>
@@ -266,6 +265,7 @@
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fC0-Fv-DOy" secondAttribute="trailing" constant="8" symbolic="YES" id="thO-We-vM9"/>
                             <constraint firstAttribute="trailing" secondItem="ng6-dg-j7g" secondAttribute="trailing" constant="65" id="vD1-oD-2sA"/>
                             <constraint firstItem="MpB-Y8-Ida" firstAttribute="baseline" secondItem="SDU-F7-7qf" secondAttribute="baseline" id="whD-je-i0p"/>
+                            <constraint firstItem="oSW-1o-zHG" firstAttribute="leading" secondItem="Mo3-C7-4iC" secondAttribute="leadingMargin" constant="-5" id="xGv-hC-H12"/>
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="top" secondItem="fC0-Fv-DOy" secondAttribute="top" id="yaf-NY-lcR"/>
                             <constraint firstItem="fY5-bi-xLP" firstAttribute="top" secondItem="NMq-er-YK5" secondAttribute="bottom" constant="20" id="z9g-he-4Jk"/>
                         </constraints>
