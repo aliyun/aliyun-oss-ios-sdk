@@ -439,7 +439,7 @@
             NSString *next_append_position = [result.httpResponseHeaderFields objectForKey:@"x-oss-next-append-position"];
             uint64_t length = [next_append_position longLongValue] - position;
             
-            uint64_t crc_local = [OSSUtil oss_crc64ForCombineCRC1:last_crc64 CRC2:local_crc64 length:(size_t)length];
+            uint64_t crc_local = [OSSUtil crc64ForCombineCRC1:last_crc64 CRC2:local_crc64 length:(size_t)length];
             result.localCRC64ecma = [NSString stringWithFormat:@"%llu",crc_local];
             OSSLogVerbose(@"crc_local: %llu, crc_remote: %@,last_position: %llu,nextAppendPosition: %llu,length:  %llu",crc_local,result.remoteCRC64ecma,position,[next_append_position longLongValue],length);
         }

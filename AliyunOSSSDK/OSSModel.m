@@ -878,9 +878,9 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         NSMutableData *mutableData = [NSMutableData dataWithData:data];
         if (_crc64ecma != 0)
         {
-            _crc64ecma = [OSSUtil oss_crc64ForCombineCRC1:_crc64ecma
-                                                     CRC2:[mutableData oss_crc64]
-                                                   length:mutableData.length];
+            _crc64ecma = [OSSUtil crc64ForCombineCRC1:_crc64ecma
+                                                 CRC2:[mutableData oss_crc64]
+                                               length:mutableData.length];
         }else
         {
             _crc64ecma = [mutableData oss_crc64];

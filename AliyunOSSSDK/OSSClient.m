@@ -859,7 +859,7 @@ static NSObject * lock;
             for (NSUInteger index = 0; index< alreadyUploadPart.count; index++)
             {
                 if (local_crc64 != 0) {
-                    local_crc64 = [OSSUtil oss_crc64ForCombineCRC1:local_crc64 CRC2:alreadyUploadPart[index].crc64 length:(size_t)alreadyUploadPart[index].size];
+                    local_crc64 = [OSSUtil crc64ForCombineCRC1:local_crc64 CRC2:alreadyUploadPart[index].crc64 length:(size_t)alreadyUploadPart[index].size];
                 }else
                 {
                     local_crc64 = alreadyUploadPart[index].crc64;
@@ -1091,7 +1091,7 @@ static NSObject * lock;
             for (NSUInteger index = 0; index< uploadedPartInfos.count; index++)
             {
                 if (local_crc64 != 0) {
-                    local_crc64 = [OSSUtil oss_crc64ForCombineCRC1:local_crc64 CRC2:uploadedPartInfos[index].crc64 length:(size_t)uploadedPartInfos[index].size];
+                    local_crc64 = [OSSUtil crc64ForCombineCRC1:local_crc64 CRC2:uploadedPartInfos[index].crc64 length:(size_t)uploadedPartInfos[index].size];
                 }else
                 {
                     local_crc64 = uploadedPartInfos[index].crc64;
@@ -1268,12 +1268,10 @@ static NSObject * lock;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
     
+    OSSRequestCRCFlag crcFlag = request.crcFlag;
     __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = [NSMutableDictionary dictionary];
-    __block NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name];
-    __block NSString *partInfosPath = [partInfosDirectory stringByAppendingPathComponent:request.uploadId];
-;
     
     for (int i = 1; i <= partCout; i++) {
     
@@ -1330,30 +1328,12 @@ static NSObject * lock;
                         }
                         
                         @synchronized(lock){
-                            BOOL isDirectory;
-                            if (!([[NSFileManager defaultManager] fileExistsAtPath:partInfosDirectory isDirectory:&isDirectory] && isDirectory))
+                            if (crcFlag == OSSRequestCRCOpen)
                             {
-                                if (![[NSFileManager defaultManager] createDirectoryAtPath:partInfosDirectory
-                                                              withIntermediateDirectories:NO
-                                                                               attributes:nil error:nil]) {
-                                    OSSLogError(@"create Directory(%@) failed!",partInfosDirectory);
-                                };
+                                [self processForLocalPartInfos:localPartInfos
+                                                      partInfo:partInfo
+                                                      uploadId:request.uploadId];
                             }
-                            
-                            if ([[NSFileManager defaultManager] fileExistsAtPath:partInfosPath])
-                            {
-                                NSError *deleteError;
-                                if (![[NSFileManager defaultManager] removeItemAtPath:partInfosPath error:&deleteError])
-                                {
-                                    OSSLogError(@"delete localPartInfos failed!Error:%@",deleteError);
-                                }
-                            }
-                            if (![[NSFileManager defaultManager] createFileAtPath:partInfosPath contents:nil attributes:nil])
-                            {
-                                OSSLogError(@"create localPartInfos file failed!path is %@",partInfosPath);
-                            }
-                            NSDictionary *partInfoDict = [partInfo entityToDictionary];
-                            [localPartInfos setObject:partInfoDict forKey:[NSString stringWithFormat:@"%d",i]];
                             [alreadyUploadPart addObject:partInfo];
                             *uploadedLength += readLength;
                             request.uploadProgress(readLength, *uploadedLength, uploadFileSize);
@@ -1366,12 +1346,48 @@ static NSObject * lock;
     }
     
     [queue waitUntilAllOperationsAreFinished];
-    if (![localPartInfos writeToFile:partInfosPath atomically:YES])
+    
+    if (crcFlag == OSSRequestCRCOpen)
     {
-        OSSLogError(@"write localPartInfos file failed!");
+        NSString *partInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:request.uploadId];
+        if (![localPartInfos writeToFile:partInfosPath atomically:YES])
+        {
+            OSSLogError(@"write localPartInfos file failed!");
+        }
     }
     
     return errorTask;
+}
+
+- (void)processForLocalPartInfos:(NSMutableDictionary *)partInfoDict partInfo:(OSSPartInfo *)partInfo uploadId:(NSString *)uploadId
+{
+    NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name];
+    NSString *partInfosPath = [partInfosDirectory stringByAppendingPathComponent:uploadId];
+    BOOL isDirectory;
+    if (!([[NSFileManager defaultManager] fileExistsAtPath:partInfosDirectory isDirectory:&isDirectory] && isDirectory))
+    {
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:partInfosDirectory
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil error:nil]) {
+            OSSLogError(@"create Directory(%@) failed!",partInfosDirectory);
+        };
+    }
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:partInfosPath])
+    {
+        NSError *deleteError;
+        if (![[NSFileManager defaultManager] removeItemAtPath:partInfosPath error:&deleteError])
+        {
+            OSSLogError(@"delete localPartInfos failed!Error:%@",deleteError);
+        }
+    }
+    if (![[NSFileManager defaultManager] createFileAtPath:partInfosPath contents:nil attributes:nil])
+    {
+        OSSLogError(@"create localPartInfos file failed!path is %@",partInfosPath);
+    }
+    NSDictionary *singlePartInfoDict = [partInfo entityToDictionary];
+    [partInfoDict setObject:singlePartInfoDict
+                     forKey:[NSString stringWithFormat:@"%d",partInfo.partNum]];
 }
 
 - (BOOL)doesObjectExistInBucket:(NSString *)bucketName
