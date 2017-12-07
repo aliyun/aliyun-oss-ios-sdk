@@ -383,7 +383,31 @@
  列举object
  */
 - (void)listObject {
+    OSSGetBucketRequest * request = [OSSGetBucketRequest new];
+    request.bucketName = BUCKET_NAME;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 1000;
+    request.prefix = @"";
     
+    OSSTask * task = [_client getBucket:request];
+    [task continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            DataCallback * data = [DataCallback new];
+            [data setCode:1];
+            [data setShowMessage:@"列举object"];
+            [data setInputMessage:@"Success!"];
+            [self setCallback:data];
+            OSSGetBucketResult * result = task.result;
+            NSLog(@"GetBucket prefixed: %@", result.commentPrefixes);
+            for (NSDictionary * objectInfo in result.contents) {
+                NSLog(@"%@", [objectInfo objectForKey:@"Key"]);
+                NSLog(@"%@", [objectInfo objectForKey:@"Size"]);
+                NSLog(@"%@", [objectInfo objectForKey:@"LastModified"]);
+            }
+        }
+        return nil;
+    }];
 }
 
 
