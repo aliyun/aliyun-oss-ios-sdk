@@ -11,14 +11,15 @@
 #import "ImageService.h"
 #import "OSSConstants.h"
 #import <AliyunOSSiOS/OSSService.h>
+#import "DataCallback.h"
 
 @interface ViewController ()
 {
-    OssService * service;
-    OssService * imageService;
-    ImageService * imageOperation;
-    NSString * uploadFilePath;
-    int originConstraintValue;
+    OssService * _service;
+    OssService * _imageService;
+    ImageService * _imageOperation;
+    NSString * _uploadFilePath;
+    int _originConstraintValue;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewBottom;
@@ -37,7 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *ossButtonNormalCancel;
 @property (weak, nonatomic) IBOutlet UIButton *ossButtonResize;
 @property (weak, nonatomic) IBOutlet UIButton *ossButtonWatermark;
-
+@property (weak, nonatomic) IBOutlet UIButton *ossButtonResumablePut;
 
 - (IBAction)onOssButtonSelectPic:(UIButton *)sender;
 - (IBAction)onOssButtonCancel:(UIButton *)sender;
@@ -46,6 +47,12 @@
 - (IBAction)onOssButtonNormalCancel:(UIButton *)sender;
 - (IBAction)onOssButtonResize:(UIButton *)sender;
 - (IBAction)onOssButtonWatermark:(UIButton *)sender;
+- (IBAction)onOssButtonResumablePut:(UIButton *)sender;
+- (IBAction)onOssButtonResumablePutCancel:(UIButton *)sender;
+- (IBAction)onOssButtonAppendPut:(UIButton *)sender;
+- (IBAction)onOssButtonCreateBucket:(UIButton *)sender;
+- (IBAction)onOssButtonDeleteBucket:(UIButton *)sender;
+- (IBAction)onOssButtonListObjcet:(UIButton *)sender;
 
 @end
 
@@ -54,20 +61,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    [self setButtonBorder:_ossButtonSelectPic];
-    [self setButtonBorder:_ossButtonCancel];
-    [self setButtonBorder:_ossButtonNormalPut];
-    [self setButtonBorder:_ossButtonNormalGet];
-    [self setButtonBorder:_ossButtonNormalCancel];
-    [self setButtonBorder:_ossButtonResize];
-    [self setButtonBorder:_ossButtonWatermark];
-    
+    [self.ossImageView setContentMode:UIViewContentModeScaleAspectFit];
     // init ossService
-    service = [[OssService alloc] initWithViewController:self withEndPoint:endPoint];
-    [service setCallbackAddress:callbackAddress];
-    imageService = [[OssService alloc] initWithViewController:self withEndPoint:imageEndPoint];
-    imageOperation = [[ImageService alloc] initImageService:imageService];
+    _service = [[OssService alloc] initWithEndPoint:endPoint];
+    
+    [_service addObserver:self forKeyPath:@"callback" options:NSKeyValueObservingOptionNew context:nil];
+    
+    [_service setCallbackAddress:callbackAddress];
+    _imageService = [[OssService alloc] initWithEndPoint:imageEndPoint];
+    [_imageService addObserver:self forKeyPath:@"callback" options:NSKeyValueObservingOptionNew context:nil];
+    _imageOperation = [[ImageService alloc] initImageService:_imageService];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,7 +80,7 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     
-    originConstraintValue = self.inputViewBottom.constant;
+    _originConstraintValue = self.inputViewBottom.constant;
     self.inputViewBottom.constant -= 85;
     [UIView animateWithDuration:1 animations:^{
         [self.view layoutIfNeeded];
@@ -97,7 +100,7 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
-    self.inputViewBottom.constant = originConstraintValue;
+    self.inputViewBottom.constant = _originConstraintValue;
 }
 
 - (void)setButtonBorder:(UIButton *)button {
@@ -109,8 +112,8 @@
     NSData *imageData = UIImageJPEGRepresentation(currentImage, 0.5);
     NSString *fullPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:fullPath atomically:NO];
-    uploadFilePath = fullPath;
-    NSLog(@"uploadFilePath : %@", uploadFilePath);
+    _uploadFilePath = fullPath;
+    NSLog(@"uploadFilePath : %@", _uploadFilePath);
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -175,7 +178,7 @@
 // 取消上传
 - (IBAction)onOssButtonCancel:(UIButton *)sender {
     _ossTextFileName.text = @"";
-    uploadFilePath = @"";
+    _uploadFilePath = @"";
     [_ossImageView setImage:nil];
 }
 
@@ -184,8 +187,13 @@
     if (![self verifyFileName]) {
         return;
     }
+    
+    if ([_uploadFilePath length] == 0) {
+        [self showMessage:@"填写错误" inputMessage:@"上传文件不能为空！"];
+        return;
+    }
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncPutImage:objectKey localFilePath:uploadFilePath];
+    [_service asyncPutImage:objectKey localFilePath:_uploadFilePath];
 }
 
 // 普通下载
@@ -194,7 +202,7 @@
         return;
     }
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncGetImage:objectKey];
+    [_service asyncGetImage:objectKey];
 }
 
 // 取消普通上传/下载任务
@@ -202,7 +210,7 @@
     if (![self verifyFileName]) {
         return;
     }
-    [service normalRequestCancel];
+    [_service normalRequestCancel];
 }
 
 // 图片缩放
@@ -213,7 +221,7 @@
     NSString * objectKey = _ossTextFileName.text;
     int width = [_ossTextWidth.text intValue];
     int height = [_ossTextHeight.text intValue];
-    [imageOperation reSize:objectKey picWidth:width picHeight:height];
+    [_imageOperation reSize:objectKey picWidth:width picHeight:height];
 }
 
 // 图片水印
@@ -224,7 +232,56 @@
     NSString * objectKey = _ossTextFileName.text;
     NSString * waterMark = _ossTextWaterMark.text;
     int size = [_ossTextSize.text intValue];
-    [imageOperation textWaterMark:objectKey waterText:waterMark objectSize:size];
+    [_imageOperation textWaterMark:objectKey waterText:waterMark objectSize:size];
+}
+
+// 断点续传
+- (IBAction)onOssButtonResumablePut:(UIButton *)sender {
+    if (![self verifyFileName]) {
+        return;
+    }
+    if ([_uploadFilePath length] == 0) {
+        [self showMessage:@"填写错误" inputMessage:@"上传文件不能为空！"];
+        return;
+    }
+    NSString * objectKey = _ossTextFileName.text;
+    [_service resumableUpload:objectKey localFilePath:_uploadFilePath];
+}
+
+// 取消断点续传
+- (IBAction)onOssButtonResumablePutCancel:(UIButton *)sender {
+    if (![self verifyFileName]) {
+        return;
+    }
+    [_service normalRequestCancel];
+}
+
+// 追加上传
+- (IBAction)onOssButtonAppendPut:(UIButton *)sender {
+    if (![self verifyFileName]) {
+        return;
+    }
+    if ([_uploadFilePath length] == 0) {
+        [self showMessage:@"填写错误" inputMessage:@"上传文件不能为空！"];
+        return;
+    }
+    NSString * objectKey = _ossTextFileName.text;
+    [_service appendUpload:objectKey localFilePath:_uploadFilePath];
+}
+
+// 创建bucket
+- (IBAction)onOssButtonCreateBucket:(UIButton *)sender {
+    [_service createBucket];
+}
+
+// 删除bucket
+- (IBAction)onOssButtonDeleteBucket:(UIButton *)sender {
+    [_service deleteBucket];
+}
+
+// 列举object
+- (IBAction)onOssButtonListObjcet:(UIButton *)sender {
+    [_service listObject];
 }
 
 /**
@@ -239,7 +296,8 @@
     NSString *fullPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:objectKey];
     [objectData writeToFile:fullPath atomically:NO];
     UIImage * image = [[UIImage alloc] initWithData:objectData];
-    uploadFilePath = fullPath;
+    NSLog(@"image width:%f, height:%f", image.size.width, image.size.height);
+    _uploadFilePath = fullPath;
     [self.ossImageView setImage:image];
     
 }
@@ -251,4 +309,23 @@
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if([keyPath isEqualToString:@"callback"]) {
+        id result = [change objectForKey:NSKeyValueChangeNewKey];
+        if ([result isKindOfClass:[DataCallback class]]) {
+            DataCallback * data = result;
+            [self showMessage:data.showMessage inputMessage:data.inputMessage];
+            if (data.code == 1 && data.action == 1) {
+                if (data.download) {
+                    [self saveAndDisplayImage:data.download downloadObjectKey:data.objectKey];
+                }
+            }
+        }
+    }
+}
+
+
+
 @end

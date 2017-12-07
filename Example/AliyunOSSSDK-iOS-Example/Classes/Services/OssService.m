@@ -9,33 +9,25 @@
 #import <UIKit/UIKit.h>
 #import <AliyunOSSiOS/OSSService.h>
 #import "OssService.h"
+#import "DataCallback.h"
 
 @implementation OssService
 {
-    OSSClient * client;
-    NSString * endPoint;
-    NSString * callbackAddress;
-    NSMutableDictionary * uploadStatusRecorder;
-    NSString * currentUploadRecordKey;
-    OSSPutObjectRequest * putRequest;
-    OSSGetObjectRequest * getRequest;
-    
-    // 简单起见，全局只维护一个断点上传任务
-    OSSResumableUploadRequest * resumableRequest;
-    ViewController * viewController;
-    BOOL isCancelled;
-    BOOL isResumeUpload;
+    OSSClient * _client;
+    NSString * _endPoint;
+    NSString * _callbackAddress;
+    OSSPutObjectRequest * _putRequest;
+    OSSGetObjectRequest * _getRequest;
+    OSSResumableUploadRequest * _resumableRequest;
+    BOOL _isCancelled;
+    BOOL _isResumeUpload;
 }
 
-- (id)initWithViewController:(ViewController *)view
-                withEndPoint:(NSString *)enpoint {
+- (id)initWithEndPoint:(NSString *)enpoint {
     if (self = [super init]) {
-        viewController = view;
-        endPoint = enpoint;
-        isResumeUpload = NO;
-        isCancelled = NO;
-        currentUploadRecordKey = @"";
-        uploadStatusRecorder = [NSMutableDictionary new];
+        _endPoint = enpoint;
+        _isResumeUpload = NO;
+        _isCancelled = NO;
         [self ossInit];
     }
     return self;
@@ -52,7 +44,7 @@
 //     STS鉴权模式
 //     2.直接访问鉴权服务器（推荐，token过期后可以自动更新）
     id<OSSCredentialProvider> credential = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:STS_AUTH_URL];
-    client = [[OSSClient alloc] initWithEndpoint:endPoint credentialProvider:credential];
+    _client = [[OSSClient alloc] initWithEndpoint:_endPoint credentialProvider:credential];
 }
 
 
@@ -60,7 +52,7 @@
  *    @brief    设置server callback地址
  */
 - (void)setCallbackAddress:(NSString *)address {
-    callbackAddress = address;
+    _callbackAddress = address;
 }
 
 
@@ -77,21 +69,21 @@
         return;
     }
     
-    putRequest = [OSSPutObjectRequest new];
-    putRequest.bucketName = BUCKET_NAME;
-    putRequest.objectKey = objectKey;
-    putRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
-    putRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+    _putRequest = [OSSPutObjectRequest new];
+    _putRequest.bucketName = BUCKET_NAME;
+    _putRequest.objectKey = objectKey;
+    _putRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    _putRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
-    if (callbackAddress != nil) {
-        putRequest.callbackParam = @{
-                                     @"callbackUrl": callbackAddress,
+    if (_callbackAddress != nil) {
+        _putRequest.callbackParam = @{
+                                     @"callbackUrl": _callbackAddress,
                                      // callbackBody可自定义传入的信息
                                      @"callbackBody": @"filename=${object}"
                                      };
     }
-    OSSTask * task = [client putObject:putRequest];
+    OSSTask * task = [_client putObject:_putRequest];
     [task continueWithBlock:^id(OSSTask *task) {
         OSSPutObjectResult * result = task.result;
         // 查看server callback是否成功
@@ -99,21 +91,36 @@
             NSLog(@"Put image success!");
             NSLog(@"server callback : %@", result.serverReturnJsonString);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [viewController showMessage:@"普通上传" inputMessage:@"Success!"];
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"上传"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
             });
         } else {
             NSLog(@"Put image failed, %@", task.error);
             if (task.error.code == OSSClientErrorCodeTaskCancelled) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [viewController showMessage:@"普通上传" inputMessage:@"任务取消!"];
+                    DataCallback * data = [DataCallback new];
+                    [data setCode:0];
+                    [data setObjectKey:objectKey];
+                    [data setShowMessage:@"上传"];
+                    [data setInputMessage:@"任务取消!"];
+                    [self setCallback:data];
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [viewController showMessage:@"普通上传" inputMessage:@"Failed!"];
+                    DataCallback * data = [DataCallback new];
+                    [data setCode:-1];
+                    [data setObjectKey:objectKey];
+                    [data setShowMessage:@"上传"];
+                    [data setInputMessage:@"Failed!"];
+                    [self setCallback:data];
                 });
             }
         }
-        putRequest = nil;
+        _putRequest = nil;
         return nil;
     }];
 }
@@ -125,46 +132,282 @@
     if (objectKey == nil || [objectKey length] == 0) {
         return;
     }
-    getRequest = [OSSGetObjectRequest new];
-    getRequest.bucketName = BUCKET_NAME;
-    getRequest.objectKey = objectKey;
-    OSSTask * task = [client getObject:getRequest];
+    _getRequest = [OSSGetObjectRequest new];
+    _getRequest.bucketName = BUCKET_NAME;
+    _getRequest.objectKey = objectKey;
+    OSSTask * task = [_client getObject:_getRequest];
     [task continueWithBlock:^id(OSSTask *task) {
         OSSGetObjectResult * result = task.result;
         if (!task.error) {
             NSLog(@"Get image success!");
             dispatch_async(dispatch_get_main_queue(), ^{
-                [viewController saveAndDisplayImage:result.downloadedData downloadObjectKey:objectKey];
-                [viewController showMessage:@"普通下载" inputMessage:@"Success!"];
+                DataCallback * data = [DataCallback new];
+                [data setAction:1];
+                [data setDownload:result.downloadedData];
+                [data setObjectKey:objectKey];
+                [data setCode:1];
+                [data setShowMessage:@"下载"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
             });
         } else {
             NSLog(@"Get image failed, %@", task.error);
             if (task.error.code == OSSClientErrorCodeTaskCancelled) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [viewController showMessage:@"普通下载" inputMessage:@"任务取消!"];
+                    DataCallback * data = [DataCallback new];
+                    [data setAction:1];
+                    [data setCode:0];
+                    [data setShowMessage:@"下载"];
+                    [data setInputMessage:@"任务取消!"];
+                    [self setCallback:data];
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [viewController showMessage:@"普通下载" inputMessage:@"Failed!"];
+                    DataCallback * data = [DataCallback new];
+                    [data setAction:1];
+                    [data setCode:-1];
+                    [data setShowMessage:@"下载"];
+                    [data setInputMessage:@"Failed!"];
+                    [self setCallback:data];
                 });
             }
         }
-        getRequest = nil;
+        _getRequest = nil;
         return nil;
     }];
 }
 
+- (void)normalRequestCancel {
+    [self requestCancel:_putRequest];
+    [self requestCancel:_getRequest];
+    [self requestCancel:_resumableRequest];
+}
+
+- (void)requestCancel:(OSSRequest *)request {
+    if (request) {
+        [request cancel];
+        request = nil;
+    }
+}
 
 /**
- *    @brief    普通上传/下载取消
+ 断点续传
  */
-- (void)normalRequestCancel {
-    if (putRequest) {
-        [putRequest cancel];
+- (void)resumableUpload:(NSString *)objectKey localFilePath:(NSString *)filePath {
+    if (objectKey == nil || [objectKey length] == 0) {
+        return;
     }
-    if (getRequest) {
-        [getRequest cancel];
-    }
+    
+    _resumableRequest = [OSSResumableUploadRequest new];
+    _resumableRequest.bucketName = BUCKET_NAME;
+    _resumableRequest.objectKey = objectKey;
+    _resumableRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    _resumableRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    OSSTask * task = [_client resumableUpload:_resumableRequest];
+    [task continueWithBlock:^id(OSSTask *task)  {
+        OSSResumableUploadResult * result = task.result;
+        if (!task.error) {
+            NSLog(@"resumable success!");
+            NSLog(@"server callback : %@", result.serverReturnJsonString);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"断点续传"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+            _resumableRequest = nil;
+        } else {
+            NSLog(@"resumable failed, %@", task.error);
+            if (task.error.code == OSSClientErrorCodeTaskCancelled) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DataCallback * data = [DataCallback new];
+                    [data setCode:0];
+                    [data setObjectKey:objectKey];
+                    [data setShowMessage:@"断点续传"];
+                    [data setInputMessage:@"任务取消!"];
+                    [self setCallback:data];
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DataCallback * data = [DataCallback new];
+                    [data setCode:-1];
+                    [data setObjectKey:objectKey];
+                    [data setShowMessage:@"断点续传"];
+                    [data setInputMessage:@"Failed!"];
+                    [self setCallback:data];
+                });
+            }
+        }
+        return nil;
+    }];
+}
+/**
+ 追加上传
+ */
+- (void)appendUpload:(NSString *)objectKey localFilePath:(NSString *)filePath {
+    OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
+    delete.bucketName = BUCKET_NAME;
+    delete.objectKey = objectKey;
+    OSSTask * task = [_client deleteObject:delete];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSAppendObjectRequest * request = [OSSAppendObjectRequest new];
+    request.bucketName = BUCKET_NAME;
+    request.objectKey = objectKey;
+    request.appendPosition = 0;
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    task = [_client appendObject:request];
+    [task continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            OSSLogError(@"%@", task.error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:-1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"追加上传"];
+                [data setInputMessage:@"Failed!"];
+                [self setCallback:data];
+            });
+        } else {
+            OSSAppendObjectResult * result = task.result;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setObjectKey:objectKey];
+                [data setShowMessage:@"追加上传"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+            NSLog(@"Result - requestId: %@, headerFields: %@",
+                  result.requestId,
+                  result.httpResponseHeaderFields);
+        }
+        return nil;
+    }];
+}
+/**
+ 创建bucket
+ */
+- (void)createBucket {
+    
+    OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
+    create.bucketName = @"ios-test-bucket";
+    create.xOssACL = @"public-read";
+    
+    [[[_client createBucket:create] continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"创建bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        } else {
+            NSLog(@"error: %@", task.error);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
+    delete.bucketName = @"ios-test-bucket";
+    
+    [[_client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"删除bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        }
+        return nil;
+    }];
+}
+/**
+ 删除bucket
+ */
+- (void)deleteBucket {
+    
+    OSSCreateBucketRequest * create = [OSSCreateBucketRequest new];
+    create.bucketName = @"ios-test-bucket";
+    create.xOssACL = @"public-read";
+    
+    [[[_client createBucket:create] continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"创建bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        } else {
+            NSLog(@"error: %@", task.error);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketRequest * delete = [OSSDeleteBucketRequest new];
+    delete.bucketName = @"ios-test-bucket";
+    
+    [[_client deleteBucket:delete] continueWithBlock:^id(OSSTask *task) {
+        if (task.error) {
+            NSLog(@"error: %@", task.error);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DataCallback * data = [DataCallback new];
+                [data setCode:1];
+                [data setShowMessage:@"删除bucket"];
+                [data setInputMessage:@"Success!"];
+                [self setCallback:data];
+            });
+        }
+        return nil;
+    }];
+}
+/**
+ 列举object
+ */
+- (void)listObject {
+    OSSGetBucketRequest * request = [OSSGetBucketRequest new];
+    request.bucketName = BUCKET_NAME;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 1000;
+    request.prefix = @"";
+    
+    OSSTask * task = [_client getBucket:request];
+    [task continueWithBlock:^id(OSSTask *task) {
+        if (!task.error) {
+            DataCallback * data = [DataCallback new];
+            [data setCode:1];
+            [data setShowMessage:@"列举object"];
+            [data setInputMessage:@"Success!"];
+            [self setCallback:data];
+            OSSGetBucketResult * result = task.result;
+            NSLog(@"GetBucket prefixed: %@", result.commentPrefixes);
+            for (NSDictionary * objectInfo in result.contents) {
+                NSLog(@"%@", [objectInfo objectForKey:@"Key"]);
+                NSLog(@"%@", [objectInfo objectForKey:@"Size"]);
+                NSLog(@"%@", [objectInfo objectForKey:@"LastModified"]);
+            }
+        }
+        return nil;
+    }];
 }
 
 

@@ -18,6 +18,7 @@
 		D827E4281FCD11BD0085380C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4271FCD11BD0085380C /* SystemConfiguration.framework */; };
 		D827E42A1FCD11C40085380C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E4291FCD11C40085380C /* CoreTelephony.framework */; };
 		D827E42C1FCD11CC0085380C /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E42B1FCD11CC0085380C /* libresolv.tbd */; };
+		4CB7B7E61FD7EC16001C0656 /* DataCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7B7E51FD7EC16001C0656 /* DataCallback.m */; };
 		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
 		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
@@ -108,6 +109,8 @@
 		D827E4271FCD11BD0085380C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D827E4291FCD11C40085380C /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		D827E42B1FCD11CC0085380C /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
+		4C331BB61FD8DF1B006229F2 /* DataCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataCallback.h; sourceTree = "<group>"; };
+		4CB7B7E51FD7EC16001C0656 /* DataCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataCallback.m; sourceTree = "<group>"; };
 		D83D58501FC680840022761B /* OSSRangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSRangeTests.m; sourceTree = "<group>"; };
 		D83D58511FC680840022761B /* OSSCredentialProviderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCredentialProviderTests.m; sourceTree = "<group>"; };
 		D83D58521FC680850022761B /* OSSModelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSModelTests.m; sourceTree = "<group>"; };
@@ -216,6 +219,8 @@
 		D83D58BC1FC6B3100022761B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4C331BB61FD8DF1B006229F2 /* DataCallback.h */,
+				4CB7B7E51FD7EC16001C0656 /* DataCallback.m */,
 				D83D58BD1FC6B3100022761B /* AppDelegate.h */,
 				D83D58C51FC6B3100022761B /* AppDelegate.m */,
 				D83D58C61FC6B3100022761B /* OSSConstants.h */,
@@ -490,6 +495,7 @@
 				D83D58D31FC6B3100022761B /* OssService.m in Sources */,
 				D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */,
 				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
+				4CB7B7E61FD7EC16001C0656 /* DataCallback.m in Sources */,
 				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
 				D83D58E21FC6B61F0022761B /* main.m in Sources */,
 				D83D58CE1FC6B3100022761B /* ViewController.m in Sources */,
@@ -676,6 +682,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -725,6 +732,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

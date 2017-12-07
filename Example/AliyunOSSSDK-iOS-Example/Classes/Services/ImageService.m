@@ -37,7 +37,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
             waterText:(NSString *)text
            objectSize:(int)size {
     NSString * base64Text = [OSSUtil calBase64WithData:(UTF8Char*)[text cStringUsingEncoding:NSASCIIStringEncoding]];
-    NSString * queryString = [NSString stringWithFormat:@"@watermark=2&type=%@&text=%@&size=%d",
+    NSString * queryString = [NSString stringWithFormat:@"@400w|watermark=2&type=%@&text=%@&size=%d",
                               font, base64Text, size];
     NSLog(@"TextWatermark: %@", object);
     NSLog(@"Text: %@", text);
