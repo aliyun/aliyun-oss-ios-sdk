@@ -250,8 +250,9 @@
 
 // 取消断点续传
 - (IBAction)onOssButtonResumablePutCancel:(UIButton *)sender {
-    _ossTextFileName.text = @"";
-    _uploadFilePath = @"";
+    if (![self verifyFileName]) {
+        return;
+    }
     [_service normalRequestCancel];
 }
 
