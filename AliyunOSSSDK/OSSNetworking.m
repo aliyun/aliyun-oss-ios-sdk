@@ -14,6 +14,7 @@
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
 #import "NSMutableData+OSS_CRC.h"
+#import "OSSInputStreamHelper.h"
 
 
 @implementation OSSURLRequestRetryHandler
@@ -409,8 +410,12 @@
         
         if (!result.localCRC64ecma.oss_isNotEmpty && delegate.uploadingFileURL)
         {
-            NSMutableData *localData = [[NSMutableData alloc] initWithContentsOfURL:delegate.uploadingFileURL];
-            result.localCRC64ecma = [NSString stringWithFormat:@"%llu",[localData oss_crc64]];
+            OSSInputStreamHelper *helper = [[OSSInputStreamHelper alloc] initWithURL:delegate.uploadingFileURL];
+            [helper syncReadBuffers];
+            if (helper.crc64 != 0) {
+                result.localCRC64ecma = [NSString stringWithFormat:@"%llu",helper.crc64];
+            }
+            //hehe
         }
         
         // 针对append接口或者分片上传，需要多次计算crc值

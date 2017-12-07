@@ -38,6 +38,10 @@
 		D80C82131FC82596008E3900 /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183151FC56358000DD9EC /* OSSIPv6Adapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D80C82141FC82599008E3900 /* OSSReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183161FC56358000DD9EC /* OSSReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D80C82151FC8259C008E3900 /* OSSIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = D871831A1FC56358000DD9EC /* OSSIPv6PrefixResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D829F3A91FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
+		D829F3AA1FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
+		D829F3AB1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */; };
+		D829F3AC1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */; };
 		D87183731FC56358000DD9EC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D87183391FC56358000DD9EC /* Info.plist */; };
 		D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183071FC56358000DD9EC /* OSSNetworking.m */; };
 		D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183081FC56358000DD9EC /* OSSHttpdns.m */; };
@@ -132,6 +136,8 @@
 		D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F61FC824FF008E3900 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F81FC82508008E3900 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
+		D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSInputStreamHelper.h; sourceTree = "<group>"; };
+		D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSInputStreamHelper.m; sourceTree = "<group>"; };
 		D87183071FC56358000DD9EC /* OSSNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSNetworking.m; sourceTree = "<group>"; };
 		D87183081FC56358000DD9EC /* OSSHttpdns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttpdns.m; sourceTree = "<group>"; };
 		D87183091FC56358000DD9EC /* OSSModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSModel.h; sourceTree = "<group>"; };
@@ -273,6 +279,8 @@
 				D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */,
 				D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */,
 				D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */,
+				D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */,
+				D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -352,6 +360,7 @@
 				D8C41B341FCC2FD20091699B /* OSSExecutor.h in Headers */,
 				D8C41B351FCC2FD20091699B /* OSSCancellationTokenRegistration.h in Headers */,
 				D8C41B361FCC2FD20091699B /* OSSBolts.h in Headers */,
+				D829F3A91FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */,
 				D8C41B371FCC2FD20091699B /* OSSTask.h in Headers */,
 				D8C41B381FCC2FD20091699B /* OSSTaskCompletionSource.h in Headers */,
 				D8C41B3B1FCC2FD20091699B /* OSSCancellationToken.h in Headers */,
@@ -388,6 +397,7 @@
 				D80C820C1FC8257F008E3900 /* OSSCancellationTokenSource.h in Headers */,
 				D80C820E1FC82584008E3900 /* OSSCancellationTokenRegistration.h in Headers */,
 				D80C82111FC8258B008E3900 /* OSSTaskCompletionSource.h in Headers */,
+				D829F3AA1FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */,
 				D80C820F1FC82586008E3900 /* OSSBolts.h in Headers */,
 				D80C820D1FC82581008E3900 /* OSSExecutor.h in Headers */,
 				D80C820B1FC82579008E3900 /* OSSCocoaLumberjack.h in Headers */,
@@ -526,6 +536,7 @@
 				D8C41B0E1FCC2F920091699B /* OSSDDLog.m in Sources */,
 				D8C41B101FCC2F920091699B /* OSSReachability.m in Sources */,
 				D8C41B111FCC2F920091699B /* OSSNSLogger.m in Sources */,
+				D829F3AB1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */,
 				D8C41B141FCC2F920091699B /* OSSFileLogger.m in Sources */,
 				D8C41B161FCC2F920091699B /* OSSUtil.m in Sources */,
 			);
@@ -557,6 +568,7 @@
 				D8C41ACF1FCC28500091699B /* OSSDDLog.m in Sources */,
 				D8C41AD11FCC28500091699B /* OSSReachability.m in Sources */,
 				D8C41AD21FCC28500091699B /* OSSNSLogger.m in Sources */,
+				D829F3AC1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */,
 				D8C41AD51FCC28500091699B /* OSSFileLogger.m in Sources */,
 				D8C41AD71FCC28500091699B /* OSSUtil.m in Sources */,
 			);
