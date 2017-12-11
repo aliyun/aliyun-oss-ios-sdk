@@ -2988,5 +2988,105 @@ id<OSSCredentialProvider>  credential, credentialFed, authCredential;
     }] waitUntilFinished];
 }
 
+- (void)testForCrc64Error
+{
+    __block NSString * uploadId = nil;
+    __block NSMutableArray * partInfos = [NSMutableArray array];
+    OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
+    init.bucketName = TEST_BUCKET;
+    init.objectKey = MultipartUploadObjectKey;
+    init.contentType = @"application/octet-stream";
+    init.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSTask * task = [client multipartUploadInit:init];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSInitMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.uploadId);
+        uploadId = result.uploadId;
+        return nil;
+    }] waitUntilFinished];
+    
+    int chuckCount = 7;
+    for (int i = 0; i < chuckCount; i++)
+    {
+        OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+        uploadPart.bucketName = TEST_BUCKET;
+        uploadPart.objectkey = MultipartUploadObjectKey;
+        uploadPart.uploadId = uploadId;
+        uploadPart.partNumber = i+1; // part number start from 1
+        NSString * filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file1m"];
+        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+        OSSLogVerbose(@" testMultipartUpload filesize: %llu", fileSize);
+        uint64_t offset = fileSize / chuckCount;
+        OSSLogVerbose(@" testMultipartUpload offset: %llu", offset);
+        
+        NSFileHandle* readHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+        [readHandle seekToFileOffset:offset * i];
+        
+        NSData* data;
+        if (i+1 == chuckCount)
+        {
+            NSUInteger lastLength = offset + fileSize % chuckCount;
+            data = [readHandle readDataOfLength:lastLength];
+        }else
+        {
+            data = [readHandle readDataOfLength:offset];
+        }
+        
+        uploadPart.uploadPartData = data;
+        NSUInteger partSize = data.length;
+        NSTimeInterval startUpload = [[NSDate date] timeIntervalSince1970];
+        task = [client uploadPart:uploadPart];
+        [[task continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            OSSUploadPartResult * result = task.result;
+            XCTAssertNotNil(result.eTag);
+            
+            uint64_t remoteCrc64ecma;
+            NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
+            [scanner scanUnsignedLongLong:&remoteCrc64ecma];
+            if (i == 2) {
+                remoteCrc64ecma += 1;
+            }
+            
+            [partInfos addObject:[OSSPartInfo partInfoWithPartNum:i+1 eTag:result.eTag size:partSize crc64:remoteCrc64ecma]];
+            return nil;
+        }] waitUntilFinished];
+        NSTimeInterval endUpload = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval cost = endUpload - startUpload;
+        OSSLogDebug(@"part num: %d  upload part cost time: %f", i, cost);
+    }
+    
+    __block uint64_t localCrc64 = 0;
+    [partInfos enumerateObjectsUsingBlock:^(OSSPartInfo *partInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (localCrc64 == 0)
+        {
+            localCrc64 = partInfo.crc64;
+        }else
+        {
+            localCrc64 = [OSSUtil crc64ForCombineCRC1:localCrc64 CRC2:partInfo.crc64 length:partInfo.size];
+        }
+    }];
+    
+    OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
+    complete.bucketName = TEST_BUCKET;
+    complete.objectKey = MultipartUploadObjectKey;
+    complete.uploadId = uploadId;
+    complete.partInfos = partInfos;
+    complete.crcFlag = OSSRequestCRCOpen;
+    
+    task = [client completeMultipartUpload:complete];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSCompleteMultipartUploadResult * result = task.result;
+        XCTAssertNotNil(result.location);
+        uint64_t remoteCrc64ecma;
+        NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
+        [scanner scanUnsignedLongLong:&remoteCrc64ecma];
+        XCTAssertNotEqual(localCrc64, remoteCrc64ecma);
+        return nil;
+    }] waitUntilFinished];
+}
+
 @end
 
