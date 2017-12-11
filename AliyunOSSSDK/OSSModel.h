@@ -435,7 +435,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @interface OSSCreateBucketRequest : OSSRequest
 
 /**
- The bucket name
+ *  存储空间,命名规范如下:(1)只能包括小写字母、数字和短横线(-);(2)必须以小写字母或者数字开头和结尾;(3)长度必须在3-63字节之间.
  */
 @property (nonatomic, strong) NSString * bucketName;
 
@@ -446,9 +446,10 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
 
 /**
- Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.
+ Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private. if this key is not set, the default value is private
  */
 @property (nonatomic, strong) NSString * xOssACL;
+
 @end
 
 /**
