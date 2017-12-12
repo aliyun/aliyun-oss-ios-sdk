@@ -39,7 +39,7 @@
                               clientConfiguration:config];
 }
 
-- (void)testForCreatingBucket
+- (void)testAPI_creatBucket
 {
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = @"bucket-testcases";
@@ -61,10 +61,50 @@
     }] waitUntilFinished];
 }
 
-- (void)testForGettingBucketACL
+- (void)testAPI_getBucket
+{
+    OSSGetBucketRequest * request = [OSSGetBucketRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 1000;
+    request.prefix = @"";
+    
+    OSSTask * task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 2;
+    request.prefix = @"";
+    
+    task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.prefix = @"fileDir";
+    request.delimiter = @"/";
+    
+    task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_getBucketACL
 {
     OSSGetBucketACLRequest * request = [OSSGetBucketACLRequest new];
-    request.bucketName = BUCKET_PRIVATE;
+    request.bucketName = OSS_BUCKET_PRIVATE;
     OSSTask * task = [_client getBucketACL:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -74,7 +114,7 @@
     }] waitUntilFinished];
 }
 
-- (void)testForGettingService
+- (void)testAPI_getService
 {
     OSSGetServiceRequest *request = [OSSGetServiceRequest new];
     OSSTask * task = [_client getService:request];
@@ -84,7 +124,7 @@
     }] waitUntilFinished];
 }
 
-- (void)testForDeletingBucket
+- (void)testAPI_deleteBucket
 {
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = @"bucket-testcases";
@@ -104,13 +144,6 @@
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
 }
 
 @end
