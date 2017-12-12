@@ -120,11 +120,17 @@ static NSTimeInterval _clockSkew = 0.0;
 @end
 
 @implementation OSSFederationToken
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSFederationToken<%p>:{AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@}", self, _tAccessKey, _tSecretKey, _tToken, _expirationTimeInGMTFormat];
+}
+
 @end
 
 @implementation OSSPlainTextAKSKPairCredentialProvider
 
-- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey {
+- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey secretKey:(nonnull NSString *)secretKey {
     if (self = [super init]) {
         self.accessKey = [accessKey oss_trim];
         self.secretKey = [secretKey oss_trim];
