@@ -124,7 +124,7 @@ static NSTimeInterval _clockSkew = 0.0;
 
 @implementation OSSPlainTextAKSKPairCredentialProvider
 
-- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey {
+- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey secretKey:(nonnull NSString *)secretKey {
     if (self = [super init]) {
         self.accessKey = [accessKey oss_trim];
         self.secretKey = [secretKey oss_trim];

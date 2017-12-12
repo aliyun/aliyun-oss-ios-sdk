@@ -128,8 +128,8 @@ typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 @property (nonatomic, strong) NSString * accessKey;
 @property (nonatomic, strong) NSString * secretKey;
 
-- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey
-                                 secretKey:(NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
+- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey
+                                 secretKey:(nonnull NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
 @end
 
 /**
