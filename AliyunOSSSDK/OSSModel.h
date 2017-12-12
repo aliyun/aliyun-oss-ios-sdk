@@ -784,8 +784,9 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @interface OSSPutObjectACLRequest : OSSPutObjectRequest
 
 /**
+ *@brief:指定oss创建object时的访问权限,合法值:public-read、private、public-read-write
  */
-@property (nonatomic, strong) NSString * acl;
+@property (nonatomic, copy, nullable) NSString *acl;
 
 @end
 
