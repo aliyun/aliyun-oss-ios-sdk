@@ -9,13 +9,17 @@
 #ifndef OSSTestMacros_h
 #define OSSTestMacros_h
 
-#define BUCKET_PUBLIC                   @"testcases-public"
-#define BUCKET_PRIVATE                  @"testcases-private"
+#define OSS_ACCESSKEY_ID                @"AccessKeyId"
+#define OSS_SECRETKEY_ID                @"SecretKeyId"
+
+#define OSS_BUCKET_PUBLIC               @"bucket-public"
+#define OSS_BUCKET_PRIVATE              @"bucket-private"
 #define OSS_ENDPOINT                    @"http://oss-cn-shenzhen.aliyuncs.com"
-#define OSS_MULTIPART_UPLOADKEY         @"oss.multipart.uploadkey"
-#define OSS_RESUMABLE_UPLOADKEY         @"oss.resumable.uploadkey"
-#define OSS_CALLBACK_URL                @"oss.callback.url"
-#define OSS_CNAME_URL                   @"oss.cname.url"
-#define OSS_STSTOKEN_URL                @"http://*.*.*.*:****/sts/getsts"
+#define OSS_MULTIPART_UPLOADKEY         @"multipart"
+#define OSS_RESUMABLE_UPLOADKEY         @"resumable"
+#define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"
+#define OSS_CNAME_URL                   @"Cname"
+#define OSS_STSTOKEN_URL                @"http://*.*.*.*:*/sts/getsts"
+#define OSS_IMAGE_KEY                   @"hasky.jpeg"
 
 #endif /* OSSTestMacros_h */
