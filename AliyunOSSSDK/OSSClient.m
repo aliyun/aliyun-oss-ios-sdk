@@ -765,8 +765,8 @@ static NSObject * lock;
         }
     }
     
-    __block int64_t expectedUploadLength = 0;
-    __block int partCount;
+    __block uint64_t expectedUploadLength = 0;
+    __block uint64_t partCount;
     __block OSSTask *errorTask;
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
@@ -805,25 +805,28 @@ static NSObject * lock;
         
         NSFileManager * fm = [NSFileManager defaultManager];
         NSError * error = nil;;
-        int64_t uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] longLongValue];
+        uint64_t uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] unsignedLongLongValue];
         expectedUploadLength = uploadFileSize;
         if (error) {
             return [OSSTask taskWithError:error];
         }
-        partCount = (int)(expectedUploadLength / request.partSize) + (expectedUploadLength % request.partSize != 0);
         
-        int maxPartSize = 5000;
+        BOOL divisible = (expectedUploadLength % request.partSize == 0);
+        partCount = (expectedUploadLength / request.partSize) + (divisible? 0 : 1);
         
-        if(partCount > maxPartSize){ // check part size
-            request.partSize = uploadFileSize / maxPartSize;
-            partCount = maxPartSize;
+        UInt16 maxPartCount = 5000;    //最大分片数量是5k
+        
+        if(partCount > maxPartCount)
+        {
+            request.partSize = uploadFileSize / maxPartCount;
+            partCount = maxPartCount;
         }
         
         if (request.isCancelled) {
             return [OSSTask taskWithError:cancelError];
         }
         
-        NSMutableArray<OSSPartInfo *> *alreadyUploadPart = [NSMutableArray new];
+        NSMutableArray<OSSPartInfo *> *alreadyUploadPart = [NSMutableArray array];
         
         errorTask = [self upload:request
                      uploadIndex:nil
@@ -971,7 +974,9 @@ static NSObject * lock;
         if (error) {
             return [OSSTask taskWithError:error];
         }
-        int partCount = (int)(uploadFileSize / request.partSize) + (uploadFileSize % request.partSize != 0 ? 1:0);
+        
+        BOOL divisible = (uploadFileSize % request.partSize == 0);
+        int partCount = (int)(uploadFileSize / request.partSize) + (divisible? 0 : 1);
         NSMutableArray * uploadedPart = [NSMutableArray array];
         NSString *recordFilePath = nil;
         
@@ -1263,7 +1268,7 @@ static NSObject * lock;
     return initTask;
 }
 
-- (OSSTask *)upload:(OSSMultipartUploadRequest *)request uploadIndex:(NSMutableArray *) alreadyUploadIndex uploadPart:(NSMutableArray *) alreadyUploadPart count:(int)partCout uploadedLength:(uint64_t *)uploadedLength fileSize:(uint64_t) uploadFileSize cancelError:(NSError *) cancelError
+- (OSSTask *)upload:(OSSMultipartUploadRequest *)request uploadIndex:(NSMutableArray *) alreadyUploadIndex uploadPart:(NSMutableArray *) alreadyUploadPart count:(uint64_t)partCout uploadedLength:(uint64_t *)uploadedLength fileSize:(uint64_t) uploadFileSize cancelError:(NSError *) cancelError
 {
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
@@ -1272,9 +1277,25 @@ static NSObject * lock;
     __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = [NSMutableDictionary dictionary];
-    
+    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:request.uploadingFileURL];
+    [inputStream open];
     for (int i = 1; i <= partCout; i++) {
     
+        NSUInteger realPartLength = 0;
+        if (i != partCout) {
+            realPartLength = request.partSize;
+        } else {
+            realPartLength = uploadFileSize - request.partSize * (i - 1);
+        }
+        
+        NSMutableData *myBuffer = [NSMutableData dataWithLength:realPartLength];
+        uint8_t *buffer = [myBuffer mutableBytes];
+        NSInteger length = [inputStream read:buffer maxLength:realPartLength];
+        
+        NSData * uploadPartData = [NSData dataWithBytes:buffer length:length];
+        if (![inputStream hasBytesAvailable]) {
+            [inputStream close];
+        }
         //alreadyUploadIndex 为空 return false
         if (alreadyUploadIndex && [alreadyUploadIndex containsObject:@(i)]) {
             continue;
@@ -1292,14 +1313,7 @@ static NSObject * lock;
                         }
                     }
                 }else{
-                    NSFileHandle * handle = [NSFileHandle fileHandleForReadingAtPath:[request.uploadingFileURL path]];
-                    [handle seekToFileOffset:(i-1) * request.partSize];
-                    int64_t readLength = MIN(request.partSize, uploadFileSize - (request.partSize * (i-1)));
-                    
                     OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
-                    
-                    NSData * uploadPartData = [handle readDataOfLength:(NSUInteger)readLength];
-                    [handle closeFile];
                     uploadPart.bucketName = request.bucketName;
                     uploadPart.objectkey = request.objectKey;
                     uploadPart.partNumber = i;
@@ -1317,7 +1331,7 @@ static NSObject * lock;
                         OSSPartInfo * partInfo = [OSSPartInfo new];
                         partInfo.partNum = i;
                         partInfo.eTag = result.eTag;
-                        partInfo.size = readLength;
+                        partInfo.size = realPartLength;
                         uint64_t crc64OfPart;
                         @try {
                             NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
@@ -1335,8 +1349,8 @@ static NSObject * lock;
                                                       uploadId:request.uploadId];
                             }
                             [alreadyUploadPart addObject:partInfo];
-                            *uploadedLength += readLength;
-                            request.uploadProgress(readLength, *uploadedLength, uploadFileSize);
+                            *uploadedLength += realPartLength;
+                            request.uploadProgress(realPartLength, *uploadedLength, uploadFileSize);
                         }
                     }
                 }

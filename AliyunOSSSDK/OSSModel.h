@@ -1310,7 +1310,7 @@ The result class of listing uploaded parts.
 /**
  The part size, minimal value is 100KB.
  */
-@property (nonatomic, assign) int64_t partSize;
+@property (nonatomic, assign) NSUInteger partSize;
 
 /**
  Upload progress callback.
