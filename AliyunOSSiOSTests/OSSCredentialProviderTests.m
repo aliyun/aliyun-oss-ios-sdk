@@ -90,18 +90,20 @@
     [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.ststokencredentialprovider.identifier" provider:provider];
 }
 
-/*
 - (void)testCustomSignerCredentialProvider
 {
     OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-        // 用户将需要签名的字符串上传给自己的业务服务器，服务器进行签名之后返回给客户端
-        NSString *signedContent = [OSSUtil sign:contentToSign withToken:_token];
+        
+        OSSFederationToken *token = [OSSFederationToken new];
+        token.tAccessKey = OSS_ACCESSKEY_ID;
+        token.tSecretKey = OSS_SECRETKEY_ID;
+        
+        NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
         return signedContent;
     }];
     
     [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.customsignercredentialprovider.identifier" provider:provider];
 }
-*/
 
 -(void)testPlainTextAKSKPairCredentialProvider
 {
