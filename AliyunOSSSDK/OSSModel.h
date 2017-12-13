@@ -137,13 +137,16 @@ TODOTODO
  The custom signed credential provider
  */
 @interface OSSCustomSignerCredentialProvider : NSObject <OSSCredentialProvider>
-@property (nonatomic, copy) NSString * (^signContent)(NSString *, NSError **);
+@property (nonatomic, copy, readonly,) NSString * _Nonnull (^ _Nonnull signContent)( NSString * _Nonnull , NSError * _Nullable *_Nullable);
+
++ (instancetype _Nullable)new NS_UNAVAILABLE;
+- (instancetype _Nullable)init NS_UNAVAILABLE;
 
 /**
- During the task execution, this API is called for signing
- It's executed at the background thread instead of UI thread.
+ * During the task execution, this API is called for signing
+ * It's executed at the background thread instead of UI thread.
  */
-- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent;
+- (instancetype _Nullable)initWithImplementedSigner:(nonnull OSSCustomSignContentBlock)signContent NS_DESIGNATED_INITIALIZER;
 @end
 
 /**

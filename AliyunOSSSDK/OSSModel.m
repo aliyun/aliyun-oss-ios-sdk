@@ -158,14 +158,18 @@ static NSTimeInterval _clockSkew = 0.0;
 
 @implementation OSSCustomSignerCredentialProvider
 
-- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent {
-    if (self = [super init]) {
-        self.signContent = signContent;
+- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent
+{
+    NSParameterAssert(signContent);
+    if (self = [super init])
+    {
+        _signContent = signContent;
     }
     return self;
 }
 
-- (NSString *)sign:(NSString *)content error:(NSError **)error {
+- (NSString *)sign:(NSString *)content error:(NSError **)error
+{
     NSString * signature = @"";
     @synchronized(self) {
         signature = self.signContent(content, error);
