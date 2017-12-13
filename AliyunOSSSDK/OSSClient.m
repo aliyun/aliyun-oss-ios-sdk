@@ -268,10 +268,15 @@ static NSObject * lock;
 {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+    
     if (request.uploadingData) {
         requestDelegate.uploadingData = request.uploadingData;
         NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
-        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        if (request.crcFlag == OSSRequestCRCOpen)
+        {
+            requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        }
     }
     if (request.uploadingFileURL) {
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
@@ -301,7 +306,6 @@ static NSObject * lock;
         [headerParams setObject:request.cacheControl forKey:OSSHttpHeaderCacheControl];
     }
     
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObject];
     responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
     requestDelegate.responseParser = responseParser;
@@ -361,12 +365,16 @@ static NSObject * lock;
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
     requestDelegate.lastCRC = crc64ecma;
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     
     if (request.uploadingData)
     {
         requestDelegate.uploadingData = request.uploadingData;
         NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
-        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        if (request.crcFlag == OSSRequestCRCOpen)
+        {
+            requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        }
     }
     if (request.uploadingFileURL) {
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
@@ -389,7 +397,6 @@ static NSObject * lock;
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", @"append",
                                     [@(request.appendPosition) stringValue], @"position", nil];
     
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeAppendObject];
     responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
     requestDelegate.responseParser = responseParser;
@@ -488,10 +495,14 @@ static NSObject * lock;
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:[@(request.partNumber) stringValue], @"partNumber",
                                     request.uploadId, @"uploadId", nil];
+    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     if (request.uploadPartData) {
         requestDelegate.uploadingData = request.uploadPartData;
         NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadPartData];
-        requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        if (request.crcFlag == OSSRequestCRCOpen)
+        {
+            requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
+        }
     }
     if (request.uploadPartFileURL) {
         requestDelegate.uploadingFileURL = request.uploadPartFileURL;
@@ -499,8 +510,7 @@ static NSObject * lock;
     if (request.uploadPartProgress) {
         requestDelegate.uploadProgress = request.uploadPartProgress;
     }
-    
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeUploadPart];
     responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
     requestDelegate.responseParser = responseParser;
