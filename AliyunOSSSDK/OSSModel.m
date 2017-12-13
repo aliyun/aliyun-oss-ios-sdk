@@ -406,6 +406,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         federationToken = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
         [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
     }
+        
 
     /* construct CanonicalizedOSSHeaders */
     if (requestMessage.headerParams) {
@@ -458,11 +459,22 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, contentMd5, contentType, date, xossHeader, resource];
     OSSLogDebug(@"string to sign: %@", stringToSign);
     if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
-        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-
+        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]])
+    {
         NSString * signature = [OSSUtil sign:stringToSign withToken:federationToken];
         [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
-    } else { // now we only have two type of credential provider
+    }else if ([self.credentialProvider isKindOfClass:[OSSCustomSignerCredentialProvider class]])
+    {
+        OSSCustomSignerCredentialProvider *provider = (OSSCustomSignerCredentialProvider *)self.credentialProvider;
+        
+        NSError *customSignError;
+        NSString * signature = [provider sign:stringToSign error:&customSignError];
+        if (customSignError) {
+            OSSLogError(@"OSSCustomSignerError: %@",customSignError);
+        }
+        [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
+    }else
+    {
         NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
         if (error) {
             return [OSSTask taskWithError:error];
