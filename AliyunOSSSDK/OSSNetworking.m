@@ -398,16 +398,11 @@
     }
     else
     {
-        /**
-         * 如果是上传文件请求,则将本地计算好的crc64值赋值给Result的localCrc64ecma,
-         * 注意当使用文件路径上传时无法验证crc64,涉及uploadTaskWithRequest:fromFile,此时
-         * 不支持crc64校验
-         */
         if (!result.localCRC64ecma.oss_isNotEmpty)
         {
             result.localCRC64ecma = delegate.contentCRC;
         }
-        
+        // 通过uploadTaskWithRequest:fromFile方式上传文件时,计算本地文件的crc64值
         if (!result.localCRC64ecma.oss_isNotEmpty && delegate.uploadingFileURL)
         {
             OSSInputStreamHelper *helper = [[OSSInputStreamHelper alloc] initWithURL:delegate.uploadingFileURL];
@@ -415,7 +410,6 @@
             if (helper.crc64 != 0) {
                 result.localCRC64ecma = [NSString stringWithFormat:@"%llu",helper.crc64];
             }
-            //hehe
         }
         
         // 针对append接口或者分片上传，需要多次计算crc值
