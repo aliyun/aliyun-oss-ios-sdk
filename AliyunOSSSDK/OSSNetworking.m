@@ -412,7 +412,7 @@
             }
         }
         
-        // 针对append接口或者分片上传，需要多次计算crc值
+        // 针对append接口，需要多次计算crc值
         if ([delegate.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty])
         {
             uint64_t last_crc64,local_crc64;
