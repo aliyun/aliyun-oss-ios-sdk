@@ -398,19 +398,36 @@
     }
     else
     {
+        OSSLogVerbose(@"--- checkForCrc64WithResult --- ");
+        // 如果服务端未返回crc信息，默认是成功的
+        OSSLogVerbose(@"result.remoteCRC64ecma : %@",result.remoteCRC64ecma);
+        OSSLogVerbose(@"if result.localCRC64ecma : %@",result.localCRC64ecma);
+        if (!result.remoteCRC64ecma.oss_isNotEmpty)
+        {
+            [source setResult:response];
+            return;
+        }
+        // getObject 操作的crc数值会在delegate.responseParser consumeHttpResponseBody 进行计算。
+        // upload & put 操作在上传成功后再计算。
+        // 如果用户设置onReceiveData block。无法计算localCRC64ecma
         if (!result.localCRC64ecma.oss_isNotEmpty)
         {
-            result.localCRC64ecma = delegate.contentCRC;
-        }
-        // 通过uploadTaskWithRequest:fromFile方式上传文件时,计算本地文件的crc64值
-        if (!result.localCRC64ecma.oss_isNotEmpty && delegate.uploadingFileURL)
-        {
-            OSSInputStreamHelper *helper = [[OSSInputStreamHelper alloc] initWithURL:delegate.uploadingFileURL];
-            [helper syncReadBuffers];
-            if (helper.crc64 != 0) {
-                result.localCRC64ecma = [NSString stringWithFormat:@"%llu",helper.crc64];
+            OSSLogVerbose(@"delegate.uploadingFileURL : %@",delegate.uploadingFileURL);
+            if (delegate.uploadingFileURL)
+            {
+                OSSInputStreamHelper *helper = [[OSSInputStreamHelper alloc] initWithURL:delegate.uploadingFileURL];
+                [helper syncReadBuffers];
+                if (helper.crc64 != 0) {
+                    result.localCRC64ecma = [NSString stringWithFormat:@"%llu",helper.crc64];
+                }
             }
+            else
+            {
+                result.localCRC64ecma = delegate.contentCRC;
+            }
+            OSSLogVerbose(@"finally result.localCRC64ecma : %@",result.localCRC64ecma);
         }
+
         
         // 针对append接口，需要多次计算crc值
         if ([delegate.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty])
@@ -442,13 +459,8 @@
             result.localCRC64ecma = [NSString stringWithFormat:@"%llu",crc_local];
             OSSLogVerbose(@"crc_local: %llu, crc_remote: %@,last_position: %llu,nextAppendPosition: %llu,length:  %llu",crc_local,result.remoteCRC64ecma,position,[next_append_position longLongValue],length);
         }
-        // 4.如果服务端未返回crc信息，默认是成功的
-        if (!result.remoteCRC64ecma.oss_isNotEmpty)
-        {
-            [source setResult:response];
-        }
-        // 5.如果服务器和本机计算的crc值不一致,则报crc校验失败;否则,认为上传任务执行成功
-        else if (result.remoteCRC64ecma.oss_isNotEmpty && result.localCRC64ecma.oss_isNotEmpty)
+        //如果服务器和本机计算的crc值不一致,则报crc校验失败;否则,认为上传任务执行成功
+        if (result.remoteCRC64ecma.oss_isNotEmpty && result.localCRC64ecma.oss_isNotEmpty)
         {
             if ([result.remoteCRC64ecma isEqualToString:result.localCRC64ecma])
             {

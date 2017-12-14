@@ -272,9 +272,9 @@ static NSObject * lock;
     
     if (request.uploadingData) {
         requestDelegate.uploadingData = request.uploadingData;
-        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
-        if (request.crcFlag == OSSRequestCRCOpen)
+        if (requestDelegate.crc64Verifiable)
         {
+            NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
             requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
         }
     }
@@ -370,9 +370,9 @@ static NSObject * lock;
     if (request.uploadingData)
     {
         requestDelegate.uploadingData = request.uploadingData;
-        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
-        if (request.crcFlag == OSSRequestCRCOpen)
+        if (requestDelegate.crc64Verifiable)
         {
+            NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadingData];
             requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
         }
     }
@@ -498,9 +498,9 @@ static NSObject * lock;
     [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     if (request.uploadPartData) {
         requestDelegate.uploadingData = request.uploadPartData;
-        NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadPartData];
-        if (request.crcFlag == OSSRequestCRCOpen)
+        if (requestDelegate.crc64Verifiable)
         {
+            NSMutableData *mutableData = [NSMutableData dataWithData:request.uploadPartData];
             requestDelegate.contentCRC = [NSString stringWithFormat:@"%llu",[mutableData oss_crc64]];
         }
     }
@@ -952,6 +952,7 @@ static NSObject * lock;
             request.crcFlag = OSSRequestCRCClosed;
         }
     }
+    OSSLogVerbose(@"resumableUpload request.crcFlag %lu: ",request.crcFlag);
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
         if (!request.objectKey || !request.bucketName || !request.uploadingFileURL) {
@@ -989,7 +990,7 @@ static NSObject * lock;
         int partCount = (int)(uploadFileSize / request.partSize) + (divisible? 0 : 1);
         NSMutableArray * uploadedPart = [NSMutableArray array];
         NSString *recordFilePath = nil;
-        
+        OSSLogVerbose(@"request.recordDirectoryPath %@: ",request.recordDirectoryPath);
         if ([request.recordDirectoryPath oss_isNotEmpty])
         {
             //read saved uploadId
@@ -1020,7 +1021,7 @@ static NSObject * lock;
                 }
             }
         }
-        
+        OSSLogVerbose(@"resumableUpload uploadId %@: ",uploadId);
         if(![uploadId oss_isNotEmpty])
         {
             OSSTask *task = [self processResumeInitMultipartUpload:request
@@ -1113,6 +1114,7 @@ static NSObject * lock;
                 }
             }
         }
+        OSSLogVerbose(@"resumableUpload local_crc64 %llu: ",local_crc64);
         
         OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
         complete.bucketName = request.bucketName;
@@ -1132,7 +1134,8 @@ static NSObject * lock;
         
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
-
+        
+        
         if (completeTask.error) {
             return completeTask;
         } else
@@ -1201,8 +1204,10 @@ static NSObject * lock;
         {
             return listPartsTask;
         }
-    }else
+    }
+    else
     {
+        OSSLogVerbose(@"resumableUpload listpart ok");
         OSSListPartsResult * result = listPartsTask.result;
         if (result.parts.count) {
             [uploadedParts addObjectsFromArray:result.parts];

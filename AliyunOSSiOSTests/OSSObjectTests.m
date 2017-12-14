@@ -26,6 +26,7 @@
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpOSSClient];
     [self setUpLocalFiles];
+    [self initUploadFile];
 }
 
 - (void)tearDown {
@@ -36,11 +37,13 @@
 - (void)setUpOSSClient
 {
     OSSClientConfiguration *config = [OSSClientConfiguration new];
-    config.crc64Verifiable = YES;
+//    config.crc64Verifiable = YES;
+    
     OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
     _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
                                credentialProvider:authProv
                               clientConfiguration:config];
+    [OSSLog enableLog];
 }
 
 - (void)setUpLocalFiles
@@ -76,6 +79,31 @@
     OSSLogVerbose(@"document directory path is: %@", documentDirectory);
 }
 
+- (void)initUploadFile{
+    NSString * uploadFile = @"guihua";
+    NSString * type = @"zip";
+    NSFileManager * fm = [NSFileManager defaultManager];
+    NSString * mainDir = [NSString oss_documentDirectory];
+    NSString * newFilePath = [mainDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", uploadFile, type]];
+    if ([fm fileExistsAtPath:newFilePath]) {
+        return;
+    }
+    
+    //获取bundle中的资源内容
+    NSString * uploadPath = [[NSBundle mainBundle] pathForResource:uploadFile ofType:type];
+    
+    NSLog(@"uploadPath: %@, newFilePath: %@", uploadPath, newFilePath);
+    NSData *data = [NSData dataWithContentsOfFile:uploadPath];
+    
+    BOOL result = [data writeToFile:newFilePath atomically:YES];
+    
+    if (result) {
+        NSLog(@"write upload file success");
+    }else {
+        NSLog(@"write upload file failed");
+    }
+}
+
 #pragma mark - putObject
 
 - (void)testAPI_putObjectFromNSData
@@ -106,33 +134,57 @@
 
 - (void)testAPI_putObjectFromFile
 {
-    for (NSUInteger pIdx = 0; pIdx < _fileNames.count; pIdx++)
-    {
-        NSString *objectKey = _fileNames[pIdx];
-        NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
-        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-        
-        OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-        request.bucketName = OSS_BUCKET_PRIVATE;
-        request.objectKey = objectKey;
-        request.uploadingFileURL = fileURL;
-        request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-        request.crcFlag = OSSRequestCRCOpen;
-        
-        request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-            NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        };
-        
-        OSSTask * task = [_client putObject:request];
-        [[task continueWithBlock:^id(OSSTask *task) {
-            XCTAssertNil(task.error);
-            BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
-                                              objectKey:objectKey
-                                          localFilePath:filePath];
-            XCTAssertTrue(isEqual);
-            return nil;
-        }] waitUntilFinished];
-    }
+    NSString *objectKey = _fileNames[0];
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = objectKey;
+    request.uploadingFileURL = fileURL;
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.crcFlag = OSSRequestCRCOpen;
+    
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    OSSTask * task = [_client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
+                                          objectKey:objectKey
+                                      localFilePath:filePath];
+        XCTAssertTrue(isEqual);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)test_putObjectFromFileWithCRC
+{
+    NSString *fileName = @"guihua.zip";
+    NSString *objectKey = @"putObject-guihua.zip";
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:fileName];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = objectKey;
+    request.uploadingFileURL = fileURL;
+    request.crcFlag = OSSRequestCRCOpen;
+//    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+//        NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+//    };
+    
+    OSSTask * task = [_client putObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
+                                          objectKey:objectKey
+                                      localFilePath:filePath];
+        XCTAssertTrue(isEqual);
+        return nil;
+    }] waitUntilFinished];
 }
 
 - (void)testAPI_putObjectToPublicBucketFromFile

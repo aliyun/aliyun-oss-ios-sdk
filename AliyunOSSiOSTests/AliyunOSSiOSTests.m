@@ -90,7 +90,6 @@ id<OSSCredentialProvider> credential, authCredential;
     }else {
         NSLog(@"write upload file failed");
     }
-    
 }
 
 - (void)initOSSClient {
