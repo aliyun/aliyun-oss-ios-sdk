@@ -548,7 +548,7 @@ static NSObject * lock;
     }
     NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
     
-    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
+//    [self enableCRC64WithFlag:request.crcFlag requestDelegate:requestDelegate];
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCompleteMultipartUpload];
     responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
     requestDelegate.responseParser = responseParser;
@@ -774,7 +774,7 @@ static NSObject * lock;
             request.crcFlag = OSSRequestCRCClosed;
         }
     }
-    
+    OSSLogVerbose(@"multipartUpload request.crcFlag %lu: ",request.crcFlag);
     __block uint64_t expectedUploadLength = 0;
     __block uint64_t partCount;
     __block OSSTask *errorTask;
@@ -906,9 +906,11 @@ static NSObject * lock;
     if (completeTask.error)
     {
         return completeTask;
-    } else
+    }
+    else
     {
         NSString *localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:request.uploadId];
+        OSSLogVerbose(@"MultipartUpload local_crc64 %@",localPartInfosPath);
         if (localPartInfosPath)
         {
             NSError *deleteError;
@@ -919,12 +921,14 @@ static NSObject * lock;
         }
         
         OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-        if (complete.crcFlag == OSSRequestCRCOpen)
+        if (complete.crcFlag == OSSRequestCRCOpen && completeResult.remoteCRC64ecma)
         {
             uint64_t remote_crc64 = 0;
             NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
             if ([scanner scanUnsignedLongLong:&remote_crc64])
             {
+                OSSLogVerbose(@"MultipartUpload local_crc64 %llu",clientCrc64);
+                OSSLogVerbose(@"MultipartUpload remote_crc64 %llu", remote_crc64);
                 if (remote_crc64 != clientCrc64)
                 {
                     NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",clientCrc64,remote_crc64];
@@ -995,7 +999,7 @@ static NSObject * lock;
         {
             //read saved uploadId
             NSString *recordPathMd5 = [OSSUtil fileMD5String:[request.uploadingFileURL path]];
-            NSData *data = [[NSString stringWithFormat:@"%@%@%@%llu",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *data = [[NSString stringWithFormat:@"%@%@%@%lu",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
             NSString *recordFileName = [OSSUtil dataMD5String:data];
             recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1114,7 +1118,7 @@ static NSObject * lock;
                 }
             }
         }
-        OSSLogVerbose(@"resumableUpload local_crc64 %llu: ",local_crc64);
+        
         
         OSSCompleteMultipartUploadRequest * complete = [OSSCompleteMultipartUploadRequest new];
         complete.bucketName = request.bucketName;
@@ -1135,8 +1139,8 @@ static NSObject * lock;
         OSSTask * completeTask = [self completeMultipartUpload:complete];
         [completeTask waitUntilFinished];
         
-        
         if (completeTask.error) {
+            OSSLogVerbose(@"completeTask.error %@: ",completeTask.error);
             return completeTask;
         } else
         {
@@ -1158,12 +1162,14 @@ static NSObject * lock;
                 }
             }
             OSSCompleteMultipartUploadResult * completeResult = completeTask.result;
-            if (complete.crcFlag == OSSRequestCRCOpen)
+            if (complete.crcFlag == OSSRequestCRCOpen && completeResult.remoteCRC64ecma)
             {
                 uint64_t remote_crc64 = 0;
                 NSScanner *scanner = [NSScanner scannerWithString:completeResult.remoteCRC64ecma];
                 if ([scanner scanUnsignedLongLong:&remote_crc64])
                 {
+                    OSSLogVerbose(@"resumableUpload local_crc64 %llu",local_crc64);
+                    OSSLogVerbose(@"resumableUpload remote_crc64 %llu", remote_crc64);
                     if (remote_crc64 != local_crc64)
                     {
                         NSString *errorMessage = [NSString stringWithFormat:@"local_crc64(%llu) is not equal to remote_crc64(%llu)!",local_crc64,remote_crc64];

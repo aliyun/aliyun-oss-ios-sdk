@@ -26,7 +26,6 @@
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpOSSClient];
     [self setUpLocalFiles];
-    [self initUploadFile];
 }
 
 - (void)tearDown {
@@ -37,7 +36,7 @@
 - (void)setUpOSSClient
 {
     OSSClientConfiguration *config = [OSSClientConfiguration new];
-//    config.crc64Verifiable = YES;
+    config.crc64Verifiable = YES;
     
     OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
     _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
@@ -134,37 +133,39 @@
 
 - (void)testAPI_putObjectFromFile
 {
-    NSString *objectKey = _fileNames[0];
-    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
-    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-    
-    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
-    request.objectKey = objectKey;
-    request.uploadingFileURL = fileURL;
-    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    request.crcFlag = OSSRequestCRCOpen;
-    
-    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-    
-    OSSTask * task = [_client putObject:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
-                                          objectKey:objectKey
-                                      localFilePath:filePath];
-        XCTAssertTrue(isEqual);
-        return nil;
-    }] waitUntilFinished];
+    for (NSUInteger pIdx = 0; pIdx < _fileNames.count; pIdx++)
+    {
+        NSString *objectKey = _fileNames[0];
+        NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
+        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+        
+        OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+        request.bucketName = OSS_BUCKET_PRIVATE;
+        request.objectKey = objectKey;
+        request.uploadingFileURL = fileURL;
+        request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+        request.crcFlag = OSSRequestCRCOpen;
+        
+        request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+            NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        };
+        
+        OSSTask * task = [_client putObject:request];
+        [[task continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
+                                              objectKey:objectKey
+                                          localFilePath:filePath];
+            XCTAssertTrue(isEqual);
+            return nil;
+        }] waitUntilFinished];
+    }
 }
 
 - (void)test_putObjectFromFileWithCRC
 {
-    NSString *fileName = @"guihua.zip";
     NSString *objectKey = @"putObject-guihua.zip";
-    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:fileName];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"guihua" ofType:@"zip"];;
     NSURL * fileURL = [NSURL fileURLWithPath:filePath];
     
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
@@ -172,9 +173,6 @@
     request.objectKey = objectKey;
     request.uploadingFileURL = fileURL;
     request.crcFlag = OSSRequestCRCOpen;
-//    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-//        NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-//    };
     
     OSSTask * task = [_client putObject:request];
     [[task continueWithBlock:^id(OSSTask *task) {
