@@ -20,6 +20,7 @@
 		D827E42C1FCD11CC0085380C /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D827E42B1FCD11CC0085380C /* libresolv.tbd */; };
 		D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */; };
 		D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */; };
+		D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */; };
 		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
 		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
@@ -113,6 +114,7 @@
 		D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSBucketTests.m; sourceTree = "<group>"; };
 		D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSObjectTests.m; sourceTree = "<group>"; };
 		D829F3B11FDE72A200A8C2DC /* OSSTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSTestMacros.h; sourceTree = "<group>"; };
+		D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSCrc64Tests.m; sourceTree = "<group>"; };
 		D83D58501FC680840022761B /* OSSRangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSRangeTests.m; sourceTree = "<group>"; };
 		D83D58511FC680840022761B /* OSSCredentialProviderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSCredentialProviderTests.m; sourceTree = "<group>"; };
 		D83D58521FC680850022761B /* OSSModelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSModelTests.m; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */,
 				D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */,
 				D829F3B11FDE72A200A8C2DC /* OSSTestMacros.h */,
+				D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -518,6 +521,7 @@
 				D87183C41FC572C6000DD9EC /* OSSTaskTests.m in Sources */,
 				D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */,
 				D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */,
+				D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */,
 				D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */,
 				D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */,
 				D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */,
