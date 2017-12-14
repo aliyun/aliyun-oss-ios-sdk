@@ -40,7 +40,7 @@
 + (NSString*)buildNetWorkConnectedMsg;
 + (NSString*)buildOperatorMsg;
 
-+ (uint64_t)crc64ecmaWithBuffer:(void *)buffer length:(size_t)len;
++ (uint64_t)crc64ecma:(uint64_t)crc1 buffer:(void *)buffer length:(size_t)len;
 
 /**
  * @brief: combine crc1 and crc2
