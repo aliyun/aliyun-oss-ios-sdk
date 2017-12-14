@@ -112,6 +112,54 @@
     }
 }
 
+- (void)testA_appendObject{
+    OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
+    delete.bucketName = OSS_BUCKET_PRIVATE;
+    delete.objectKey = @"appendObject";
+    OSSTask * task = [_client deleteObject:delete];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSDeleteObjectResult * result = task.result;
+        XCTAssertEqual(204, result.httpResponseCode);
+        return nil;
+    }] waitUntilFinished];
+    
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[0]];
+    OSSAppendObjectRequest * request = [OSSAppendObjectRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = @"appendObject";
+    request.appendPosition = 0;
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    __block int64_t nextAppendPosition = 0;
+    __block NSString *lastCrc64ecma;
+    task = [_client appendObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSAppendObjectResult * result = task.result;
+        nextAppendPosition = result.xOssNextAppendPosition;
+        lastCrc64ecma = result.remoteCRC64ecma;
+        return nil;
+    }] waitUntilFinished];
+    
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = @"appendObject";
+    request.appendPosition = nextAppendPosition;
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    
+    task = [_client appendObject:request withCrc64ecma:lastCrc64ecma];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)test_getObject
 {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
