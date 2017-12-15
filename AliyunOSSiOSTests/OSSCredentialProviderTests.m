@@ -68,7 +68,7 @@
     OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
     OSSHeadObjectRequest *request = [OSSHeadObjectRequest new];
     request.bucketName = OSS_BUCKET_PRIVATE;
-    request.objectKey = @"hasky.jpeg";
+    request.objectKey = OSS_IMAGE_KEY;
     OSSTask *task = [client headObject:request];
     [task waitUntilFinished];
     

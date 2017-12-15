@@ -435,7 +435,7 @@
 {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = OSS_BUCKET_PRIVATE;
-    request.objectKey = @"hasky.jpeg";
+    request.objectKey = OSS_IMAGE_KEY;
     request.xOssProcess = @"image/resize,m_lfit,w_100,h_100";
     
     request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
