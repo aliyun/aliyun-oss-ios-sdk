@@ -204,8 +204,8 @@
 
 
 - (void)testMultipartUpload_normal {
-    NSString * objectkey = @"mul-guihua.zip";
-    NSString * uploadFile = @"guihua.zip";
+    NSString * objectkey = @"mul-wangwang.zip";
+    NSString * uploadFile = @"wangwang.zip";
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     
     multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
@@ -234,8 +234,8 @@
 }
 
 - (void)test_resumbleUpload_cancel_resumble {
-    NSString * objectkey = @"res-guihua.zip";
-    NSString * uploadFile = @"guihua.zip";
+    NSString * objectkey = @"res-wangwang.zip";
+    NSString * uploadFile = @"wangwang.zip";
     __block bool cancel = NO;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = OSS_BUCKET_PRIVATE;

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D1F297EF1FE24FF3005E0B5D /* guihua.zip in Resources */ = {isa = PBXBuildFile; fileRef = D1F297EE1FE24FF3005E0B5D /* guihua.zip */; };
 		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
 		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
 		D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D827E4141FCD0FC60085380C /* Assets.xcassets */; };
@@ -95,7 +94,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D1F297EE1FE24FF3005E0B5D /* guihua.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = guihua.zip; sourceTree = "<group>"; };
 		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D827E40F1FCD0FC60085380C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -272,7 +270,6 @@
 			isa = PBXGroup;
 			children = (
 				D83D58F91FC700C70022761B /* test.xml */,
-				D1F297EE1FE24FF3005E0B5D /* guihua.zip */,
 				D83D58FA1FC700C70022761B /* wangwang.zip */,
 			);
 			path = Resources;
@@ -462,7 +459,6 @@
 			files = (
 				D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */,
 				D83D58FC1FC700C70022761B /* wangwang.zip in Resources */,
-				D1F297EF1FE24FF3005E0B5D /* guihua.zip in Resources */,
 				D83D58FB1FC700C70022761B /* test.xml in Resources */,
 				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
 				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,

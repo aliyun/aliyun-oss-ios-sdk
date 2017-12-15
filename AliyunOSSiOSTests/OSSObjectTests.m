@@ -78,31 +78,6 @@
     OSSLogVerbose(@"document directory path is: %@", documentDirectory);
 }
 
-- (void)initUploadFile{
-    NSString * uploadFile = @"guihua";
-    NSString * type = @"zip";
-    NSFileManager * fm = [NSFileManager defaultManager];
-    NSString * mainDir = [NSString oss_documentDirectory];
-    NSString * newFilePath = [mainDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", uploadFile, type]];
-    if ([fm fileExistsAtPath:newFilePath]) {
-        return;
-    }
-    
-    //获取bundle中的资源内容
-    NSString * uploadPath = [[NSBundle mainBundle] pathForResource:uploadFile ofType:type];
-    
-    NSLog(@"uploadPath: %@, newFilePath: %@", uploadPath, newFilePath);
-    NSData *data = [NSData dataWithContentsOfFile:uploadPath];
-    
-    BOOL result = [data writeToFile:newFilePath atomically:YES];
-    
-    if (result) {
-        NSLog(@"write upload file success");
-    }else {
-        NSLog(@"write upload file failed");
-    }
-}
-
 #pragma mark - putObject
 
 - (void)testAPI_putObjectFromNSData
@@ -164,8 +139,8 @@
 
 - (void)test_putObjectFromFileWithCRC
 {
-    NSString *objectKey = @"putObject-guihua.zip";
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"guihua" ofType:@"zip"];;
+    NSString *objectKey = @"putObject-wangwang.zip";
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"wangwang" ofType:@"zip"];;
     NSURL * fileURL = [NSURL fileURLWithPath:filePath];
     
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
