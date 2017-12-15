@@ -1055,15 +1055,28 @@ static NSObject * lock;
         NSMutableArray * alreadyUploadIndex = [NSMutableArray new];
     
         [uploadedPart enumerateObjectsUsingBlock:^(NSDictionary *partInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-            int32_t partNumber = (int32_t)[[partInfo objectForKey:OSSPartNumberXMLTOKEN] intValue];
-            NSString *eTag = [partInfo objectForKey:OSSETagXMLTOKEN];
-            int64_t size = (int64_t)[[partInfo objectForKey:OSSSizeXMLTOKEN] longLongValue];
+            unsigned long long iPartNum = 0;
+            NSString *partNumberString = [partInfo objectForKey:OSSPartNumberXMLTOKEN];
+            NSScanner *scanner = [NSScanner scannerWithString:partNumberString];
+            [scanner scanUnsignedLongLong:&iPartNum];
+
+            unsigned long long iPartSize = 0;
+            NSString *partSizeString = [partInfo objectForKey:OSSSizeXMLTOKEN];
+            scanner = [NSScanner scannerWithString:partSizeString];
+            [scanner scanUnsignedLongLong:&iPartSize];
             
-            OSSPartInfo * info = [OSSPartInfo partInfoWithPartNum:partNumber
-                                                                 eTag:eTag
-                                                                 size:size
-                                                                crc64:0];
-            NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%d",partNumber]];
+            NSString *eTag = [partInfo objectForKey:OSSETagXMLTOKEN];
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+            
+            OSSPartInfo * info = [OSSPartInfo partInfoWithPartNum:iPartNum
+                                                             eTag:eTag
+                                                             size:iPartSize
+                                                            crc64:0];
+#pragma clang diagnostic pop
+            
+            NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%zi",iPartNum]];
             if (tPartInfo)
             {
                 info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
@@ -1110,12 +1123,9 @@ static NSObject * lock;
         {
             for (NSUInteger index = 0; index< uploadedPartInfos.count; index++)
             {
-                if (local_crc64 != 0) {
-                    local_crc64 = [OSSUtil crc64ForCombineCRC1:local_crc64 CRC2:uploadedPartInfos[index].crc64 length:(size_t)uploadedPartInfos[index].size];
-                }else
-                {
-                    local_crc64 = uploadedPartInfos[index].crc64;
-                }
+                uint64_t partCrc64 = uploadedPartInfos[index].crc64;
+                int64_t partSize = uploadedPartInfos[index].size;
+                local_crc64 = [OSSUtil crc64ForCombineCRC1:local_crc64 CRC2:partCrc64 length:partSize];
             }
         }
         
@@ -1218,14 +1228,21 @@ static NSObject * lock;
         if (result.parts.count) {
             [uploadedParts addObjectsFromArray:result.parts];
         }
-        __block NSUInteger firstPartSize = -1;
+        __block NSUInteger firstPartSize = 0;
         __block NSUInteger bUploadedLength = 0;
         [uploadedParts enumerateObjectsUsingBlock:^(NSDictionary *part, NSUInteger idx, BOOL * _Nonnull stop) {
-            bUploadedLength += [[part objectForKey:OSSSizeXMLTOKEN] unsignedIntegerValue];
+            unsigned long long iPartSize = 0;
+            NSString *partSizeString = [part objectForKey:OSSSizeXMLTOKEN];
+            NSScanner *scanner = [NSScanner scannerWithString:partSizeString];
+            [scanner scanUnsignedLongLong:&iPartSize];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+            bUploadedLength += iPartSize;
             if (idx == 0)
             {
-                firstPartSize = [[part objectForKey:OSSSizeXMLTOKEN] unsignedIntegerValue];
+                firstPartSize = iPartSize;
             }
+#pragma clang diagnostic pop
         }];
         *uploadedLength = bUploadedLength;
         
@@ -1235,7 +1252,7 @@ static NSObject * lock;
                                                               code:OSSClientErrorCodeCannotResumeUpload
                                                           userInfo:@{OSSErrorMessageTOKEN: @"The uploading file is inconsistent with before"}]];
         }
-        else if (firstPartSize != -1 && firstPartSize != partSize)
+        else if (firstPartSize != 0 && firstPartSize != partSize)
         {
             return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                               code:OSSClientErrorCodeCannotResumeUpload
