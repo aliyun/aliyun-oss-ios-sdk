@@ -101,7 +101,7 @@
     [parser setDelegate:self];
     BOOL succeed = [parser parse];
 #ifdef DEBUG
-    NSLog(@"%@",(succeed?@"YES":@"NO"));
+    NSLog(@"dictionaryWithParser %@",(succeed?@"YES":@"NO"));
 #endif
     id result = _root;
     _root = nil;

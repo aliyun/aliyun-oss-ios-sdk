@@ -7,207 +7,132 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <AliyunOSSiOS/OSSModel.h>
-#import <AliyunOSSiOS/OSSTaskCompletionSource.h>
-#import <AliyunOSSiOS/OSSTask.h>
-#import <AliyunOSSiOS/OSSUtil.h>
-
-#define RIGHT_PROVIDER_SERVER @"http://*.*.*.*:****/sts/getsts"
-#define WRONG_PROVIDER_SERVER @"http://*.*.*.*:****/sts/getsts"
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import "OSSTestMacros.h"
 
 @interface OSSCredentialProviderTests : XCTestCase
+{
+    OSSFederationToken *_token;
+}
 
 @end
 
 @implementation OSSCredentialProviderTests
 
-- (void)setUp {
+- (void)setUp
+{
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    [self setUpFederationToken];
 }
 
-- (void)tearDown {
+- (void)tearDown
+{
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+- (void)setUpFederationToken
+{
+    NSURL * url = [NSURL URLWithString:OSS_STSTOKEN_URL];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLSessionDataTask * dataTask = [session dataTaskWithRequest:request
+                                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                     XCTAssertNil(error);
+                                                     [tcs setResult:data];
+                                                 }];
+    [dataTask resume];
+    [tcs.task waitUntilFinished];
+    
+    NSDictionary * result = [NSJSONSerialization JSONObjectWithData:tcs.task.result
+                                                            options:kNilOptions
+                                                              error:nil];
+    XCTAssertNotNil(result);
+    _token = [OSSFederationToken new];
+    _token.tAccessKey = result[@"AccessKeyId"];
+    _token.tSecretKey = result[@"AccessKeySecret"];
+    _token.tToken = result[@"SecurityToken"];
+    _token.expirationTimeInGMTFormat = result[@"Expiration"];
+    
+    NSLog(@"tokenInfo: %@", _token);
+}
+
+- (void)headObjectWithBackgroundSessionIdentifier:(nonnull NSString *)identifier provider:(id<OSSCredentialProvider>)provider
+{
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.backgroundSesseionIdentifier = identifier;
+    config.enableBackgroundTransmitService = YES;
+    
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
+    OSSHeadObjectRequest *request = [OSSHeadObjectRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = OSS_IMAGE_KEY;
+    OSSTask *task = [client headObject:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
 }
 
 - (void)testForFederationCredentialProvider
 {
     OSSFederationCredentialProvider *provider = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken *{
-        NSURL * url = [NSURL URLWithString:RIGHT_PROVIDER_SERVER];
-        NSURLRequest * request = [NSURLRequest requestWithURL:url];
-        OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
-        NSURLSession * session = [NSURLSession sharedSession];
-        NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
-                                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                        if (error) {
-                                                            [tcs setError:error];
-                                                            return;
-                                                        }
-                                                        [tcs setResult:data];
-                                                    }];
-        [sessionTask resume];
-        [tcs.task waitUntilFinished];
-        if (tcs.task.error) {
-            return nil;
-        } else {
-            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
-                                                                    options:kNilOptions
-                                                                      error:nil];
-            XCTAssertNotNil(object);
-            OSSFederationToken * token = [OSSFederationToken new];
-            // All the entries below are mandatory.
-            token.tAccessKey = object[@"AccessKeyId"];
-            token.tSecretKey = object[@"AccessKeySecret"];
-            token.tToken = object[@"SecurityToken"];
-            token.expirationTimeInGMTFormat = object[@"Expiration"];
-            NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
-            return token;
-        }
+        return _token;
     }];
     
-    NSError *error;
-    OSSFederationToken *token = [provider getToken:&error];
-    NSLog(@"token:%@",token);
-    XCTAssertNil(error);
-    
-    NSError *otherError;
-    OSSFederationToken *otherToken = [provider getToken:&otherError];
-    NSLog(@"otherToken:%@",otherToken);
-    XCTAssertNil(otherError);
-}
-
-- (void)testNotGetFederationCredentialProvider
-{
-    OSSFederationCredentialProvider *provider = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken *{
-        NSURL * url = [NSURL URLWithString:WRONG_PROVIDER_SERVER];
-        NSURLRequest * request = [NSURLRequest requestWithURL:url];
-        OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
-        NSURLSession * session = [NSURLSession sharedSession];
-        NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
-                                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                        if (error) {
-                                                            [tcs setError:error];
-                                                            return;
-                                                        }
-                                                        [tcs setResult:data];
-                                                    }];
-        [sessionTask resume];
-        [tcs.task waitUntilFinished];
-        if (tcs.task.error) {
-            return nil;
-        } else {
-            NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
-                                                                    options:kNilOptions
-                                                                      error:nil];
-            XCTAssertNotNil(object);
-            OSSFederationToken * token = [OSSFederationToken new];
-            // All the entries below are mandatory.
-            token.tAccessKey = object[@"AccessKeyId"];
-            token.tSecretKey = object[@"AccessKeySecret"];
-            token.tToken = object[@"SecurityToken"];
-            token.expirationTimeInGMTFormat = object[@"Expiration"];
-            NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
-            return token;
-        }
-    }];
-    
-    NSError *error;
-    OSSFederationToken *token = [provider getToken:&error];
-    NSLog(@"token:%@",token);
-    XCTAssertNotNil(error);
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.federationprovider.identifier" provider:provider];
 }
 
 - (void)testGetStsTokenCredentialProvider
 {
-    NSURL * url = [NSURL URLWithString:RIGHT_PROVIDER_SERVER];
-    NSURLRequest * request = [NSURLRequest requestWithURL:url];
-    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
-    NSURLSession * session = [NSURLSession sharedSession];
-    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
-                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                    if (error) {
-                                                        [tcs setError:error];
-                                                        return;
-                                                    }
-                                                    [tcs setResult:data];
-                                                }];
-    [sessionTask resume];
-    [tcs.task waitUntilFinished];
-    
-    XCTAssertNil(tcs.task.error);
-    NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
-                                                            options:kNilOptions
-                                                              error:nil];
-    XCTAssertNotNil(object);
-    OSSFederationToken * token = [OSSFederationToken new];
-    // All the entries below are mandatory.
-    token.tAccessKey = object[@"AccessKeyId"];
-    token.tSecretKey = object[@"AccessKeySecret"];
-    token.tToken = object[@"SecurityToken"];
-    token.expirationTimeInGMTFormat = object[@"Expiration"];
-    NSLog(@"AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@", token.tAccessKey, token.tSecretKey, token.tToken, token.expirationTimeInGMTFormat);
-    OSSStsTokenCredentialProvider *provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:object[@"AccessKeyId"] secretKeyId:object[@"AccessKeySecret"] securityToken:object[@"SecurityToken"]];
-    OSSFederationToken *federationToken = [provider getToken];
-    XCTAssertNotNil(federationToken.tAccessKey);
-    XCTAssertNotNil(federationToken.tSecretKey);
-    XCTAssertNotNil(federationToken.tToken);
-    
-    NSError *signError;
-    NSString *signedString = [provider sign:@"hello world" error:&signError];
-    NSLog(@"signedString: %@",signedString);
-    XCTAssertNil(signError);
+    OSSStsTokenCredentialProvider *provider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:_token.tAccessKey secretKeyId:_token.tSecretKey securityToken:_token.tToken];
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.ststokencredentialprovider.identifier" provider:provider];
 }
 
 - (void)testCustomSignerCredentialProvider
 {
-    NSURL * url = [NSURL URLWithString:RIGHT_PROVIDER_SERVER];
-    NSURLRequest * request = [NSURLRequest requestWithURL:url];
-    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
-    NSURLSession * session = [NSURLSession sharedSession];
-    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
-                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                    if (error) {
-                                                        [tcs setError:error];
-                                                        return;
-                                                    }
-                                                    [tcs setResult:data];
-                                                }];
-    [sessionTask resume];
-    [tcs.task waitUntilFinished];
-    
-    XCTAssertNil(tcs.task.error);
-    NSDictionary * object = [NSJSONSerialization JSONObjectWithData:tcs.task.result
-                                                            options:kNilOptions
-                                                              error:nil];
-    XCTAssertNotNil(object);
-    OSSFederationToken * token = [OSSFederationToken new];
-    // All the entries below are mandatory.
-    token.tAccessKey = object[@"AccessKeyId"];
-    token.tSecretKey = object[@"AccessKeySecret"];
-    token.tToken = object[@"SecurityToken"];
-    token.expirationTimeInGMTFormat = object[@"Expiration"];
-    
     OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-        /** 用户将需要签名的字符串上传给自己的业务服务器，服务器进行签名之后返回给客户端 */
+        
+        OSSFederationToken *token = [OSSFederationToken new];
+        token.tAccessKey = OSS_ACCESSKEY_ID;
+        token.tSecretKey = OSS_SECRETKEY_ID;
+        
         NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
         return signedContent;
     }];
     
-    NSError *error;
-    NSString *signedString = [provider sign:@"hello world" error:&error];
-    NSLog(@"signedString: %@",signedString);
-    XCTAssertNil(error);
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.customsignercredentialprovider.identifier" provider:provider];
 }
 
 -(void)testPlainTextAKSKPairCredentialProvider
 {
     // invalid credentialProvider
-    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:nil secretKey:nil];
-    NSError *error;
-    NSString *signedString = [provider sign:@"hello world" error:&error];
-    NSLog(@"signedString: %@",signedString);
-    XCTAssertNotNil(error);
+    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.plainakskpaircredentialprovider.identifier" provider:provider];
+}
+
+-(void)testAuthCredentialProvider
+{
+    // invalid credentialProvider
+    OSSAuthCredentialProvider *provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.authcredentialprovider.identifier" provider:provider];
+}
+
+- (void)testAuthCredentialProviderWithDecoder
+{
+    id<OSSCredentialProvider> provider =
+    [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL responseDecoder:^NSData *(NSData *data) {
+        NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSData* decodeData = [str dataUsingEncoding:NSUTF8StringEncoding];
+        if (decodeData) {
+            return decodeData;
+        }
+        return data;
+    }];
+    
+    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.authcredentialproviderwithdecoder.identifier" provider:provider];
 }
 
 @end

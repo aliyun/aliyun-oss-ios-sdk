@@ -13,6 +13,8 @@
 @class OSSTask;
 @class OSSClientConfiguration;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetService,
     OSSOperationTypeCreateBucket,
@@ -41,20 +43,27 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
     OSSClientErrorCodeNilUploadid,
     OSSClientErrorCodeTaskCancelled,
     OSSClientErrorCodeNetworkError,
+    OSSClientErrorCodeInvalidCRC,
     OSSClientErrorCodeCannotResumeUpload,
     OSSClientErrorCodeExcpetionCatched,
     OSSClientErrorCodeNotKnown
 };
 
+typedef NS_ENUM(NSUInteger, OSSRequestCRCFlag) {
+    OSSRequestCRCUninitialized,
+    OSSRequestCRCOpen,
+    OSSRequestCRCClosed
+};
+
 typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
 typedef void (^OSSNetworkingDownloadProgressBlock) (int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
 typedef void (^OSSNetworkingRetryBlock) (void);
-typedef void (^OSSNetworkingCompletionHandlerBlock) (id responseObject, NSError *error);
+typedef void (^OSSNetworkingCompletionHandlerBlock) (id _Nullable responseObject, NSError * _Nullable error);
 typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
 
-typedef NSString * (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
-typedef OSSFederationToken * (^OSSGetFederationTokenBlock) (void);
-typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
+typedef NSString* _Nullable (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
+typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
+typedef NSData * _Nullable (^OSSResponseDecoderBlock) (NSData * data);
 
 /**
  Categories NSDictionary
@@ -102,7 +111,7 @@ typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 /**
  Token's expiration time in GMT format string.
  */
-@property (atomic, strong) NSString * expirationTimeInGMTFormat;
+@property (atomic, strong, nullable) NSString *expirationTimeInGMTFormat;
 @end
 
 /**
@@ -110,7 +119,7 @@ typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
  */
 @protocol OSSCredentialProvider <NSObject>
 @optional
-- (NSString *)sign:(NSString *)content error:(NSError **)error;
+- (nullable NSString *)sign:(NSString *)content error:(NSError **)error;
 @end
 
 /**
@@ -121,8 +130,8 @@ typedef NSData * (^OSSResponseDecoderBlock) (NSData * data);
 @property (nonatomic, strong) NSString * accessKey;
 @property (nonatomic, strong) NSString * secretKey;
 
-- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey
-                                 secretKey:(NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
+- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey
+                                 secretKey:(nonnull NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
 @end
 
 /**
@@ -130,13 +139,16 @@ TODOTODO
  The custom signed credential provider
  */
 @interface OSSCustomSignerCredentialProvider : NSObject <OSSCredentialProvider>
-@property (nonatomic, copy) NSString * (^signContent)(NSString *, NSError **);
+@property (nonatomic, copy, readonly,) NSString * _Nonnull (^ _Nonnull signContent)( NSString * _Nonnull , NSError * _Nullable *_Nullable);
+
++ (instancetype _Nullable)new NS_UNAVAILABLE;
+- (instancetype _Nullable)init NS_UNAVAILABLE;
 
 /**
- During the task execution, this API is called for signing
- It's executed at the background thread instead of UI thread.
+ * During the task execution, this API is called for signing
+ * It's executed at the background thread instead of UI thread.
  */
-- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent;
+- (instancetype _Nullable)initWithImplementedSigner:(nonnull OSSCustomSignContentBlock)signContent NS_DESIGNATED_INITIALIZER;
 @end
 
 /**
@@ -152,7 +164,7 @@ TODOTODO
  It runs in the background thread, not the UI thread.
  */
 - (instancetype)initWithFederationTokenGetter:(OSSGetFederationTokenBlock)federationTokenGetter;
-- (OSSFederationToken *)getToken:(NSError **)error;
+- (nullable OSSFederationToken *)getToken:(NSError **)error;
 @end
 
 /**
@@ -176,7 +188,7 @@ TODOTODO
 @property (nonatomic, strong) NSString * authServerUrl;
 @property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
-- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
 @end
 
 /**
@@ -235,6 +247,11 @@ Sets the session Id for background file transmission
  Sets CName excluded list.
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;
+
+/**
+ 是否开启crc校验(当同时设置了此选项和请求中的checkCRC开关时，以请求中的checkCRC开关为准)
+ */
+@property (nonatomic, assign) BOOL crc64Verifiable;
 
 @end
 
@@ -299,6 +316,12 @@ Sets the session Id for background file transmission
 @property (nonatomic, assign) BOOL isCancelled;
 
 /**
+ 开启crc校验的标志位(默认值0代表未设置,此时会以clientConfiguration中的开关为准,1代表开启crc64
+ 验证,2代表关闭crc64的验证。
+ */
+@property (nonatomic, assign) OSSRequestCRCFlag crcFlag;
+
+/**
  Cancels the request
  */
 - (void)cancel;
@@ -324,6 +347,17 @@ The request Id. It's the value of header x-oss-request-id, which is created from
 It's a unique Id represents this request. This is used for troubleshooting when you contact OSS support.
  */
 @property (nonatomic, strong) NSString * requestId;
+
+/**
+ It's the value of header x-oss-hash-crc64ecma, which is created from OSS server.
+ */
+@property (nonatomic, copy) NSString *remoteCRC64ecma;
+
+/**
+ It's the value of local Data.
+ */
+@property (nonatomic, copy) NSString *localCRC64ecma;
+
 @end
 
 /**
@@ -397,7 +431,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 /**
  The container of the buckets. It's a dictionary array, in which every element has keys "Name", "CreationDate" and "Location".
  */
-@property (nonatomic, strong) NSArray * buckets;
+@property (nonatomic, strong, nullable) NSArray * buckets;
 @end
 
 /**
@@ -406,7 +440,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @interface OSSCreateBucketRequest : OSSRequest
 
 /**
- The bucket name
+ *  存储空间,命名规范如下:(1)只能包括小写字母、数字和短横线(-);(2)必须以小写字母或者数字开头和结尾;(3)长度必须在3-63字节之间.
  */
 @property (nonatomic, strong) NSString * bucketName;
 
@@ -417,9 +451,10 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
 
 /**
- Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private.
+ Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private. if this key is not set, the default value is private
  */
 @property (nonatomic, strong) NSString * xOssACL;
+
 @end
 
 /**
@@ -535,7 +570,7 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 /**
  The dictionary arrary, in which each dictionary has keys of "Key", "LastModified", "ETag", "Type", "Size", "StorageClass" and "Owner".
  */
-@property (nonatomic, strong) NSArray * contents;
+@property (nonatomic, strong, nullable) NSArray * contents;
 
 /**
  The arrary of common prefixes. Each element is one common prefix.
@@ -754,8 +789,9 @@ It's a unique Id represents this request. This is used for troubleshooting when 
 @interface OSSPutObjectACLRequest : OSSPutObjectRequest
 
 /**
+ *@brief:指定oss创建object时的访问权限,合法值:public-read、private、public-read-write
  */
-@property (nonatomic, strong) NSString * acl;
+@property (nonatomic, copy, nullable) NSString *acl;
 
 @end
 
@@ -818,7 +854,7 @@ It's the MD5 value for put object request. If the object is created by other API
  The content's MD5 digest value.
  It's calculated from the MD5 value of the request body according to RFC 1864 and then encoded by base64.
  */
-@property (nonatomic, strong) NSString * contentMd5;
+@property (nonatomic, strong) NSString *contentMd5;
 
 /**
  The object's name during the download according to RFC 2616.
@@ -1070,7 +1106,7 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  The Part information. It's called by CompleteMultipartUpload().
  */
-@interface OSSPartInfo : NSObject
+@interface OSSPartInfo : NSObject<NSCopying>
 
 /**
  The part number in this part upload.
@@ -1087,9 +1123,13 @@ It's the MD5 value for put object request. If the object is created by other API
  */
 @property (nonatomic, assign) int64_t size;
 
-+ (instancetype)partInfoWithPartNum:(int32_t)partNum
-                               eTag:(NSString *)eTag
-                               size:(int64_t)size;
+@property (nonatomic, assign) uint64_t crc64;
+
++ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size __attribute__((deprecated("Use partInfoWithPartNum:eTag:size:crc64: to instead!")));
++ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size crc64:(uint64_t)crc64;
+
+- (nonnull NSDictionary *)entityToDictionary;
+
 @end
 
 /**
@@ -1218,7 +1258,7 @@ The result class of listing uploaded parts.
 /**
  The array of the part information.
  */
-@property (nonatomic, strong) NSArray * parts;
+@property (nonatomic, strong, nullable) NSArray * parts;
 @end
 
 /**
@@ -1276,7 +1316,7 @@ The result class of listing uploaded parts.
 /**
  The part size, minimal value is 100KB.
  */
-@property (nonatomic, assign) int64_t partSize;
+@property (nonatomic, assign) NSUInteger partSize;
 
 /**
  Upload progress callback.
@@ -1351,10 +1391,14 @@ The result class of listing uploaded parts.
 @interface OSSHttpResponseParser : NSObject
 @property (nonatomic, strong) NSURL * downloadingFileURL;
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveBlock;
+/** 是否开启crc64校验 */
+@property (nonatomic, assign) BOOL crc64Verifiable;
 
 - (instancetype)initForOperationType:(OSSOperationType)operationType;
 - (void)consumeHttpResponse:(NSHTTPURLResponse *)response;
 - (OSSTask *)consumeHttpResponseBody:(NSData *)data;
-- (id)constructResultObject;
+- (nullable id)constructResultObject;
 - (void)reset;
 @end
+
+NS_ASSUME_NONNULL_END

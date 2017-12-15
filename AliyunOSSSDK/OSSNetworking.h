@@ -92,6 +92,21 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, copy) OSSNetworkingCompletionHandlerBlock completionHandler;
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveData;
 
+/**
+ 本地计算的数据的crc值(只有当上传操作时才会设置此值),version2.7.2开始添加
+ */
+@property (nonatomic, copy) NSString *contentCRC;
+
+/** 上一次的crc值 */
+@property (nonatomic, copy) NSString *lastCRC;
+
+/**
+ 是否开启crc校验,version2.7.2开始添加
+ */
+@property (nonatomic, assign) BOOL crc64Verifiable;
+
+
+
 - (OSSTask *)buildInternalHttpRequest;
 - (void)reset;
 - (void)cancel;
@@ -131,7 +146,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 /**
  The network interface which OSSClient uses for network read and write operations.
  */
-@interface OSSNetworking : NSObject <NSURLSessionDelegate>
+@interface OSSNetworking : NSObject <NSURLSessionDelegate, NSURLSessionDataDelegate>
 @property (nonatomic, strong) NSURLSession * dataSession;
 @property (nonatomic, strong) NSURLSession * uploadFileSession;
 @property (nonatomic, assign) BOOL isUsingBackgroundSession;
