@@ -36,7 +36,6 @@
 		D83D58DA1FC6B4450022761B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
 		D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D83D58DD1FC6B61F0022761B /* Assets.xcassets */; };
 		D83D58E21FC6B61F0022761B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58DF1FC6B61F0022761B /* main.m */; };
-		D83D58E31FC6B61F0022761B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E01FC6B61F0022761B /* Info.plist */; };
 		D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E41FC6B6D90022761B /* Main.storyboard */; };
 		D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83D58E61FC6B6D90022761B /* LaunchScreen.storyboard */; };
 		D83D58EB1FC6C0C70022761B /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83D58EA1FC6C0C70022761B /* AliyunOSSiOS.framework */; };
@@ -52,7 +51,6 @@
 		D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */; };
 		D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */; };
 		D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */; };
-		D87183C81FC572C6000DD9EC /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D87183C01FC572C6000DD9EC /* Info.plist */; };
 		D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */; };
 		D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
@@ -405,7 +403,7 @@
 		D87182AD1FC55611000DD9EC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "阿里云";
 				TargetAttributes = {
 					D827E40B1FCD0FC60085380C = {
@@ -467,7 +465,6 @@
 				D1F297EF1FE24FF3005E0B5D /* guihua.zip in Resources */,
 				D83D58FB1FC700C70022761B /* test.xml in Resources */,
 				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
-				D83D58E31FC6B61F0022761B /* Info.plist in Resources */,
 				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,7 +473,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87183C81FC572C6000DD9EC /* Info.plist in Resources */,
 				D8C41A641FCC002C0091699B /* test.xml in Resources */,
 				D83D58F21FC6C1F40022761B /* sts.py in Resources */,
 				D8C41A651FCC003A0091699B /* wangwang.zip in Resources */,

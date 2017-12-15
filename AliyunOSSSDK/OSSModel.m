@@ -138,7 +138,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return self;
 }
 
-- (NSString *)sign:(NSString *)content error:(NSError **)error {
+- (nullable NSString *)sign:(NSString *)content error:(NSError **)error {
     if (![self.accessKey oss_isNotEmpty] || ![self.secretKey oss_isNotEmpty])
     {
         if (error != nil)
@@ -194,7 +194,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return self;
 }
 
-- (OSSFederationToken *)getToken:(NSError **)error {
+- (nullable OSSFederationToken *)getToken:(NSError **)error {
     OSSFederationToken * validToken = nil;
     @synchronized(self) {
         if (self.cachedToken == nil) {
@@ -271,7 +271,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return [self initWithAuthServerUrl:authServerUrl responseDecoder:nil];
 }
 
-- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder
 {
     self = [super initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:self.authServerUrl];
@@ -1010,7 +1010,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return meta;
 }
 
-- (id)constructResultObject
+- (nullable id)constructResultObject
 {
     if (self.onRecieveBlock)
     {

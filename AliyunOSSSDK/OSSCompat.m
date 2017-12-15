@@ -202,7 +202,7 @@
 
 - (OSSTaskHandler *)resumableUploadFile:(NSString *)filePath
                         withContentType:(NSString *)contentType
-                         withObjectMeta:(NSDictionary * _Nullable)meta
+                         withObjectMeta:(NSDictionary *)meta
                            toBucketName:(NSString *)bucketName
                             toObjectKey:(NSString *)objectKey
                             onCompleted:(void(^)(BOOL, NSError *))onComplete

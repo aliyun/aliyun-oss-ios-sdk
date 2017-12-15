@@ -612,7 +612,7 @@ static NSObject * lock;
     
     if(request.recordDirectoryPath){
         NSString *recordPathMd5 = [OSSUtil fileMD5String:[request.uploadingFileURL path]];
-        NSData *data = [[NSString stringWithFormat:@"%@%@%@%lld",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *data = [[NSString stringWithFormat:@"%@%@%@%zi",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
         NSString *recordFileName = [OSSUtil dataMD5String:data];
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -774,9 +774,9 @@ static NSObject * lock;
             request.crcFlag = OSSRequestCRCClosed;
         }
     }
-    OSSLogVerbose(@"multipartUpload request.crcFlag %lu: ",request.crcFlag);
-    __block uint64_t expectedUploadLength = 0;
-    __block uint64_t partCount;
+    OSSLogVerbose(@"multipartUpload request.crcFlag %zi: ",request.crcFlag);
+    __block NSUInteger expectedUploadLength = 0;
+    __block NSUInteger partCount;
     __block OSSTask *errorTask;
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
@@ -799,7 +799,7 @@ static NSObject * lock;
                                           userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled!"}];
         });
         
-        __block uint64_t uploadedLength = 0;
+        __block NSUInteger uploadedLength = 0;
         
         // 1.初始化上传条件,获取UploadId用于后续的每一片上传
         OSSInitMultipartUploadRequest * init = [OSSInitMultipartUploadRequest new];
@@ -815,7 +815,7 @@ static NSObject * lock;
         
         NSFileManager * fm = [NSFileManager defaultManager];
         NSError * error = nil;;
-        uint64_t uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] unsignedLongLongValue];
+        NSUInteger uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] unsignedIntegerValue];
         expectedUploadLength = uploadFileSize;
         if (error) {
             return [OSSTask taskWithError:error];
@@ -824,7 +824,7 @@ static NSObject * lock;
         BOOL divisible = (expectedUploadLength % request.partSize == 0);
         partCount = (expectedUploadLength / request.partSize) + (divisible? 0 : 1);
         
-        UInt16 maxPartCount = 5000;    //最大分片数量是5k
+        NSUInteger maxPartCount = 5000;    //最大分片数量是5k
         
         if(partCount > maxPartCount)
         {
@@ -956,7 +956,7 @@ static NSObject * lock;
             request.crcFlag = OSSRequestCRCClosed;
         }
     }
-    OSSLogVerbose(@"resumableUpload request.crcFlag %lu: ",request.crcFlag);
+    OSSLogVerbose(@"resumableUpload request.crcFlag %zi: ",request.crcFlag);
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
         if (!request.objectKey || !request.bucketName || !request.uploadingFileURL) {
@@ -979,13 +979,13 @@ static NSObject * lock;
                                           userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled!"}];
         });
         
-        __block uint64_t uploadedLength = 0;
+        __block NSUInteger uploadedLength = 0;
         __block OSSTask * errorTask;
         __block NSString *uploadId;
         
         NSFileManager * fm = [NSFileManager defaultManager];
         NSError * error = nil;
-        int64_t uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] unsignedLongLongValue];
+        NSUInteger uploadFileSize = [[[fm attributesOfItemAtPath:[request.uploadingFileURL path] error:&error] objectForKey:NSFileSize] unsignedIntegerValue];
         if (error) {
             return [OSSTask taskWithError:error];
         }
@@ -999,7 +999,7 @@ static NSObject * lock;
         {
             //read saved uploadId
             NSString *recordPathMd5 = [OSSUtil fileMD5String:[request.uploadingFileURL path]];
-            NSData *data = [[NSString stringWithFormat:@"%@%@%@%lu",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *data = [[NSString stringWithFormat:@"%@%@%@%zi",recordPathMd5,request.bucketName,request.objectKey,request.partSize] dataUsingEncoding:NSUTF8StringEncoding];
             NSString *recordFileName = [OSSUtil dataMD5String:data];
             recordFilePath = [NSString stringWithFormat:@"%@/%@",request.recordDirectoryPath,recordFileName];
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1192,7 +1192,7 @@ static NSObject * lock;
     }];
 }
 
-- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(uint64_t *)uploadedLength totalSize:(uint64_t)totalSize partSize:(uint64_t)partSize
+- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(NSUInteger)totalSize partSize:(NSUInteger)partSize
 {
     OSSListPartsRequest * listParts = [OSSListPartsRequest new];
     listParts.bucketName = bucket;
@@ -1218,13 +1218,13 @@ static NSObject * lock;
         if (result.parts.count) {
             [uploadedParts addObjectsFromArray:result.parts];
         }
-        __block int64_t firstPartSize = -1;
-        __block uint64_t bUploadedLength = 0;
+        __block NSUInteger firstPartSize = -1;
+        __block NSUInteger bUploadedLength = 0;
         [uploadedParts enumerateObjectsUsingBlock:^(NSDictionary *part, NSUInteger idx, BOOL * _Nonnull stop) {
-            bUploadedLength += [[part objectForKey:OSSSizeXMLTOKEN] longLongValue];
+            bUploadedLength += [[part objectForKey:OSSSizeXMLTOKEN] unsignedIntegerValue];
             if (idx == 0)
             {
-                firstPartSize = [[part objectForKey:OSSSizeXMLTOKEN] longLongValue];
+                firstPartSize = [[part objectForKey:OSSSizeXMLTOKEN] unsignedIntegerValue];
             }
         }];
         *uploadedLength = bUploadedLength;
@@ -1289,7 +1289,7 @@ static NSObject * lock;
     return initTask;
 }
 
-- (OSSTask *)upload:(OSSMultipartUploadRequest *)request uploadIndex:(NSMutableArray *) alreadyUploadIndex uploadPart:(NSMutableArray *) alreadyUploadPart count:(uint64_t)partCout uploadedLength:(uint64_t *)uploadedLength fileSize:(uint64_t) uploadFileSize cancelError:(NSError *) cancelError
+- (OSSTask *)upload:(OSSMultipartUploadRequest *)request uploadIndex:(NSMutableArray *) alreadyUploadIndex uploadPart:(NSMutableArray *) alreadyUploadPart count:(NSUInteger)partCout uploadedLength:(NSUInteger *)uploadedLength fileSize:(NSUInteger) uploadFileSize cancelError:(NSError *) cancelError
 {
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
