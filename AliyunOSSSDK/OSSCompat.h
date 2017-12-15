@@ -13,6 +13,8 @@
 
 typedef OSSCancellationTokenSource OSSTaskHandler;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface OSSClient (Compat)
 
 /**
@@ -21,7 +23,7 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
  */
 - (OSSTaskHandler *)uploadData:(NSData *)data
                withContentType:(NSString *)contentType
-                withObjectMeta:(NSDictionary * _Nullable)meta
+                withObjectMeta:(NSDictionary *)meta
                   toBucketName:(NSString *)bucketName
                    toObjectKey:(NSString *)objectKey
                    onCompleted:(void(^)(BOOL, NSError *))onCompleted
@@ -79,3 +81,5 @@ typedef OSSCancellationTokenSource OSSTaskHandler;
                    objectKey:(NSString *)objectKey
                  onCompleted:(void(^)(BOOL, NSError *))onCompleted;
 @end
+
+NS_ASSUME_NONNULL_END

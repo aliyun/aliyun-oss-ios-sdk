@@ -13,6 +13,8 @@
 #import "OSSUtil.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
+#import "NSMutableData+OSS_CRC.h"
+#import "OSSInputStreamHelper.h"
 
 
 @implementation OSSURLRequestRetryHandler
@@ -205,6 +207,7 @@
             [self.internalRequest setValue:[self.allNeededMessage.headerParams objectForKey:key] forHTTPHeaderField:key];
         }
     }
+
     OSSLogVerbose(@"buidlInternalHttpRequest -\nmethod: %@\nurl: %@\nheader: %@", self.internalRequest.HTTPMethod,
                   self.internalRequest.URL, self.internalRequest.allHTTPHeaderFields);
 
@@ -347,9 +350,9 @@
 
 - (OSSTask *)sendRequest:(OSSNetworkingRequestDelegate *)request {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        OSSLogVerbose(@"%@",[OSSUtil buildNetWorkConnectedMsg]);
+        OSSLogVerbose(@"NetWorkConnectedMsg : %@",[OSSUtil buildNetWorkConnectedMsg]);
         NSString *operator = [OSSUtil buildOperatorMsg];
-        if(operator) OSSLogVerbose(@"%@",[OSSUtil buildOperatorMsg]);
+        if(operator) OSSLogVerbose(@"Operator : %@",[OSSUtil buildOperatorMsg]);
     });
     OSSLogVerbose(@"send request --------");
     if (self.configuration.proxyHost && self.configuration.proxyPort) {
@@ -361,18 +364,122 @@
 
     OSSTaskCompletionSource * taskCompletionSource = [OSSTaskCompletionSource taskCompletionSource];
 
-    __weak OSSNetworkingRequestDelegate * ref = request;
+    __weak OSSNetworkingRequestDelegate *weakRequest= request;
     request.completionHandler = ^(id responseObject, NSError * error) {
-
-        [ref reset];
-        if (!error) {
-            [taskCompletionSource setResult:responseObject];
-        } else {
+        [weakRequest reset];
+        
+        // 1.判断是否出错，如果出错的话，直接设置错误信息
+        if (error)
+        {
             [taskCompletionSource setError:error];
+        }else
+        {
+            [self checkForCrc64WithResult:responseObject
+                          requestDelegate:weakRequest
+                     taskCompletionSource:taskCompletionSource];
         }
     };
     [self dataTaskWithDelegate:request];
     return taskCompletionSource.task;
+}
+
+- (void)checkForCrc64WithResult:(nonnull id)response requestDelegate:(OSSNetworkingRequestDelegate *)delegate taskCompletionSource:(OSSTaskCompletionSource *)source
+{
+    OSSResult *result = (OSSResult *)response;
+    BOOL hasRange = [delegate.internalRequest valueForHTTPHeaderField:@"Range"] != nil;
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:delegate.internalRequest.URL resolvingAgainstBaseURL:YES];
+    BOOL hasXOSSProcess = [urlComponents.query containsString:@"x-oss-process"];
+    BOOL enableCRC = delegate.crc64Verifiable;
+    // 3.判断如果未开启crc校验,或者headerFields里面有Range字段或者参数表中存在
+    //   x-oss-process字段,都将不进行crc校验
+    if (!enableCRC || hasRange || hasXOSSProcess)
+    {
+        [source setResult:response];
+    }
+    else
+    {
+        OSSLogVerbose(@"--- checkForCrc64WithResult --- ");
+        // 如果服务端未返回crc信息，默认是成功的
+        OSSLogVerbose(@"result.remoteCRC64ecma : %@",result.remoteCRC64ecma);
+        OSSLogVerbose(@"if result.localCRC64ecma : %@",result.localCRC64ecma);
+        if (!result.remoteCRC64ecma.oss_isNotEmpty)
+        {
+            [source setResult:response];
+            return;
+        }
+        // getObject 操作的crc数值会在delegate.responseParser consumeHttpResponseBody 进行计算。
+        // upload & put 操作在上传成功后再计算。
+        // 如果用户设置onReceiveData block。无法计算localCRC64ecma
+        if (!result.localCRC64ecma.oss_isNotEmpty)
+        {
+            OSSLogVerbose(@"delegate.uploadingFileURL : %@",delegate.uploadingFileURL);
+            if (delegate.uploadingFileURL)
+            {
+                OSSInputStreamHelper *helper = [[OSSInputStreamHelper alloc] initWithURL:delegate.uploadingFileURL];
+                [helper syncReadBuffers];
+                if (helper.crc64 != 0) {
+                    result.localCRC64ecma = [NSString stringWithFormat:@"%llu",helper.crc64];
+                }
+            }
+            else
+            {
+                result.localCRC64ecma = delegate.contentCRC;
+            }
+            OSSLogVerbose(@"finally result.localCRC64ecma : %@",result.localCRC64ecma);
+        }
+
+        
+        // 针对append接口，需要多次计算crc值
+        if ([delegate.lastCRC oss_isNotEmpty] && [result.localCRC64ecma oss_isNotEmpty])
+        {
+            uint64_t last_crc64,local_crc64;
+            NSScanner *scanner = [NSScanner scannerWithString:delegate.lastCRC];
+            [scanner scanUnsignedLongLong:&last_crc64];
+            
+            scanner = [NSScanner scannerWithString:result.localCRC64ecma];
+            [scanner scanUnsignedLongLong:&local_crc64];
+            
+            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:delegate.internalRequest.URL resolvingAgainstBaseURL:YES];
+            NSArray<NSString *> *params = [urlComponents.query componentsSeparatedByString:@"&"];
+            
+            __block NSString *positionValue;
+            [params enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj rangeOfString:@"position="].location == 0)
+                {
+                    *stop = YES;
+                    positionValue = [obj substringFromIndex:9];
+                }
+            }];
+            
+            uint64_t position = [positionValue longLongValue];
+            NSString *next_append_position = [result.httpResponseHeaderFields objectForKey:@"x-oss-next-append-position"];
+            uint64_t length = [next_append_position longLongValue] - position;
+            
+            uint64_t crc_local = [OSSUtil crc64ForCombineCRC1:last_crc64 CRC2:local_crc64 length:(size_t)length];
+            result.localCRC64ecma = [NSString stringWithFormat:@"%llu",crc_local];
+            OSSLogVerbose(@"crc_local: %llu, crc_remote: %@,last_position: %llu,nextAppendPosition: %llu,length:  %llu",crc_local,result.remoteCRC64ecma,position,[next_append_position longLongValue],length);
+        }
+        //如果服务器和本机计算的crc值不一致,则报crc校验失败;否则,认为上传任务执行成功
+        if (result.remoteCRC64ecma.oss_isNotEmpty && result.localCRC64ecma.oss_isNotEmpty)
+        {
+            if ([result.remoteCRC64ecma isEqualToString:result.localCRC64ecma])
+            {
+                [source setResult:response];
+            }else
+            {
+                NSString *errorMessage = [NSString stringWithFormat:@"crc validation fails(local_crc64ecma: %@,remote_crc64ecma: %@)",result.localCRC64ecma,result.remoteCRC64ecma];
+                
+                NSError *crcError = [NSError errorWithDomain:OSSClientErrorDomain
+                                                        code:OSSClientErrorCodeInvalidCRC
+                                                    userInfo:@{OSSErrorMessageTOKEN:errorMessage}];
+                [source setError:crcError];
+            }
+        }
+        else
+        {
+            [source setResult:response];
+        }
+    }
 }
 
 - (void)dataTaskWithDelegate:(OSSNetworkingRequestDelegate *)requestDelegate {
@@ -432,9 +539,10 @@
     }];
 }
 
-#pragma mark - delegate method
+#pragma mark - NSURLSessionTaskDelegate Methods
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(sessionTask.taskIdentifier)];
     [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
 
@@ -549,14 +657,54 @@
     }];
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(task.taskIdentifier)];
-    if (delegate.uploadProgress) {
+    if (delegate.uploadProgress)
+    {
         delegate.uploadProgress(bytesSent, totalBytesSent, totalBytesExpectedToSend);
     }
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler
+{
+    if (!challenge) {
+        return;
+    }
+    
+    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    NSURLCredential *credential = nil;
+    
+    /*
+     * Gets the host name
+     */
+    
+    NSString * host = [[task.currentRequest allHTTPHeaderFields] objectForKey:@"Host"];
+    if (!host) {
+        host = task.currentRequest.URL.host;
+    }
+    
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        if ([self evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:host]) {
+            disposition = NSURLSessionAuthChallengeUseCredential;
+            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        }
+    } else {
+        disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    }
+    // Uses the default evaluation for other challenges.
+    completionHandler(disposition,credential);
+}
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
+{
+    
+}
+
+#pragma mark - NSURLSessionDataDelegate Methods
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
     /* background upload task will not call back didRecieveResponse */
@@ -570,13 +718,13 @@
     completionHandler(NSURLSessionResponseAllow);
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
+{
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
     /* background upload task will not call back didRecieveResponse.
        so if we recieve response data after background uploading file,
        we consider it as error response message since a successful uploading request will not response any data */
-    NSString *receivedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if (delegate.isBackgroundUploadFileTask)
     {
         //判断当前的statuscode是否成功
@@ -614,6 +762,8 @@
     }
 }
 
+#pragma mark - Private Methods
+
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust forDomain:(NSString *)domain {
     /*
      * Creates the policies for certificate verification.
@@ -624,13 +774,13 @@
     } else {
         [policies addObject:(__bridge_transfer id)SecPolicyCreateBasicX509()];
     }
-
+    
     /*
      * Sets the policies to server's certificate
      */
     SecTrustSetPolicies(serverTrust, (__bridge CFArrayRef)policies);
-
-
+    
+    
     /*
      * Evaulates if the current serverTrust is trustable.
      * It's officially suggested that the serverTrust could be passed when result = kSecTrustResultUnspecified or kSecTrustResultProceed.
@@ -639,39 +789,8 @@
      */
     SecTrustResultType result;
     SecTrustEvaluate(serverTrust, &result);
-
+    
     return (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed);
 }
 
-/*
- * NSURLSession
- */
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler {
-    if (!challenge) {
-        return;
-    }
-
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    NSURLCredential *credential = nil;
-
-    /*
-     * Gets the host name
-     */
-
-    NSString * host = [[task.currentRequest allHTTPHeaderFields] objectForKey:@"Host"];
-    if (!host) {
-        host = task.currentRequest.URL.host;
-    }
-
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        if ([self evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:host]) {
-            disposition = NSURLSessionAuthChallengeUseCredential;
-            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        }
-    } else {
-        disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    }
-    // Uses the default evaluation for other challenges.
-    completionHandler(disposition,credential);
-}
 @end

@@ -12,6 +12,7 @@
 #import "OSSNetworking.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
+#import "NSMutableData+OSS_CRC.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIDevice.h>
 #endif
@@ -119,11 +120,17 @@ static NSTimeInterval _clockSkew = 0.0;
 @end
 
 @implementation OSSFederationToken
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSFederationToken<%p>:{AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@}", self, _tAccessKey, _tSecretKey, _tToken, _expirationTimeInGMTFormat];
+}
+
 @end
 
 @implementation OSSPlainTextAKSKPairCredentialProvider
 
-- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey {
+- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey secretKey:(nonnull NSString *)secretKey {
     if (self = [super init]) {
         self.accessKey = [accessKey oss_trim];
         self.secretKey = [secretKey oss_trim];
@@ -131,7 +138,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return self;
 }
 
-- (NSString *)sign:(NSString *)content error:(NSError **)error {
+- (nullable NSString *)sign:(NSString *)content error:(NSError **)error {
     if (![self.accessKey oss_isNotEmpty] || ![self.secretKey oss_isNotEmpty])
     {
         if (error != nil)
@@ -151,14 +158,18 @@ static NSTimeInterval _clockSkew = 0.0;
 
 @implementation OSSCustomSignerCredentialProvider
 
-- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent {
-    if (self = [super init]) {
-        self.signContent = signContent;
+- (instancetype)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent
+{
+    NSParameterAssert(signContent);
+    if (self = [super init])
+    {
+        _signContent = signContent;
     }
     return self;
 }
 
-- (NSString *)sign:(NSString *)content error:(NSError **)error {
+- (NSString *)sign:(NSString *)content error:(NSError **)error
+{
     NSString * signature = @"";
     @synchronized(self) {
         signature = self.signContent(content, error);
@@ -183,7 +194,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return self;
 }
 
-- (OSSFederationToken *)getToken:(NSError **)error {
+- (nullable OSSFederationToken *)getToken:(NSError **)error {
     OSSFederationToken * validToken = nil;
     @synchronized(self) {
         if (self.cachedToken == nil) {
@@ -260,7 +271,7 @@ static NSTimeInterval _clockSkew = 0.0;
     return [self initWithAuthServerUrl:authServerUrl responseDecoder:nil];
 }
 
-- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(OSSResponseDecoderBlock)decoder
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder
 {
     self = [super initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:self.authServerUrl];
@@ -395,6 +406,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         federationToken = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
         [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
     }
+        
 
     /* construct CanonicalizedOSSHeaders */
     if (requestMessage.headerParams) {
@@ -447,11 +459,22 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, contentMd5, contentType, date, xossHeader, resource];
     OSSLogDebug(@"string to sign: %@", stringToSign);
     if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
-        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-
+        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]])
+    {
         NSString * signature = [OSSUtil sign:stringToSign withToken:federationToken];
         [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
-    } else { // now we only have two type of credential provider
+    }else if ([self.credentialProvider isKindOfClass:[OSSCustomSignerCredentialProvider class]])
+    {
+        OSSCustomSignerCredentialProvider *provider = (OSSCustomSignerCredentialProvider *)self.credentialProvider;
+        
+        NSError *customSignError;
+        NSString * signature = [provider sign:stringToSign error:&customSignError];
+        if (customSignError) {
+            OSSLogError(@"OSSCustomSignerError: %@",customSignError);
+        }
+        [requestMessage.headerParams setObject:signature forKey:@"Authorization"];
+    }else
+    {
         NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
         if (error) {
             return [OSSTask taskWithError:error];
@@ -576,6 +599,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @end
 
 @implementation OSSResult
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSResult<%p> : {httpResponseCode: %ld, requestId: %@, httpResponseHeaderFields: %@, local_crc64ecma: %@}",self,(long)self.httpResponseCode,self.requestId,self.httpResponseHeaderFields,self.localCRC64ecma];
+}
+
 @end
 
 @implementation OSSGetServiceRequest
@@ -732,10 +761,48 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 + (instancetype)partInfoWithPartNum:(int32_t)partNum
                                eTag:(NSString *)eTag
                                size:(int64_t)size {
-    OSSPartInfo * instance = [OSSPartInfo new];
-    instance.partNum = partNum;
-    instance.eTag = eTag;
-    instance.size = size;
+    return [self partInfoWithPartNum:partNum
+                                eTag:eTag
+                                size:size
+                               crc64:0];
+}
+
++ (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size crc64:(uint64_t)crc64
+{
+    OSSPartInfo *parInfo = [OSSPartInfo new];
+    parInfo.partNum = partNum;
+    parInfo.eTag = eTag;
+    parInfo.size = size;
+    parInfo.crc64 = crc64;
+    return parInfo;
+}
+
+- (nonnull NSDictionary *)entityToDictionary
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:@(_partNum) forKey:@"partNum"];
+    if (_eTag)
+    {
+        [dict setValue:_eTag forKey:@"eTag"];
+    }
+    [dict setValue:@(_size) forKey:@"size"];
+    [dict setValue:@(_crc64) forKey:@"crc64"];
+    return [dict copy];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"OSSPartInfo<%p>:{partNum: %d,eTag: %@,partSize: %lld,crc64: %llu}",self,self.partNum,self.eTag,self.size,self.crc64];
+}
+
+#pragma marks - Protocol Methods
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+    OSSPartInfo *instance = [[[self class] allocWithZone:zone] init];
+    instance.partNum = self.partNum;
+    instance.eTag = self.eTag;
+    instance.size = self.size;
+    instance.crc64 = self.crc64;
     return instance;
 }
 
@@ -806,6 +873,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     NSFileHandle * _fileHandle;
     NSMutableData * _collectingData;
     NSHTTPURLResponse * _response;
+    uint64_t _crc64ecma;
 }
 
 - (void)reset {
@@ -825,40 +893,61 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     _response = response;
 }
 
-- (OSSTask *)consumeHttpResponseBody:(NSData *)data {
-
+- (OSSTask *)consumeHttpResponseBody:(NSData *)data
+{
+    if (_crc64Verifiable&&(_operationTypeForThisParser == OSSOperationTypeGetObject))
+    {
+        NSMutableData *mutableData = [NSMutableData dataWithData:data];
+        if (_crc64ecma != 0)
+        {
+            _crc64ecma = [OSSUtil crc64ForCombineCRC1:_crc64ecma
+                                                 CRC2:[mutableData oss_crc64]
+                                               length:mutableData.length];
+        }else
+        {
+            _crc64ecma = [mutableData oss_crc64];
+        }
+    }
+    
     if (self.onRecieveBlock) {
         self.onRecieveBlock(data);
         return [OSSTask taskWithResult:nil];
     }
 
     NSError * error;
-    if (self.downloadingFileURL) {
-        if (!_fileHandle) {
+    if (self.downloadingFileURL)
+    {
+        if (!_fileHandle)
+        {
             NSFileManager * fm = [NSFileManager defaultManager];
             NSString * dirName = [[self.downloadingFileURL path] stringByDeletingLastPathComponent];
-            if (![fm fileExistsAtPath:dirName]) {
+            if (![fm fileExistsAtPath:dirName])
+            {
                 [fm createDirectoryAtPath:dirName withIntermediateDirectories:YES attributes:nil error:&error];
             }
-            if (![fm fileExistsAtPath:dirName] || error) {
+            if (![fm fileExistsAtPath:dirName] || error)
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create dir at %@", dirName]}]];
             }
             [fm createFileAtPath:[self.downloadingFileURL path] contents:nil attributes:nil];
-            if (![fm fileExistsAtPath:[self.downloadingFileURL path]]) {
+            if (![fm fileExistsAtPath:[self.downloadingFileURL path]])
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Can't create file at %@", [self.downloadingFileURL path]]}]];
             }
             _fileHandle = [NSFileHandle fileHandleForWritingToURL:self.downloadingFileURL error:&error];
-            if (error) {
+            if (error)
+            {
                 return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                                  code:OSSClientErrorCodeFileCantWrite
                                                              userInfo:[error userInfo]]];
             }
             [_fileHandle writeData:data];
-        } else {
+        } else
+        {
             @try {
                 [_fileHandle writeData:data];
             }
@@ -868,28 +957,39 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                                                              userInfo:@{OSSErrorMessageTOKEN: [exception description]}]];
             }
         }
-    } else {
-        if (!_collectingData) {
+    } else
+    {
+        if (!_collectingData)
+        {
             _collectingData = [[NSMutableData alloc] initWithData:data];
-        } else {
+        }
+        else
+        {
             [_collectingData appendData:data];
         }
     }
     return [OSSTask taskWithResult:nil];
 }
 
-- (void)parseResponseHeader:(NSHTTPURLResponse *)response toResultObject:(OSSResult *)result {
+- (void)parseResponseHeader:(NSHTTPURLResponse *)response toResultObject:(OSSResult *)result
+{
     result.httpResponseCode = [_response statusCode];
     result.httpResponseHeaderFields = [NSDictionary dictionaryWithDictionary:[_response allHeaderFields]];
     [[_response allHeaderFields] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         NSString * keyString = (NSString *)key;
-        if ([keyString isEqualToString:@"x-oss-request-id"]) {
+        if ([keyString isEqualToString:@"x-oss-request-id"])
+        {
             result.requestId = obj;
+        }
+        else if ([keyString isEqualToString:@"x-oss-hash-crc64ecma"])
+        {
+            result.remoteCRC64ecma = obj;
         }
     }];
 }
 
-- (NSDictionary *)parseResponseHeaderToGetMeta:(NSHTTPURLResponse *)response {
+- (NSDictionary *)parseResponseHeaderToGetMeta:(NSHTTPURLResponse *)response
+{
     NSMutableDictionary * meta = [NSMutableDictionary new];
 
     /* define a constant array to contain all meta header name */
@@ -910,22 +1010,28 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     return meta;
 }
 
-- (id)constructResultObject {
-    if (self.onRecieveBlock) {
+- (nullable id)constructResultObject
+{
+    if (self.onRecieveBlock)
+    {
         return nil;
     }
 
-    switch (_operationTypeForThisParser) {
-
-        case OSSOperationTypeGetService: {
+    switch (_operationTypeForThisParser)
+    {
+        case OSSOperationTypeGetService:
+        {
             OSSGetServiceResult * getServiceResult = [OSSGetServiceResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getServiceResult];
             }
-            if (_collectingData) {
+            if (_collectingData)
+            {
                 NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
-                if (parseDict) {
+                if (parseDict)
+                {
                     getServiceResult.ownerId = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSIDXMLTOKEN];
                     getServiceResult.ownerDispName = [[parseDict objectForKey:OSSOwnerXMLTOKEN] objectForKey:OSSDisplayNameXMLTOKEN];
                     getServiceResult.prefix = [parseDict objectForKey:OSSPrefixXMLTOKEN];
@@ -947,9 +1053,11 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return getServiceResult;
         }
 
-        case OSSOperationTypeCreateBucket: {
+        case OSSOperationTypeCreateBucket:
+        {
             OSSCreateBucketResult * createBucketResult = [OSSCreateBucketResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:createBucketResult];
                 [_response.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                     if ([((NSString *)key) isEqualToString:@"Location"]) {
@@ -961,22 +1069,27 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return createBucketResult;
         }
 
-        case OSSOperationTypeGetBucketACL: {
+        case OSSOperationTypeGetBucketACL:
+        {
             OSSGetBucketACLResult * getBucketACLResult = [OSSGetBucketACLResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getBucketACLResult];
             }
-            if (_collectingData) {
+            if (_collectingData)
+            {
                 NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
                 OSSLogVerbose(@"Get service dict: %@", parseDict);
-                if (parseDict) {
+                if (parseDict)
+                {
                     getBucketACLResult.aclGranted = [[parseDict objectForKey:OSSAccessControlListXMLTOKEN] objectForKey:OSSGrantXMLTOKEN];
                 }
             }
             return getBucketACLResult;
         }
 
-        case OSSOperationTypeDeleteBucket: {
+        case OSSOperationTypeDeleteBucket:
+        {
             OSSDeleteBucketResult * deleteBucketResult = [OSSDeleteBucketResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:deleteBucketResult];
@@ -984,7 +1097,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return deleteBucketResult;
         }
 
-        case OSSOperationTypeGetBucket: {
+        case OSSOperationTypeGetBucket:
+        {
             OSSGetBucketResult * getBucketResult = [OSSGetBucketResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:getBucketResult];
@@ -1030,34 +1144,45 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return getBucketResult;
         }
 
-        case OSSOperationTypeHeadObject: {
+        case OSSOperationTypeHeadObject:
+        {
             OSSHeadObjectResult * headObjectResult = [OSSHeadObjectResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:headObjectResult];
                 headObjectResult.objectMeta = [self parseResponseHeaderToGetMeta:_response];
             }
             return headObjectResult;
         }
 
-        case OSSOperationTypeGetObject: {
+        case OSSOperationTypeGetObject:
+        {
             OSSGetObjectResult * getObejctResult = [OSSGetObjectResult new];
             OSSLogDebug(@"GetObjectResponse: %@", _response);
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:getObejctResult];
                 getObejctResult.objectMeta = [self parseResponseHeaderToGetMeta:_response];
+                if (_crc64ecma != 0)
+                {
+                    getObejctResult.localCRC64ecma = [NSString stringWithFormat:@"%llu",_crc64ecma];
+                }
             }
             if (_fileHandle) {
                 [_fileHandle closeFile];
             }
+            
             if (_collectingData) {
                 getObejctResult.downloadedData = _collectingData;
             }
             return getObejctResult;
         }
 
-        case OSSOperationTypePutObject: {
+        case OSSOperationTypePutObject:
+        {
             OSSPutObjectResult * putObjectResult = [OSSPutObjectResult new];
-            if (_response) {
+            if (_response)
+            {
                 [self parseResponseHeader:_response toResultObject:putObjectResult];
                 [_response.allHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                     if ([((NSString *)key) isEqualToString:@"Etag"]) {
@@ -1072,7 +1197,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
             return putObjectResult;
         }
 
-        case OSSOperationTypeAppendObject: {
+        case OSSOperationTypeAppendObject:
+        {
             OSSAppendObjectResult * appendObjectResult = [OSSAppendObjectResult new];
             if (_response) {
                 [self parseResponseHeader:_response toResultObject:appendObjectResult];

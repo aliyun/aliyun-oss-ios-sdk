@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
 
-  s.source_files = 'AliyunOSSSDK/*.{h,m}', 'AliyunOSSSDK/OSSTask/*.{h,m}','AliyunOSSSDK/OSSFileLog/*.{h,m}', 'AliyunOSSSDK/OSSIPv6/*.{h,m}'
+  s.source_files = 'AliyunOSSSDK/*.{h,m,c}', 'AliyunOSSSDK/OSSTask/*.{h,m}','AliyunOSSSDK/OSSFileLog/*.{h,m}', 'AliyunOSSSDK/OSSIPv6/*.{h,m}'
 
   s.ios.frameworks = 'SystemConfiguration','CoreTelephony'
   s.osx.frameworks = 'SystemConfiguration','CoreTelephony'

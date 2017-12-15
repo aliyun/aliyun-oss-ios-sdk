@@ -158,6 +158,14 @@ The corresponding RESTFul API: AppendObject
 - (OSSTask *)appendObject:(OSSAppendObjectRequest *)request;
 
 /**
+ @brief : Appends data to an existing or non-existing object on the OSS server. The object created by this operation is appendable.
+ request    : request
+ crc64ecma  : 如果服务器上面已经存在对象,需要客户端先调用headObject获取到对象的crc64ecma,然后再调用
+              该接口上传数据
+ */
+- (OSSTask *)appendObject:(OSSAppendObjectRequest *)request withCrc64ecma:(nullable NSString *)crc64ecma;
+
+/**
 The corresponding RESTFul API: copyObject
  Copies an existing object to another one.The operation sends a PUT request with x-oss-copy-source header to specify the source object.
  OSS server side will detect and copy the object. If it succeeds, the new object's metadata information will be returned.
