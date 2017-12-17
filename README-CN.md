@@ -39,7 +39,7 @@ $ cd Products && ls
 如果工程是通过pod管理依赖，那么在Podfile中加入以下依赖即可，不需要再导入framework：
 
 ```
-pod 'AliyunOSSiOS', '~> 2.7.1'
+pod 'AliyunOSSiOS', '~> 2.8.0'
 ```
 
 CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: [CocoaPods安装和使用教程](http://code4app.com/article/cocoapods-install-usage)。
@@ -49,7 +49,7 @@ CocoaPods是一个非常优秀的依赖管理工具，推荐参考官方文档: 
 ### 工程中引入头文件
 
 ```objc
-#import <AliyunOSSiOS/OSSService.h>
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 ```
 
 注意，引入Framework后，需要在工程`Build Settings`的`Other Linker Flags`中加入`-ObjC`。如果工程此前已经设置过`-force_load`选项，那么，需要加入`-force_load <framework path>/AliyunOSSiOS`。
@@ -61,6 +61,7 @@ OSS移动端SDK为了解决无线网络下域名解析容易遭到劫持的问�
 ```
 libresolv.tbd
 SystemConfiguration.framework
+CoreTelephony.framework
 ```
 
 ### 关于苹果ATS政策

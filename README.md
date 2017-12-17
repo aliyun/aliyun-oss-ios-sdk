@@ -39,7 +39,7 @@ In Xcode, drag the OSS iOS SDK framework and drop it to your target, and select 
 If your project manages dependencies using a Pod, add the following dependency to the Podfile. In this case, you do not need to import the OSS iOS SDK framework.
 
 ```
-pod 'AliyunOSSiOS', '~> 2.7.1'
+pod 'AliyunOSSiOS', '~> 2.8.0'
 ```
 
 CocoaPods is an outstanding dependency manager. Recommended official reference documents: [CocoaPods Installation and Usage Tutorial]((http://code4app.com/article/cocoapods-install-usage)).
@@ -49,7 +49,7 @@ You can directly introduce the OSS iOS SDK framework or the Pod dependency, eith
 ### Introduce the header file to the project
 
 ```objc
-#import <AliyunOSSiOS/OSSService.h>
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 ```
 
 **Note:** After you introduce the OSS iOS SDK framework, add `-ObjC` to *Other Linker Flags* of *Build Settings* in your project. If the `-force_load` option has been configured for your project, add `-force_load <framework path>/AliyunOSSiOS`.
@@ -61,6 +61,7 @@ The OSS mobile SDK has introduced the *HTTPDNS* for domain name resolution to so
 ```
 libresolv.tbd
 SystemConfiguration.framework
+CoreTelephony.framework
 ```
 
 ### The ATS policy of Apple

@@ -2,8 +2,9 @@ iOS 发版流程
 
 1.	更改AliyunOSSiOS.podspec 文件中的相关信息。
 2.	更改Readme中相关的信息。
-3.	在github上添加tag
-4.	按照文档中介绍执行
+3.	在github上添加tag。
+4.	按照文档中介绍执行。
+5.	修改OSSDefine.h中的OSSSDKVersion的版本号。
 	http://www.jianshu.com/p/3a365f273439
 	pod spec lint AliyunOSSiOS.podspec
 	pod trunk push AliyunOSSiOS.podspec 
