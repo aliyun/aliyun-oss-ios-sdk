@@ -36,7 +36,7 @@
 - (void)setUpOSSClient
 {
     OSSClientConfiguration *config = [OSSClientConfiguration new];
-    config.crc64Verifiable = YES;
+//    config.crc64Verifiable = YES;
     
     OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
     _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
@@ -110,7 +110,7 @@
 {
     for (NSUInteger pIdx = 0; pIdx < _fileNames.count; pIdx++)
     {
-        NSString *objectKey = _fileNames[0];
+        NSString *objectKey = _fileNames[pIdx];
         NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];
         
@@ -119,7 +119,8 @@
         request.objectKey = objectKey;
         request.uploadingFileURL = fileURL;
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-        request.crcFlag = OSSRequestCRCOpen;
+//  在统一config 中修改
+//        request.crcFlag = OSSRequestCRCOpen;
         
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
             NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
@@ -147,7 +148,8 @@
     request.bucketName = OSS_BUCKET_PRIVATE;
     request.objectKey = objectKey;
     request.uploadingFileURL = fileURL;
-    request.crcFlag = OSSRequestCRCOpen;
+//  在统一config 中修改
+//    request.crcFlag = OSSRequestCRCOpen;
     
     OSSTask * task = [_client putObject:request];
     [[task continueWithBlock:^id(OSSTask *task) {
@@ -160,37 +162,6 @@
     }] waitUntilFinished];
 }
 
-- (void)testAPI_putObjectToPublicBucketFromFile
-{
-    for (NSUInteger pIdx = 0; pIdx < _fileNames.count; pIdx++)
-    {
-        NSString *objectKey = _fileNames[pIdx];
-        NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
-        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-        
-        OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-        request.bucketName = OSS_BUCKET_PUBLIC;
-        request.objectKey = objectKey;
-        request.uploadingFileURL = fileURL;
-        request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-        request.crcFlag = OSSRequestCRCOpen;
-        
-        request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-            NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        };
-        
-        OSSTask * task = [_client putObject:request];
-        [[task continueWithBlock:^id(OSSTask *task) {
-            XCTAssertNil(task.error);
-            BOOL isEqual = [self checkMd5WithBucketName:OSS_BUCKET_PRIVATE
-                                              objectKey:objectKey
-                                          localFilePath:filePath];
-            XCTAssertTrue(isEqual);
-            return nil;
-        }] waitUntilFinished];
-    }
-}
-
 - (void)testAPI_putObjectWithoutContentType
 {
     NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[0]];
@@ -201,7 +172,7 @@
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = OSS_BUCKET_PRIVATE;
     request.objectKey = objectKeyWithoutContentType;
-    request.crcFlag = OSSRequestCRCOpen;
+//    request.crcFlag = OSSRequestCRCOpen;
     request.uploadingData = [readFile readDataToEndOfFile];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
@@ -504,7 +475,7 @@
     
     request.onRecieveData = ^(NSData * data) {
         [recieveData appendData:data];
-        NSLog(@"%ld", [data length]);
+        NSLog(@"recieveData %ld", [recieveData length]);
     };
     
     OSSTask * task = [_client getObject:request];
