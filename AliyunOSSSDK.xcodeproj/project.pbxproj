@@ -43,10 +43,6 @@
 		D829F3AC1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */; };
 		D842D59B1FFCAAD600220913 /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21028BBC1BA9ABF500C2A6BA /* AliyunOSSiOS.framework */; };
 		D842D59C1FFCAAF300220913 /* OSSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = D842D5891FFC8C0500220913 /* OSSLog.swift */; };
-		D842D5A31FFCB97A00220913 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D842D59F1FFCB97900220913 /* Info.plist */; };
-		D842D5A41FFCB97A00220913 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D842D59F1FFCB97900220913 /* Info.plist */; };
-		D842D5A51FFCB97A00220913 /* AliyunOSSSwift-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D842D5A01FFCB97A00220913 /* AliyunOSSSwift-Info.plist */; };
-		D842D5A61FFCB97A00220913 /* AliyunOSSSwift-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D842D5A01FFCB97A00220913 /* AliyunOSSSwift-Info.plist */; };
 		D842D5A81FFCBA2800220913 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D842D5A71FFCBA2800220913 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D842D5A91FFCBA2800220913 /* AliyunOSSiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D842D5A71FFCBA2800220913 /* AliyunOSSiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D842D5AC1FFCC48000220913 /* AliyunOSSSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = D842D59E1FFCB97900220913 /* AliyunOSSSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -156,7 +152,7 @@
 		D842D5891FFC8C0500220913 /* OSSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSLog.swift; sourceTree = "<group>"; };
 		D842D5911FFCA8F300220913 /* AliyunOSSSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AliyunOSSSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D59E1FFCB97900220913 /* AliyunOSSSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSSwift.h; sourceTree = "<group>"; };
-		D842D59F1FFCB97900220913 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D842D59F1FFCB97900220913 /* AliyunOSSSDK-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AliyunOSSSDK-Info.plist"; sourceTree = "<group>"; };
 		D842D5A01FFCB97A00220913 /* AliyunOSSSwift-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AliyunOSSSwift-Info.plist"; sourceTree = "<group>"; };
 		D842D5A71FFCBA2800220913 /* AliyunOSSiOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliyunOSSiOS.h; sourceTree = "<group>"; };
 		D842D5AB1FFCC29500220913 /* AliyunOSSSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AliyunOSSSDK.modulemap; sourceTree = "<group>"; };
@@ -286,7 +282,7 @@
 				D842D5A71FFCBA2800220913 /* AliyunOSSiOS.h */,
 				D842D59E1FFCB97900220913 /* AliyunOSSSwift.h */,
 				D842D5A01FFCB97A00220913 /* AliyunOSSSwift-Info.plist */,
-				D842D59F1FFCB97900220913 /* Info.plist */,
+				D842D59F1FFCB97900220913 /* AliyunOSSSDK-Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -570,8 +566,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D842D5A51FFCB97A00220913 /* AliyunOSSSwift-Info.plist in Resources */,
-				D842D5A31FFCB97A00220913 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,8 +573,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D842D5A61FFCB97A00220913 /* AliyunOSSSwift-Info.plist in Resources */,
-				D842D5A41FFCB97A00220913 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -807,7 +799,7 @@
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "";
-				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/AliyunOSSSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -845,7 +837,7 @@
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				GCC_PREFIX_HEADER = "";
-				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/AliyunOSSSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -885,11 +877,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/AliyunOSSSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-OSX";
 				PRODUCT_NAME = AliyunOSSOSX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -919,11 +910,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Supporting Files/AliyunOSSSDK-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.oss.AliyunOSSSDK-OSX";
 				PRODUCT_NAME = AliyunOSSOSX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
