@@ -1,0 +1,6 @@
+framework module AliyunOSSiOS {
+  umbrella header "AliyunOSSiOS.h"
+
+  export *
+  module * { export * }
+}
