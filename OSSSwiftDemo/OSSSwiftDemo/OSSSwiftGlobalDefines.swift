@@ -20,3 +20,4 @@ let OSS_CNAME_URL: String = "OSS_CNAME_URL"
 let OSS_STSTOKEN_URL: String = "OSS_STSTOKEN_URL"
 let OSS_IMAGE_KEY: String = "OSS_IMAGE_KEY"
 
+
