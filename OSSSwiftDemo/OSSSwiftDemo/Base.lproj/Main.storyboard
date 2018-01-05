@@ -101,12 +101,38 @@
                     <view key="view" contentMode="scaleToFill" id="dvD-Vf-cqX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJK-1x-Eei">
+                                <rect key="frame" x="27" y="90" width="88" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="上传图片"/>
+                                <connections>
+                                    <action selector="uploadButtonClicked:" destination="XRZ-Ju-6eb" eventType="touchUpInside" id="FzM-h8-ZIV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYO-Gp-QS9">
+                                <rect key="frame" x="27" y="141" width="88" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="分片上传"/>
+                                <connections>
+                                    <action selector="multipartUploadButtonClicked:" destination="XRZ-Ju-6eb" eventType="touchUpInside" id="BGT-zs-8Ct"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hrd-Tt-TTD">
+                                <rect key="frame" x="27" y="191" width="88" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="断点续传"/>
+                                <connections>
+                                    <action selector="resumableButtonClicked:" destination="XRZ-Ju-6eb" eventType="touchUpInside" id="N57-xh-3tP"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7MY-gp-sAP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="97" y="-726"/>
+            <point key="canvasLocation" x="96.799999999999997" y="-726.38680659670172"/>
         </scene>
     </scenes>
 </document>

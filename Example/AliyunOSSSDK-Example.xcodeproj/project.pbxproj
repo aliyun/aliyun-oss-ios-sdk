@@ -21,6 +21,7 @@
 		D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */; };
 		D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */; };
 		D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */; };
+		D8350C6B1FFF662A00D8DF46 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
 		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
@@ -449,6 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */,
+				D8350C6B1FFF662A00D8DF46 /* wangwang.zip in Resources */,
 				D827E4181FCD0FC60085380C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
