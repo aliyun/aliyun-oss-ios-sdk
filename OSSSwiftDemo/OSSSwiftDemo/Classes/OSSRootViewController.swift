@@ -14,8 +14,10 @@ let ourLogLevel = OSSDDLogLevel.verbose
 class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDataDelegate {
     
     let provider: OSSAuthCredentialProvider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
-    var ossclient: OSSClient!
-    @IBOutlet weak var testButton: UIButton!
+    @IBOutlet weak var objectKeyTF: UITextField!
+    @IBOutlet weak var serverURLTF: UITextField!
+    @IBOutlet weak var bucketNameTF: UITextField!
+    var mClient: OSSClient!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,18 +60,60 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         OSSLogWarn("Warn from aDDLogInstance", osslog: aDDLogInstance)
         OSSLogError("Error from aDDLogInstance", osslog: aDDLogInstance)
         
-        ossclient = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: self.provider)
+        mClient = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: self.provider)
+        serverURLTF.text = OSS_STSTOKEN_URL
+        bucketNameTF.text = OSS_BUCKET_PUBLIC
+        objectKeyTF.text = nil
     }
-
+    
     @IBAction func getImageButtonClicked(_ sender: Any) {
+        if (objectKeyTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            return;
+        }
+        if (bucketNameTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            return;
+        }
         getImage()
     }
     @IBAction func getObjectButtonClicked(_ sender: UIButton) {
+        if (objectKeyTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            return;
+        }
+        if (bucketNameTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            return;
+        }
         getObject()
     }
+    @IBAction func getBucketButtonClicked(_ sender: Any) {
+        getBucket()
+    }
     
+    @IBAction func getBucketACLButtonClicked(_ sender: Any) {
+        getBucketACL()
+    }
+    @IBAction func createButtonClicked(_ sender: Any) {
+        createBucket()
+    }
+    @IBAction func deleteBucketButtonClicked(_ sender: UIButton) {
+        deleteBucket()
+    }
     @IBAction func getStsTokenButtonClicked(_ sender: UIButton) {
         getStsToken()
+    }
+    @IBAction func headObjectButtonClicked(_ sender: Any) {
+        if (objectKeyTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            return;
+        }
+        if (bucketNameTF.text?.isEmpty)! {
+            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            return;
+        }
+        headObject()
     }
     
     override func didReceiveMemoryWarning() {
@@ -84,9 +128,10 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         getObjectReq.downloadProgress = { (bytesWritten: Int64,totalBytesWritten : Int64, totalBytesExpectedToWrite: Int64) -> Void in
             print("bytesWritten:\(bytesWritten),totalBytesWritten:\(totalBytesWritten),totalBytesExpectedToWrite:\(totalBytesExpectedToWrite)");
         };
-        let task: OSSTask = ossclient.getObject(getObjectReq);
-        task.continue({(task: OSSTask) -> OSSTask<AnyObject>? in
-            return nil;
+        let task: OSSTask = mClient.getObject(getObjectReq);
+        task.continue({(t) -> OSSTask<AnyObject>? in
+            self.showResult(task: t)
+            return nil
         })
         task.waitUntilFinished()
         
@@ -96,14 +141,15 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     func getImage() -> Void {
         let getObjectReq: OSSGetObjectRequest = OSSGetObjectRequest()
         getObjectReq.bucketName = OSS_BUCKET_PUBLIC;
-        getObjectReq.objectKey = OSS_IMAGE_KEY;
+        getObjectReq.objectKey = objectKeyTF.text!;
         getObjectReq.xOssProcess = "image/resize,m_lfit,w_100,h_100";
         getObjectReq.downloadProgress = { (bytesWritten: Int64,totalBytesWritten : Int64, totalBytesExpectedToWrite: Int64) -> Void in
             print("bytesWritten:\(bytesWritten),totalBytesWritten:\(totalBytesWritten),totalBytesExpectedToWrite:\(totalBytesExpectedToWrite)");
         };
-        let task: OSSTask = ossclient.getObject(getObjectReq);
-        task.continue({(task: OSSTask) -> OSSTask<AnyObject>? in
-            return nil;
+        let task: OSSTask = mClient.getObject(getObjectReq);
+        task.continue({(t) -> OSSTask<AnyObject>? in
+            self.showResult(task: t)
+            return nil
         })
         task.waitUntilFinished()
         
@@ -130,7 +176,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             //验证JSON对象可用性
             let accessKeyId = json?["AccessKeyId"]
             let accessKeySecret = json?["AccessKeySecret"]
-            print("get Json Object:","accessKeyId: \(String(describing: accessKeyId)), accessKeySecret: \(String(describing: accessKeySecret))")
+            
+            self.ossAlert(title: "提示", message: json?.description)
+            
             
             let token = OSSFederationToken()
             token.tAccessKey = accessKeyId as! String
@@ -144,6 +192,98 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         } catch{
             print("get Error")
         }
+    }
+    func headObject() -> Void {
+        if (objectKeyTF.text?.isEmpty)! {
+            ossAlert(title: nil, message: "objectKey can not be empty!")
+        }
+        
+        let request = OSSHeadObjectRequest()
+        request.bucketName = OSS_BUCKET_PUBLIC
+        request.objectKey = objectKeyTF.text!
+    
+        let task: OSSTask = mClient.headObject(request)
+        task.continue({(task) -> OSSTask<AnyObject>? in
+            self.showResult(task: task)
+            return nil
+        })
+        task.waitUntilFinished()
+    }
+    
+    func ossAlert(title: String?,message:String?) -> Void {
+        let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alertCtrl.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.default, handler: { (action) in
+            print("\(action.title!) has been clicked");
+            alertCtrl.dismiss(animated: true, completion: nil)
+        }))
+        
+        DispatchQueue.main.async {
+            self.present(alertCtrl, animated: true, completion: nil)
+        }
+    }
+    
+    func showResult(task: OSSTask<AnyObject>?) -> Void {
+        if (task?.error != nil) {
+            self.ossAlert(title: "错误", message: task?.error?.localizedDescription)
+        }else
+        {
+            let result = task?.result
+            self.ossAlert(title: "提示", message: result?.description)
+        }
+    }
+    
+    func getBucket() -> Void {
+        let request = OSSGetBucketRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        
+        let task = mClient.getBucket(request)
+        task.continue( { (t) -> Any? in
+            if let result = t.result as? OSSGetBucketResult {
+                self.showResult(task: OSSTask(result: result.contents as AnyObject))
+            }else
+            {
+                self.showResult(task: t)
+            }
+            return nil
+        })
+    }
+    
+    func getBucketACL() -> Void {
+        let request = OSSGetBucketACLRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        
+        let task = mClient.getBucketACL(request)
+        task.continue( { (t) -> Any? in
+            if let result = t.result as? OSSGetBucketACLResult {
+                self.showResult(task: OSSTask(result: result.aclGranted as AnyObject))
+            }else
+            {
+                self.showResult(task: t)
+            }
+            return nil
+        })
+    }
+    
+    func createBucket() -> Void {
+        let request = OSSCreateBucketRequest()
+        request.bucketName = "com-dhc-test"
+        
+        let task = mClient.createBucket(request)
+        task.continue( { (t) -> Any? in
+            self.showResult(task: t)
+            return nil
+        })
+    }
+    
+    func deleteBucket() -> Void {
+        let request = OSSDeleteBucketRequest()
+        request.bucketName = "com-dhc-test"
+        
+        let task = mClient.deleteBucket(request)
+        task.continue( { (t) -> Any? in
+            self.showResult(task: t)
+            return nil
+        })
     }
 }
 
