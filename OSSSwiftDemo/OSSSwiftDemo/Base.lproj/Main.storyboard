@@ -184,15 +184,37 @@
                                     <action selector="getBucketACLButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UiQ-hf-dCh"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQN-Uq-VJc">
-                                <rect key="frame" x="20" y="347" width="101" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQN-Uq-VJc">
+                                <rect key="frame" x="20" y="347" width="69" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Xny-2V-baR"/>
                                     <constraint firstAttribute="height" constant="30" id="hCh-kd-p5o"/>
                                 </constraints>
-                                <state key="normal" title="upload Images"/>
+                                <state key="normal" title="putObject"/>
                                 <connections>
-                                    <segue destination="XRZ-Ju-6eb" kind="show" id="y2S-2K-635"/>
+                                    <action selector="uploadButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QC5-h6-jEK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqm-Gw-t7I">
+                                <rect key="frame" x="109" y="347" width="111" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="jWG-bY-Lmj"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="x5f-aL-5JR"/>
+                                </constraints>
+                                <state key="normal" title="multipartUpload"/>
+                                <connections>
+                                    <action selector="multipartUploadButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1X0-a6-tEJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="09w-QX-obA">
+                                <rect key="frame" x="240" y="347" width="121" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="ye4-Sf-2q0"/>
+                                    <constraint firstAttribute="height" constant="30" id="zg2-XW-DLf"/>
+                                </constraints>
+                                <state key="normal" title="resumableUpload"/>
+                                <connections>
+                                    <action selector="resumableButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nJ1-77-qmK"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -207,13 +229,11 @@
                             <constraint firstItem="0b8-u4-DdD" firstAttribute="leading" secondItem="34B-Tb-Sor" secondAttribute="leading" id="9ay-oj-YOj"/>
                             <constraint firstItem="3aV-uP-YEQ" firstAttribute="centerY" secondItem="ziu-d9-Nqw" secondAttribute="centerY" id="AQV-g7-y0K"/>
                             <constraint firstItem="3G4-1H-ECR" firstAttribute="centerY" secondItem="0b8-u4-DdD" secondAttribute="centerY" id="H18-WY-Y4l"/>
-                            <constraint firstItem="U9y-2q-ob2" firstAttribute="top" secondItem="fQN-Uq-VJc" secondAttribute="bottom" constant="20" id="HLl-W3-g10"/>
                             <constraint firstItem="Tca-B1-Fs2" firstAttribute="leading" secondItem="LSU-Zv-z5x" secondAttribute="trailing" constant="20" id="IRV-Pm-drY"/>
                             <constraint firstItem="bPD-vd-Gm3" firstAttribute="leading" secondItem="34B-Tb-Sor" secondAttribute="trailing" constant="20" id="IgT-tC-Eje"/>
                             <constraint firstItem="rD5-qK-Hpy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="Iyg-Q9-PWL"/>
                             <constraint firstItem="ziu-d9-Nqw" firstAttribute="top" secondItem="zJl-Cp-W1b" secondAttribute="bottom" constant="20" id="JK7-0G-66n"/>
                             <constraint firstItem="b7c-Mc-1zM" firstAttribute="centerY" secondItem="0b8-u4-DdD" secondAttribute="centerY" id="LAw-q6-Kgn"/>
-                            <constraint firstAttribute="trailing" secondItem="fQN-Uq-VJc" secondAttribute="trailing" constant="20" id="LgI-hV-yw3"/>
                             <constraint firstItem="ziu-d9-Nqw" firstAttribute="leading" secondItem="rD5-qK-Hpy" secondAttribute="leading" id="VLC-YK-ivN"/>
                             <constraint firstItem="3aV-uP-YEQ" firstAttribute="trailing" secondItem="X45-c1-Jf8" secondAttribute="trailing" id="Vj0-cR-ge2"/>
                             <constraint firstItem="3G4-1H-ECR" firstAttribute="leading" secondItem="0b8-u4-DdD" secondAttribute="trailing" constant="40" id="c5b-rf-yJ0"/>
@@ -229,9 +249,15 @@
                             <constraint firstItem="zJl-Cp-W1b" firstAttribute="leading" secondItem="rD5-qK-Hpy" secondAttribute="leading" id="npu-El-flm"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="34B-Tb-Sor" secondAttribute="trailing" constant="20" symbolic="YES" id="oar-13-Ied"/>
                             <constraint firstItem="34B-Tb-Sor" firstAttribute="top" secondItem="ziu-d9-Nqw" secondAttribute="bottom" constant="20" id="uJ7-RZ-pXn"/>
+                            <constraint firstItem="09w-QX-obA" firstAttribute="leading" secondItem="gqm-Gw-t7I" secondAttribute="trailing" constant="20" id="uXo-Ad-MdF"/>
                             <constraint firstItem="tBS-CX-eru" firstAttribute="centerY" secondItem="34B-Tb-Sor" secondAttribute="centerY" id="vVQ-gO-nc1"/>
                             <constraint firstItem="zJl-Cp-W1b" firstAttribute="top" secondItem="rD5-qK-Hpy" secondAttribute="bottom" constant="20" id="vgY-gg-uIT"/>
                             <constraint firstItem="X45-c1-Jf8" firstAttribute="leading" secondItem="rD5-qK-Hpy" secondAttribute="trailing" constant="20" id="x9M-Y4-O0e"/>
+                            <constraint firstItem="09w-QX-obA" firstAttribute="centerY" secondItem="gqm-Gw-t7I" secondAttribute="centerY" id="yGI-fp-vYh"/>
+                            <constraint firstItem="gqm-Gw-t7I" firstAttribute="centerY" secondItem="fQN-Uq-VJc" secondAttribute="centerY" id="yRB-w7-6q1"/>
+                            <constraint firstItem="fQN-Uq-VJc" firstAttribute="top" secondItem="LSU-Zv-z5x" secondAttribute="bottom" constant="20" id="z5j-VB-wEX"/>
+                            <constraint firstItem="gqm-Gw-t7I" firstAttribute="leading" secondItem="fQN-Uq-VJc" secondAttribute="trailing" constant="20" id="zGh-X8-VTP"/>
+                            <constraint firstItem="fQN-Uq-VJc" firstAttribute="leading" secondItem="LSU-Zv-z5x" secondAttribute="leading" id="zPk-vL-BaG"/>
                             <constraint firstItem="deg-Pe-gKx" firstAttribute="leading" secondItem="zJl-Cp-W1b" secondAttribute="trailing" constant="20" id="zvr-SK-bxY"/>
                         </constraints>
                     </view>

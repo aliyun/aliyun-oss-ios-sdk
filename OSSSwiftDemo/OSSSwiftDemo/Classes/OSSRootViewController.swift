@@ -11,7 +11,7 @@ import AliyunOSSSwiftSDK
 import AliyunOSSiOS
 
 let ourLogLevel = OSSDDLogLevel.verbose
-class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDataDelegate {
+class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDataDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     
     let provider: OSSAuthCredentialProvider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
     @IBOutlet weak var objectKeyTF: UITextField!
@@ -283,6 +283,110 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             self.showResult(task: t)
             return nil
         })
+    }
+    
+    @IBAction func uploadButtonClicked(_ sender: UIButton) {
+        let imagePickerCtrl = UIImagePickerController();
+        imagePickerCtrl.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate;
+        self.present(imagePickerCtrl, animated: true, completion: {
+            print("打开了图片选择器页面")
+        });
+    }
+    @IBAction func multipartUploadButtonClicked(_ sender: Any) {
+        print("分片上传按钮被点击过！")
+        multipartUpload()
+    }
+    @IBAction func resumableButtonClicked(_ sender: Any) {
+        print("断点续传按钮被点击过！")
+        resumableUpload()
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion: {
+            print("图片选择控制器销毁啦！")
+            if #available(iOS 11.0, *) {
+                let selectedImageURL = info[UIImagePickerControllerImageURL]
+                self.putObject(fileURL: selectedImageURL as! URL)
+            } else {
+                // Fallback on earlier versions
+            }
+        })
+    }
+    
+    func putObject(fileURL: URL) -> Void {
+        let request = OSSPutObjectRequest()
+        request.uploadingFileURL = fileURL
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectKey = "landscape-painting.jpeg"
+        request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
+            print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
+        };
+        
+        let provider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
+        let task = client.putObject(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+        }).waitUntilFinished()
+    }
+    
+    func multipartUpload() -> Void {
+        let request = OSSMultipartUploadRequest()
+        request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectKey = "wangwang(swift).zip"
+        request.partSize = 102400;
+        request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
+            print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
+        };
+        
+        let provider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
+        let task = client.multipartUpload(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+        }).waitUntilFinished()
+    }
+    
+    func resumableUpload() -> Void {
+        var request = OSSResumableUploadRequest()
+        request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.deleteUploadIdOnCancelling = false;
+        request.objectKey = "wangwang(swift).zip"
+        let cacheDir =  NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first
+        request.recordDirectoryPath = cacheDir!
+        request.partSize = 102400;
+        request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
+            print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
+            if totalBytesSent > (totalBytesExpectedToSend / 2) {
+                request.cancel()
+            }
+        }
+        
+        let provider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
+        var task = client.resumableUpload(request)
+        task.continue({ (t) -> Any? in
+            print("Error: \(String(describing: t.error))")
+            return nil
+        }).waitUntilFinished()
+        
+        request = OSSResumableUploadRequest()
+        request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectKey = "wangwang(swift).zip"
+        request.partSize = 102400;
+        request.deleteUploadIdOnCancelling = false;
+        request.recordDirectoryPath = cacheDir!
+        request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
+            print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
+        }
+        
+        task = client.resumableUpload(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+        }).waitUntilFinished()
     }
 }
 

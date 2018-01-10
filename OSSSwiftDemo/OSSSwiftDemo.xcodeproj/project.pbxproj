@@ -13,7 +13,6 @@
 		D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C771FFF66B400D8DF46 /* AppDelegate.swift */; };
 		D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */; };
 		D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */; };
-		D8350C841FFF66B400D8DF46 /* OSSSecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C7A1FFF66B400D8DF46 /* OSSSecondViewController.swift */; };
 		D842D5751FFB65A800220913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5731FFB65A800220913 /* Main.storyboard */; };
 		D842D5771FFB65A800220913 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D842D5761FFB65A800220913 /* Assets.xcassets */; };
 		D842D57A1FFB65A800220913 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5781FFB65A800220913 /* LaunchScreen.storyboard */; };
@@ -45,7 +44,6 @@
 		D8350C771FFF66B400D8DF46 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSRootViewController.swift; sourceTree = "<group>"; };
 		D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSNavigationController.swift; sourceTree = "<group>"; };
-		D8350C7A1FFF66B400D8DF46 /* OSSSecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSSecondViewController.swift; sourceTree = "<group>"; };
 		D842D56C1FFB65A800220913 /* OSSSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSSSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5741FFB65A800220913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D842D5761FFB65A800220913 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 				D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */,
 				D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */,
 				D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */,
-				D8350C7A1FFF66B400D8DF46 /* OSSSecondViewController.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -223,7 +220,6 @@
 				D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */,
 				D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */,
 				D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */,
-				D8350C841FFF66B400D8DF46 /* OSSSecondViewController.swift in Sources */,
 				D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
