@@ -71,17 +71,6 @@
                                     <action selector="getStsTokenButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l9t-eE-AwK"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQN-Uq-VJc">
-                                <rect key="frame" x="309" y="617" width="46" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Xny-2V-baR"/>
-                                    <constraint firstAttribute="height" constant="30" id="hCh-kd-p5o"/>
-                                </constraints>
-                                <state key="normal" title="新页面"/>
-                                <connections>
-                                    <segue destination="XRZ-Ju-6eb" kind="show" id="y2S-2K-635"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sts服务器" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rD5-qK-Hpy">
                                 <rect key="frame" x="20" y="74" width="75" height="21"/>
                                 <constraints>
@@ -195,6 +184,17 @@
                                     <action selector="getBucketACLButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UiQ-hf-dCh"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQN-Uq-VJc">
+                                <rect key="frame" x="20" y="347" width="101" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Xny-2V-baR"/>
+                                    <constraint firstAttribute="height" constant="30" id="hCh-kd-p5o"/>
+                                </constraints>
+                                <state key="normal" title="upload Images"/>
+                                <connections>
+                                    <segue destination="XRZ-Ju-6eb" kind="show" id="y2S-2K-635"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -223,7 +223,7 @@
                             <constraint firstItem="34B-Tb-Sor" firstAttribute="leading" secondItem="ziu-d9-Nqw" secondAttribute="leading" id="hW9-n9-egR"/>
                             <constraint firstItem="rD5-qK-Hpy" firstAttribute="top" secondItem="RJr-fI-c7Y" secondAttribute="bottom" constant="10" id="i3l-Hk-jfH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="deg-Pe-gKx" secondAttribute="trailing" constant="20" id="j9J-zo-B8D"/>
-                            <constraint firstItem="b7c-Mc-1zM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3G4-1H-ECR" secondAttribute="trailing" symbolic="YES" id="lJK-XX-tDz"/>
+                            <constraint firstItem="b7c-Mc-1zM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3G4-1H-ECR" secondAttribute="trailing" constant="8" symbolic="YES" id="lJK-XX-tDz"/>
                             <constraint firstItem="LSU-Zv-z5x" firstAttribute="leading" secondItem="0b8-u4-DdD" secondAttribute="leading" id="meM-wc-7nu"/>
                             <constraint firstItem="Tca-B1-Fs2" firstAttribute="centerY" secondItem="LSU-Zv-z5x" secondAttribute="centerY" id="mu2-Bd-6bV"/>
                             <constraint firstItem="zJl-Cp-W1b" firstAttribute="leading" secondItem="rD5-qK-Hpy" secondAttribute="leading" id="npu-El-flm"/>

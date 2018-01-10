@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D8350C7B1FFF66B400D8DF46 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6D1FFF66B400D8DF46 /* test.xml */; };
 		D8350C7C1FFF66B400D8DF46 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6E1FFF66B400D8DF46 /* wangwang.zip */; };
-		D8350C7E1FFF66B400D8DF46 /* MyFirstSwiftClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C741FFF66B400D8DF46 /* MyFirstSwiftClass.swift */; };
 		D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */; };
 		D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C771FFF66B400D8DF46 /* AppDelegate.swift */; };
 		D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */; };
@@ -42,7 +41,6 @@
 		D8350C6D1FFF66B400D8DF46 /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		D8350C6E1FFF66B400D8DF46 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D8350C701FFF66B400D8DF46 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D8350C741FFF66B400D8DF46 /* MyFirstSwiftClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyFirstSwiftClass.swift; sourceTree = "<group>"; };
 		D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSSwiftGlobalDefines.swift; sourceTree = "<group>"; };
 		D8350C771FFF66B400D8DF46 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSRootViewController.swift; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 			isa = PBXGroup;
 			children = (
 				D8350C771FFF66B400D8DF46 /* AppDelegate.swift */,
-				D8350C741FFF66B400D8DF46 /* MyFirstSwiftClass.swift */,
 				D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */,
 				D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */,
 				D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */,
@@ -227,7 +224,6 @@
 				D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */,
 				D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */,
 				D8350C841FFF66B400D8DF46 /* OSSSecondViewController.swift in Sources */,
-				D8350C7E1FFF66B400D8DF46 /* MyFirstSwiftClass.swift in Sources */,
 				D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

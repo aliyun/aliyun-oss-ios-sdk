@@ -22,7 +22,6 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        我的类().打招呼(名字:"小明")
         
         OSSDDLog.removeAllLoggers();
         OSSLog.enable();
