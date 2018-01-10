@@ -11,6 +11,7 @@
 #import "ImageService.h"
 #import "OSSConstants.h"
 #import <AliyunOSSiOS/OSSService.h>
+#import "OSSTestMacros.h"
 
 @interface ViewController ()
 {
@@ -68,6 +69,8 @@
     [service setCallbackAddress:callbackAddress];
     imageService = [[OssService alloc] initWithViewController:self withEndPoint:imageEndPoint];
     imageOperation = [[ImageService alloc] initImageService:imageService];
+    
+    [OSSLog enableLog];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -251,4 +254,21 @@
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
+
+- (IBAction)customSignButtonClicked:(id)sender{
+    OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
+        
+        // 用户应该在此处将需要签名的字符串发送到自己的业务服务器(AK和SK都在业务服务器保存中,从业务服务器获取签名后的字符串)
+        OSSFederationToken *token = [OSSFederationToken new];
+        token.tAccessKey = OSS_ACCESSKEY_ID;
+        token.tSecretKey = OSS_SECRETKEY_ID;
+        
+        NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
+        return signedContent;
+    }];
+    
+    NSError *error;
+    OSSLogDebug(@"%@",[provider sign:@"abc" error:&error]);
+}
+
 @end

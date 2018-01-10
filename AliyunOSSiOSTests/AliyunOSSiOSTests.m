@@ -1471,6 +1471,75 @@ id<OSSCredentialProvider> credential, authCredential;
     }] waitUntilFinished];
 }
 
+- (void)test_ConcurrencyMultipartUpload
+{
+    __block BOOL finished = NO,complete = NO;
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 100 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    OSSTask * multipartTask = [client multipartUpload:multipartUploadRequest];
+    
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[multipartTask continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            if (task.error) {
+                NSLog(@"error: %@", task.error);
+                if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                    // The upload cannot be resumed. Needs to re-initiate a upload.
+                }
+            } else {
+                NSLog(@"Upload file success");
+            }
+            finished = YES;
+            return nil;
+        }] waitUntilFinished];
+    });
+    
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    request.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectKey = OSS_MULTIPART_UPLOADKEY;
+    request.contentType = @"application/octet-stream";
+    request.partSize = 100 * 1024;
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    request.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    OSSClient *newClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:[[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL]];
+    OSSTask * otherTask = [newClient multipartUpload:request];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[otherTask continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            if (task.error) {
+                NSLog(@"error: %@", task.error);
+                if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
+                    // The upload cannot be resumed. Needs to re-initiate a upload.
+                }
+            } else {
+                NSLog(@"Upload file success");
+            }
+            complete = YES;
+            return nil;
+        }] waitUntilFinished];
+    });
+    
+    while (!complete || !finished) {
+        OSSLogVerbose(@"上传任务执行中");
+    }
+    //    BOOL isEqual = [self isFileOnOSSBucket:OSS_BUCKET_PRIVATE objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[multipartUploadRequest.uploadingFileURL path]];
+    //    XCTAssertTrue(isEqual);
+}
+
 #pragma mark - token update
 /*
 - (void)testZZZTokenUpdate {
