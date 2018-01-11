@@ -13,7 +13,7 @@ import AliyunOSSiOS
 let ourLogLevel = OSSDDLogLevel.verbose
 class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDataDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     
-    let provider: OSSAuthCredentialProvider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+    var mProvider: OSSAuthCredentialProvider!;
     @IBOutlet weak var objectKeyTF: UITextField!
     @IBOutlet weak var serverURLTF: UITextField!
     @IBOutlet weak var bucketNameTF: UITextField!
@@ -59,7 +59,8 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         OSSLogWarn("Warn from aDDLogInstance", osslog: aDDLogInstance)
         OSSLogError("Error from aDDLogInstance", osslog: aDDLogInstance)
         
-        mClient = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: self.provider)
+        mProvider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        mClient = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: mProvider)
         serverURLTF.text = OSS_STSTOKEN_URL
         bucketNameTF.text = OSS_BUCKET_PUBLIC
         objectKeyTF.text = nil
@@ -223,7 +224,8 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     
     func showResult(task: OSSTask<AnyObject>?) -> Void {
         if (task?.error != nil) {
-            self.ossAlert(title: "错误", message: task?.error?.localizedDescription)
+            let error: NSError = (task?.error)! as NSError
+            self.ossAlert(title: "错误", message: error.description)
         }else
         {
             let result = task?.result
@@ -304,18 +306,14 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: {
             print("图片选择控制器销毁啦！")
-            if #available(iOS 11.0, *) {
-                let selectedImageURL = info[UIImagePickerControllerImageURL]
-                self.putObject(fileURL: selectedImageURL as! URL)
-            } else {
-                // Fallback on earlier versions
-            }
+            let selectedImage = info[UIImagePickerControllerOriginalImage];
+            self.putObject(image: selectedImage as! UIImage)
         })
     }
     
-    func putObject(fileURL: URL) -> Void {
+    func putObject(image: UIImage) -> Void {
         let request = OSSPutObjectRequest()
-        request.uploadingFileURL = fileURL
+        request.uploadingData = UIImagePNGRepresentation(image)!
         request.bucketName = OSS_BUCKET_PRIVATE
         request.objectKey = "landscape-painting.jpeg"
         request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
