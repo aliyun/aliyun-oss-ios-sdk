@@ -992,6 +992,17 @@ static NSObject * lock;
         
         BOOL divisible = (uploadFileSize % request.partSize == 0);
         int partCount = (int)(uploadFileSize / request.partSize) + (divisible? 0 : 1);
+        NSUInteger maxPartCount = 5000;    //最大分片数量是5k
+        
+        if(partCount > maxPartCount)
+        {
+            request.partSize = uploadFileSize / maxPartCount;
+            partCount = maxPartCount;
+        }
+        
+        if (request.isCancelled) {
+            return [OSSTask taskWithError:cancelError];
+        }
         NSMutableArray * uploadedPart = [NSMutableArray array];
         NSString *recordFilePath = nil;
         OSSLogVerbose(@"request.recordDirectoryPath %@: ",request.recordDirectoryPath);
