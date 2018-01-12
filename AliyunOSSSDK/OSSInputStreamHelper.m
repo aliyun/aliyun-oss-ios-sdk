@@ -52,10 +52,12 @@
     NSInteger length = 1;
     while (length > 0)
     {
-        uint8_t streamData[1024 * 4];
-        length = [_inputStream read:streamData maxLength:1024 * 4];
-        if (length > 0) {
-            _crc64 = aos_crc64(_crc64, streamData, length);
+        @autoreleasepool{
+            uint8_t streamData[1024 * 4];
+            length = [_inputStream read:streamData maxLength:1024 * 4];
+            if (length > 0) {
+                _crc64 = aos_crc64(_crc64, streamData, length);
+            }
         }
     }
     
