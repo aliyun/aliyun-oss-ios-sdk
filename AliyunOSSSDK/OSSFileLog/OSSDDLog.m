@@ -438,6 +438,43 @@ static NSUInteger _numProcessors;
 }
 
 + (void)log:(BOOL)asynchronous
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
+    context:(NSInteger)context
+       file:(const char *)file
+   function:(const char *)function
+       line:(NSUInteger)line
+        tag:(id)tag
+     format:(NSString *)format
+       args:(va_list)args {
+    [self.sharedInstance log:asynchronous level:level flag:flag context:context file:file function:function line:line tag:tag format:format args:args];
+}
+
+- (void)log:(BOOL)asynchronous
+      level:(OSSDDLogLevel)level
+       flag:(OSSDDLogFlag)flag
+    context:(NSInteger)context
+       file:(const char *)file
+   function:(const char *)function
+       line:(NSUInteger)line
+        tag:(id)tag
+     format:(NSString *)format
+       args:(va_list)args {
+    if (format) {
+        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+        [self log:asynchronous
+          message:message
+            level:level
+             flag:flag
+          context:context
+             file:file
+         function:function
+             line:line
+              tag:tag];
+    }
+}
+
++ (void)log:(BOOL)asynchronous
     message:(NSString *)message
       level:(OSSDDLogLevel)level
        flag:(OSSDDLogFlag)flag
@@ -459,17 +496,31 @@ static NSUInteger _numProcessors;
        line:(NSUInteger)line
         tag:(id)tag {
     OSSDDLogMessage *logMessage = [[OSSDDLogMessage alloc] initWithMessage:message
-                                                               level:level
-                                                                flag:flag
-                                                             context:context
-                                                                file:[NSString stringWithFormat:@"%s", file]
-                                                            function:[NSString stringWithFormat:@"%s", function]
-                                                                line:line
-                                                                 tag:tag
-                                                             options:(OSSDDLogMessageOptions)0
-                                                           timestamp:nil];
+                                                                     level:level
+                                                                      flag:flag
+                                                                   context:context
+                                                                      file:[NSString stringWithFormat:@"%s", file]
+                                                                  function:[NSString stringWithFormat:@"%s", function]
+                                                                      line:line
+                                                                       tag:tag
+                                                                   options:(OSSDDLogMessageOptions)0
+                                                                 timestamp:nil];
     
     [self queueLogMessage:logMessage asynchronously:asynchronous];
+}
+
++ (void)log:(BOOL)asynchronous
+    message:(OSSDDLogMessage *)logMessage {
+    [self.sharedInstance log:asynchronous message:logMessage];
+}
+
+- (void)log:(BOOL)asynchronous
+    message:(OSSDDLogMessage *)logMessage {
+    [self queueLogMessage:logMessage asynchronously:asynchronous];
+}
+
++ (void)flushLog {
+    [self.sharedInstance flushLog];
 }
 
 - (void)flushLog {

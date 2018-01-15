@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                         <viewControllerLayoutGuide type="top" id="L08-sz-ndx"/>
                         <viewControllerLayoutGuide type="bottom" id="cBW-uC-aMI"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Mo3-C7-4iC">
+                    <view key="view" contentMode="scaleToFill" id="Mo3-C7-4iC" customClass="UIScrollView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -133,6 +133,17 @@
                                     <action selector="onOssButtonNormalCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="rS3-b3-LLO"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yzB-vT-XdQ">
+                                <rect key="frame" x="16" y="355" width="77" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="MMf-JE-bPv"/>
+                                    <constraint firstAttribute="height" constant="30" id="dLP-6t-085"/>
+                                </constraints>
+                                <state key="normal" title="自定义签名"/>
+                                <connections>
+                                    <action selector="customSignButtonClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="BZS-wt-u3g"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -156,10 +167,13 @@
                             <constraint firstItem="L6N-s3-fvF" firstAttribute="top" secondItem="HPe-Fv-2H5" secondAttribute="bottom" constant="26" id="UIr-a1-b2Z"/>
                             <constraint firstItem="HPe-Fv-2H5" firstAttribute="top" secondItem="fY5-bi-xLP" secondAttribute="bottom" constant="79" id="UVn-WL-aHT"/>
                             <constraint firstItem="2l1-kO-u42" firstAttribute="leading" secondItem="HPe-Fv-2H5" secondAttribute="trailing" constant="8" id="Yov-vC-EYf"/>
+                            <constraint firstItem="yzB-vT-XdQ" firstAttribute="leading" secondItem="fY5-bi-xLP" secondAttribute="leading" id="aEf-ze-sLB"/>
                             <constraint firstItem="oSW-1o-zHG" firstAttribute="centerX" secondItem="Mo3-C7-4iC" secondAttribute="centerX" id="aXv-Wa-hok"/>
                             <constraint firstAttribute="trailing" secondItem="JdC-4m-t1M" secondAttribute="trailing" constant="79" id="ae3-dR-MGg"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="yzB-vT-XdQ" secondAttribute="trailing" constant="20" symbolic="YES" id="d1d-Kb-zYX"/>
                             <constraint firstItem="ng6-dg-j7g" firstAttribute="top" secondItem="oSW-1o-zHG" secondAttribute="bottom" constant="66" id="dYA-pD-jR3"/>
                             <constraint firstItem="fC0-Fv-DOy" firstAttribute="leading" secondItem="L6N-s3-fvF" secondAttribute="trailing" constant="8" id="fPb-ch-VOX"/>
+                            <constraint firstItem="yzB-vT-XdQ" firstAttribute="top" secondItem="fY5-bi-xLP" secondAttribute="bottom" constant="25" id="ias-2o-Skt"/>
                             <constraint firstItem="2l1-kO-u42" firstAttribute="top" secondItem="HPe-Fv-2H5" secondAttribute="top" id="irF-3E-mpa"/>
                             <constraint firstAttribute="leadingMargin" secondItem="HPe-Fv-2H5" secondAttribute="leading" id="jfe-x6-me0"/>
                             <constraint firstItem="ZWd-Av-N8U" firstAttribute="top" secondItem="2l1-kO-u42" secondAttribute="top" id="ojN-tA-ezV"/>
@@ -167,7 +181,7 @@
                             <constraint firstItem="ng6-dg-j7g" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Jgi-Is-fxv" secondAttribute="trailing" constant="8" symbolic="YES" id="pYG-mO-Jnw"/>
                             <constraint firstItem="ZWd-Av-N8U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2l1-kO-u42" secondAttribute="trailing" constant="8" symbolic="YES" id="sU7-B6-s2G"/>
                             <constraint firstItem="unZ-gL-zRz" firstAttribute="centerY" secondItem="NMq-er-YK5" secondAttribute="centerY" id="sgc-oh-ywi"/>
-                            <constraint firstItem="PNm-Gl-Hkx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fC0-Fv-DOy" secondAttribute="trailing" symbolic="YES" id="thO-We-vM9"/>
+                            <constraint firstItem="PNm-Gl-Hkx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fC0-Fv-DOy" secondAttribute="trailing" constant="8" symbolic="YES" id="thO-We-vM9"/>
                             <constraint firstAttribute="trailing" secondItem="ng6-dg-j7g" secondAttribute="trailing" constant="71" id="vD1-oD-2sA"/>
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="top" secondItem="fC0-Fv-DOy" secondAttribute="top" id="yaf-NY-lcR"/>
                             <constraint firstItem="fY5-bi-xLP" firstAttribute="top" secondItem="NMq-er-YK5" secondAttribute="bottom" constant="29.5" id="z9g-he-4Jk"/>

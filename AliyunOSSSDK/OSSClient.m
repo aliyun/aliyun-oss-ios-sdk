@@ -911,7 +911,7 @@ static NSObject * lock;
     {
         NSString *localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:request.uploadId];
         OSSLogVerbose(@"MultipartUpload local_crc64 %@",localPartInfosPath);
-        if (localPartInfosPath)
+        if (localPartInfosPath && [[NSFileManager defaultManager] fileExistsAtPath:localPartInfosPath])
         {
             NSError *deleteError;
             if (![[NSFileManager defaultManager] removeItemAtPath:localPartInfosPath error:&deleteError])
@@ -1165,7 +1165,7 @@ static NSObject * lock;
             return completeTask;
         } else
         {
-            if(recordFilePath)
+            if(recordFilePath && [[NSFileManager defaultManager] fileExistsAtPath:recordFilePath])
             {
                 NSError *deleteError;
                 if (![[NSFileManager defaultManager] removeItemAtPath:recordFilePath error:&deleteError])
@@ -1174,7 +1174,7 @@ static NSObject * lock;
                 }
             }
             
-            if (localPartInfosPath)
+            if (localPartInfosPath && [[NSFileManager defaultManager] fileExistsAtPath:localPartInfosPath])
             {
                 NSError *deleteError;
                 if (![[NSFileManager defaultManager] removeItemAtPath:localPartInfosPath error:&deleteError])
