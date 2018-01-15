@@ -18,3 +18,4 @@ FOUNDATION_EXPORT const unsigned char AliyunOSSiOSVersionString[];
 
 #import "OSSService.h"
 #import "OSSCompat.h"
+#import "OSSXMLDictionary.h"
