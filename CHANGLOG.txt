@@ -11,6 +11,14 @@ Environment Requirement：
 
 Update Logs:
 
+2018/1/15
+- Release 2.8.1
+1.fix : fix oom issue when resumeuploading bigFile.
+
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.8.1'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
+
 2017/12/17
 - Release 2.8.0
 1.feat : add crc64 function;
