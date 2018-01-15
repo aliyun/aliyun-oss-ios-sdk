@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="languages">
-        <item>C语言</item>
+        <item>C</item>
         <item>Java </item>
         <item>C#</item>
         <item>PHP</item>

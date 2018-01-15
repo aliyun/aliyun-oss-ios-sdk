@@ -2,8 +2,8 @@
 //  OSSRootViewController.swift
 //  OSSSwiftDemo
 //
-//  Created by 怀叙 on 2018/1/2.
-//  Copyright © 2018年 阿里云. All rights reserved.
+//  Created by huaixu on 2018/1/2.
+//  Copyright © 2018年 aliyun. All rights reserved.
 //
 
 import UIKit
@@ -68,22 +68,22 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     
     @IBAction func getImageButtonClicked(_ sender: Any) {
         if (objectKeyTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            ossAlert(title: "error", message: "Please input object name!")
             return;
         }
         if (bucketNameTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            ossAlert(title: "error", message: "Please input bucket name!")
             return;
         }
         getImage()
     }
     @IBAction func getObjectButtonClicked(_ sender: UIButton) {
         if (objectKeyTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            ossAlert(title: "error", message: "Please input object name!")
             return;
         }
         if (bucketNameTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            ossAlert(title: "error", message: "Please input bucket name!")
             return;
         }
         getObject()
@@ -106,11 +106,11 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     }
     @IBAction func headObjectButtonClicked(_ sender: Any) {
         if (objectKeyTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入Object名称之后重试!")
+            ossAlert(title: "error", message: "Please input object name!")
             return;
         }
         if (bucketNameTF.text?.isEmpty)! {
-            ossAlert(title: "错误", message: "请输入BUCKET名称之后重试!")
+            ossAlert(title: "error", message: "Please input bucket name!")
             return;
         }
         headObject()
@@ -164,7 +164,8 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             let session: URLSession = URLSession(configuration: config, delegate: self as URLSessionDelegate, delegateQueue: nil);
             
             let task = session.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
-                //把Data对象转换回JSON对象
+                
+                //Convert Data to Jsons
                 tcs.setResult(data as AnyObject)
             })
             task.resume()
@@ -173,11 +174,12 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             let json = try? JSONSerialization.jsonObject(with: tcs.task.result as! Data,
                                                          options:.allowFragments) as! [String: Any]
             print("Json Object:", json as Any)
-            //验证JSON对象可用性
+            
+            //verify json
             let accessKeyId = json?["AccessKeyId"]
             let accessKeySecret = json?["AccessKeySecret"]
             
-            self.ossAlert(title: "提示", message: json?.description)
+            self.ossAlert(title: "notice", message: json?.description)
             
             
             let token = OSSFederationToken()
@@ -212,7 +214,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     
     func ossAlert(title: String?,message:String?) -> Void {
         let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertCtrl.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.default, handler: { (action) in
+        alertCtrl.addAction(UIAlertAction(title: "confirm", style: UIAlertActionStyle.default, handler: { (action) in
             print("\(action.title!) has been clicked");
             alertCtrl.dismiss(animated: true, completion: nil)
         }))
@@ -225,11 +227,11 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     func showResult(task: OSSTask<AnyObject>?) -> Void {
         if (task?.error != nil) {
             let error: NSError = (task?.error)! as NSError
-            self.ossAlert(title: "错误", message: error.description)
+            self.ossAlert(title: "error", message: error.description)
         }else
         {
             let result = task?.result
-            self.ossAlert(title: "提示", message: result?.description)
+            self.ossAlert(title: "notice", message: result?.description)
         }
     }
     
@@ -290,22 +292,17 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     @IBAction func uploadButtonClicked(_ sender: UIButton) {
         let imagePickerCtrl = UIImagePickerController();
         imagePickerCtrl.delegate = self as UIImagePickerControllerDelegate & UINavigationControllerDelegate;
-        self.present(imagePickerCtrl, animated: true, completion: {
-            print("打开了图片选择器页面")
-        });
+        self.present(imagePickerCtrl, animated: true, completion: nil);
     }
     @IBAction func multipartUploadButtonClicked(_ sender: Any) {
-        print("分片上传按钮被点击过！")
         multipartUpload()
     }
     @IBAction func resumableButtonClicked(_ sender: Any) {
-        print("断点续传按钮被点击过！")
         resumableUpload()
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: {
-            print("图片选择控制器销毁啦！")
             let selectedImage = info[UIImagePickerControllerOriginalImage];
             self.putObject(image: selectedImage as! UIImage)
         })

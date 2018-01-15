@@ -26,7 +26,7 @@
             </objects>
             <point key="canvasLocation" x="-1802" y="-726"/>
         </scene>
-        <!--主页面-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="OSSRootViewController" customModule="OSSSwiftDemo" customModuleProvider="target" sceneMemberID="viewController">
@@ -71,7 +71,7 @@
                                     <action selector="getStsTokenButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l9t-eE-AwK"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sts服务器" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rD5-qK-Hpy">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sts server" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rD5-qK-Hpy">
                                 <rect key="frame" x="20" y="74" width="75" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="Nzd-Gz-XLL"/>
@@ -90,8 +90,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bucket名称" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zJl-Cp-W1b">
-                                <rect key="frame" x="20" y="115" width="87" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bucket name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zJl-Cp-W1b">
+                                <rect key="frame" x="20" y="115" width="99" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Ksk-BD-nQt"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="c0d-En-AYa"/>
@@ -101,7 +101,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bucket-Name" borderStyle="roundedRect" placeholder="请输入bucket名称" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="deg-Pe-gKx">
-                                <rect key="frame" x="127" y="111" width="212" height="30"/>
+                                <rect key="frame" x="139" y="111" width="200" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="dad-op-cVe"/>
                                 </constraints>
@@ -109,8 +109,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="对象名称" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ziu-d9-Nqw">
-                                <rect key="frame" x="20" y="156" width="69.5" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="object name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ziu-d9-Nqw">
+                                <rect key="frame" x="20" y="156" width="95" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="3LY-Of-1Nn"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="Ywl-K5-ALd"/>
@@ -120,7 +120,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="objectName" borderStyle="roundedRect" placeholder="请输入对象名称" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3aV-uP-YEQ">
-                                <rect key="frame" x="109.5" y="151.5" width="229.5" height="30"/>
+                                <rect key="frame" x="135" y="151.5" width="204" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="9aT-EQ-EMP"/>
                                     <constraint firstAttribute="height" constant="30" id="w1C-nQ-jA2"/>
@@ -261,7 +261,7 @@
                             <constraint firstItem="deg-Pe-gKx" firstAttribute="leading" secondItem="zJl-Cp-W1b" secondAttribute="trailing" constant="20" id="zvr-SK-bxY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="主页面" id="HjQ-Zm-HTV"/>
+                    <navigationItem key="navigationItem" title="Home" id="HjQ-Zm-HTV"/>
                     <connections>
                         <outlet property="bucketNameTF" destination="deg-Pe-gKx" id="81X-FC-hqw"/>
                         <outlet property="objectKeyTF" destination="3aV-uP-YEQ" id="ZCV-Fb-yZ7"/>

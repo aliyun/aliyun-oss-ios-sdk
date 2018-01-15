@@ -524,7 +524,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0910;
-				ORGANIZATIONNAME = "阿里云";
+				ORGANIZATIONNAME = aliyun;
 				TargetAttributes = {
 					21028BBB1BA9ABF500C2A6BA = {
 						CreatedOnToolsVersion = 6.4;

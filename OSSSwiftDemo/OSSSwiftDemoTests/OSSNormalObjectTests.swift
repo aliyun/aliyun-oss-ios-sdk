@@ -2,8 +2,8 @@
 //  OSSNormalObjectTests.swift
 //  OSSSwiftDemoTests
 //
-//  Created by 怀叙 on 2018/1/11.
-//  Copyright © 2018年 阿里云. All rights reserved.
+//  Created by huaixu on 2018/1/11.
+//  Copyright © 2018年 aliyun. All rights reserved.
 //
 
 import XCTest

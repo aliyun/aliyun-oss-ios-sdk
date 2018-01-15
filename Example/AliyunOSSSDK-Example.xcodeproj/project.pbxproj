@@ -402,7 +402,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
-				ORGANIZATIONNAME = "阿里云";
+				ORGANIZATIONNAME = aliyun;
 				TargetAttributes = {
 					D827E40B1FCD0FC60085380C = {
 						CreatedOnToolsVersion = 9.1;

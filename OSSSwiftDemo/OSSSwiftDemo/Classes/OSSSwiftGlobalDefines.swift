@@ -2,8 +2,8 @@
 //  OSSSwiftGlobalDefines.swift
 //  OSSSwiftDemo
 //
-//  Created by 怀叙 on 2018/1/3.
-//  Copyright © 2018年 阿里云. All rights reserved.
+//  Created by huaixu on 2018/1/3.
+//  Copyright © 2018年 Aliyun. All rights reserved.
 //
 
 import Foundation

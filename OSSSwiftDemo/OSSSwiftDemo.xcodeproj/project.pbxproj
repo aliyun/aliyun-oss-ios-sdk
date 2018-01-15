@@ -25,8 +25,8 @@
 		D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */; };
 		D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */; };
 		D8DF2FFE20078D910056B674 /* OSSSwiftGlobalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */; };
-		D8DF30002008439A0056B674 /* swift.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* swift.pdf */; };
-		D8DF30012008439A0056B674 /* swift.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* swift.pdf */; };
+		D8DF30002008439A0056B674 /* oracle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* oracle.pdf */; };
+		D8DF30012008439A0056B674 /* oracle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* oracle.pdf */; };
 		D8DF3003200851AF0056B674 /* OSSCheckMd5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */; };
 		D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */; };
 		D8E641662009D9040023DF48 /* OSSMultipartUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */; };
@@ -86,7 +86,7 @@
 		D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSSwiftDemoTests.swift; sourceTree = "<group>"; };
 		D8DF2FF6200789BA0056B674 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSNormalObjectTests.swift; sourceTree = "<group>"; };
-		D8DF2FFF2008439A0056B674 /* swift.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = swift.pdf; sourceTree = "<group>"; };
+		D8DF2FFF2008439A0056B674 /* oracle.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = oracle.pdf; sourceTree = "<group>"; };
 		D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckMd5Tests.swift; sourceTree = "<group>"; };
 		D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSExceptionalTests.swift; sourceTree = "<group>"; };
 		D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSMultipartUploadTests.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		D8350C6C1FFF66B400D8DF46 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D8DF2FFF2008439A0056B674 /* swift.pdf */,
+				D8DF2FFF2008439A0056B674 /* oracle.pdf */,
 				D8350C6D1FFF66B400D8DF46 /* test.xml */,
 				D8350C6E1FFF66B400D8DF46 /* wangwang.zip */,
 			);
@@ -267,7 +267,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
-				ORGANIZATIONNAME = "阿里云";
+				ORGANIZATIONNAME = aliyun;
 				TargetAttributes = {
 					D842D56B1FFB65A800220913 = {
 						CreatedOnToolsVersion = 9.2;
@@ -309,7 +309,7 @@
 				D842D5771FFB65A800220913 /* Assets.xcassets in Resources */,
 				D842D5751FFB65A800220913 /* Main.storyboard in Resources */,
 				D8350C7C1FFF66B400D8DF46 /* wangwang.zip in Resources */,
-				D8DF30002008439A0056B674 /* swift.pdf in Resources */,
+				D8DF30002008439A0056B674 /* oracle.pdf in Resources */,
 				D8350C7B1FFF66B400D8DF46 /* test.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,7 +318,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8DF30012008439A0056B674 /* swift.pdf in Resources */,
+				D8DF30012008439A0056B674 /* oracle.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
