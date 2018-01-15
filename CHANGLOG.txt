@@ -13,7 +13,7 @@ Update Logs:
 
 2018/1/15
 - Release 2.8.1
-1.fix : fix oom issue when resumeuploading bigFile.
+1.fix : fix oom issue when resumeuploading big file.
 
 github address：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod dependency：   pod 'AliyunOSSiOS', '~> 2.8.1'
