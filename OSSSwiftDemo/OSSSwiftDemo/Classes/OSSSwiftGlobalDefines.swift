@@ -17,7 +17,12 @@ let OSS_MULTIPART_UPLOADKEY: String = "multipart"
 let OSS_RESUMABLE_UPLOADKEY: String = "resumable"
 let OSS_CALLBACK_URL: String = "http://oss-demo.aliyuncs.com:23450"
 let OSS_CNAME_URL: String = "https://hs.chenhongyu.cn"
-let OSS_STSTOKEN_URL: String = "http://30.40.38.11:3015/sts/getsts"
-let OSS_IMAGE_KEY: String = "haskey.jpeg"
+let OSS_STSTOKEN_URL: String = "http://30.40.38.17:3015/sts/getsts"
+let OSS_IMAGE_KEY: String = "zuozhu.jpeg"
+let OSS_CRC64_ENABLE: Bool = true
+let OSS_CONTENT_TYPE: String = "Content-Type"
+let OSS_CONTENT_LENGTH: String = "Content-Length"
+let OSS_TEST_CONTENT_TYPE: String = "application/special"
+let OSS_APPEND_OBJECT_KEY: String = "appendObject"
 
 

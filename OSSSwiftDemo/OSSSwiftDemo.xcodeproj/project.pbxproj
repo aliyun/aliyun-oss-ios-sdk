@@ -21,7 +21,35 @@
 		D842D5BC1FFCC8A600220913 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */; };
 		D842D5C41FFDDA3C00220913 /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */; };
 		D842D5C61FFDDA4300220913 /* AliyunOSSSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */; };
+		D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */; };
+		D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */; };
+		D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */; };
+		D8DF2FFE20078D910056B674 /* OSSSwiftGlobalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */; };
+		D8DF30002008439A0056B674 /* swift.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* swift.pdf */; };
+		D8DF30012008439A0056B674 /* swift.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* swift.pdf */; };
+		D8DF3003200851AF0056B674 /* OSSCheckMd5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */; };
+		D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */; };
+		D8E641662009D9040023DF48 /* OSSMultipartUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */; };
+		D8E641682009D9170023DF48 /* OSSBucketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641672009D9170023DF48 /* OSSBucketTests.swift */; };
+		D8E6416A2009D92F0023DF48 /* OSSResumableUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */; };
+		D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */; };
+		D8E6416E2009D94F0023DF48 /* OSSTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */; };
+		D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416F200A31530023DF48 /* OSSProviderTests.swift */; };
+		D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */; };
+		D8E64174200A81BF0023DF48 /* OSSExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */; };
+		D8E64178200A81E90023DF48 /* OSSXMLDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */; };
+		D8F27EB0200C4CD9005A2C39 /* OSSCnameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D8DF2FF7200789BA0056B674 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D842D5641FFB65A800220913 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D842D56B1FFB65A800220913;
+			remoteInfo = OSSSwiftDemo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		D842D5B21FFCC56E00220913 /* Embed Frameworks */ = {
@@ -53,6 +81,24 @@
 		D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckCRC64Tests.swift; sourceTree = "<group>"; };
+		D8DF2FF2200789BA0056B674 /* OSSSwiftDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSSSwiftDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSSwiftDemoTests.swift; sourceTree = "<group>"; };
+		D8DF2FF6200789BA0056B674 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSNormalObjectTests.swift; sourceTree = "<group>"; };
+		D8DF2FFF2008439A0056B674 /* swift.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = swift.pdf; sourceTree = "<group>"; };
+		D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckMd5Tests.swift; sourceTree = "<group>"; };
+		D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSExceptionalTests.swift; sourceTree = "<group>"; };
+		D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSMultipartUploadTests.swift; sourceTree = "<group>"; };
+		D8E641672009D9170023DF48 /* OSSBucketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSBucketTests.swift; sourceTree = "<group>"; };
+		D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSResumableUploadTests.swift; sourceTree = "<group>"; };
+		D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSLogTests.swift; sourceTree = "<group>"; };
+		D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSTaskTests.swift; sourceTree = "<group>"; };
+		D8E6416F200A31530023DF48 /* OSSProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSProviderTests.swift; sourceTree = "<group>"; };
+		D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCancellationTests.swift; sourceTree = "<group>"; };
+		D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSExecutorTests.swift; sourceTree = "<group>"; };
+		D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSXMLDictionaryTests.swift; sourceTree = "<group>"; };
+		D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCnameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,12 +114,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DF2FEF200789BA0056B674 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		D8350C6C1FFF66B400D8DF46 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D8DF2FFF2008439A0056B674 /* swift.pdf */,
 				D8350C6D1FFF66B400D8DF46 /* test.xml */,
 				D8350C6E1FFF66B400D8DF46 /* wangwang.zip */,
 			);
@@ -103,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				D842D56E1FFB65A800220913 /* OSSSwiftDemo */,
+				D8DF2FF3200789BA0056B674 /* OSSSwiftDemoTests */,
 				D842D5AD1FFCC55700220913 /* Frameworks */,
 				D842D56D1FFB65A800220913 /* Products */,
 			);
@@ -112,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				D842D56C1FFB65A800220913 /* OSSSwiftDemo.app */,
+				D8DF2FF2200789BA0056B674 /* OSSSwiftDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +197,29 @@
 			path = Frameworks;
 			sourceTree = "<group>";
 		};
+		D8DF2FF3200789BA0056B674 /* OSSSwiftDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */,
+				D8DF2FF6200789BA0056B674 /* Info.plist */,
+				D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */,
+				D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */,
+				D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */,
+				D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */,
+				D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */,
+				D8E641672009D9170023DF48 /* OSSBucketTests.swift */,
+				D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */,
+				D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */,
+				D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */,
+				D8E6416F200A31530023DF48 /* OSSProviderTests.swift */,
+				D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */,
+				D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */,
+				D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */,
+				D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */,
+			);
+			path = OSSSwiftDemoTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -162,6 +241,24 @@
 			productReference = D842D56C1FFB65A800220913 /* OSSSwiftDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D8DF2FF1200789BA0056B674 /* OSSSwiftDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8DF2FFB200789BA0056B674 /* Build configuration list for PBXNativeTarget "OSSSwiftDemoTests" */;
+			buildPhases = (
+				D8DF2FEE200789BA0056B674 /* Sources */,
+				D8DF2FEF200789BA0056B674 /* Frameworks */,
+				D8DF2FF0200789BA0056B674 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8DF2FF8200789BA0056B674 /* PBXTargetDependency */,
+			);
+			name = OSSSwiftDemoTests;
+			productName = OSSSwiftDemoTests;
+			productReference = D8DF2FF2200789BA0056B674 /* OSSSwiftDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,7 +272,12 @@
 					D842D56B1FFB65A800220913 = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
+					};
+					D8DF2FF1200789BA0056B674 = {
+						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Manual;
+						TestTargetID = D842D56B1FFB65A800220913;
 					};
 				};
 			};
@@ -193,6 +295,7 @@
 			projectRoot = "";
 			targets = (
 				D842D56B1FFB65A800220913 /* OSSSwiftDemo */,
+				D8DF2FF1200789BA0056B674 /* OSSSwiftDemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -206,7 +309,16 @@
 				D842D5771FFB65A800220913 /* Assets.xcassets in Resources */,
 				D842D5751FFB65A800220913 /* Main.storyboard in Resources */,
 				D8350C7C1FFF66B400D8DF46 /* wangwang.zip in Resources */,
+				D8DF30002008439A0056B674 /* swift.pdf in Resources */,
 				D8350C7B1FFF66B400D8DF46 /* test.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8DF2FF0200789BA0056B674 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8DF30012008439A0056B674 /* swift.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +336,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8DF2FEE200789BA0056B674 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */,
+				D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */,
+				D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */,
+				D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */,
+				D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */,
+				D8E64178200A81E90023DF48 /* OSSXMLDictionaryTests.swift in Sources */,
+				D8E6416A2009D92F0023DF48 /* OSSResumableUploadTests.swift in Sources */,
+				D8E64174200A81BF0023DF48 /* OSSExecutorTests.swift in Sources */,
+				D8DF2FFE20078D910056B674 /* OSSSwiftGlobalDefines.swift in Sources */,
+				D8E6416E2009D94F0023DF48 /* OSSTaskTests.swift in Sources */,
+				D8F27EB0200C4CD9005A2C39 /* OSSCnameTests.swift in Sources */,
+				D8E641662009D9040023DF48 /* OSSMultipartUploadTests.swift in Sources */,
+				D8DF3003200851AF0056B674 /* OSSCheckMd5Tests.swift in Sources */,
+				D8E641682009D9170023DF48 /* OSSBucketTests.swift in Sources */,
+				D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */,
+				D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D8DF2FF8200789BA0056B674 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D842D56B1FFB65A800220913 /* OSSSwiftDemo */;
+			targetProxy = D8DF2FF7200789BA0056B674 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D842D5731FFB65A800220913 /* Main.storyboard */ = {
@@ -358,8 +501,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6ND67KCL32;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
@@ -382,8 +526,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6ND67KCL32;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
@@ -397,6 +542,44 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D8DF2FF9200789BA0056B674 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = OSSSwiftDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.swift.oss.OSSSwiftDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSSSwiftDemo.app/OSSSwiftDemo";
+			};
+			name = Debug;
+		};
+		D8DF2FFA200789BA0056B674 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = OSSSwiftDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aliyun.swift.oss.OSSSwiftDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSSSwiftDemo.app/OSSSwiftDemo";
 			};
 			name = Release;
 		};
@@ -417,6 +600,15 @@
 			buildConfigurations = (
 				D842D57F1FFB65A800220913 /* Debug */,
 				D842D5801FFB65A800220913 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8DF2FFB200789BA0056B674 /* Build configuration list for PBXNativeTarget "OSSSwiftDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8DF2FF9200789BA0056B674 /* Debug */,
+				D8DF2FFA200789BA0056B674 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
