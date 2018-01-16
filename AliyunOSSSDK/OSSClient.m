@@ -116,7 +116,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:[request getQueryDict]];
+                                                    querys:[request getQueryDict] sha1:nil];
     requestDelegate.operType = OSSOperationTypeGetService;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -142,7 +142,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:headerParams
-                                                    querys:nil];
+                                                    querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeCreateBucket;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -161,7 +161,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:nil];
+                                                    querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeDeleteBucket;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -180,7 +180,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:[request getQueryDict]];
+                                                    querys:[request getQueryDict] sha1:nil];
     requestDelegate.operType = OSSOperationTypeGetBucket;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -200,7 +200,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:query];
+                                                    querys:query sha1:nil];
     requestDelegate.operType = OSSOperationTypeGetBucketACL;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -219,7 +219,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:nil];
+                                                    querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeHeadObject;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -258,7 +258,7 @@ static NSObject * lock;
                                                      range:rangeString
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:querys];
+                                                    querys:querys sha1:nil];
     requestDelegate.operType = OSSOperationTypeGetObject;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -306,20 +306,16 @@ static NSObject * lock;
         [headerParams setObject:request.cacheControl forKey:OSSHttpHeaderCacheControl];
     }
     
+    
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObject];
     responseParser.crc64Verifiable = requestDelegate.crc64Verifiable;
     requestDelegate.responseParser = responseParser;
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
     
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
-                                                httpMethod:@"PUT"
-                                                bucketName:request.bucketName
-                                                 objectKey:request.objectKey
-                                                      type:request.contentType
-                                                       md5:request.contentMd5
-                                                     range:nil
-                                                      date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
-                                              headerParams:headerParams
-                                                    querys:nil];
+                                                                                 httpMethod:@"PUT" bucketName:request.bucketName objectKey:request.objectKey type:request.contentType md5:request.contentMd5 range:nil
+                                                                                       date:dateString
+                                                                               headerParams:headerParams querys:nil sha1:request.contentSHA1];
     requestDelegate.operType = OSSOperationTypePutObject;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -349,7 +345,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:headerParams
-                                                    querys:querys];
+                                                    querys:querys sha1:nil];
     requestDelegate.operType = OSSOperationTypePutObjectACL;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -410,7 +406,7 @@ static NSObject * lock;
                                                                                       range:nil
                                                                                        date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                                                                headerParams:headerParams
-                                                                                     querys:querys];
+                                                                                     querys:querys sha1:request.contentSHA1];
     requestDelegate.operType = OSSOperationTypeAppendObject;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -429,7 +425,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:nil];
+                                                    querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeDeleteObject;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -452,7 +448,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:headerParams
-                                                    querys:nil];
+                                                    querys:nil sha1:request.contentSHA1];
     requestDelegate.operType = OSSOperationTypeCopyObject;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -474,7 +470,12 @@ static NSObject * lock;
     if (request.cacheControl) {
         [headerParams setObject:request.cacheControl forKey:OSSHttpHeaderCacheControl];
     }
-    NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObject:@"" forKey:@"uploads"];
+    
+    NSMutableDictionary *querys = [NSMutableDictionary dictionary];
+    [querys setObject:@"" forKey:@"uploads"];
+    if (request.sequential) {
+        [querys setObject:@"" forKey:@"sequential"];
+    }
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeInitMultipartUpload];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"POST"
@@ -485,7 +486,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:headerParams
-                                                    querys:querys];
+                                                    querys:[querys copy] sha1:nil];
     requestDelegate.operType = OSSOperationTypeInitMultipartUpload;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -524,7 +525,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:querys];
+                                                    querys:querys sha1:request.contentSHA1];
     requestDelegate.operType = OSSOperationTypeUploadPart;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -562,7 +563,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:headerParams
-                                                    querys:querys];
+                                                    querys:querys sha1:request.contentSHA1];
     requestDelegate.operType = OSSOperationTypeCompleteMultipartUpload;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -582,7 +583,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:querys];
+                                                    querys:querys sha1:nil];
     requestDelegate.operType = OSSOperationTypeListMultipart;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -602,7 +603,7 @@ static NSObject * lock;
                                                      range:nil
                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
                                               headerParams:nil
-                                                    querys:querys];
+                                                    querys:querys sha1:nil];
     requestDelegate.operType = OSSOperationTypeAbortMultipartUpload;
 
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
@@ -806,6 +807,7 @@ static NSObject * lock;
         init.bucketName = request.bucketName;
         init.objectKey = request.objectKey;
         init.objectMeta = request.completeMetaHeader;
+        init.sequential = request.sequential;
         OSSTask * initTask = [self multipartUploadInit:init];
         [[initTask continueWithBlock:^id(OSSTask *task) {
             OSSInitMultipartUploadResult * result = task.result;
@@ -1319,8 +1321,14 @@ static NSObject * lock;
 
 - (OSSTask *)upload:(OSSMultipartUploadRequest *)request uploadIndex:(NSMutableArray *) alreadyUploadIndex uploadPart:(NSMutableArray *) alreadyUploadPart count:(NSUInteger)partCout uploadedLength:(NSUInteger *)uploadedLength fileSize:(NSUInteger) uploadFileSize cancelError:(NSError *) cancelError
 {
+    BOOL sequential = request.sequential;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue setMaxConcurrentOperationCount: 5];
+    
+    NSInteger maxConcurrentOperationCount = 1;
+    if (!sequential) {
+        maxConcurrentOperationCount = 5;
+    }
+    [queue setMaxConcurrentOperationCount: maxConcurrentOperationCount];
     
     OSSRequestCRCFlag crcFlag = request.crcFlag;
     __block BOOL isCancel = NO;
@@ -1370,10 +1378,11 @@ static NSObject * lock;
                         uploadPart.uploadPartData = uploadPartData;
                         uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
                         uploadPart.crcFlag = request.crcFlag;
+                        uploadPart.contentSHA1 = [OSSUtil sha1WithData:uploadPartData];
                         
                         OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                         [uploadPartTask waitUntilFinished];
-                        if (uploadPartTask.error) {
+                        if (uploadPartTask.error ! && uploadPartTask.error.code != 409) {
                             errorTask = uploadPartTask;
                         } else {
                             OSSUploadPartResult * result = uploadPartTask.result;
@@ -1411,7 +1420,7 @@ static NSObject * lock;
             [queue addOperation:operation];
             NSLog(@"task.count = %zd",queue.operationCount);
             
-            if (queue.operationCount >= 5) {
+            if (queue.operationCount >= maxConcurrentOperationCount) {
                 [queue waitUntilAllOperationsAreFinished];
             }
         }

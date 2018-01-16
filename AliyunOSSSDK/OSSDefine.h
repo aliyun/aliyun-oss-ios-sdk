@@ -62,6 +62,7 @@
 #define OSSHttpHeaderContentMD5                 @"Content-MD5"
 #define OSSHttpHeaderCacheControl               @"Cache-Control"
 #define OSSHttpHeaderExpires                    @"Expires"
+#define OSSHttpHeaderHashSHA1                   @"x-oss-hash-sha1"
 
 #define OSSDefaultRetryCount                    3
 #define OSSDefaultMaxConcurrentNum              5

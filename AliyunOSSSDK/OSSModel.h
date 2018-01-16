@@ -780,6 +780,11 @@ It's a unique Id represents this request. This is used for troubleshooting when 
  It runs in background thread (not UI thread).
  */
 @property (nonatomic, copy) OSSNetworkingRetryBlock uploadRetryCallback;
+
+/**
+ * the sha1 of content
+ */
+@property (nonatomic, copy) NSString *contentSHA1;
  
 @end
 
@@ -888,6 +893,13 @@ It's the MD5 value for put object request. If the object is created by other API
  It's called on the background thread.
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
+
+/**
+ * the sha1 of content
+ */
+@property (nonatomic, copy) NSString *contentSHA1;
+
+
 @end
 
 /**
@@ -970,6 +982,13 @@ It's the MD5 value for put object request. If the object is created by other API
  It could include standard http headers as well.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
+
+/**
+ * the sha1 of content
+ */
+@property (nonatomic, copy) NSString *contentSHA1;
+
+
 @end
 
 /**
@@ -1034,6 +1053,12 @@ It's the MD5 value for put object request. If the object is created by other API
  It could include other standard http headers.
  */
 @property (nonatomic, strong) NSDictionary * objectMeta;
+
+/**
+ * When Setting this value to YES , parts will be uploaded in order. Default value is NO.
+ */
+@property (nonatomic, assign) BOOL sequential;
+
 @end
 
 /**
@@ -1094,6 +1119,12 @@ It's the MD5 value for put object request. If the object is created by other API
  It runs in background thread (not UI thread);
  */
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadPartProgress;
+
+/**
+ * the sha1 of content
+ */
+@property (nonatomic, copy) NSString *contentSHA1;
+
 @end
 
 /**
@@ -1178,6 +1209,12 @@ It's the MD5 value for put object request. If the object is created by other API
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+/**
+ * the sha1 of content
+ */
+@property (nonatomic, copy) NSString *contentSHA1;
+
 @end
 
 /**
@@ -1343,6 +1380,11 @@ The result class of listing uploaded parts.
  The metadata header
  */
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
+
+/**
+ * When Setting this value to YES , parts will be uploaded in order. Default value is NO.
+ */
+@property (nonatomic, assign) BOOL sequential;
 
 
 - (void)cancel;

@@ -202,11 +202,15 @@
     if (self.allNeededMessage.range) {
         [self.internalRequest setValue:self.allNeededMessage.range forHTTPHeaderField:@"Range"];
     }
+    if (self.allNeededMessage.contentSHA1) {
+        [self.internalRequest setValue:_allNeededMessage.contentSHA1 forHTTPHeaderField:@"x-oss-hash-sha1"];
+    }
     if (self.allNeededMessage.headerParams) {
         for (NSString * key in [self.allNeededMessage.headerParams allKeys]) {
             [self.internalRequest setValue:[self.allNeededMessage.headerParams objectForKey:key] forHTTPHeaderField:key];
         }
     }
+    
 
     OSSLogVerbose(@"buidlInternalHttpRequest -\nmethod: %@\nurl: %@\nheader: %@", self.internalRequest.HTTPMethod,
                   self.internalRequest.URL, self.internalRequest.allHTTPHeaderFields);
@@ -238,6 +242,41 @@
         _contentMd5 = contentMd5;
         _range = range;
         _date = date;
+        _headerParams = headerParams;
+        if (!_headerParams) {
+            _headerParams = [NSMutableDictionary new];
+        }
+        _querys = querys;
+        if (!_querys) {
+            _querys = [NSMutableDictionary new];
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithEndpoint:(NSString *)endpoint
+                      httpMethod:(NSString *)httpMethod
+                      bucketName:(NSString *)bucketName
+                       objectKey:(NSString *)objectKey
+                            type:(NSString *)contentType
+                             md5:(NSString *)contentMd5
+                           range:(NSString *)range
+                            date:(NSString *)date
+                    headerParams:(NSMutableDictionary *)headerParams
+                          querys:(NSMutableDictionary *)querys
+                            sha1:(NSString *)contentSHA1
+{
+    if (self = [super init])
+    {
+        _endpoint = endpoint;
+        _httpMethod = httpMethod;
+        _bucketName = bucketName;
+        _objectKey = objectKey;
+        _contentType = contentType;
+        _contentMd5 = contentMd5;
+        _range = range;
+        _date = date;
+        _contentSHA1 = contentSHA1;
         _headerParams = headerParams;
         if (!_headerParams) {
             _headerParams = [NSMutableDictionary new];
