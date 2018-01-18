@@ -126,6 +126,7 @@ typedef NSData * _Nullable (^OSSResponseDecoderBlock) (NSData * data);
  The plaint text AK/SK credential provider for test purposely.
  */
 
+__attribute__((deprecated("PLEASE DO NOT USE THIS CLASS AGAIN")))
 @interface OSSPlainTextAKSKPairCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, strong) NSString * accessKey;
 @property (nonatomic, strong) NSString * secretKey;
