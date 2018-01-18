@@ -292,6 +292,12 @@ Aborts the multipart upload by the specified upload Id.
 - (BOOL)doesObjectExistInBucket:(NSString *)bucketName
                       objectKey:(NSString *)objectKey
                           error:(const NSError **)error;
+
+/**
+ * multipart upload sequentially in order,support resume upload
+ */
+- (OSSTask *)sequentialMultipartUpload:(OSSResumableUploadRequest *)request;
+
 @end
 
 NS_ASSUME_NONNULL_END
