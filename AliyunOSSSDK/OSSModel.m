@@ -406,6 +406,10 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         federationToken = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
         [requestMessage.headerParams setObject:federationToken.tToken forKey:@"x-oss-security-token"];
     }
+    
+    if (requestMessage.contentSHA1) {
+        [requestMessage.headerParams setObject:requestMessage.contentSHA1 forKey:OSSHttpHeaderHashSHA1];
+    }
         
 
     /* construct CanonicalizedOSSHeaders */
