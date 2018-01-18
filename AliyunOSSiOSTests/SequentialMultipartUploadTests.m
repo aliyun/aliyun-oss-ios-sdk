@@ -6,7 +6,7 @@
 //  Copyright © 2018年 aliyun. All rights reserved.
 //
 
-#import "AliyunOSSTests.m"
+#import "AliyunOSSTests.h"
 
 @interface SequentialMultipartUploadTests : AliyunOSSTests
 
@@ -33,10 +33,12 @@
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
     request.crcFlag = OSSRequestCRCClosed;
+    request.contentSHA1 = [OSSUtil sha1WithFilePath:request.uploadingFileURL.path];
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
         XCTAssertNil(t.error);
+        
         return nil;
     }] waitUntilFinished];
 }
@@ -54,13 +56,15 @@
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
         XCTAssertNil(t.error);
+        
         return nil;
     }] waitUntilFinished];
 }
 
-- (void)testAPI_sequentialMultipartUpload_cancel {
+- (void)testAPI_sequentialMultipartUpload_cancel_withoutDeleteRecord {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
     request.bucketName = OSS_BUCKET_PUBLIC;
+    request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
@@ -74,7 +78,32 @@
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
-        XCTAssertNil(t.error);
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(t.error.code, OSSClientErrorCodeTaskCancelled);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_sequentialMultipartUpload_cancel_deleteRecord {
+    OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
+    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.objectKey = @"sequential-multipart";
+    request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    request.deleteUploadIdOnCancelling = YES;
+    request.crcFlag = OSSRequestCRCOpen;
+    __weak typeof(request) weakRequest = request;
+    request.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+        if (totalBytesSent > totalBytesExpectedToSend / 2) {
+            [weakRequest cancel];
+        }
+    };
+    
+    OSSTask *task = [self.client sequentialMultipartUpload:request];
+    [[task continueWithBlock:^OSSTask* (OSSTask* t) {
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(t.error.code, OSSClientErrorCodeTaskCancelled);
         
         return nil;
     }] waitUntilFinished];
@@ -86,6 +115,7 @@
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
+    request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     request.crcFlag = OSSRequestCRCClosed;
     __weak typeof(request) weakRequest = request;
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
@@ -96,7 +126,9 @@
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
-        XCTAssertNil(t.error);
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(t.error.code, OSSClientErrorCodeTaskCancelled);
+        
         return nil;
     }] waitUntilFinished];
     
@@ -106,6 +138,7 @@
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCClosed;
+    resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
@@ -121,6 +154,8 @@
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
     request.crcFlag = OSSRequestCRCOpen;
+    request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    
     __weak typeof(request) weakRequest = request;
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
         if (totalBytesSent > totalBytesExpectedToSend / 2) {
@@ -130,7 +165,9 @@
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
-        XCTAssertNil(t.error);
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(t.error.code, OSSClientErrorCodeTaskCancelled);
+        
         return nil;
     }] waitUntilFinished];
     
@@ -140,10 +177,12 @@
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCOpen;
+    resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
         XCTAssertNil(t.error);
+        
         return nil;
     }] waitUntilFinished];
 }
@@ -153,8 +192,10 @@
     request.bucketName = OSS_BUCKET_PUBLIC;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
-    request.deleteUploadIdOnCancelling = NO;
+    request.deleteUploadIdOnCancelling = YES;
     request.crcFlag = OSSRequestCRCClosed;
+    request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    
     __weak typeof(request) weakRequest = request;
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
         if (totalBytesSent > totalBytesExpectedToSend / 2) {
@@ -164,7 +205,9 @@
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
-        XCTAssertNil(t.error);
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(t.error.code, OSSClientErrorCodeTaskCancelled);
+        
         return nil;
     }] waitUntilFinished];
     
@@ -174,10 +217,12 @@
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCOpen;
+    resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
-        XCTAssertNotNil(t.error);
+        XCTAssertNil(t.error);
+        
         return nil;
     }] waitUntilFinished];
 }

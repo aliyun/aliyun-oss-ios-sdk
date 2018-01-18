@@ -21,6 +21,7 @@
 		D842D5BC1FFCC8A600220913 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */; };
 		D842D5C41FFDDA3C00220913 /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */; };
 		D842D5C61FFDDA4300220913 /* AliyunOSSSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */; };
+		D85277402010B21A00D7B1DE /* SequentialMultipartUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */; };
 		D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */; };
 		D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */; };
 		D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */; };
@@ -81,6 +82,7 @@
 		D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequentialMultipartUploadTests.swift; sourceTree = "<group>"; };
 		D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckCRC64Tests.swift; sourceTree = "<group>"; };
 		D8DF2FF2200789BA0056B674 /* OSSSwiftDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSSSwiftDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSSwiftDemoTests.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */,
 				D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */,
 				D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */,
+				D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */,
 			);
 			path = OSSSwiftDemoTests;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */,
 				D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */,
 				D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */,
+				D85277402010B21A00D7B1DE /* SequentialMultipartUploadTests.swift in Sources */,
 				D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */,
 				D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */,
 				D8E64178200A81E90023DF48 /* OSSXMLDictionaryTests.swift in Sources */,

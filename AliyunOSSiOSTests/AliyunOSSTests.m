@@ -1,3 +1,4 @@
+
 //
 //  AliyunOSSTests.m
 //  AliyunOSSiOSTests
@@ -5,26 +6,13 @@
 //  Created by huaixu on 2018/1/18.
 //  Copyright © 2018年 aliyun. All rights reserved.
 //
-
-#import <XCTest/XCTest.h>
-#import <AliyunOSSiOS/AliyunOSSiOS.h>
-#import "OSSTestMacros.h"
-
-@interface AliyunOSSTests : XCTestCase {
-    
-}
-
-@property (nonatomic, strong) OSSClient *client;
-@property (nonatomic, copy) NSArray<NSString *> *fileNames;
-@property (nonatomic, copy) NSArray<NSNumber *> *fileSizes;
-
-@end
-
+#import "AliyunOSSTests.h"
 @implementation AliyunOSSTests
 
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    [self setupContainer];
     [self setupClient];
     [self setupTestFiles];
 }
@@ -35,7 +23,8 @@
 }
 
 - (void)setupClient {
-    OSSAuthCredentialProvider *provider = [OSSAuthCredentialProvider new];
+    //    OSSAuthCredentialProvider *provider = [OSSAuthCredentialProvider new];
+    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"YJjHKOKWDWINLKXv" secretKey:@"37wFMvLLnqf2EvI5ljhp8WIl2F1l6W"];
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;
@@ -80,3 +69,4 @@
 }
 
 @end
+

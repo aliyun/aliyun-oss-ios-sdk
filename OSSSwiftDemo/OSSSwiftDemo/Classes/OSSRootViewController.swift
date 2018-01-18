@@ -115,6 +115,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         }
         headObject()
     }
+    @IBAction func sequentialUpload(_ sender: Any) {
+        sequentialMultipartUpload()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -381,6 +384,25 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         task = client.resumableUpload(request)
         task.continue({ (t) -> Any? in
             self.showResult(task: t)
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func sequentialMultipartUpload() {
+        let request = OSSResumableUploadRequest()
+        request.bucketName = OSS_BUCKET_PUBLIC;
+        request.objectKey = "sequential-swift-multipart";
+        request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
+        request.deleteUploadIdOnCancelling = false
+        request.crcFlag = OSSRequestCRCFlag.open
+        let filePath = Bundle.main.path(forResource: "wangwang", ofType: "zip")
+        request.contentSHA1 = OSSUtil.sha1(withFilePath: filePath)
+        
+        let task = mClient.sequentialMultipartUpload(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
         }).waitUntilFinished()
     }
 }
