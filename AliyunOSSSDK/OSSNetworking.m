@@ -324,6 +324,11 @@
     }
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<OSSAllRequestNeededMessage: %p>{endpoint: %@\nhttpMethod: %@\nbucketName: %@\nobjectKey: %@\ncontentType: %@\ncontentMd5: %@\nrange: %@\ndate: %@\nheaderParams: %@\nquerys: %@\ncontentSHA1: %@\nisHostInCnameExcludeList: %d\n}",self, _endpoint, _httpMethod, _bucketName, _objectKey, _contentType, _contentMd5, _range, _date, _headerParams, _querys, _contentSHA1, _isHostInCnameExcludeList];
+}
+
 @end
 
 @implementation OSSNetworking
