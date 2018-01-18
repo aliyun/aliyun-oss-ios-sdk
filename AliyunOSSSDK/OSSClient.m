@@ -17,7 +17,9 @@
 #import "OSSReachabilityManager.h"
 #import "NSMutableData+OSS_CRC.h"
 
-NSString  * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
+NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
+NSString * const oss_record_info_suffix_with_crc = @"-crc64";
+NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -622,8 +624,12 @@ static NSObject * lock;
         NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String:uploadingFilePath];
         NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%zi",uploadingFilePathMd5, resumableRequest.bucketName, resumableRequest.objectKey, resumableRequest.partSize];
         if (sequential) {
-            nameInfoString = [nameInfoString stringByAppendingString:@"-sequential"];
+            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_sequential];
         }
+        if (request.crcFlag == OSSRequestCRCOpen) {
+            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_crc];
+        }
+        
         NSData *data = [nameInfoString dataUsingEncoding:NSUTF8StringEncoding];
         NSString *recordFileName = [OSSUtil dataMD5String:data];
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",resumableRequest.recordDirectoryPath,recordFileName];
@@ -1183,7 +1189,8 @@ static NSObject * lock;
                                                 objectKey: request.objectKey
                                                  partSize: request.partSize
                                            recordFilePath: &recordFilePath
-                                               sequential: sequential];
+                                               sequential: sequential
+                                                  crcFlag:request.crcFlag];
                 OSSLogVerbose(@"local uploadId: %@,recordFilePath: %@",uploadId, recordFilePath);
             }
             
@@ -1251,6 +1258,7 @@ static NSObject * lock;
             initRequest.contentType = request.contentType;
             initRequest.objectMeta = request.completeMetaHeader;
             initRequest.sequential = sequential;
+            initRequest.crcFlag = request.crcFlag;
             
             OSSTask *task = [self processResumableInitMultipartUpload:initRequest
                                                        recordFilePath:recordFilePath];
@@ -1449,13 +1457,18 @@ static NSObject * lock;
                               partSize:(NSInteger)partSize
                         recordFilePath:(NSString **)recordFilePath
                             sequential:(BOOL)sequential
+                               crcFlag:(OSSRequestCRCFlag)flag
 {
     NSString *uploadId = nil;
     NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String: filePath];
     NSString *record = [NSString stringWithFormat:@"%@%@%@%zi", uploadingFilePathMd5, bucket, objectKey, partSize];
     if (sequential) {
-        record = [record stringByAppendingString:@"-sequential"];
+        record = [record stringByAppendingString:oss_record_info_suffix_with_sequential];
     }
+    if (flag == OSSRequestCRCOpen) {
+        record = [record stringByAppendingString:oss_record_info_suffix_with_crc];
+    }
+    
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
     NSString *recordFileName = [OSSUtil dataMD5String:data];
     *recordFilePath = [recordPath stringByAppendingPathComponent: recordFileName];
