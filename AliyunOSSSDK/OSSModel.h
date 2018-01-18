@@ -1382,7 +1382,9 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
 
 /**
+ * the sha1 of content
  */
+@property (nonatomic, copy) NSString *contentSHA1;
 
 
 - (void)cancel;
