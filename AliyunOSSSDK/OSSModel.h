@@ -1382,9 +1382,7 @@ The result class of listing uploaded parts.
 @property (nonatomic, strong) NSDictionary * completeMetaHeader;
 
 /**
- * When Setting this value to YES , parts will be uploaded in order. Default value is NO.
  */
-@property (nonatomic, assign) BOOL sequential;
 
 
 - (void)cancel;

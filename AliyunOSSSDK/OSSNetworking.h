@@ -106,11 +106,6 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  */
 @property (nonatomic, assign) BOOL crc64Verifiable;
 
-/**
- * determine whether multipart upload object concurrently.
- */
-@property (nonatomic, assign) BOOL sequential;
-
 
 
 - (OSSTask *)buildInternalHttpRequest;
