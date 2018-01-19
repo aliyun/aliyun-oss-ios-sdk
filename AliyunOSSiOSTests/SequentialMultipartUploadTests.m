@@ -52,6 +52,7 @@
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
     request.crcFlag = OSSRequestCRCOpen;
+    request.contentSHA1 = [OSSUtil sha1WithFilePath:request.uploadingFileURL.path];
     
     OSSTask *task = [self.client sequentialMultipartUpload:request];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
@@ -139,6 +140,7 @@
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCClosed;
     resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    resumedRequest.contentSHA1 = [OSSUtil sha1WithFilePath:request.uploadingFileURL.path];
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
@@ -178,6 +180,7 @@
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCOpen;
     resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    resumedRequest.contentSHA1 = [OSSUtil sha1WithFilePath:request.uploadingFileURL.path];
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {
@@ -218,6 +221,7 @@
     resumedRequest.deleteUploadIdOnCancelling = NO;
     resumedRequest.crcFlag = OSSRequestCRCOpen;
     resumedRequest.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+    resumedRequest.contentSHA1 = [OSSUtil sha1WithFilePath:request.uploadingFileURL.path];
     
     task = [self.client sequentialMultipartUpload:resumedRequest];
     [[task continueWithBlock:^OSSTask* (OSSTask* t) {

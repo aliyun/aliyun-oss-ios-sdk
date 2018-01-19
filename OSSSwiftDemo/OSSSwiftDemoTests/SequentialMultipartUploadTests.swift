@@ -77,9 +77,6 @@ class SequentialMultipartUploadTests: OSSSwiftDemoTests {
             }
         }
         
-        let filePath = Bundle.main.path(forResource: "wangwang", ofType: "zip")
-        request.contentSHA1 = OSSUtil.sha1(withFilePath: filePath)
-        
         let task = client.sequentialMultipartUpload(request)
         task.continue({ (t) -> Any? in
             XCTAssertNotNil(t.error)
@@ -103,9 +100,6 @@ class SequentialMultipartUploadTests: OSSSwiftDemoTests {
                 request?.cancel()
             }
         }
-        
-        let filePath = Bundle.main.path(forResource: "wangwang", ofType: "zip")
-        request.contentSHA1 = OSSUtil.sha1(withFilePath: filePath)
         
         let task = client.sequentialMultipartUpload(request)
         task.continue({ (t) -> Any? in
