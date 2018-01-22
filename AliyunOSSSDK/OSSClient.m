@@ -1368,12 +1368,21 @@ static NSObject * lock;
 
 - (OSSTask *)preChecksForRequest:(OSSMultipartUploadRequest *)request
 {
-    OSSTask *preTask = [self checkNecessaryParamsOfRequest:request];
-    if (preTask.error) {
+    OSSTask *preTask = [self checkFileSizeWithRequest:request];
+    if (preTask) {
+        return preTask;
+    }
+    
+    preTask = [self checkNecessaryParamsOfRequest:request];
+    if (preTask) {
         return preTask;
     }
     
     preTask = [self checkPartSizeForRequest:request];
+    if (preTask) {
+        return preTask;
+    }
+    
     
     return preTask;
 }
@@ -1636,6 +1645,31 @@ static NSObject * lock;
         return [OSSTask taskWithError:error];
     }
     return nil;
+}
+
+- (OSSTask *)checkFileSizeWithRequest:(OSSMultipartUploadRequest *)request {
+    NSError *error = nil;
+    if (!request.uploadingFileURL || ![request.uploadingFileURL.path oss_isNotEmpty]) {
+        error = [NSError errorWithDomain:OSSClientErrorDomain
+                                    code:OSSClientErrorCodeInvalidArgument
+                                userInfo:@{OSSErrorMessageTOKEN: @"Please check your request's uploadingFileURL!"}];
+    }else
+    {
+        NSFileManager *dfm = [NSFileManager defaultManager];
+        NSDictionary *attributes = [dfm attributesOfItemAtPath:request.uploadingFileURL.path error:&error];
+        unsigned long long fileSize = [attributes[NSFileSize] unsignedLongLongValue];
+        if (!error && fileSize == 0) {
+            error = [NSError errorWithDomain:OSSClientErrorDomain
+                                        code:OSSClientErrorCodeInvalidArgument
+                                    userInfo:@{OSSErrorMessageTOKEN: @"File length must not be 0!"}];
+        }
+    }
+    
+    if (error) {
+        return [OSSTask taskWithError:error];
+    } else {
+        return nil;
+    }
 }
 
 + (NSError *)cancelError{
