@@ -115,6 +115,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         }
         headObject()
     }
+    @IBAction func sequentialUpload(_ sender: Any) {
+        sequentialMultipartUpload()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -359,9 +362,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             }
         }
         
-        let provider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
-        let client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
-        var task = client.resumableUpload(request)
+        var task = mClient.resumableUpload(request)
         task.continue({ (t) -> Any? in
             print("Error: \(String(describing: t.error))")
             return nil
@@ -373,12 +374,49 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         request.objectKey = "wangwang(swift).zip"
         request.partSize = 102400;
         request.deleteUploadIdOnCancelling = false;
+        request.contentSHA1 = OSSUtil.sha1(withFilePath: request.uploadingFileURL.path)
         request.recordDirectoryPath = cacheDir!
         request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
             print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
         }
         
-        task = client.resumableUpload(request)
+        task = mClient.resumableUpload(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func sequentialMultipartUpload() {
+        let request = OSSResumableUploadRequest()
+        request.bucketName = OSS_BUCKET_PUBLIC;
+        request.objectKey = "sequential-swift-multipart";
+        request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
+        request.deleteUploadIdOnCancelling = false
+        request.crcFlag = OSSRequestCRCFlag.open
+        let filePath = Bundle.main.path(forResource: "wangwang", ofType: "zip")
+        request.contentSHA1 = OSSUtil.sha1(withFilePath: filePath)
+        
+        let task = mClient.sequentialMultipartUpload(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    @IBAction func putObjectWithSHA1(_ sender: Any) {
+        let request = OSSPutObjectRequest()
+        request.uploadingFileURL = Bundle.main.url(forResource: "test", withExtension: "xml")!
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectKey = "test.xml"
+        request.contentSHA1 = OSSUtil.sha1(withFilePath: Bundle.main.path(forResource: "test", ofType: "xml"))
+        
+        request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
+            print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
+        };
+        
+        let task = mClient.putObject(request)
         task.continue({ (t) -> Any? in
             self.showResult(task: t)
         }).waitUntilFinished()

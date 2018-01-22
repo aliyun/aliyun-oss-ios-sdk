@@ -48,6 +48,10 @@
 
 + (uint64_t)crc64ForCombineCRC1:(uint64_t)crc1 CRC2:(uint64_t)crc2 length:(size_t)len2;
 
++ (NSString *)sha1WithString:(NSString *)string;
++ (NSString *)sha1WithData:(NSData *)data;
++ (NSString *)sha1WithFilePath:(NSString *)filePath;
+
 @end
 
 @interface NSString (OSS)

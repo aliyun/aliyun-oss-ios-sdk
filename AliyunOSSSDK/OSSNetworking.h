@@ -93,15 +93,16 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveData;
 
 /**
- 本地计算的数据的crc值(只有当上传操作时才会设置此值),version2.7.2开始添加
+ * when put object to server,client caculate crc64 code and assigns it to
+ * this property.
  */
 @property (nonatomic, copy) NSString *contentCRC;
 
-/** 上一次的crc值 */
+/** last crc64 code */
 @property (nonatomic, copy) NSString *lastCRC;
 
 /**
- 是否开启crc校验,version2.7.2开始添加
+ * determine whether to verify crc64 code
  */
 @property (nonatomic, assign) BOOL crc64Verifiable;
 
@@ -126,6 +127,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
 @property (nonatomic, strong) NSString * date;
 @property (nonatomic, strong) NSMutableDictionary * headerParams;
 @property (nonatomic, strong) NSMutableDictionary * querys;
+@property (nonatomic, copy) NSString *contentSHA1;
 
 @property (nonatomic, assign) BOOL isHostInCnameExcludeList;
 
@@ -138,7 +140,19 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
                            range:(NSString *)range
                             date:(NSString *)date
                     headerParams:(NSMutableDictionary *)headerParams
-                          querys:(NSMutableDictionary *)querys;
+                          querys:(NSMutableDictionary *)querys __attribute__((deprecated("Use -initWithEndpoint:httpMethod:bucketName:objectKey:type:md5:range:date:headerParams:querys:sha1: instead")));
+
+- (instancetype)initWithEndpoint:(NSString *)endpoint
+                      httpMethod:(NSString *)httpMethod
+                      bucketName:(NSString *)bucketName
+                       objectKey:(NSString *)objectKey
+                            type:(NSString *)contentType
+                             md5:(NSString *)contentMd5
+                           range:(NSString *)range
+                            date:(NSString *)date
+                    headerParams:(NSMutableDictionary *)headerParams
+                          querys:(NSMutableDictionary *)querys
+                            sha1:(NSString *)contentSHA1;
 
 - (OSSTask *)validateRequestParamsInOperationType:(OSSOperationType)operType;
 @end

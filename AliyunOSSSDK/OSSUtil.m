@@ -1103,6 +1103,81 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return aos_crc64_combine(crc1, crc2, len2);
 }
 
++ (NSString *)sha1WithString:(NSString *)string
+{
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    return [self sha1WithData:data];
+}
+
++ (NSString *)sha1WithData:(NSData *)data
+{
+    unsigned char *digest = NULL;
+    
+    // Malloc a buffer to hold hash.
+    digest = malloc(CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char));
+    memset(digest, 0x0, CC_SHA1_DIGEST_LENGTH);
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+    
+    NSString *result = [self sha1WithDigest:digest];
+    if (digest) {
+        free(digest);
+    }
+    
+    return result;
+}
+
++ (NSString *)sha1WithDigest:(const unsigned char *)digest
+{
+    if (!digest) {
+        return nil;
+    }
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char)];
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02x",digest[i]];
+    }
+    
+    return result;
+}
+
++ (NSString *)sha1WithFilePath:(NSString *)filePath
+{
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+    if(!handle) {
+        return nil;
+    }
+    CC_SHA1_CTX sha1;
+    CC_SHA1_Init(&sha1);
+    BOOL done = NO;
+    unsigned char *digest = NULL;
+    
+    while(!done) {
+        @autoreleasepool{
+            NSData* fileData = [handle readDataOfLength: CHUNK_SIZE];
+            if(fileData.length == 0) {
+                done = YES;
+                break;
+            }
+            // Malloc a buffer to hold hash.
+            digest = malloc(CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char));
+            memset(digest, 0x0, CC_SHA1_DIGEST_LENGTH);
+
+            CC_SHA1_Update(&sha1, fileData.bytes, (CC_LONG)[fileData length]);
+        }
+    }
+    
+    // Malloc a buffer to hold hash.
+    digest = malloc(CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char));
+    memset(digest, 0x0, CC_SHA1_DIGEST_LENGTH);
+    CC_SHA1_Final(digest, &sha1);
+    
+    NSString *result = [self sha1WithDigest:digest];
+    if (digest) {
+        free(digest);
+    }
+    
+    return result;
+}
+
 @end
 
 @implementation NSString (OSS)
