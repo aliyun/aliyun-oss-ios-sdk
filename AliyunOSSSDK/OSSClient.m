@@ -17,6 +17,12 @@
 #import "OSSReachabilityManager.h"
 #import "NSMutableData+OSS_CRC.h"
 
+#import "OSSNetworkingRequestDelegate.h"
+#import "OSSAllRequestNeededMessage.h"
+#import "OSSURLRequestRetryHandler.h"
+#import "OSSHttpResponseParser.h"
+
+
 NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
