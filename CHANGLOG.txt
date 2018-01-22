@@ -12,6 +12,15 @@ Environment Requirement：
 Update Logs:
 
 2018/1/22
+- Release 2.9.1
+
+fix podspec
+
+github address：https://github.com/aliyun/aliyun-oss-ios-sdk
+pod dependency：   pod 'AliyunOSSiOS', '~> 2.8.1'
+demo address：  https://github.com/alibaba/alicloud-ios-demo
+
+2018/1/22
 - Release 2.9.0
 
 1.SHA1 check when putObject and seqenceupload.
