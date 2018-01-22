@@ -22,10 +22,10 @@
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
 
-
-NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
-NSString * const oss_record_info_suffix_with_crc = @"-crc64";
-NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
+static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
+static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
+static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
+static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -934,7 +934,7 @@ static NSObject * lock;
                                                               code:OSSClientErrorCodeCannotResumeUpload
                                                           userInfo:@{OSSErrorMessageTOKEN: @"The uploading file is inconsistent with before"}]];
         }
-        else if (firstPartSize != 0 && firstPartSize != partSize)
+        else if (firstPartSize != 0 && firstPartSize != partSize && totalSize != firstPartSize)
         {
             return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
                                                               code:OSSClientErrorCodeCannotResumeUpload
@@ -1373,12 +1373,21 @@ static NSObject * lock;
 
 - (OSSTask *)preChecksForRequest:(OSSMultipartUploadRequest *)request
 {
-    OSSTask *preTask = [self checkNecessaryParamsOfRequest:request];
-    if (preTask.error) {
+    OSSTask *preTask = [self checkFileSizeWithRequest:request];
+    if (preTask) {
+        return preTask;
+    }
+    
+    preTask = [self checkNecessaryParamsOfRequest:request];
+    if (preTask) {
         return preTask;
     }
     
     preTask = [self checkPartSizeForRequest:request];
+    if (preTask) {
+        return preTask;
+    }
+    
     
     return preTask;
 }
@@ -1438,12 +1447,11 @@ static NSObject * lock;
 {
     BOOL divisible = (fileSize % request.partSize == 0);
     NSInteger partCount = (fileSize / request.partSize) + (divisible? 0 : 1);
-    NSUInteger maxPartCount = 5000;    //最大分片数量是5k
     
-    if(partCount > maxPartCount)
+    if(partCount > oss_multipart_max_part_number)
     {
-        request.partSize = fileSize / maxPartCount;
-        partCount = maxPartCount;
+        request.partSize = fileSize / oss_multipart_max_part_number;
+        partCount = oss_multipart_max_part_number;
     }
     return partCount;
 }
@@ -1642,6 +1650,31 @@ static NSObject * lock;
         return [OSSTask taskWithError:error];
     }
     return nil;
+}
+
+- (OSSTask *)checkFileSizeWithRequest:(OSSMultipartUploadRequest *)request {
+    NSError *error = nil;
+    if (!request.uploadingFileURL || ![request.uploadingFileURL.path oss_isNotEmpty]) {
+        error = [NSError errorWithDomain:OSSClientErrorDomain
+                                    code:OSSClientErrorCodeInvalidArgument
+                                userInfo:@{OSSErrorMessageTOKEN: @"Please check your request's uploadingFileURL!"}];
+    }else
+    {
+        NSFileManager *dfm = [NSFileManager defaultManager];
+        NSDictionary *attributes = [dfm attributesOfItemAtPath:request.uploadingFileURL.path error:&error];
+        unsigned long long fileSize = [attributes[NSFileSize] unsignedLongLongValue];
+        if (!error && fileSize == 0) {
+            error = [NSError errorWithDomain:OSSClientErrorDomain
+                                        code:OSSClientErrorCodeInvalidArgument
+                                    userInfo:@{OSSErrorMessageTOKEN: @"File length must not be 0!"}];
+        }
+    }
+    
+    if (error) {
+        return [OSSTask taskWithError:error];
+    } else {
+        return nil;
+    }
 }
 
 + (NSError *)cancelError{

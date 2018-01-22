@@ -1202,4 +1202,138 @@
     NSString *localMD5 = [OSSUtil fileMD5String:filePath];
     return [remoteMD5 isEqualToString:localMD5];
 }
+
+- (void)testAPI_multipartRequestWithoutUploadingURL {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_multipartRequestWithWrongFileURL {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    multipartUploadRequest.uploadingFileURL = [NSURL URLWithString:@"http://www.alibaba-inc.com"];
+    
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_multipartRequestWithUnexistFileURL {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"unexistfile"]];
+    
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_multipartRequestWithoutPartSize {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_multipartRequestWithoutObjectKey {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_multipartRequestWithoutBucketName {
+    NSString * uploadFile = @"wangwang.zip";
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.partSize = 1024 * 1024;
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+    };
+    NSString * docDir = [NSString oss_documentDirectory];
+    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        NSLog(@"Error: %@", task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
 @end
