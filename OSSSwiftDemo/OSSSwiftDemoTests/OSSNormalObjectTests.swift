@@ -410,6 +410,25 @@ class OSSNormalObjectTests: OSSSwiftDemoTests {
         }).waitUntilFinished()
     }
     
+    /**
+     * This sample demonstrates how to delete objects under specfied bucket 
+     * from Aliyun OSS using the OSS SDK for Java.
+     */
+    func testAPI_DeleteObjects() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.encodingType = "url"
+        request.keys = ["file1k","file10k","file100k"]
+        request.quiet = false
+        
+        let task = client.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
     func testAPI_getService() {
         let request = OSSGetServiceRequest()
         request.prefix = "huaixu"

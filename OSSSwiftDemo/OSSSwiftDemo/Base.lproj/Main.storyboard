@@ -250,6 +250,17 @@
                                     <action selector="putObjectWithSHA1:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FF2-iD-bud"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ugo-6q-sVJ">
+                                <rect key="frame" x="20" y="447" width="151" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="YTn-58-eIy"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="wzr-U8-WnK"/>
+                                </constraints>
+                                <state key="normal" title="deleteMultipleObjects"/>
+                                <connections>
+                                    <action selector="deleteMultipleObjectsClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dqg-mf-7O4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -262,6 +273,7 @@
                             <constraint firstItem="bPD-vd-Gm3" firstAttribute="leading" secondItem="LSU-Zv-z5x" secondAttribute="trailing" constant="20" id="A4i-ac-SgX"/>
                             <constraint firstItem="3aV-uP-YEQ" firstAttribute="centerY" secondItem="ziu-d9-Nqw" secondAttribute="centerY" id="AQV-g7-y0K"/>
                             <constraint firstItem="tBS-CX-eru" firstAttribute="leading" secondItem="3G4-1H-ECR" secondAttribute="trailing" constant="20" id="F2P-uO-OgV"/>
+                            <constraint firstItem="Ugo-6q-sVJ" firstAttribute="top" secondItem="7de-lQ-kvZ" secondAttribute="bottom" constant="20" id="I4N-Of-UQg"/>
                             <constraint firstItem="Tca-B1-Fs2" firstAttribute="leading" secondItem="bPD-vd-Gm3" secondAttribute="trailing" constant="20" id="IOq-PR-z8q"/>
                             <constraint firstItem="rD5-qK-Hpy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="Iyg-Q9-PWL"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="d0Y-PP-OPQ" secondAttribute="trailing" constant="20" id="JDm-PC-TeS"/>
@@ -269,6 +281,7 @@
                             <constraint firstItem="b7c-Mc-1zM" firstAttribute="centerY" secondItem="0b8-u4-DdD" secondAttribute="centerY" id="LAw-q6-Kgn"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Tca-B1-Fs2" secondAttribute="trailing" constant="20" symbolic="YES" id="LkV-B0-KzW"/>
                             <constraint firstItem="d0Y-PP-OPQ" firstAttribute="leading" secondItem="7de-lQ-kvZ" secondAttribute="trailing" constant="10" id="MPq-pp-D6O"/>
+                            <constraint firstItem="Ugo-6q-sVJ" firstAttribute="leading" secondItem="7de-lQ-kvZ" secondAttribute="leading" id="Ni5-cH-wJN"/>
                             <constraint firstItem="7Aa-rd-DEL" firstAttribute="centerY" secondItem="0b8-u4-DdD" secondAttribute="centerY" id="Qk3-u4-nM7"/>
                             <constraint firstItem="tBS-CX-eru" firstAttribute="centerY" secondItem="34B-Tb-Sor" secondAttribute="centerY" id="Rsc-wn-D9i"/>
                             <constraint firstItem="ziu-d9-Nqw" firstAttribute="leading" secondItem="rD5-qK-Hpy" secondAttribute="leading" id="VLC-YK-ivN"/>

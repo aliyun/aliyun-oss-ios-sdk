@@ -118,6 +118,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     @IBAction func sequentialUpload(_ sender: Any) {
         sequentialMultipartUpload()
     }
+    @IBAction func deleteMultipleObjectsClicked(_ sender: Any) {
+        deleteMultipleObjects()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -436,7 +439,21 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             
             return nil
         }).waitUntilFinished()
+    }
+    
+    func deleteMultipleObjects() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.keys = ["testFor5m"]
+        request.quiet = false
+        request.encodingType = "url"
         
+        let task = mClient.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
+        }).waitUntilFinished()
     }
 }
 
