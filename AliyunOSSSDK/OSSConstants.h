@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeGetBucketACL,
     OSSOperationTypeHeadObject,
     OSSOperationTypeGetObject,
+    OSSOperationTypeGetObjectACL,
     OSSOperationTypePutObject,
     OSSOperationTypePutObjectACL,
     OSSOperationTypeAppendObject,

@@ -123,6 +123,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func getObjectACLButtonClicked(_ sender: Any) {
+        getObjectACL()
+    }
     
     func getObject() -> Void {
         let getObjectReq: OSSGetObjectRequest = OSSGetObjectRequest()
@@ -420,6 +423,20 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         task.continue({ (t) -> Any? in
             self.showResult(task: t)
         }).waitUntilFinished()
+    }
+    
+    func getObjectACL() {
+        let request = OSSGetObjectACLRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = OSS_IMAGE_KEY
+        
+        let task = mClient.getObjectACL(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
+        }).waitUntilFinished()
+        
     }
 }
 

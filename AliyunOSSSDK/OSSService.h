@@ -19,6 +19,8 @@
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
 #import "OSSRequest.h"
+#import "OSSGetObjectACLRequest.h"
+#import "OSSGetObjectACLResult.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"

@@ -201,6 +201,24 @@ class OSSNormalObjectTests: OSSSwiftDemoTests {
         }).waitUntilFinished()
     }
     
+    func testAPI_getObjectACL() -> Void {
+        let request = OSSGetObjectACLRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = OSS_IMAGE_KEY
+        
+        let task = client.getObjectACL(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNil(t.error)
+            if (t.result != nil)
+            {
+                let result = t.result! as! OSSGetObjectACLResult
+                XCTAssertEqual(result.grant, "default")
+            }
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
     func testAPI_getObjectWithImage() -> Void {
         let request = OSSGetObjectRequest()
         request.bucketName = OSS_BUCKET_PRIVATE

@@ -377,6 +377,24 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_getObject
+{
+    OSSGetObjectACLRequest * request = [OSSGetObjectACLRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectName = OSS_IMAGE_KEY;
+    
+    OSSTask * task = [_client getObjectACL:request];
+    [[task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNil(task.error);
+        if (t.result != nil) {
+            OSSGetObjectACLResult *result = (OSSGetObjectACLResult *)t.result;
+            XCTAssertEqual(result.grant, @"default");
+        }
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testAPI_getImage
 {
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];

@@ -14,6 +14,7 @@
 #import "OSSModel.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
+#import "OSSGetObjectACLResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -326,6 +327,24 @@
                 getObejctResult.downloadedData = _collectingData;
             }
             return getObejctResult;
+        }
+        case OSSOperationTypeGetObjectACL:
+        {
+            OSSGetObjectACLResult * getObjectACLResult = [OSSGetObjectACLResult new];
+            OSSLogDebug(@"GetObjectResponse: %@", _response);
+            if (_response)
+            {
+                [self parseResponseHeader:_response toResultObject:getObjectACLResult];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get service dict: %@", parseDict);
+                getObjectACLResult.grant = parseDict[@"AccessControlList"][@"Grant"];
+            }
+            
+            
+            return getObjectACLResult;
         }
             
         case OSSOperationTypePutObject:

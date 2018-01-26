@@ -36,6 +36,18 @@
 		D80C82131FC82596008E3900 /* OSSIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183151FC56358000DD9EC /* OSSIPv6Adapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D80C82141FC82599008E3900 /* OSSReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183161FC56358000DD9EC /* OSSReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D80C82151FC8259C008E3900 /* OSSIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = D871831A1FC56358000DD9EC /* OSSIPv6PrefixResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88C9201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88C7201AC1B400F379D8 /* OSSGetObjectACLRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88CA201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88C7201AC1B400F379D8 /* OSSGetObjectACLRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88CB201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88C8201AC1B400F379D8 /* OSSGetObjectACLRequest.m */; };
+		D80C88CC201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88C8201AC1B400F379D8 /* OSSGetObjectACLRequest.m */; };
+		D80C88CF201AC21200F379D8 /* OSSResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88CD201AC21200F379D8 /* OSSResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88D0201AC21200F379D8 /* OSSResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88CD201AC21200F379D8 /* OSSResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88D1201AC21200F379D8 /* OSSResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88CE201AC21200F379D8 /* OSSResult.m */; };
+		D80C88D2201AC21200F379D8 /* OSSResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88CE201AC21200F379D8 /* OSSResult.m */; };
+		D80C88D5201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88D6201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88D7201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */; };
+		D80C88D8201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */; };
 		D829F3A91FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
 		D829F3AA1FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
 		D829F3AB1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */; };
@@ -170,6 +182,12 @@
 		D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F61FC824FF008E3900 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F81FC82508008E3900 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
+		D80C88C7201AC1B400F379D8 /* OSSGetObjectACLRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSGetObjectACLRequest.h; sourceTree = "<group>"; };
+		D80C88C8201AC1B400F379D8 /* OSSGetObjectACLRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSGetObjectACLRequest.m; sourceTree = "<group>"; };
+		D80C88CD201AC21200F379D8 /* OSSResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSResult.h; sourceTree = "<group>"; };
+		D80C88CE201AC21200F379D8 /* OSSResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSResult.m; sourceTree = "<group>"; };
+		D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSGetObjectACLResult.h; sourceTree = "<group>"; };
+		D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSGetObjectACLResult.m; sourceTree = "<group>"; };
 		D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSInputStreamHelper.h; sourceTree = "<group>"; };
 		D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSInputStreamHelper.m; sourceTree = "<group>"; };
 		D842D5891FFC8C0500220913 /* OSSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSLog.swift; sourceTree = "<group>"; };
@@ -364,6 +382,12 @@
 				D85278092015D59000D7B1DE /* OSSURLRequestRetryHandler.m */,
 				D852780E2015DF4900D7B1DE /* OSSConstants.h */,
 				D852780F2015DF4900D7B1DE /* OSSConstants.m */,
+				D80C88C7201AC1B400F379D8 /* OSSGetObjectACLRequest.h */,
+				D80C88C8201AC1B400F379D8 /* OSSGetObjectACLRequest.m */,
+				D80C88CD201AC21200F379D8 /* OSSResult.h */,
+				D80C88CE201AC21200F379D8 /* OSSResult.m */,
+				D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */,
+				D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -456,6 +480,9 @@
 				D8C41B3E1FCC2FD20091699B /* OSSNSLogger.h in Headers */,
 				D842D5A81FFCBA2800220913 /* AliyunOSSiOS.h in Headers */,
 				D8C41B3F1FCC2FD20091699B /* OSSReachability.h in Headers */,
+				D80C88CF201AC21200F379D8 /* OSSResult.h in Headers */,
+				D80C88C9201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
+				D80C88D5201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
 				D8C41B411FCC2FD20091699B /* OSSFileLogger.h in Headers */,
 				D8C5E54D1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
 				D8C41B441FCC2FD20091699B /* OSSDDLog.h in Headers */,
@@ -499,6 +526,9 @@
 				D80C82091FC82574008E3900 /* OSSFileLogger.h in Headers */,
 				D80C82071FC8256F008E3900 /* OSSNSLogger.h in Headers */,
 				D80C82031FC8255F008E3900 /* OSSDefine.h in Headers */,
+				D80C88D0201AC21200F379D8 /* OSSResult.h in Headers */,
+				D80C88CA201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
+				D80C88D6201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
 				D80C82011FC82559008E3900 /* OSSHttpdns.h in Headers */,
 				D842D5A91FFCBA2800220913 /* AliyunOSSiOS.h in Headers */,
 				D8C5E54E1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
@@ -653,6 +683,7 @@
 				D8C41AE61FCC2F920091699B /* OSSNetworking.m in Sources */,
 				D8C41AE71FCC2F920091699B /* OSSHttpdns.m in Sources */,
 				D8C41AE91FCC2F920091699B /* OSSClient.m in Sources */,
+				D80C88D7201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
 				D8C41AEC1FCC2F920091699B /* OSSLog.m in Sources */,
 				D8C41AF01FCC2F920091699B /* OSSModel.m in Sources */,
 				D8C41AF51FCC2F920091699B /* OSSIPv6PrefixResolver.m in Sources */,
@@ -668,10 +699,12 @@
 				D8C41B071FCC2F920091699B /* OSSCancellationTokenSource.m in Sources */,
 				D8C41B081FCC2F920091699B /* OSSExecutor.m in Sources */,
 				D8C5E54F1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */,
+				D80C88D1201AC21200F379D8 /* OSSResult.m in Sources */,
 				D8C41B0A1FCC2F920091699B /* OSSXMLDictionary.m in Sources */,
 				D852780C2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
 				D85277ED2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D85278122015DF4900D7B1DE /* OSSConstants.m in Sources */,
+				D80C88CB201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */,
 				D8C41B0E1FCC2F920091699B /* OSSDDLog.m in Sources */,
 				D8C41B101FCC2F920091699B /* OSSReachability.m in Sources */,
 				D8C41B111FCC2F920091699B /* OSSNSLogger.m in Sources */,
@@ -691,6 +724,7 @@
 				D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */,
 				D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */,
 				D8C41AAA1FCC284F0091699B /* OSSClient.m in Sources */,
+				D80C88D8201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
 				D8C41AAD1FCC284F0091699B /* OSSLog.m in Sources */,
 				D8C41AB11FCC284F0091699B /* OSSModel.m in Sources */,
 				D8C41AB61FCC284F0091699B /* OSSIPv6PrefixResolver.m in Sources */,
@@ -706,10 +740,12 @@
 				D8C41AC81FCC28500091699B /* OSSCancellationTokenSource.m in Sources */,
 				D8C41AC91FCC28500091699B /* OSSExecutor.m in Sources */,
 				D8C5E5501FCEB57600613BA5 /* NSMutableData+OSS_CRC.m in Sources */,
+				D80C88D2201AC21200F379D8 /* OSSResult.m in Sources */,
 				D8C41ACB1FCC28500091699B /* OSSXMLDictionary.m in Sources */,
 				D852780D2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
 				D85277EE2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D85278132015DF4900D7B1DE /* OSSConstants.m in Sources */,
+				D80C88CC201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */,
 				D8C41ACF1FCC28500091699B /* OSSDDLog.m in Sources */,
 				D8C41AD11FCC28500091699B /* OSSReachability.m in Sources */,
 				D8C41AD21FCC28500091699B /* OSSNSLogger.m in Sources */,

@@ -14,6 +14,7 @@
 @class OSSGetBucketRequest;
 @class OSSGetBucketACLRequest;
 @class OSSGetObjectRequest;
+@class OSSGetObjectACLRequest;
 @class OSSPutObjectRequest;
 @class OSSPutObjectACLRequest;
 @class OSSDeleteObjectRequest;
@@ -136,6 +137,8 @@ The corresponding RESTFul API: GetObject
  Gets the whole object (includes content). It requires caller have read permission on the object.
  */
 - (OSSTask *)getObject:(OSSGetObjectRequest *)request;
+
+- (OSSTask *)getObjectACL:(OSSGetObjectACLRequest *)request;
 
 /**
 The corresponding RESTFul API: PutObject
