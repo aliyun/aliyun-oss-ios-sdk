@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypePutObjectACL,
     OSSOperationTypeAppendObject,
     OSSOperationTypeDeleteObject,
+    OSSOperationTypeDeleteMultipleObjects,
     OSSOperationTypeCopyObject,
     OSSOperationTypeInitMultipartUpload,
     OSSOperationTypeUploadPart,

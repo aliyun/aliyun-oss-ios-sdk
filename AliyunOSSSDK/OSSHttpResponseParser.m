@@ -15,6 +15,7 @@
 #import "OSSUtil.h"
 #import "OSSLog.h"
 #import "OSSGetObjectACLResult.h"
+#import "OSSDeleteMultipleObjectsResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -390,7 +391,20 @@
             }
             return deleteObjectResult;
         }
+        case OSSOperationTypeDeleteMultipleObjects: {
+            OSSDeleteMultipleObjectsResult * deleteObjectResult = [OSSDeleteMultipleObjectsResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:deleteObjectResult];
+            }
             
+            if (_collectingData) {
+                NSDictionary *dict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                deleteObjectResult.encodingType = dict[@"EncodingType"];
+                deleteObjectResult.deletedObjects = dict[@"Deleted"];
+            }
+            
+            return deleteObjectResult;
+        }
         case OSSOperationTypePutObjectACL: {
             OSSPutObjectACLResult * putObjectACLResult = [OSSPutObjectACLResult new];
             if (_response) {

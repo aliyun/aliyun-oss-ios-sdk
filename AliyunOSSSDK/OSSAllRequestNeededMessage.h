@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSString * range;
 @property (nonatomic, strong) NSString * date;
 @property (nonatomic, strong) NSMutableDictionary * headerParams;
-@property (nonatomic, strong) NSMutableDictionary * querys;
+@property (nonatomic, copy) NSDictionary * querys;
 @property (nonatomic, copy) NSString *contentSHA1;
 
 @property (nonatomic, assign) BOOL isHostInCnameExcludeList;

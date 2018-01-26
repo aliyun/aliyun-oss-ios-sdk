@@ -48,6 +48,14 @@
 		D80C88D6201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D80C88D7201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */; };
 		D80C88D8201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */; };
+		D80C88E7201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88E5201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88E8201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88E5201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88E9201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88E6201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m */; };
+		D80C88EA201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88E6201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m */; };
+		D80C88ED201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88EB201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88EE201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */ = {isa = PBXBuildFile; fileRef = D80C88EB201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D80C88EF201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88EC201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m */; };
+		D80C88F0201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D80C88EC201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m */; };
 		D829F3A91FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
 		D829F3AA1FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */; };
 		D829F3AB1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */; };
@@ -188,6 +196,10 @@
 		D80C88CE201AC21200F379D8 /* OSSResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSResult.m; sourceTree = "<group>"; };
 		D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSGetObjectACLResult.h; sourceTree = "<group>"; };
 		D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSGetObjectACLResult.m; sourceTree = "<group>"; };
+		D80C88E5201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteMultipleObjectsRequest.h; sourceTree = "<group>"; };
+		D80C88E6201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSDeleteMultipleObjectsRequest.m; sourceTree = "<group>"; };
+		D80C88EB201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteMultipleObjectsResult.h; sourceTree = "<group>"; };
+		D80C88EC201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSDeleteMultipleObjectsResult.m; sourceTree = "<group>"; };
 		D829F3A71FD8CFBE00A8C2DC /* OSSInputStreamHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSInputStreamHelper.h; sourceTree = "<group>"; };
 		D829F3A81FD8CFBE00A8C2DC /* OSSInputStreamHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSInputStreamHelper.m; sourceTree = "<group>"; };
 		D842D5891FFC8C0500220913 /* OSSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSLog.swift; sourceTree = "<group>"; };
@@ -388,6 +400,10 @@
 				D80C88CE201AC21200F379D8 /* OSSResult.m */,
 				D80C88D3201AC33000F379D8 /* OSSGetObjectACLResult.h */,
 				D80C88D4201AC33000F379D8 /* OSSGetObjectACLResult.m */,
+				D80C88E5201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h */,
+				D80C88E6201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m */,
+				D80C88EB201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h */,
+				D80C88EC201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -482,6 +498,8 @@
 				D8C41B3F1FCC2FD20091699B /* OSSReachability.h in Headers */,
 				D80C88CF201AC21200F379D8 /* OSSResult.h in Headers */,
 				D80C88C9201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
+				D80C88ED201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */,
+				D80C88E7201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */,
 				D80C88D5201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
 				D8C41B411FCC2FD20091699B /* OSSFileLogger.h in Headers */,
 				D8C5E54D1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
@@ -529,6 +547,8 @@
 				D80C88D0201AC21200F379D8 /* OSSResult.h in Headers */,
 				D80C88CA201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
 				D80C88D6201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
+				D80C88EE201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */,
+				D80C88E8201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */,
 				D80C82011FC82559008E3900 /* OSSHttpdns.h in Headers */,
 				D842D5A91FFCBA2800220913 /* AliyunOSSiOS.h in Headers */,
 				D8C5E54E1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
@@ -681,6 +701,7 @@
 				D85277F32015BD5A00D7B1DE /* OSSNetworkingRequestDelegate.m in Sources */,
 				D8C5E5431FCE915000613BA5 /* aos_crc64.c in Sources */,
 				D8C41AE61FCC2F920091699B /* OSSNetworking.m in Sources */,
+				D80C88E9201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m in Sources */,
 				D8C41AE71FCC2F920091699B /* OSSHttpdns.m in Sources */,
 				D8C41AE91FCC2F920091699B /* OSSClient.m in Sources */,
 				D80C88D7201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
@@ -689,6 +710,7 @@
 				D8C41AF51FCC2F920091699B /* OSSIPv6PrefixResolver.m in Sources */,
 				D85278062015D58400D7B1DE /* OSSHttpResponseParser.m in Sources */,
 				D8C41AF61FCC2F920091699B /* OSSReachabilityManager.m in Sources */,
+				D80C88EF201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */,
 				D8C41AF71FCC2F920091699B /* OSSIPv6Adapter.m in Sources */,
 				D8C41AFA1FCC2F920091699B /* OSSCompat.m in Sources */,
 				D8C41AFC1FCC2F920091699B /* OSSCancellationTokenRegistration.m in Sources */,
@@ -722,6 +744,7 @@
 				D85277F42015BD5A00D7B1DE /* OSSNetworkingRequestDelegate.m in Sources */,
 				D8C5E5441FCE915000613BA5 /* aos_crc64.c in Sources */,
 				D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */,
+				D80C88EA201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m in Sources */,
 				D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */,
 				D8C41AAA1FCC284F0091699B /* OSSClient.m in Sources */,
 				D80C88D8201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
@@ -730,6 +753,7 @@
 				D8C41AB61FCC284F0091699B /* OSSIPv6PrefixResolver.m in Sources */,
 				D85278072015D58400D7B1DE /* OSSHttpResponseParser.m in Sources */,
 				D8C41AB71FCC284F0091699B /* OSSReachabilityManager.m in Sources */,
+				D80C88F0201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */,
 				D8C41AB81FCC284F0091699B /* OSSIPv6Adapter.m in Sources */,
 				D8C41ABB1FCC284F0091699B /* OSSCompat.m in Sources */,
 				D8C41ABD1FCC284F0091699B /* OSSCancellationTokenRegistration.m in Sources */,

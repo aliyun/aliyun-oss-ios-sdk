@@ -22,6 +22,7 @@
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
 #import "OSSGetObjectACLRequest.h"
+#import "OSSDeleteMultipleObjectsRequest.h"
 
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
@@ -459,6 +460,50 @@ static NSObject * lock;
                                                     querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeDeleteObject;
 
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteMultipleObjects:(OSSDeleteMultipleObjectsRequest *)request
+{
+    if (![request.bucketName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"bucket name should not be empty"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    if ([request.keys count] == 0) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"keys should not be empty"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.uploadingData = [OSSUtil constructHttpBodyForDeleteMultipleObjects:request.keys quiet:request.quiet];
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteMultipleObjects];
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    NSMutableDictionary *querys = [NSMutableDictionary dictionaryWithDictionary:@{@"delete": @""}];
+    if ([request.encodingType isEqualToString:@"url"]) {
+        [querys setObject:request.encodingType forKey:@"encoding-type"];
+    }
+    
+                                                                                  
+    
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                                                 httpMethod:@"POST"
+                                                                                 bucketName:request.bucketName
+                                                                                  objectKey:nil
+                                                                                       type:nil
+                                                                                        md5:md5String
+                                                                                      range:nil
+                                                                                       date:dateString
+                                                                               headerParams:nil
+                                                                                     querys:querys
+                                                                                       sha1:nil];
+    requestDelegate.operType = OSSOperationTypeDeleteMultipleObjects;
+    
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 

@@ -21,6 +21,8 @@
 #import "OSSRequest.h"
 #import "OSSGetObjectACLRequest.h"
 #import "OSSGetObjectACLResult.h"
+#import "OSSDeleteMultipleObjectsRequest.h"
+#import "OSSDeleteMultipleObjectsResult.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"

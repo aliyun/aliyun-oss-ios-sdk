@@ -98,7 +98,7 @@
     if (!self.objectKey &&
         (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
          && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
-         && operType != OSSOperationTypeGetBucketACL)) {
+         && operType != OSSOperationTypeGetBucketACL&& operType != OSSOperationTypeDeleteMultipleObjects)) {
             errorMessage = @"Object key should not be nil";
         }
     
