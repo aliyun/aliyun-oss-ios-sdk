@@ -118,6 +118,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     @IBAction func sequentialUpload(_ sender: Any) {
         sequentialMultipartUpload()
     }
+    @IBAction func triggerCallbackClicked(_ sender: Any) {
+        triggerCallBack()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -419,6 +422,26 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         let task = mClient.putObject(request)
         task.continue({ (t) -> Any? in
             self.showResult(task: t)
+        }).waitUntilFinished()
+    }
+    
+    func triggerCallBack() {
+        let request = OSSCallBackRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = "landscape-painting.jpeg"
+        request.callbackVar = ["key1": "value1",
+                               "key2": "value2"]
+        request.callbackParam = ["callbackUrl": "121.43.113.8",
+                                 "callbackBody": "test"]
+        
+        let task = mClient.triggerCallBack(request)
+        task.continue({ (t) -> Any? in
+            if (t.result != nil) {
+                let result = t.result as! OSSCallBackResult;
+                self .ossAlert(title: "提示", message: result.serverReturnJsonString);
+            }
+            
+            return nil
         }).waitUntilFinished()
     }
 }
