@@ -867,6 +867,12 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSResumableUploadResult
 @end
 
+@implementation OSSCallBackRequest
+@end
+
+@implementation OSSCallBackResult
+@end
+
 #pragma mark response parser
 
 
@@ -1332,6 +1338,25 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
                 [self parseResponseHeader:_response toResultObject:abortMultipartUploadResult];
             }
             return abortMultipartUploadResult;
+        }
+        
+        case OSSOperationTypeTriggerCallBack: {
+            OSSCallBackResult *result = [OSSCallBackResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:result];
+            }
+            
+            if (_collectingData) {
+                if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/xml"]) {
+                    NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                    OSSLogVerbose(@"callback trigger result<xml>: %@", parsedDict);
+                    result.serverReturnXML = parsedDict;
+                } else if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/json"]) {
+                    result.serverReturnJsonString = [[NSString alloc] initWithData:_collectingData encoding:NSUTF8StringEncoding];
+                    OSSLogVerbose(@"callback trigger result<json>: %@", result.serverReturnJsonString);
+                }
+            }
+            return result;
         }
 
         default: {

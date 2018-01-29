@@ -1178,6 +1178,14 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return result;
 }
 
++ (NSData *)constructHttpBodyForTriggerCallback:(NSString *)callbackParams callbackVaribles:(NSString *)callbackVaribles
+{
+    NSString *bodyString = [NSString stringWithFormat:@"x-oss-process=trigger/callback,callback_%@,callback-var_%@", callbackParams, callbackVaribles];
+    NSData *bodyData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    return bodyData;
+}
+
 @end
 
 @implementation NSString (OSS)
