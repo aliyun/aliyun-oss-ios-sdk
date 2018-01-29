@@ -23,6 +23,8 @@
 
 - (void)normalRequestCancel;
 
+- (void)triggerCallback;
+
 @end
 
 #endif /* OssService_h */

@@ -257,4 +257,8 @@
     OSSLogDebug(@"%@",[provider sign:@"abc" error:&error]);
 }
 
+- (IBAction)triggerCallbackClicked:(id)sender {
+    [service triggerCallback];
+}
+
 @end
