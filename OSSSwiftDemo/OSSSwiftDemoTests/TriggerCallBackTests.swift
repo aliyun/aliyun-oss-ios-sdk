@@ -22,13 +22,48 @@ class TriggerCallBackTests: OSSSwiftDemoTests {
         super.tearDown()
     }
     
+    override func setupClient() {
+        let tProvider = OSSPlainTextAKSKPairCredentialProvider.init(plainTextAccessKey: "AK", secretKey: "SK")
+        client = OSSClient.init(endpoint: OSS_ENDPOINT, credentialProvider: tProvider)
+    }
+    
     func testForTriggeringCallback() {
         let request = OSSCallBackRequest()
         request.bucketName = OSS_BUCKET_PRIVATE
-        request.objectName = "landscape-painting.jpeg"
+        request.objectName = "objectKey"
         request.callbackVar = ["key1": "value1",
                                "key2": "value2"]
-        request.callbackParam = ["callbackUrl": "121.43.113.8",
+        request.callbackParam = ["callbackUrl": "callbackUrl",
+                                 "callbackBody": "test"]
+        
+        let task = client.triggerCallBack(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func testForTriggeringCallbackWithoutParams() {
+        let request = OSSCallBackRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = "objectKey"
+        request.callbackVar = ["key1": "value1",
+                               "key2": "value2"]
+        
+        let task = client.triggerCallBack(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNotNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func testForTriggeringCallbackWithoutVars() {
+        let request = OSSCallBackRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = "objectKey"
+        request.callbackParam = ["callbackUrl": "callbackUrl",
                                  "callbackBody": "test"]
         
         let task = client.triggerCallBack(request)
