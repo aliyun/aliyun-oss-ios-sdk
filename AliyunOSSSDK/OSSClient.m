@@ -1154,7 +1154,8 @@ static NSObject * lock;
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
         
-        __block NSUInteger uploadedLength = 0;
+        static NSUInteger uploadedLength = 0;
+        uploadedLength = 0;
         __block OSSTask * errorTask;
         __block NSString *uploadId;
         
@@ -1347,6 +1348,46 @@ static NSObject * lock;
                                      recordFilePath:recordFilePath
                                  localPartInfosPath:localPartInfosPath];
     }];
+}
+
+- (OSSTask *)triggerCallBack:(OSSCallBackRequest *)request
+{
+    if (![request.bucketName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSTaskErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"bucketName should not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    if (![request.objectName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSTaskErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"objectName should not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    OSSNetworkingRequestDelegate *requestDelegate = request.requestDelegate;
+    NSMutableDictionary *querys = [NSMutableDictionary dictionary];
+    [querys setObject:@"" forKey:@"x-oss-process"];
+    NSString *paramString = [request.callbackParam base64JsonString];
+    NSString *variblesString = [request.callbackVar base64JsonString];
+    requestDelegate.uploadingData = [OSSUtil constructHttpBodyForTriggerCallback:paramString callbackVaribles:variblesString];
+    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    
+    
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeTriggerCallBack];
+    requestDelegate.responseParser = responseParser;
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                                                 httpMethod:@"POST" bucketName:request.bucketName objectKey:request.objectName type:nil
+                                                                                        md5:md5String
+                                                                                      range:nil
+                                                                                       date:dateString
+                                                                               headerParams:nil
+                                                                                     querys:querys
+                                                                                       sha1:nil];
+    requestDelegate.operType = OSSOperationTypeTriggerCallBack;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
 # pragma mark - Private Methods

@@ -118,6 +118,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     @IBAction func sequentialUpload(_ sender: Any) {
         sequentialMultipartUpload()
     }
+    @IBAction func triggerCallbackClicked(_ sender: Any) {
+        triggerCallBack()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -419,6 +422,29 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         let task = mClient.putObject(request)
         task.continue({ (t) -> Any? in
             self.showResult(task: t)
+        }).waitUntilFinished()
+    }
+    
+    func triggerCallBack() {
+        let provider = OSSPlainTextAKSKPairCredentialProvider.init(plainTextAccessKey: "AK", secretKey: "SKs")
+        let pClient = OSSClient.init(endpoint: OSS_ENDPOINT, credentialProvider: provider);
+        
+        let request = OSSCallBackRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = "objectName"
+        request.callbackVar = ["key1": "value1",
+                               "key2": "value2"]
+        request.callbackParam = ["callbackUrl": "callbackUrl",
+                                "callbackBody": "test"]
+        
+        let task = pClient.triggerCallBack(request)
+        task.continue({ (t) -> Any? in
+            if (t.result != nil) {
+                let result = t.result as! OSSCallBackResult;
+                self .ossAlert(title: "提示", message: result.serverReturnJsonString);
+            }
+            
+            return nil
         }).waitUntilFinished()
     }
 }
