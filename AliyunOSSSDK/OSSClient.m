@@ -1369,6 +1369,8 @@ static NSObject * lock;
     NSString *paramString = [request.callbackParam base64JsonString];
     NSString *variblesString = [request.callbackVar base64JsonString];
     requestDelegate.uploadingData = [OSSUtil constructHttpBodyForTriggerCallback:paramString callbackVaribles:variblesString];
+    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    
     
     OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeTriggerCallBack];
     requestDelegate.responseParser = responseParser;
@@ -1376,7 +1378,7 @@ static NSObject * lock;
     
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                                                  httpMethod:@"POST" bucketName:request.bucketName objectKey:request.objectName type:nil
-                                                                                        md5:nil
+                                                                                        md5:md5String
                                                                                       range:nil
                                                                                        date:dateString
                                                                                headerParams:nil

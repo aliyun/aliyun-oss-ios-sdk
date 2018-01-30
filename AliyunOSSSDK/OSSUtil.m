@@ -269,7 +269,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
         return nil;
     }
     NSData * data = [NSData dataWithBytes:input length:length];
-    return [data base64EncodedStringWithOptions:0];
+    return [data base64EncodedStringWithOptions: NSDataBase64Encoding64CharacterLineLength];
 }
 
 + (BOOL)isSubresource:(NSString *)param {
@@ -1180,10 +1180,21 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
 + (NSData *)constructHttpBodyForTriggerCallback:(NSString *)callbackParams callbackVaribles:(NSString *)callbackVaribles
 {
-    NSString *bodyString = [NSString stringWithFormat:@"x-oss-process=trigger/callback,callback_%@,callback-var_%@", callbackParams, callbackVaribles];
-    NSData *bodyData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableString *bodyString = [NSMutableString string];
     
-    return bodyData;
+    [bodyString appendString:@"x-oss-process=trigger/callback,callback_"];
+    if ([callbackParams oss_isNotEmpty])
+    {
+        [bodyString appendString:callbackParams];
+    }
+    
+    [bodyString appendString:@",callback-var_"];
+    if ([callbackVaribles oss_isNotEmpty])
+    {
+        [bodyString appendString:callbackVaribles];
+    }
+    
+    return [bodyString dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
