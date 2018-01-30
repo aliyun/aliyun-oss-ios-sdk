@@ -205,7 +205,6 @@
 
 - (void)testMultipartUpload_normal {
     NSString * objectkey = @"mul-wangwang.zip";
-    NSString * uploadFile = @"wangwang.zip";
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     
     multipartUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
@@ -214,8 +213,7 @@
     multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
-    NSString * docDir = [NSString oss_documentDirectory];
-    multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
@@ -235,7 +233,6 @@
 
 - (void)test_resumbleUpload_cancel_resumble {
     NSString * objectkey = @"res-wangwang.zip";
-    NSString * uploadFile = @"wangwang.zip";
     __block bool cancel = NO;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = OSS_BUCKET_PRIVATE;
@@ -250,8 +247,7 @@
             cancel = YES;
         }
     };
-    NSString * docDir = [NSString oss_documentDirectory];
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * resumeTask = [_client resumableUpload:resumableUpload];
     [resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
@@ -272,7 +268,7 @@
     resumableUpload.objectKey = objectkey;
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.partSize = 256 * 1024;
-    resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:uploadFile]];
+    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
