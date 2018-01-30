@@ -426,15 +426,18 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     }
     
     func triggerCallBack() {
+        let provider = OSSPlainTextAKSKPairCredentialProvider.init(plainTextAccessKey: "AK", secretKey: "SKs")
+        let pClient = OSSClient.init(endpoint: OSS_ENDPOINT, credentialProvider: provider);
+        
         let request = OSSCallBackRequest()
         request.bucketName = OSS_BUCKET_PRIVATE
-        request.objectName = "landscape-painting.jpeg"
+        request.objectName = "objectName"
         request.callbackVar = ["key1": "value1",
                                "key2": "value2"]
-        request.callbackParam = ["callbackUrl": "121.43.113.8",
-                                 "callbackBody": "test"]
+        request.callbackParam = ["callbackUrl": "callbackUrl",
+                                "callbackBody": "test"]
         
-        let task = mClient.triggerCallBack(request)
+        let task = pClient.triggerCallBack(request)
         task.continue({ (t) -> Any? in
             if (t.result != nil) {
                 let result = t.result as! OSSCallBackResult;
