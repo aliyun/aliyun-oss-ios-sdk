@@ -6,9 +6,9 @@
 //  Copyright © 2015年 Ali. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <AliyunOSSiOS/OSSService.h>
 #import "OssService.h"
+#import "OSSTestMacros.h"
 
 @implementation OssService
 {
@@ -165,6 +165,28 @@
     if (getRequest) {
         [getRequest cancel];
     }
+}
+
+- (void)triggerCallback
+{
+    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
+    OSSClient *pClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
+    OSSCallBackRequest *request = [OSSCallBackRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.objectName = @"landscape-painting.jpeg";
+    request.callbackParam = @{@"callbackUrl": OSS_CALLBACK_URL,
+                              @"callbackBody": @"test"};
+    request.callbackVar = @{@"var1": @"value1",
+                            @"var2": @"value2"};
+    
+    [[[pClient triggerCallBack:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        if (task.result) {
+            OSSCallBackResult *result = (OSSCallBackResult *)task.result;
+            NSLog(@"Result: %@", result.serverReturnJsonString);
+        }
+        
+        return nil;
+    }] waitUntilFinished];
 }
 
 

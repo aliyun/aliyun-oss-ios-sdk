@@ -53,6 +53,8 @@
 + (NSString *)sha1WithData:(NSData *)data;
 + (NSString *)sha1WithFilePath:(NSString *)filePath;
 
++ (NSData *)constructHttpBodyForTriggerCallback:(NSString *)callbackParams callbackVaribles:(NSString *)callbackVaribles;
+
 @end
 
 @interface NSString (OSS)

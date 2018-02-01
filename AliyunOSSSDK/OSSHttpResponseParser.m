@@ -512,6 +512,24 @@
             }
             return abortMultipartUploadResult;
         }
+        case OSSOperationTypeTriggerCallBack: {
+            OSSCallBackResult *callbackResult = [OSSCallBackResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:callbackResult];
+            }
+            
+            if (_collectingData) {
+                if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/xml"]) {
+                    NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                    OSSLogVerbose(@"callback trigger result<xml>: %@", parsedDict);
+                    callbackResult.serverReturnXML = parsedDict;
+                } else if ([[[_response.allHeaderFields objectForKey:OSSHttpHeaderContentType] description] isEqual:@"application/json"]) {
+                    callbackResult.serverReturnJsonString = [[NSString alloc] initWithData:_collectingData encoding:NSUTF8StringEncoding];
+                    OSSLogVerbose(@"callback trigger result<json>: %@", callbackResult.serverReturnJsonString);
+                }
+            }
+            return callbackResult;
+        }
             
         default: {
             OSSLogError(@"unknown operation type");

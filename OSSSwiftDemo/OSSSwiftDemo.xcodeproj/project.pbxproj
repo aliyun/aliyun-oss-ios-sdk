@@ -13,6 +13,7 @@
 		D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C771FFF66B400D8DF46 /* AppDelegate.swift */; };
 		D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */; };
 		D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */; };
+		D83CEFF6201F1BFD00F917E1 /* TriggerCallBackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */; };
 		D842D5751FFB65A800220913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5731FFB65A800220913 /* Main.storyboard */; };
 		D842D5771FFB65A800220913 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D842D5761FFB65A800220913 /* Assets.xcassets */; };
 		D842D57A1FFB65A800220913 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5781FFB65A800220913 /* LaunchScreen.storyboard */; };
@@ -73,6 +74,7 @@
 		D8350C771FFF66B400D8DF46 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSRootViewController.swift; sourceTree = "<group>"; };
 		D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSNavigationController.swift; sourceTree = "<group>"; };
+		D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerCallBackTests.swift; sourceTree = "<group>"; };
 		D842D56C1FFB65A800220913 /* OSSSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSSSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5741FFB65A800220913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D842D5761FFB65A800220913 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */,
 				D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */,
 				D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */,
+				D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */,
 			);
 			path = OSSSwiftDemoTests;
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 				D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */,
 				D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */,
 				D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */,
+				D83CEFF6201F1BFD00F917E1 /* TriggerCallBackTests.swift in Sources */,
 				D85277402010B21A00D7B1DE /* SequentialMultipartUploadTests.swift in Sources */,
 				D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */,
 				D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */,

@@ -24,7 +24,7 @@
 
 - (void)setupClient {
     //    OSSAuthCredentialProvider *provider = [OSSAuthCredentialProvider new];
-    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"YJjHKOKWDWINLKXv" secretKey:@"37wFMvLLnqf2EvI5ljhp8WIl2F1l6W"];
+    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.maxRetryCount = 2;
     conf.timeoutIntervalForRequest = 30;

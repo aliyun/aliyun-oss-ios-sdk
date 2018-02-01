@@ -53,9 +53,9 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
  FederationToken class
  */
 @interface OSSFederationToken : NSObject
-@property (nonatomic, strong) NSString * tAccessKey;
-@property (nonatomic, strong) NSString * tSecretKey;
-@property (nonatomic, strong) NSString * tToken;
+@property (nonatomic, copy) NSString * tAccessKey;
+@property (nonatomic, copy) NSString * tSecretKey;
+@property (nonatomic, copy) NSString * tToken;
 
 /**
  Token's expiration time in milliseconds of the unix time.
@@ -82,11 +82,11 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
 
 __attribute__((deprecated("PLEASE DO NOT USE THIS CLASS AGAIN")))
 @interface OSSPlainTextAKSKPairCredentialProvider : NSObject <OSSCredentialProvider>
-@property (nonatomic, strong) NSString * accessKey;
-@property (nonatomic, strong) NSString * secretKey;
+@property (nonatomic, copy) NSString * accessKey;
+@property (nonatomic, copy) NSString * secretKey;
 
-- (instancetype)initWithPlainTextAccessKey:(nonnull NSString *)accessKey
-                                 secretKey:(nonnull NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
+- (instancetype)initWithPlainTextAccessKey:(NSString *)accessKey
+                                 secretKey:(NSString *)secretKey __attribute__((deprecated("We recommend the STS authentication mode on mobile")));
 @end
 
 /**
@@ -103,7 +103,7 @@ TODOTODO
  * During the task execution, this API is called for signing
  * It's executed at the background thread instead of UI thread.
  */
-- (instancetype _Nullable)initWithImplementedSigner:(nonnull OSSCustomSignContentBlock)signContent NS_DESIGNATED_INITIALIZER;
+- (instancetype _Nullable)initWithImplementedSigner:(OSSCustomSignContentBlock)signContent NS_DESIGNATED_INITIALIZER;
 @end
 
 /**
@@ -126,9 +126,9 @@ TODOTODO
  The STS token's credential provider.
  */
 @interface OSSStsTokenCredentialProvider : NSObject <OSSCredentialProvider>
-@property (nonatomic, strong) NSString * accessKeyId;
-@property (nonatomic, strong) NSString * secretKeyId;
-@property (nonatomic, strong) NSString * securityToken;
+@property (nonatomic, copy) NSString * accessKeyId;
+@property (nonatomic, copy) NSString * secretKeyId;
+@property (nonatomic, copy) NSString * securityToken;
 
 - (OSSFederationToken *)getToken;
 - (instancetype)initWithAccessKeyId:(NSString *)accessKeyId
@@ -140,7 +140,7 @@ TODOTODO
  auth credential provider.
  */
 @interface OSSAuthCredentialProvider : OSSFederationCredentialProvider
-@property (nonatomic, strong) NSString * authServerUrl;
+@property (nonatomic, copy) NSString * authServerUrl;
 @property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
@@ -175,7 +175,7 @@ TODOTODO
 /**
 Sets the session Id for background file transmission
  */
-@property (nonatomic, strong) NSString * backgroundSesseionIdentifier;
+@property (nonatomic, copy) NSString * backgroundSesseionIdentifier;
 
 /**
  Sets request timeout
@@ -190,13 +190,13 @@ Sets the session Id for background file transmission
 /**
  Sets proxy host and port.
  */
-@property (nonatomic, strong) NSString * proxyHost;
+@property (nonatomic, copy) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
 
 /**
  Sets UA
  */
-@property (nonatomic, strong) NSString * userAgentMark;
+@property (nonatomic, copy) NSString * userAgentMark;
 
 /**
  Sets CName excluded list.
@@ -253,6 +253,8 @@ Sets the session Id for background file transmission
 - (NSString *)toHeaderString;
 @end
 
+#pragma mark RequestAndResultClass
+
 /**
  The request to list all buckets of current user.
  */
@@ -261,13 +263,13 @@ Sets the session Id for background file transmission
 /**
  The prefix filter for listing buckets---optional.
  */
-@property (nonatomic, strong) NSString * prefix;
+@property (nonatomic, copy) NSString * prefix;
 
 /**
  The marker filter for listing buckets----optional.
  The marker filter is to ensure any returned bucket name must be greater than the marker in the lexicographic order.
  */
-@property (nonatomic, strong) NSString * marker;
+@property (nonatomic, copy) NSString * marker;
 
 /**
  The max entries to return. By default it's 100 and max value of this property is 1000.
@@ -289,22 +291,22 @@ Sets the session Id for background file transmission
 /**
  The owner Id
  */
-@property (nonatomic, strong) NSString * ownerId;
+@property (nonatomic, copy) NSString * ownerId;
 
 /**
  Bucket owner name---currently it's same as owner Id.
  */
-@property (nonatomic, strong) NSString * ownerDispName;
+@property (nonatomic, copy) NSString * ownerDispName;
 
 /**
  The prefix of this query. It's only set when there's remaining buckets to return.
  */
-@property (nonatomic, strong) NSString * prefix;
+@property (nonatomic, copy) NSString * prefix;
 
 /**
  The marker of this query. It's only set when there's remaining buckets to return.
  */
-@property (nonatomic, strong) NSString * marker;
+@property (nonatomic, copy) NSString * marker;
 
 /**
  The max buckets to return. It's only set when there's remaining buckets to return.
@@ -319,7 +321,7 @@ Sets the session Id for background file transmission
 /**
  The marker for the next ListBucket call. It's only set when there's remaining buckets to return.
  */
-@property (nonatomic, strong) NSString * nextMarker;
+@property (nonatomic, copy) NSString * nextMarker;
 
 /**
  The container of the buckets. It's a dictionary array, in which every element has keys "Name", "CreationDate" and "Location".
@@ -335,18 +337,18 @@ Sets the session Id for background file transmission
 /**
  *  存储空间,命名规范如下:(1)只能包括小写字母、数字和短横线(-);(2)必须以小写字母或者数字开头和结尾;(3)长度必须在3-63字节之间.
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  The bucket location
  For more information about OSS datacenter and endpoint, please check out <a>https://docs.aliyun.com/#/pub/oss/product-documentation/domain-region</a>
  */
-@property (nonatomic, strong) NSString * location __attribute__ ((deprecated));
+@property (nonatomic, copy) NSString * location __attribute__ ((deprecated));
 
 /**
  Sets Bucket access permission. For now there're three permissions:public-read-write，public-read and private. if this key is not set, the default value is private
  */
-@property (nonatomic, strong) NSString * xOssACL;
+@property (nonatomic, copy) NSString * xOssACL;
 
 @end
 
@@ -358,7 +360,7 @@ Sets the session Id for background file transmission
 /**
  Bucket datacenter
  */
-@property (nonatomic, strong) NSString * location;
+@property (nonatomic, copy) NSString * location;
 @end
 
 /**
@@ -369,7 +371,7 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 @end
 
 /**
@@ -386,7 +388,7 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  The delimiter is very important and it determines the behavior of common prefix.
@@ -395,13 +397,13 @@ Sets the session Id for background file transmission
  If the delimiter is '/', then the ListObject will return a common prefix 'prefix/' and a file 'abc'.
  If the delimiter is something else, then ListObject will return three files: prefix/, abc and prefix/123.txt. No common prefix!.
  */
-@property (nonatomic, strong) NSString * delimiter;
+@property (nonatomic, copy) NSString * delimiter;
 
 /**
  The marker filter for listing objects----optional.
  The marker filter is to ensure any returned object name must be greater than the marker in the lexicographic order.
  */
-@property (nonatomic, strong) NSString * marker;
+@property (nonatomic, copy) NSString * marker;
 
 /**
  The max entries count to return. By default it's 100 and it could be up to 1000.
@@ -411,7 +413,7 @@ Sets the session Id for background file transmission
 /**
  The filter prefix of the objects to return----the returned objects' name must have the prefix.
  */
-@property (nonatomic, strong) NSString * prefix;
+@property (nonatomic, copy) NSString * prefix;
 
 /**
  Generates the query parameter dictionary according to the properties.
@@ -427,17 +429,17 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  The prefix of the objects returned----the returned objects must have this prefix.
  */
-@property (nonatomic, strong) NSString * prefix;
+@property (nonatomic, copy) NSString * prefix;
 
 /**
  The marker filter of the objects returned---all objects returned are greater than this marker in lexicographic order.
  */
-@property (nonatomic, strong) NSString * marker;
+@property (nonatomic, copy) NSString * marker;
 
 /**
  The max entries to return. By default it's 100 and it could be up to 1000.
@@ -448,12 +450,12 @@ Sets the session Id for background file transmission
  The delimiter to differentiate the folder object and file object.
  For object whose name ends with the delimiter, then it's treated as folder or common prefixes.
  */
-@property (nonatomic, strong) NSString * delimiter;
+@property (nonatomic, copy) NSString * delimiter;
 
 /**
  The maker for the next call. If no more entries to return, it's null.
  */
-@property (nonatomic, strong) NSString * nextMarker;
+@property (nonatomic, copy) NSString * nextMarker;
 
 /**
  Flag of truncated result. If it's truncated, it means there's more entries to return.
@@ -479,7 +481,7 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 @end
 
 /**
@@ -490,7 +492,7 @@ Sets the session Id for background file transmission
 /**
  The bucket ACL. It could be one of the three values: private/public-read/public-read-write.
  */
-@property (nonatomic, strong) NSString * aclGranted;
+@property (nonatomic, copy) NSString * aclGranted;
 @end
 
 /**
@@ -501,12 +503,12 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 @end
 
 /**
@@ -517,7 +519,7 @@ Sets the session Id for background file transmission
 /**
  Object metadata
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 @end
 
 /**
@@ -528,12 +530,12 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  OSS Download Range: For example, bytes=0-9 means uploading the first to the tenth's character.
@@ -548,7 +550,7 @@ Sets the session Id for background file transmission
 /**
  Image processing configuration.
  */
-@property (nonatomic, strong) NSString * xOssProcess;
+@property (nonatomic, copy) NSString * xOssProcess;
 
 /**
  Download progress callback.
@@ -576,7 +578,7 @@ Sets the session Id for background file transmission
 /**
  The object metadata dictionary
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 @end
 
 
@@ -594,12 +596,12 @@ Sets the session Id for background file transmission
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  The in-memory data to upload.
@@ -614,17 +616,17 @@ Sets the session Id for background file transmission
 /**
  The callback parameters.
  */
-@property (nonatomic, strong) NSDictionary * callbackParam;
+@property (nonatomic, copy) NSDictionary * callbackParam;
 
 /**
  The callback variables.
  */
-@property (nonatomic, strong) NSDictionary * callbackVar;
+@property (nonatomic, copy) NSDictionary * callbackVar;
 
 /**
  The content type.
  */
-@property (nonatomic, strong) NSString * contentType;
+@property (nonatomic, copy) NSString * contentType;
 
 /**
  The content's MD5 digest. 
@@ -632,27 +634,27 @@ Sets the session Id for background file transmission
  Then use base64 encoding on the 128bit result to get this MD5 value.
  This header is for integrity check on the data. And it's recommended to turn on for every body.
  */
-@property (nonatomic, strong) NSString * contentMd5;
+@property (nonatomic, copy) NSString * contentMd5;
 
 /**
  Specifies the download name of the object. Checks out RFC2616 for more details.
  */
-@property (nonatomic, strong) NSString * contentDisposition;
+@property (nonatomic, copy) NSString * contentDisposition;
 
 /**
  Specifies the content encoding during the download. Checks out RFC2616 for more details.
  */
-@property (nonatomic, strong) NSString * contentEncoding;
+@property (nonatomic, copy) NSString * contentEncoding;
 
 /**
  Specifies the cache behavior during the download. Checks out RFC2616 for more details.
  */
-@property (nonatomic, strong) NSString * cacheControl;
+@property (nonatomic, copy) NSString * cacheControl;
 
 /**
  Expiration time in milliseconds. Checks out RFC2616 for more details.
  */
-@property (nonatomic, strong) NSString * expires;
+@property (nonatomic, copy) NSString * expires;
 
 /**
  The object's metadata.
@@ -660,7 +662,7 @@ Sets the session Id for background file transmission
  The total size of all user metadata cannot be more than 8K. 
  It also could include standard HTTP headers in this object.
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 
 /**
  The upload progress callback.
@@ -703,12 +705,12 @@ ETag (entity tag) is the tag during the object creation in OSS server side.
 It's the MD5 value for put object request. If the object is created by other APIs, the ETag is the UUID of the content.
  ETag could be used to check if the object has been updated.
  */
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 
 /**
  If the callback is specified, this is the callback response result.
  */
-@property (nonatomic, strong) NSString * serverReturnJsonString;
+@property (nonatomic, copy) NSString * serverReturnJsonString;
 @end
 
 /**
@@ -719,12 +721,12 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  Specifies which position to append. For a new file, the first append should start from 0. And the subsequential calls will start from the current length of the object.
@@ -746,40 +748,40 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Sets the content type
  */
-@property (nonatomic, strong) NSString * contentType;
+@property (nonatomic, copy) NSString * contentType;
 
 /**
  The content's MD5 digest value.
  It's calculated from the MD5 value of the request body according to RFC 1864 and then encoded by base64.
  */
-@property (nonatomic, strong) NSString *contentMd5;
+@property (nonatomic, copy) NSString *contentMd5;
 
 /**
  The object's name during the download according to RFC 2616.
  */
-@property (nonatomic, strong) NSString * contentDisposition;
+@property (nonatomic, copy) NSString * contentDisposition;
 
 /**
  The content encoding during the object upload. Checks out RFC2616 for more detail.
  */
-@property (nonatomic, strong) NSString * contentEncoding;
+@property (nonatomic, copy) NSString * contentEncoding;
 
 /**
  Specifies the cache control behavior when it's being downloaded.Checks out RFC 2616 for more details.
  */
-@property (nonatomic, strong) NSString * cacheControl;
+@property (nonatomic, copy) NSString * cacheControl;
 
 /**
  Expiration time. Checks out RFC2616 for more information.
  */
-@property (nonatomic, strong) NSString * expires;
+@property (nonatomic, copy) NSString * expires;
 
 /**
  The object's metadata, which start with x-oss-meta-, such as x-oss-meta-location.
  Each request can have multiple metadata as long as the total size of all metadata is no bigger than 8KB.
  It could include standard headers as well.
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 
 /**
  Upload progress callback.
@@ -806,7 +808,7 @@ It's the MD5 value for put object request. If the object is created by other API
  For Objects created by PUT, ETag is the MD5 value of the content data. For others, ETag is the UUID of the content.
  ETag is used for checking data integrity.
  */
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 
 /**
  Specifies the next starting position. It's essentially the current object size.
@@ -823,12 +825,12 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object object
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 @end
 
 /**
@@ -845,36 +847,36 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  Source object's address (the caller needs the read permission on this object)
  */
-@property (nonatomic, strong) NSString * sourceCopyFrom;
+@property (nonatomic, copy) NSString * sourceCopyFrom;
 
 /**
  The content type
  */
-@property (nonatomic, strong) NSString * contentType;
+@property (nonatomic, copy) NSString * contentType;
 
 /**
  The content's MD5 digest.
  It's calculated according to RFC 1864 and encoded in base64.
  Though it's optional, it's recommended to turn it on for integrity check.
  */
-@property (nonatomic, strong) NSString * contentMd5;
+@property (nonatomic, copy) NSString * contentMd5;
 
 /**
  The user metadata dictionary, which starts with x-oss-meta-. 
  The total size of user metadata can be no more than 8KB.
  It could include standard http headers as well.
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 
 /**
  * the sha1 of content
@@ -892,12 +894,12 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  The last modified time
  */
-@property (nonatomic, strong) NSString * lastModifed;
+@property (nonatomic, copy) NSString * lastModifed;
 
 /**
  The ETag of the new object.
  */
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 @end
 
 /**
@@ -908,44 +910,44 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  Content type
  */
-@property (nonatomic, strong) NSString * contentType;
+@property (nonatomic, copy) NSString * contentType;
 
 /**
  The object's download name. Checks out RFC 2616 for more details.
  */
-@property (nonatomic, strong) NSString * contentDisposition;
+@property (nonatomic, copy) NSString * contentDisposition;
 
 /**
  The content encoding. Checks out RFC 2616.
  */
-@property (nonatomic, strong) NSString * contentEncoding;
+@property (nonatomic, copy) NSString * contentEncoding;
 
 /**
  Specifies the cache control behavior when it's downloaded. Checks out RFC 2616 for more details.
  */
-@property (nonatomic, strong) NSString * cacheControl;
+@property (nonatomic, copy) NSString * cacheControl;
 
 /**
  Expiration time in milliseconds. Checks out RFC 2616 for more details.
  */
-@property (nonatomic, strong) NSString * expires;
+@property (nonatomic, copy) NSString * expires;
 
 /**
  The dictionary of object's custom metadata, which starts with x-oss-meta-. 
  The total size of user metadata is no more than 8KB.
  It could include other standard http headers.
  */
-@property (nonatomic, strong) NSDictionary * objectMeta;
+@property (nonatomic, copy) NSDictionary * objectMeta;
 
 /**
  * When Setting this value to YES , parts will be uploaded in order. Default value is NO.
@@ -962,7 +964,7 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  The upload Id of the multipart upload
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 @end
 
 /**
@@ -973,17 +975,17 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectkey;
+@property (nonatomic, copy) NSString * objectkey;
 
 /**
  Multipart Upload id.
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 
 /**
  The part number of this part.
@@ -995,7 +997,7 @@ It's the MD5 value for put object request. If the object is created by other API
  It's calculated according to RFC 1864 and encoded in base64.
  Though it's optional, it's recommended to turn it on for integrity check.
  */
-@property (nonatomic, strong) NSString * contentMd5;
+@property (nonatomic, copy) NSString * contentMd5;
 
 /**
  The in-memory data to upload from.
@@ -1024,7 +1026,7 @@ It's the MD5 value for put object request. If the object is created by other API
  The result class of uploading one part.
  */
 @interface OSSUploadPartResult : OSSResult
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 @end
 
 /**
@@ -1040,7 +1042,7 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  ETag value of this part returned by OSS.
  */
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 
 /**
  The part size.
@@ -1052,7 +1054,7 @@ It's the MD5 value for put object request. If the object is created by other API
 + (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size __attribute__((deprecated("Use partInfoWithPartNum:eTag:size:crc64: to instead!")));
 + (instancetype)partInfoWithPartNum:(int32_t)partNum eTag:(NSString *)eTag size:(int64_t)size crc64:(uint64_t)crc64;
 
-- (nonnull NSDictionary *)entityToDictionary;
+- (NSDictionary *)entityToDictionary;
 
 @end
 
@@ -1064,24 +1066,24 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  Multipart upload Id
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 
 /**
  The content MD5 value.
  It's calculated according to RFC 1864 and encoded in base64.
  Though it's optional, it's recommended to turn it on for integrity check. 
  */
-@property (nonatomic, strong) NSString * contentMd5;
+@property (nonatomic, copy) NSString * contentMd5;
 
 /**
  All parts' information.
@@ -1091,17 +1093,17 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Server side callback parameter
  */
-@property (nonatomic, strong) NSDictionary * callbackParam;
+@property (nonatomic, copy) NSDictionary * callbackParam;
 
 /**
  Callback variables 
  */
-@property (nonatomic, strong) NSDictionary * callbackVar;
+@property (nonatomic, copy) NSDictionary * callbackVar;
 
 /**
  The metadata header
  */
-@property (nonatomic, strong) NSDictionary * completeMetaHeader;
+@property (nonatomic, copy) NSDictionary * completeMetaHeader;
 
 /**
  * the sha1 of content
@@ -1118,19 +1120,19 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  The object's URL
  */
-@property (nonatomic, strong) NSString * location;
+@property (nonatomic, copy) NSString * location;
 
 /**
  ETag (entity tag).
  It's generated when the object is created. 
  */
-@property (nonatomic, strong) NSString * eTag;
+@property (nonatomic, copy) NSString * eTag;
 
 /**
  The callback response if the callback is specified.
  The resutl class of initiating a multipart upload.
  */
-@property (nonatomic, strong) NSString * serverReturnJsonString;
+@property (nonatomic, copy) NSString * serverReturnJsonString;
 @end
 
 /**
@@ -1141,17 +1143,17 @@ It's the MD5 value for put object request. If the object is created by other API
 /**
  Bucket name
  The request class of uploading one part.*/
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  The multipart upload Id.
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 
 /**
  The max part count to return
@@ -1199,17 +1201,17 @@ The result class of listing uploaded parts.
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object name
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  The multipart upload Id.
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 @end
 
 /**
@@ -1226,17 +1228,17 @@ The result class of listing uploaded parts.
 /**
  The upload Id
  */
-@property (nonatomic, strong) NSString * uploadId;
+@property (nonatomic, copy) NSString * uploadId;
 
 /**
  Bucket name
  */
-@property (nonatomic, strong) NSString * bucketName;
+@property (nonatomic, copy) NSString * bucketName;
 
 /**
  Object object
  */
-@property (nonatomic, strong) NSString * objectKey;
+@property (nonatomic, copy) NSString * objectKey;
 
 /**
  The local file path to upload from.
@@ -1257,22 +1259,22 @@ The result class of listing uploaded parts.
 /**
  The callback parmeters
  */
-@property (nonatomic, strong) NSDictionary * callbackParam;
+@property (nonatomic, copy) NSDictionary * callbackParam;
 
 /**
  The callback variables
  */
-@property (nonatomic, strong) NSDictionary * callbackVar;
+@property (nonatomic, copy) NSDictionary * callbackVar;
 
 /**
  Content type
  */
-@property (nonatomic, strong) NSString * contentType;
+@property (nonatomic, copy) NSString * contentType;
 
 /**
  The metadata header
  */
-@property (nonatomic, strong) NSDictionary * completeMetaHeader;
+@property (nonatomic, copy) NSDictionary * completeMetaHeader;
 
 /**
  * the sha1 of content
@@ -1292,7 +1294,7 @@ The result class of listing uploaded parts.
 /**
  directory path about create record uploadId file 
  */
-@property (nonatomic, strong) NSString * recordDirectoryPath;
+@property (nonatomic, copy) NSString * recordDirectoryPath;
 
 
 /**
@@ -1312,10 +1314,49 @@ The result class of listing uploaded parts.
  The result class of resumable uploading
  */
 @interface OSSResumableUploadResult : OSSResult
+
 /**
  The callback response, if the callback is specified.
  */
-@property (nonatomic, strong) NSString * serverReturnJsonString;
+@property (nonatomic, copy) NSString * serverReturnJsonString;
+
+@end
+
+
+/**
+ for more information,Please refer to the link https://help.aliyun.com/document_detail/31989.html?spm=5176.doc31988.6.908.CkOpBW
+ */
+@interface OSSCallBackRequest : OSSRequest
+
+@property (nonatomic, copy) NSString *bucketName;
+
+@property (nonatomic, copy) NSString *objectName;
+/**
+ The callback parameters.when you set this value,there are required params as below:
+ {
+    "callbackUrl": xxx
+    "callbackBody": xxx
+ }
+ */
+@property (nonatomic, copy) NSDictionary *callbackParam;
+/**
+ The callback variables.
+ */
+@property (nonatomic, copy) NSDictionary *callbackVar;
+
+@end
+
+
+
+@interface OSSCallBackResult : OSSResult
+
+@property (nonatomic, copy) NSDictionary *serverReturnXML;
+
+/**
+ If the callback is specified, this is the callback response result.
+ */
+@property (nonatomic, copy) NSString *serverReturnJsonString;
+
 @end
 
 NS_ASSUME_NONNULL_END

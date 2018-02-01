@@ -61,7 +61,8 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeUploadPart,
     OSSOperationTypeCompleteMultipartUpload,
     OSSOperationTypeAbortMultipartUpload,
-    OSSOperationTypeListMultipart
+    OSSOperationTypeListMultipart,
+    OSSOperationTypeTriggerCallBack
 };
 
 /**

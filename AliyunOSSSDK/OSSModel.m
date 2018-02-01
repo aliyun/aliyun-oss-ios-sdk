@@ -836,3 +836,8 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSResumableUploadResult
 @end
 
+@implementation OSSCallBackRequest
+@end
+
+@implementation OSSCallBackResult
+@end

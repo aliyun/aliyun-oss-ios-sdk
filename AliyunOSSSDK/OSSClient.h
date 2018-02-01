@@ -30,6 +30,7 @@
 @class OSSMultipartUploadRequest;
 @class OSSTask;
 @class OSSExecutor;
+@class OSSCallBackRequest;
 
 @class OSSNetworking;
 @class OSSClientConfiguration;
@@ -246,6 +247,8 @@ Aborts the multipart upload by the specified upload Id.
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
 - (OSSTask *)abortResumableMultipartUpload:(OSSResumableUploadRequest *)request;
+
+- (OSSTask *)triggerCallBack:(OSSCallBackRequest *)request;
 
 #pragma mark extention method
 
