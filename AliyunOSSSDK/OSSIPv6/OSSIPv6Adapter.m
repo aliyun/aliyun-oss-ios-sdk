@@ -141,7 +141,7 @@
 /**
  *	@brief	Looks up the DNS server stack and returns the flag combinations of SUPPORT_IPV4_STACK and SUPPORT_IPV6_STACK.
  *
- *	@return
+ *	@return the flag combinations of SUPPORT_IPV4_STACK and SUPPORT_IPV6_STACK
  */
 - (int)getDNSServersIpStack {
     int dns_stack = 0;
@@ -172,11 +172,6 @@
     return dns_stack;
 }
 
-/**
- *	@brief	Checks if the address is IPV4
- *
- *	@return
- */
 - (BOOL)isIPv4Address:(NSString *)addr {
     if (addr == nil) {
         return NO;
@@ -188,11 +183,6 @@
     return success == 1;
 }
 
-/**
- *	@brief	Checks if the address is IPV6
- *
- *	@return
- */
 - (BOOL)isIPv6Address:(NSString *)addr {
     if (addr == nil) {
         return NO;
