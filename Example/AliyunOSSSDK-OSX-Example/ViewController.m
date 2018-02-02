@@ -2,8 +2,8 @@
 //  ViewController.m
 //  AliyunOSSSDK-OSX-Example
 //
-//  Created by 怀叙 on 2017/11/28.
-//  Copyright © 2017年 阿里云. All rights reserved.
+//  Created by huaixu on 2017/11/28.
+//  Copyright © 2017年 aliyun. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -25,18 +25,17 @@ NSString * const endPoint = @"http://oss-cn-hangzhou.aliyuncs.com";
     
     [super viewDidLoad];
     OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"AK" secretKey:@"SK"];
+    
+    [OSSLog enableLog];
     _client = [[OSSClient alloc] initWithEndpoint:endPoint credentialProvider:provider];
     // Do any additional setup after loading the view.
-    [self getObjectTest];
 }
 
 - (void)setRepresentedObject:(id)representedObject
 {
     [super setRepresentedObject:representedObject];
 }
-
-- (void) getObjectTest
-{
+- (IBAction)getObjectButtonClicked:(id)sender {
     OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
     getRequest.bucketName = BUCKET_NAME;
     getRequest.objectKey = DOWNLOAD_OBJECT_KEY;
