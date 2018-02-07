@@ -33,7 +33,7 @@ mkdir -p ${SRCROOT}/Products
 
 cp -LR "${DEVICE_DIR}" "${INSTALL_DIR}"
 
-# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.
+# Uses the Lipo Tool to merge both binary files (i386/x86_64 + armv7/armv64) into one Universal final product.
 lipo -create "${DEVICE_DIR}/${FMK_NAME}" "${SIMULATOR_DIR}/${FMK_NAME}" -output "${INSTALL_DIR}/${FMK_NAME}"
 
 rm -r "${WRK_DIR}"
