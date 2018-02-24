@@ -14,7 +14,7 @@
 
 #define OSS_BUCKET_PUBLIC               @"bucket-public"
 #define OSS_BUCKET_PRIVATE              @"bucket-private"
-#define OSS_ENDPOINT                    @"http://oss-cn-shenzhen.aliyuncs.com"
+#define OSS_ENDPOINT                    @"http://oss-cn-hangzhou.aliyuncs.com"
 #define OSS_MULTIPART_UPLOADKEY         @"multipart"
 #define OSS_RESUMABLE_UPLOADKEY         @"resumable"
 #define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"

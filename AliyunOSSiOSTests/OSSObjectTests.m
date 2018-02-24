@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OSSTestMacros.h"
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import "OSSTestUtils.h"
 
 @interface OSSObjectTests : XCTestCase
 {
@@ -560,6 +561,64 @@
 }
 
 #pragma mark - others
+
+- (void)testAPI_get_Bucket_list_Objects
+{
+    NSString * bucket = @"oss-ios-get-bucket-list-object-test";
+    OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
+    req.bucketName = bucket;
+    [[_client createBucket:req] waitUntilFinished];
+    
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[0]];
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = bucket;
+    put.objectKey = _fileNames[0];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    NSError *readError;
+    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:&readError];
+    put.uploadingData = [readFile readDataToEndOfFile];
+    [[_client putObject:put] waitUntilFinished];
+    
+    OSSGetBucketRequest * request = [OSSGetBucketRequest new];
+    request.bucketName = bucket;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 1000;
+    request.prefix = @"";
+    
+    OSSTask * task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketRequest new];
+    request.bucketName = bucket;
+    request.delimiter = @"";
+    request.marker = @"";
+    request.maxKeys = 2;
+    request.prefix = @"";
+    
+    task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketRequest new];
+    request.bucketName = bucket;
+    request.prefix = @"fileDir";
+    request.delimiter = @"/";
+    
+    task = [_client getBucket:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:bucket with:_client];
+}
+
 - (void)testAPI_headObject
 {
     OSSHeadObjectRequest * request = [OSSHeadObjectRequest new];

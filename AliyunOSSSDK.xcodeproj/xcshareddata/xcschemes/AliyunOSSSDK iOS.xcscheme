@@ -29,7 +29,26 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D87183A61FC56F12000DD9EC"
+               BuildableName = "AliyunOSSiOSTests.xctest"
+               BlueprintName = "AliyunOSSiOSTests"
+               ReferencedContainer = "container:Example/AliyunOSSSDK-Example.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "21028BBB1BA9ABF500C2A6BA"
+            BuildableName = "AliyunOSSiOS.framework"
+            BlueprintName = "AliyunOSSSDK iOS"
+            ReferencedContainer = "container:AliyunOSSSDK.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
