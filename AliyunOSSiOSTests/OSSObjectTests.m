@@ -416,24 +416,32 @@
     }] waitUntilFinished];
 }
 
-//- (void)testAPI_getImage
-//{
-//    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
-//    request.bucketName = _privateBucketName;
-//    request.objectKey = OSS_IMAGE_KEY;
-//    request.xOssProcess = @"image/resize,m_lfit,w_100,h_100";
-//
-//    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-//        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-//    };
-//
-//    OSSTask * task = [_client getObject:request];
-//
-//    [[task continueWithBlock:^id(OSSTask *task) {
-//        XCTAssertNil(task.error);
-//        return nil;
-//    }] waitUntilFinished];
-//}
+- (void)testAPI_getImage
+{
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = _privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    put.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    
+    [[_client putObject:put] waitUntilFinished];
+    
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = _privateBucketName;
+    request.objectKey = OSS_IMAGE_KEY;
+    request.xOssProcess = @"image/resize,m_lfit,w_100,h_100";
+
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+
+    OSSTask * task = [_client getObject:request];
+
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
 
 - (void)testAPI_getObjectWithRecieveDataBlock
 {
