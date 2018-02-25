@@ -115,7 +115,7 @@ or
 We recommend STS authentication mode to initialize the OSSClient on mobile. For details about authentication, refer to the *Access Control* section in the complete official documentation provided in the following link.
 
 ```objc
-NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
+NSString *endpoint = @"oss-cn-hangzhou.aliyuncs.com";
 
 id<OSSCredentialProvider> credential = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"<StsToken.AccessKeyId>" secretKeyId:@"<StsToken.SecretKeyId>" securityToken:@"<StsToken.SecurityToken>"];
 
