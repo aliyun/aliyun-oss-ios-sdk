@@ -621,9 +621,7 @@ static NSObject * lock;
     OSSTask *errorTask = nil;
     if(resumable) {
         OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
-        NSString *uploadingFilePath = [resumableRequest.uploadingFileURL path];
-        NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String:uploadingFilePath];
-        NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%zi",uploadingFilePathMd5, resumableRequest.bucketName, resumableRequest.objectKey, resumableRequest.partSize];
+        NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%zi",request.md5String, resumableRequest.bucketName, resumableRequest.objectKey, resumableRequest.partSize];
         if (sequential) {
             nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_sequential];
         }
@@ -1182,26 +1180,18 @@ static NSObject * lock;
         if (resumable) {
             OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
             NSString *recordDirectoryPath = resumableRequest.recordDirectoryPath;
-            localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
-            localPartInfos = [NSDictionary dictionaryWithContentsOfFile:localPartInfosPath];
-            if ([recordDirectoryPath oss_isNotEmpty]) {
-                uploadId = [self readUploadIdWithFilePath: request.uploadingFileURL.path
-                                               recordPath: recordDirectoryPath
-                                                   bucket: request.bucketName
-                                                objectKey: request.objectKey
-                                                 partSize: request.partSize
-                                           recordFilePath: &recordFilePath
-                                               sequential: sequential
-                                                  crcFlag:request.crcFlag];
+            request.md5String = [OSSUtil fileMD5String:request.uploadingFileURL.path];
+            if ([recordDirectoryPath oss_isNotEmpty])
+            {
+                uploadId = [self readUploadIdForRequest:request recordFilePath:&recordFilePath sequential:sequential];
                 OSSLogVerbose(@"local uploadId: %@,recordFilePath: %@",uploadId, recordFilePath);
             }
             
-            if(uploadId.oss_isNotEmpty)
+            if([uploadId oss_isNotEmpty])
             {
-                NSString *localPartInfosPath = [NSString oss_documentDirectory];
-                localPartInfosPath = [[localPartInfosPath stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
                 
-                localPartInfos = [[NSDictionary alloc] initWithContentsOfURL:[NSURL fileURLWithPath:localPartInfosPath]];
+                localPartInfos = [[NSDictionary alloc] initWithContentsOfFile:localPartInfosPath];
                 
                 OSSTask *listPartTask = [self processListPartsWithObjectKey:request.objectKey
                                                                      bucket:request.bucketName
@@ -1500,28 +1490,20 @@ static NSObject * lock;
     return [fileSizeNumber unsignedLongLongValue];
 }
 
-- (NSString *)readUploadIdWithFilePath:(NSString *)filePath
-                            recordPath:(NSString *)recordPath
-                                bucket:(NSString *)bucket
-                             objectKey:(NSString *)objectKey
-                              partSize:(NSInteger)partSize
-                        recordFilePath:(NSString **)recordFilePath
-                            sequential:(BOOL)sequential
-                               crcFlag:(OSSRequestCRCFlag)flag
+- (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential
 {
     NSString *uploadId = nil;
-    NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String: filePath];
-    NSString *record = [NSString stringWithFormat:@"%@%@%@%zi", uploadingFilePathMd5, bucket, objectKey, partSize];
+    NSString *record = [NSString stringWithFormat:@"%@%@%@%zd", request.md5String, request.bucketName, request.objectKey, request.partSize];
     if (sequential) {
         record = [record stringByAppendingString:oss_record_info_suffix_with_sequential];
     }
-    if (flag == OSSRequestCRCOpen) {
+    if (request.crcFlag == OSSRequestCRCOpen) {
         record = [record stringByAppendingString:oss_record_info_suffix_with_crc];
     }
     
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
     NSString *recordFileName = [OSSUtil dataMD5String:data];
-    *recordFilePath = [recordPath stringByAppendingPathComponent: recordFileName];
+    *recordFilePath = [request.recordDirectoryPath stringByAppendingPathComponent: recordFileName];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath: *recordFilePath]) {
         NSFileHandle * read = [NSFileHandle fileHandleForReadingAtPath:*recordFilePath];

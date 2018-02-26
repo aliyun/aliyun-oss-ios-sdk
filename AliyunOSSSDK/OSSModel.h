@@ -1388,6 +1388,11 @@ The result class of listing uploaded parts.
  */
 @property (nonatomic, copy) NSString *contentSHA1;
 
+/**
+ * the md5 of content
+ */
+@property (nonatomic, copy) NSString *md5String;
+
 
 - (void)cancel;
 @end

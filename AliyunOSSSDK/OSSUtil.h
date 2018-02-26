@@ -23,12 +23,15 @@
 + (BOOL)isOssOriginBucketHost:(NSString *)host;
 + (NSString *)getIpByHost:(NSString *)host;
 + (BOOL)isNetworkDelegateState;
+
++ (NSData *)fileMD5:(NSString *)path;
 + (NSString *)dataMD5String:(NSData *)data;
 + (NSString *)fileMD5String:(NSString *)path;
-+ (NSString*)base64ForData:(uint8_t *)input length:(int32_t)length;
 + (NSString *)base64Md5ForData:(NSData *)data;
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath;
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL;
++ (NSString *)base64ForData:(uint8_t *)input length:(int32_t)length;
+
 + (NSString *)populateSubresourceStringFromParameter:(NSDictionary *)parameters;
 + (NSString *)populateQueryStringFromParameter:(NSDictionary *)parameters;
 + (BOOL)isSubresource:(NSString *)param;
@@ -36,7 +39,6 @@
 + (NSString *)getRelativePath:(NSString *)fullPath;
 + (NSString *)detemineMimeTypeForFilePath:(NSString *)filePath uploadName:(NSString *)uploadName;
 + (BOOL)hasPhoneFreeSpace;
-+ (NSData *)fileMD5:(NSString *)path;
 + (NSString*)buildNetWorkConnectedMsg;
 + (NSString*)buildOperatorMsg;
 
