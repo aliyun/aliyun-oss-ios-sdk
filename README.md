@@ -194,6 +194,15 @@ The SDK provides advanced upload, download, resumable upload/download, object ma
 
 [Click to view details](http://aliyun.github.io/aliyun-oss-ios-sdk/).
 
+## F&Q
+
+1.how to support armv7s？
+
+​arm is backward compatible, armv7 library is also suitable for app that needs to support armv7s. 
+ If you still need to optimize armv7s, you could set up as shown below.
+
+![list1](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/Images/list1.png)
+
 ## License
 
 * Apache License 2.0.
