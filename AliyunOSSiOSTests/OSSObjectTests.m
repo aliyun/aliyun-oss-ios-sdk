@@ -97,22 +97,6 @@
     OSSLogVerbose(@"document directory path is: %@", documentDirectory);
 }
 
-- (void) putTestData: (NSString *)key with: (NSString *)bucket
-{
-    NSString *objectKey = key;
-    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
-    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-    
-    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = bucket;
-    request.objectKey = objectKey;
-    request.uploadingFileURL = fileURL;
-    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    
-    OSSTask * task = [_client putObject:request];
-    [task waitUntilFinished];
-}
-
 #pragma mark - putObject
 
 - (void)testAPI_putObjectFromNSData
@@ -318,7 +302,7 @@
 
 - (void)testAPI_putObjectACL
 {
-    [self putTestData:_fileNames[0] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[0] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -400,7 +384,7 @@
 #pragma mark - getObject
 - (void)testAPI_getObject
 {
-    [self putTestData:_fileNames[0] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[0] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -445,7 +429,7 @@
 
 - (void)testAPI_getObjectWithRecieveDataBlock
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -493,7 +477,7 @@
 
 - (void)testAPI_getObjectWithRange
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -518,7 +502,7 @@
 
 - (void)testAPI_getObjectByPartiallyRecieveData
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -544,7 +528,7 @@
 
 - (void)testAPI_getObjectFromPublicBucket
 {
-    [self putTestData:_fileNames[3] with:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _publicBucketName;
@@ -579,8 +563,8 @@
 
 - (void)testAPI_getObjectOverwriteOldFile
 {
-    [self putTestData:_fileNames[3] with:_publicBucketName];
-    [self putTestData:_fileNames[2] with:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[2] withClient:_client withBucket:_publicBucketName];
     NSString *tmpFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"tempfile"];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _publicBucketName;
@@ -677,7 +661,7 @@
 
 - (void)testAPI_headObject
 {
-    [self putTestData:_fileNames[3] with:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
     
     OSSHeadObjectRequest * request = [OSSHeadObjectRequest new];
     request.bucketName = _publicBucketName;
@@ -692,7 +676,7 @@
 
 - (void)testAPI_doesObjectExistWithExistObject
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     NSError * error = nil;
     BOOL isExist = [_client doesObjectExistInBucket:_privateBucketName objectKey:_fileNames[3] error:&error];
     XCTAssertEqual(isExist, YES);
@@ -720,7 +704,7 @@
 
 - (void)testAPI_copyAndDeleteObject
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     
     OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
     head.bucketName = _privateBucketName;
@@ -795,7 +779,7 @@
 
 - (void)testAPI_timeSkewedButAutoRetry
 {
-    [self putTestData:_fileNames[3] with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
     
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -931,7 +915,7 @@
 
 - (void)testAPI_cnameGetObejct
 {
-    [self putTestData:_fileNames[3] with:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
 
     id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
     OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_CNAME_URL
@@ -962,7 +946,7 @@
 
 - (void)testAPI_customExcludeCname
 {
-    [self putTestData:_fileNames[3] with:_publicBucketName];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
@@ -1033,7 +1017,7 @@
 
 - (void)testAPI_cancelGetObject
 {
-    [self putTestData:@"file5m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file5m" withClient:_client withBucket:_privateBucketName];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
     request.objectKey = @"file5m";
@@ -1061,8 +1045,7 @@
 
 - (void)testAPI_cancelGetObjectWithNoSessionTask
 {
-    [self putTestData:@"file5m" with:_privateBucketName];
-    
+    [OSSTestUtils putTestDataWithKey:@"file5m" withClient:_client withBucket:_privateBucketName];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
     getRequest.bucketName = _privateBucketName;
@@ -1080,7 +1063,7 @@
 
 - (void)testAPI_cancelGetObjectAndContinue
 {
-    [self putTestData:@"file5m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file5m" withClient:_client withBucket:_privateBucketName];
     
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];

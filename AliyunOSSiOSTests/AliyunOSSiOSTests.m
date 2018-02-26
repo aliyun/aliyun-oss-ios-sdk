@@ -136,22 +136,6 @@ id<OSSCredentialProvider> credential, authCredential;
     }
 }
 
-- (void) putTestData: (NSString *)key with: (NSString *)bucket
-{
-    NSString *objectKey = key;
-    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
-    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-    
-    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = bucket;
-    request.objectKey = objectKey;
-    request.uploadingFileURL = fileURL;
-    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    
-    OSSTask * task = [client putObject:request];
-    [task waitUntilFinished];
-}
-
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
@@ -220,9 +204,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testUserAgentConfig {
-    
-    [self putTestData:@"file1m" with:_privateBucketName];
-    
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
     
     conf.userAgentMark = @"customUserAgent";
@@ -889,7 +871,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testConcurrentGetObject {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     __block int counter = 0;
     for (int i = 0; i < 5; i++) {
@@ -923,7 +905,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testSerialGetObjectWithConfiguration {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSClientConfiguration * configuration = [OSSClientConfiguration new];
     configuration.maxRetryCount = 2;
     configuration.timeoutIntervalForRequest = 30;
@@ -1093,7 +1075,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testCompatDownload {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
     
     [client downloadToDataFromBucket:_privateBucketName
@@ -1110,7 +1092,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testCompatDownloadToFile {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     NSString * docDir = [NSString oss_documentDirectory];
     
     NSString * saveToFile = [NSString stringWithFormat:@"%@/%@", docDir, @"compatDownloadFile"];
@@ -1136,7 +1118,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testCompatDeleteObject {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSCopyObjectRequest * copy = [OSSCopyObjectRequest new];
     copy.bucketName = _privateBucketName;
     copy.objectKey = @"file1m_copy";
@@ -1324,7 +1306,7 @@ id<OSSCredentialProvider> credential, authCredential;
 }
 
 - (void)testOSSAuthCredentialProvider {
-    [self putTestData:@"file1m" with:_privateBucketName];
+    [OSSTestUtils putTestDataWithKey:@"file1m" withClient:client withBucket:_privateBucketName];
     OSSGetObjectRequest * request = [OSSGetObjectRequest new];
     request.bucketName = _privateBucketName;
     request.objectKey = @"file1m";

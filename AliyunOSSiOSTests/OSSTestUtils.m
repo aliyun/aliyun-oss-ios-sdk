@@ -53,4 +53,21 @@
     deleteBucket.bucketName = bucket;
     [[client deleteBucket:deleteBucket] waitUntilFinished];
 }
+
++ (void) putTestDataWithKey: (NSString *)key withClient: (OSSClient *)client withBucket: (NSString *)bucket
+{
+    NSString *objectKey = key;
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = bucket;
+    request.objectKey = objectKey;
+    request.uploadingFileURL = fileURL;
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    
+    OSSTask * task = [client putObject:request];
+    [task waitUntilFinished];
+}
+
 @end
