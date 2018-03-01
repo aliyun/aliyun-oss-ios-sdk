@@ -878,81 +878,15 @@
     }] waitUntilFinished];
 }
 
-#pragma mark - cname
-- (void)testAPI_cnamePutObject
-{
-    id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_CNAME_URL
-                                           credentialProvider:provider];
-    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = _publicBucketName;
-    request.objectKey = @"file1m";
-
-    NSString * docDir = [NSString oss_documentDirectory];
-    NSURL * fileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
-    NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:nil];
-
-    request.uploadingData = [readFile readDataToEndOfFile];
-    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-
-    OSSTask * task = [tClient putObject:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        if (task.error) {
-            OSSLogError(@"%@", task.error);
-        }
-        OSSPutObjectResult * result = task.result;
-        XCTAssertEqual(200, result.httpResponseCode);
-        NSLog(@"Result - requestId: %@, headerFields: %@",
-              result.requestId,
-              result.httpResponseHeaderFields);
-        return nil;
-    }] waitUntilFinished];
-}
-
-- (void)testAPI_cnameGetObejct
-{
-    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
-
-    id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_CNAME_URL
-                                           credentialProvider:provider];
-    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
-    request.bucketName = _publicBucketName;
-    request.objectKey = @"file1m";
-
-    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-    };
-
-    OSSTask * task = [tClient getObject:request];
-
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        OSSGetObjectResult * result = task.result;
-        XCTAssertEqual(200, result.httpResponseCode);
-        XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
-        XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
-        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
-              result.requestId,
-              result.httpResponseHeaderFields,
-              (unsigned long)[result.downloadedData length]);
-        return nil;
-    }] waitUntilFinished];
-}
-
 - (void)testAPI_customExcludeCname
 {
     [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
 
     OSSClientConfiguration * conf = [OSSClientConfiguration new];
-    conf.cnameExcludeList = @[@"osstest.xxyycc.com", @"vpc.sample.com"];
+    conf.cnameExcludeList = @[@"oss-cn-hangzhou.aliyuncs.com", @"vpc.sample.com"];
     id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
 
-    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_CNAME_URL
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
                                            credentialProvider:provider
                                           clientConfiguration:conf];
 
@@ -1257,6 +1191,20 @@
     [task waitUntilFinished];
      XCTAssertTrue([OSSClientErrorDomain isEqualToString:task.error.domain]);
     NSLog(@"error: %@", task.error);
+}
+
+#pragma mark - cname
+- (void)testAPI_cnameUrlCheck
+{
+    id<OSSCredentialProvider> provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_CNAME_URL
+                                           credentialProvider:provider];
+    OSSTask * tk = [tClient presignConstrainURLWithBucketName:_privateBucketName
+                                 withObjectKey:@"file1k"
+                        withExpirationInterval:30 * 60];
+    [tk waitUntilFinished];
+    XCTAssertNotNil(tk.result);
+    XCTAssertTrue([tk.result hasPrefix:OSS_CNAME_URL]);
 }
 
 #pragma mark - presign

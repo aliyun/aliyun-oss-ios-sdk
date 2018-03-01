@@ -18,7 +18,7 @@
 #define OSS_MULTIPART_UPLOADKEY         @"multipart"
 #define OSS_RESUMABLE_UPLOADKEY         @"resumable"
 #define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"
-#define OSS_CNAME_URL                   @"Cname"
+#define OSS_CNAME_URL                   @"http://www.cnametest.com/"
 #define OSS_STSTOKEN_URL                @"http://*.*.*.*:*/sts/getsts"
 #define OSS_IMAGE_KEY                   @"hasky.jpeg"
 
