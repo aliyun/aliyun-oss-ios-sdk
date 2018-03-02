@@ -1029,7 +1029,6 @@ static NSObject * lock;
         if (request.isCancelled)
         {
             [queue cancelAllOperations];
-            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
             break;
         }
         
@@ -1068,6 +1067,10 @@ static NSObject * lock;
     }
     [fileHande closeFile];
     [queue waitUntilAllOperationsAreFinished];
+    
+    if (!errorTask && request.isCancelled) {
+        errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+    }
     
     return errorTask;
 }
