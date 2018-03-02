@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeCompleteMultipartUpload,
     OSSOperationTypeAbortMultipartUpload,
     OSSOperationTypeListMultipart,
+    OSSOperationTypeListMultipartUploads,
     OSSOperationTypeTriggerCallBack
 };
 
@@ -1298,6 +1299,110 @@ The result class of listing uploaded parts.
  The array of the part information.
  */
 @property (nonatomic, strong, nullable) NSArray * parts;
+@end
+
+/**
+ The request class of listing all multipart uploads.
+ */
+@interface OSSListMultipartUploadsRequest : OSSRequest
+/**
+ Bucket name.
+ */
+@property (nonatomic, copy) NSString * bucketName;
+
+/**
+ The delimiter.
+ */
+@property (nonatomic, copy) NSString * delimiter;
+
+/**
+ The prefix.
+ */
+@property (nonatomic, copy) NSString * prefix;
+
+/**
+ The max number of uploads.
+ */
+@property (nonatomic, assign) int32_t maxUploads;
+
+/**
+ The key marker filter.
+ */
+@property (nonatomic, copy) NSString * keyMarker;
+
+/**
+ The upload Id marker.
+ */
+@property (nonatomic, copy) NSString * uploadIdMarker;
+
+/**
+ The encoding type of the object in the response body.
+ */
+@property (nonatomic, copy) NSString * encodingType;
+
+/**
+ Generates the query parameter dictionary according to the properties.
+ */
+- (NSMutableDictionary *)getQueryDict;
+
+@end
+
+/**
+ The result class of listing multipart uploads.
+ */
+@interface OSSListMultipartUploadsResult : OSSResult
+/**
+ Bucket name
+ */
+@property (nonatomic, copy) NSString * bucketName;
+
+/**
+ The marker filter of the objects returned---all objects returned are greater than this marker in lexicographic order.
+ */
+@property (nonatomic, copy) NSString * keyMarker;
+
+/**
+ The delimiter to differentiate the folder object and file object.
+ For object whose name ends with the delimiter, then it's treated as folder or common prefixes.
+ */
+@property (nonatomic, copy) NSString * delimiter;
+
+/**
+ The prefix of the objects returned----the returned objects must have this prefix.
+ */
+@property (nonatomic, copy) NSString * prefix;
+
+/**
+ The upload Id marker.
+ */
+@property (nonatomic, copy) NSString * uploadIdMarker;
+
+/**
+ The max entries to return. By default it's 100 and it could be up to 1000.
+ */
+@property (nonatomic, assign) int32_t maxUploads;
+
+/**
+ If not all results are returned this time, the response request includes the NextKeyMarker element to indicate the value of KeyMarker in the next request.
+ */
+@property (nonatomic, copy) NSString * nextKeyMarker;
+
+/**
+ If not all results are returned this time, the response request includes the NextUploadMarker element to indicate the value of UploadMarker in the next request.
+ */
+@property (nonatomic, copy) NSString * nextUploadIdMarker;
+
+/**
+ Flag of truncated result. If it's truncated, it means there's more entries to return.
+ */
+@property (nonatomic, assign) BOOL isTruncated;
+
+@property (nonatomic, strong, nullable) NSArray * uploads;
+
+/**
+ The arrary of common prefixes. Each element is one common prefix.
+ */
+@property (nonatomic, strong) NSArray * commonPrefixes;
 @end
 
 /**

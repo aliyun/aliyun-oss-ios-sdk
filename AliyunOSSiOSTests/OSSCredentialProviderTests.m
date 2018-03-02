@@ -9,10 +9,12 @@
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
 #import "OSSTestMacros.h"
+#import "OSSTestUtils.h"
 
 @interface OSSCredentialProviderTests : XCTestCase
 {
     OSSFederationToken *_token;
+    NSString *_privateBucketName;
 }
 
 @end
@@ -22,6 +24,9 @@
 - (void)setUp
 {
     [super setUp];
+    NSArray *array1 = [self.name componentsSeparatedByString:@" "];
+    NSString *testName = [[array1[1] substringToIndex:([array1[1] length] -1)] lowercaseString];
+    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpFederationToken];
 }
@@ -66,13 +71,24 @@
     config.enableBackgroundTransmitService = YES;
     
     OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
+    OSSCreateBucketRequest *createBucket1 = [OSSCreateBucketRequest new];
+    createBucket1.bucketName = _privateBucketName;
+    [[client createBucket:createBucket1] waitUntilFinished];
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = _privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    [[client putObject:put] waitUntilFinished];
+    
     OSSHeadObjectRequest *request = [OSSHeadObjectRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.bucketName = _privateBucketName;
     request.objectKey = OSS_IMAGE_KEY;
     OSSTask *task = [client headObject:request];
     [task waitUntilFinished];
     
     XCTAssertNil(task.error);
+    
+    [OSSTestUtils cleanBucket:_privateBucketName with:client];
 }
 
 - (void)testForFederationCredentialProvider
