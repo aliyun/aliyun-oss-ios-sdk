@@ -307,7 +307,7 @@
     if (!self.objectKey &&
         (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
          && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
-         && operType != OSSOperationTypeGetBucketACL)) {
+         && operType != OSSOperationTypeGetBucketACL && operType != OSSOperationTypeListMultipartUploads)) {
         errorMessage = @"Object key should not be nil";
     }
 

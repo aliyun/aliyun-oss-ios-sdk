@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C7B5BE320411D1900FDD612 /* OSSTestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */; };
+		4C7B5BE52041680300FDD612 /* hasky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE42041680300FDD612 /* hasky.jpeg */; };
+		4C7B5BE62041680300FDD612 /* hasky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE42041680300FDD612 /* hasky.jpeg */; };
+		4C7B5BE72041680300FDD612 /* hasky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE42041680300FDD612 /* hasky.jpeg */; };
+		4C7B5BE92043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
+		4C7B5BEA2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
+		4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
 		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
 		D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D827E4141FCD0FC60085380C /* Assets.xcassets */; };
@@ -21,7 +28,6 @@
 		D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */; };
 		D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */; };
 		D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */; };
-		D8350C6B1FFF662A00D8DF46 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 		D83CEFF8201F1CEE00F917E1 /* TriggerCallbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */; };
 		D83D58581FC681F90022761B /* OSSModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58521FC680850022761B /* OSSModelTests.m */; };
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
@@ -44,7 +50,6 @@
 		D83D58F21FC6C1F40022761B /* sts.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58EE1FC6C1F40022761B /* sts.py */; };
 		D83D58F41FC6C1F40022761B /* httpserver.py in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F01FC6C1F40022761B /* httpserver.py */; };
 		D83D58FB1FC700C70022761B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
-		D83D58FC1FC700C70022761B /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 		D85277392010414D00D7B1DE /* AliyunOSSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D85277382010414D00D7B1DE /* AliyunOSSTests.m */; };
 		D852773B2010439A00D7B1DE /* SequentialMultipartUploadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */; };
 		D87183B11FC56FD0000DD9EC /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87183B21FC56FD0000DD9EC /* AliyunOSSiOS.framework */; };
@@ -59,7 +64,6 @@
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
 		D8C41A641FCC002C0091699B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
-		D8C41A651FCC003A0091699B /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D83D58FA1FC700C70022761B /* wangwang.zip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +102,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C7B5BE120411D1900FDD612 /* OSSTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSTestUtils.h; sourceTree = "<group>"; };
+		4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSTestUtils.m; sourceTree = "<group>"; };
+		4C7B5BE42041680300FDD612 /* hasky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hasky.jpeg; sourceTree = "<group>"; };
+		4C7B5BE82043A15100FDD612 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D827E40F1FCD0FC60085380C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -143,7 +151,6 @@
 		D83D58EE1FC6C1F40022761B /* sts.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sts.py; sourceTree = "<group>"; };
 		D83D58F01FC6C1F40022761B /* httpserver.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = httpserver.py; sourceTree = "<group>"; };
 		D83D58F91FC700C70022761B /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
-		D83D58FA1FC700C70022761B /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D85277382010414D00D7B1DE /* AliyunOSSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AliyunOSSTests.m; sourceTree = "<group>"; };
 		D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SequentialMultipartUploadTests.m; sourceTree = "<group>"; };
 		D852773C2010536500D7B1DE /* AliyunOSSTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AliyunOSSTests.h; sourceTree = "<group>"; };
@@ -277,8 +284,9 @@
 		D83D58F81FC700C70022761B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4C7B5BE82043A15100FDD612 /* wangwang.zip */,
+				4C7B5BE42041680300FDD612 /* hasky.jpeg */,
 				D83D58F91FC700C70022761B /* test.xml */,
-				D83D58FA1FC700C70022761B /* wangwang.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -344,6 +352,8 @@
 				D85277382010414D00D7B1DE /* AliyunOSSTests.m */,
 				D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */,
 				D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */,
+				4C7B5BE120411D1900FDD612 /* OSSTestUtils.h */,
+				4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -460,8 +470,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C7B5BE72041680300FDD612 /* hasky.jpeg in Resources */,
 				D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */,
-				D8350C6B1FFF662A00D8DF46 /* wangwang.zip in Resources */,
+				4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */,
 				D827E4181FCD0FC60085380C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,8 +481,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C7B5BEA2043A15100FDD612 /* wangwang.zip in Resources */,
 				D83D58E81FC6B6DA0022761B /* Main.storyboard in Resources */,
-				D83D58FC1FC700C70022761B /* wangwang.zip in Resources */,
+				4C7B5BE62041680300FDD612 /* hasky.jpeg in Resources */,
 				D83D58FB1FC700C70022761B /* test.xml in Resources */,
 				D83D58E91FC6B6DA0022761B /* LaunchScreen.storyboard in Resources */,
 				D83D58E11FC6B61F0022761B /* Assets.xcassets in Resources */,
@@ -482,9 +494,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C7B5BE92043A15100FDD612 /* wangwang.zip in Resources */,
+				4C7B5BE52041680300FDD612 /* hasky.jpeg in Resources */,
 				D8C41A641FCC002C0091699B /* test.xml in Resources */,
 				D83D58F21FC6C1F40022761B /* sts.py in Resources */,
-				D8C41A651FCC003A0091699B /* wangwang.zip in Resources */,
 				D83D58F41FC6C1F40022761B /* httpserver.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,6 +550,7 @@
 				D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */,
 				D83CEFF8201F1CEE00F917E1 /* TriggerCallbackTests.m in Sources */,
 				D85277392010414D00D7B1DE /* AliyunOSSTests.m in Sources */,
+				4C7B5BE320411D1900FDD612 /* OSSTestUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
