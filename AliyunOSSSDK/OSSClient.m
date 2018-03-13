@@ -17,6 +17,13 @@
 #import "OSSReachabilityManager.h"
 #import "NSMutableData+OSS_CRC.h"
 
+#import "OSSNetworkingRequestDelegate.h"
+#import "OSSAllRequestNeededMessage.h"
+#import "OSSURLRequestRetryHandler.h"
+#import "OSSHttpResponseParser.h"
+#import "OSSGetObjectACLRequest.h"
+#import "OSSDeleteMultipleObjectsRequest.h"
+
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
@@ -26,7 +33,9 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
  * extend OSSRequest to include the ref to networking request object
  */
 @interface OSSRequest ()
+
 @property (nonatomic, strong) OSSNetworkingRequestDelegate * requestDelegate;
+
 @end
 
 
@@ -289,6 +298,26 @@ static NSObject * lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
+- (OSSTask *)getObjectACL:(OSSGetObjectACLRequest *)request
+{
+    OSSNetworkingRequestDelegate *requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetObjectACL];
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:_endpoint
+                                                                                 httpMethod:@"GET"
+                                                                                 bucketName:request.bucketName
+                                                                                  objectKey:request.objectName
+                                                                                       type:nil
+                                                                                        md5:nil
+                                                                                      range:nil
+                                                                                       date:dateString
+                                                                               headerParams:nil
+                                                                                     querys:@{@"acl": @""} sha1:nil];
+    requestDelegate.operType = OSSOperationTypeGetObjectACL;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 - (OSSTask *)putObject:(OSSPutObjectRequest *)request
 {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
@@ -453,6 +482,50 @@ static NSObject * lock;
                                                     querys:nil sha1:nil];
     requestDelegate.operType = OSSOperationTypeDeleteObject;
 
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteMultipleObjects:(OSSDeleteMultipleObjectsRequest *)request
+{
+    if (![request.bucketName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"bucket name should not be empty"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    if ([request.keys count] == 0) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"keys should not be empty"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.uploadingData = [OSSUtil constructHttpBodyForDeleteMultipleObjects:request.keys quiet:request.quiet];
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteMultipleObjects];
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    NSMutableDictionary *querys = [NSMutableDictionary dictionaryWithDictionary:@{@"delete": @""}];
+    if ([request.encodingType isEqualToString:@"url"]) {
+        [querys setObject:request.encodingType forKey:@"encoding-type"];
+    }
+    
+                                                                                  
+    
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                                                 httpMethod:@"POST"
+                                                                                 bucketName:request.bucketName
+                                                                                  objectKey:nil
+                                                                                       type:nil
+                                                                                        md5:md5String
+                                                                                      range:nil
+                                                                                       date:dateString
+                                                                               headerParams:nil
+                                                                                     querys:querys
+                                                                                       sha1:nil];
+    requestDelegate.operType = OSSOperationTypeDeleteMultipleObjects;
+    
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 

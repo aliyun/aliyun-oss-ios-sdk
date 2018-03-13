@@ -9,14 +9,14 @@
 #ifndef OSSTestMacros_h
 #define OSSTestMacros_h
 
-#define OSS_ACCESSKEY_ID                @"AccessKeyId"
-#define OSS_SECRETKEY_ID                @"SecretKeyId"
+#define OSS_ACCESSKEY_ID                @"LTAIdJcQW6Uap6cL"
+#define OSS_SECRETKEY_ID                @"ssnJED1Ro4inSpE2NF71bGZD6IEbN1"
 
-#define OSS_BUCKET_PUBLIC               @"bucket-public"
-#define OSS_BUCKET_PRIVATE              @"bucket-private"
+#define OSS_BUCKET_PUBLIC               @"zq-public"
+#define OSS_BUCKET_PRIVATE              @"zq-hangzhou"
 #define OSS_ENDPOINT                    @"http://oss-cn-hangzhou.aliyuncs.com"
-#define OSS_MULTIPART_UPLOADKEY         @"multipart"
-#define OSS_RESUMABLE_UPLOADKEY         @"resumable"
+#define OSS_MULTIPART_UPLOADKEY         @"multipart_key"
+#define OSS_RESUMABLE_UPLOADKEY         @"resumable_key"
 #define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"
 #define OSS_CNAME_URL                   @"http://www.cnametest.com/"
 #define OSS_STSTOKEN_URL                @"http://*.*.*.*:*/sts/getsts"

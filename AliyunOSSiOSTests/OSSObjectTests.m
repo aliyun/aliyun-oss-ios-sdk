@@ -62,6 +62,13 @@
     createBucket2.bucketName = _publicBucketName;
     createBucket2.xOssACL = @"public-read-write";
     [[_client createBucket:createBucket2] waitUntilFinished];
+    
+    //upload test image
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = _privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    [[_client putObject:put] waitUntilFinished];
 }
 
 - (void)setUpLocalFiles
@@ -95,6 +102,9 @@
         [f closeFile];
     }
     OSSLogVerbose(@"document directory path is: %@", documentDirectory);
+    
+    
+    
 }
 
 #pragma mark - putObject
@@ -396,6 +406,25 @@
     OSSTask * task = [_client getObject:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_getObjectACL
+{
+    OSSGetObjectACLRequest * request = [OSSGetObjectACLRequest new];
+    request.bucketName = _privateBucketName;
+    request.objectName = OSS_IMAGE_KEY;
+    
+    OSSTask * task = [_client getObjectACL:request];
+    [[task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNil(task.error);
+        if (t.result != nil) {
+            OSSGetObjectACLResult *result = (OSSGetObjectACLResult *)t.result;
+            NSLog(@"grant %@", result.grant);
+            XCTAssertEqualObjects(result.grant, @"default");
+        }
+        
         return nil;
     }] waitUntilFinished];
 }
@@ -739,6 +768,21 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_DeleteMultipleObjects {
+    OSSDeleteMultipleObjectsRequest *request = [OSSDeleteMultipleObjectsRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.keys = @[@"file1k",@"file10k",@"file100k",@"file1m"];
+    request.encodingType = @"url";
+    
+    OSSTask *task = [_client deleteMultipleObjects:request];
+    [[task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNil(t.error);
+
+        return nil;
+    }] waitUntilFinished];
+    
+}
+
 #pragma mark - retry operations
 - (void)testAPI_PutObjectWithErrorRetry
 {
@@ -1018,6 +1062,34 @@
 }
 
 #pragma mark - exceptional tests
+
+- (void)testAPI_DeleteMultipleObjects_withoutBucketName {
+    OSSDeleteMultipleObjectsRequest *request = [OSSDeleteMultipleObjectsRequest new];
+    request.keys = @[@"file1k",@"file10k",@"file100k",@"file1m"];
+    request.encodingType = @"url";
+    
+    OSSTask *task = [_client deleteMultipleObjects:request];
+    [[task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNotNil(t.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+}
+
+- (void)testAPI_DeleteMultipleObjects_withoutKeys {
+    OSSDeleteMultipleObjectsRequest *request = [OSSDeleteMultipleObjectsRequest new];
+    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.encodingType = @"url";
+    
+    OSSTask *task = [_client deleteMultipleObjects:request];
+    [[task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNotNil(t.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+}
 
 - (void)testAPI_getObjectWithServerErrorNotExistObject
 {

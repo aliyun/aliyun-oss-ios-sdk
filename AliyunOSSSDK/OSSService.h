@@ -11,7 +11,19 @@
 #define OSS_IOS_SDK_VERSION OSSSDKVersion
 
 #import "OSSDefine.h"
+#import "OSSConstants.h"
+
 #import "OSSNetworking.h"
+#import "OSSNetworkingRequestDelegate.h"
+#import "OSSAllRequestNeededMessage.h"
+#import "OSSURLRequestRetryHandler.h"
+#import "OSSHttpResponseParser.h"
+#import "OSSRequest.h"
+#import "OSSGetObjectACLRequest.h"
+#import "OSSGetObjectACLResult.h"
+#import "OSSDeleteMultipleObjectsRequest.h"
+#import "OSSDeleteMultipleObjectsResult.h"
+
 #import "OSSClient.h"
 #import "OSSModel.h"
 #import "OSSUtil.h"

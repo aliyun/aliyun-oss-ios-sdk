@@ -189,4 +189,29 @@ class OSSExceptionalTests: OSSSwiftDemoTests {
         }).waitUntilFinished()
     }
     
+    func testAPI_DeleteObjectsWithoutKeys() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.encodingType = "url"
+        
+        let task = client.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNotNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func testAPI_DeleteObjectsWithoutBucketName() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.encodingType = "url"
+        request.keys = ["file1k","file10k","file100k"];
+        
+        let task = client.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNotNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
 }

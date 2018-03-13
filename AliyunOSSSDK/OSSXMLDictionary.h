@@ -30,34 +30,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSSConstants.h"
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
-
-
-typedef NS_ENUM(NSInteger, OSSXMLDictionaryAttributesMode)
-{
-    OSSXMLDictionaryAttributesModePrefixed = 0, //default
-    OSSXMLDictionaryAttributesModeDictionary,
-    OSSXMLDictionaryAttributesModeUnprefixed,
-    OSSXMLDictionaryAttributesModeDiscard
-};
-
-
-typedef NS_ENUM(NSInteger, OSSXMLDictionaryNodeNameMode)
-{
-    OSSXMLDictionaryNodeNameModeRootOnly = 0, //default
-    OSSXMLDictionaryNodeNameModeAlways,
-    OSSXMLDictionaryNodeNameModeNever
-};
-
-
-static NSString *const OSSXMLDictionaryAttributesKey   = @"__attributes";
-static NSString *const OSSXMLDictionaryCommentsKey     = @"__comments";
-static NSString *const OSSXMLDictionaryTextKey         = @"__text";
-static NSString *const OSSXMLDictionaryNodeNameKey     = @"__name";
-static NSString *const OSSXMLDictionaryAttributePrefix = @"_";
-
-
 @interface OSSXMLDictionaryParser : NSObject <NSCopying>
 
 + (OSSXMLDictionaryParser *)sharedInstance;

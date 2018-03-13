@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSSRequest.h"
+#import "OSSResult.h"
 
 @class OSSAllRequestNeededMessage;
 @class OSSFederationToken;
@@ -15,57 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, OSSOperationType) {
-    OSSOperationTypeGetService,
-    OSSOperationTypeCreateBucket,
-    OSSOperationTypeDeleteBucket,
-    OSSOperationTypeGetBucket,
-    OSSOperationTypeGetBucketACL,
-    OSSOperationTypeHeadObject,
-    OSSOperationTypeGetObject,
-    OSSOperationTypePutObject,
-    OSSOperationTypePutObjectACL,
-    OSSOperationTypeAppendObject,
-    OSSOperationTypeDeleteObject,
-    OSSOperationTypeCopyObject,
-    OSSOperationTypeInitMultipartUpload,
-    OSSOperationTypeUploadPart,
-    OSSOperationTypeCompleteMultipartUpload,
-    OSSOperationTypeAbortMultipartUpload,
-    OSSOperationTypeListMultipart,
-    OSSOperationTypeListMultipartUploads,
-    OSSOperationTypeTriggerCallBack
-};
-
-typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
-    OSSClientErrorCodeNetworkingFailWithResponseCode0,
-    OSSClientErrorCodeSignFailed,
-    OSSClientErrorCodeFileCantWrite,
-    OSSClientErrorCodeInvalidArgument,
-    OSSClientErrorCodeNilUploadid,
-    OSSClientErrorCodeTaskCancelled,
-    OSSClientErrorCodeNetworkError,
-    OSSClientErrorCodeInvalidCRC,
-    OSSClientErrorCodeCannotResumeUpload,
-    OSSClientErrorCodeExcpetionCatched,
-    OSSClientErrorCodeNotKnown
-};
-
-typedef NS_ENUM(NSUInteger, OSSRequestCRCFlag) {
-    OSSRequestCRCUninitialized,
-    OSSRequestCRCOpen,
-    OSSRequestCRCClosed
-};
-
-typedef void (^OSSNetworkingUploadProgressBlock) (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
-typedef void (^OSSNetworkingDownloadProgressBlock) (int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
-typedef void (^OSSNetworkingRetryBlock) (void);
-typedef void (^OSSNetworkingCompletionHandlerBlock) (id _Nullable responseObject, NSError * _Nullable error);
-typedef void (^OSSNetworkingOnRecieveDataBlock) (NSData * data);
-
-typedef NSString* _Nullable (^OSSCustomSignContentBlock) (NSString * contentToSign, NSError **error);
 typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
-typedef NSData * _Nullable (^OSSResponseDecoderBlock) (NSData * data);
 
 /**
  Categories NSDictionary
@@ -301,67 +253,7 @@ Sets the session Id for background file transmission
 - (NSString *)toHeaderString;
 @end
 
-
 #pragma mark RequestAndResultClass
-
-/**
- The base class of request to OSS.
- */
-@interface OSSRequest : NSObject
-/**
- Flag of requiring authentication. It's per each request.
- */
-@property (nonatomic, assign) BOOL isAuthenticationRequired;
-
-/**
- Flag of request canceled.
- */
-@property (nonatomic, assign) BOOL isCancelled;
-
-/**
- 开启crc校验的标志位(默认值0代表未设置,此时会以clientConfiguration中的开关为准,1代表开启crc64
- 验证,2代表关闭crc64的验证。
- */
-@property (nonatomic, assign) OSSRequestCRCFlag crcFlag;
-
-/**
- Cancels the request
- */
-- (void)cancel;
-@end
-
-/**
- The base class of result from OSS.
- */
-@interface OSSResult : NSObject
-
-/**
- The http response code.
- */
-@property (nonatomic, assign) NSInteger httpResponseCode;
-
-/**
- The http headers, in the form of key value dictionary.
- */
-@property (nonatomic, copy) NSDictionary * httpResponseHeaderFields;
-
-/**
-The request Id. It's the value of header x-oss-request-id, which is created from OSS server.
-It's a unique Id represents this request. This is used for troubleshooting when you contact OSS support.
- */
-@property (nonatomic, copy) NSString * requestId;
-
-/**
- It's the value of header x-oss-hash-crc64ecma, which is created from OSS server.
- */
-@property (nonatomic, copy) NSString *remoteCRC64ecma;
-
-/**
- It's the value of local Data.
- */
-@property (nonatomic, copy) NSString *localCRC64ecma;
-
-@end
 
 /**
  The request to list all buckets of current user.
@@ -1569,24 +1461,6 @@ The result class of listing uploaded parts.
  */
 @property (nonatomic, copy) NSString *serverReturnJsonString;
 
-@end
-
-#pragma mark Others
-
-/**
- HTTP response parser
- */
-@interface OSSHttpResponseParser : NSObject
-@property (nonatomic, strong) NSURL * downloadingFileURL;
-@property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveBlock;
-/** 是否开启crc64校验 */
-@property (nonatomic, assign) BOOL crc64Verifiable;
-
-- (instancetype)initForOperationType:(OSSOperationType)operationType;
-- (void)consumeHttpResponse:(NSHTTPURLResponse *)response;
-- (OSSTask *)consumeHttpResponseBody:(NSData *)data;
-- (nullable id)constructResultObject;
-- (void)reset;
 @end
 
 NS_ASSUME_NONNULL_END

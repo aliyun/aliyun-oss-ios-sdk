@@ -118,6 +118,9 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     @IBAction func sequentialUpload(_ sender: Any) {
         sequentialMultipartUpload()
     }
+    @IBAction func deleteMultipleObjectsClicked(_ sender: Any) {
+        deleteMultipleObjects()
+    }
     @IBAction func triggerCallbackClicked(_ sender: Any) {
         triggerCallBack()
     }
@@ -126,11 +129,14 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func getObjectACLButtonClicked(_ sender: Any) {
+        getObjectACL()
+    }
     
     func getObject() -> Void {
         let getObjectReq: OSSGetObjectRequest = OSSGetObjectRequest()
         getObjectReq.bucketName = OSS_BUCKET_PUBLIC;
-        getObjectReq.objectKey = "file1k";
+        getObjectReq.objectKey = OSS_IMAGE_KEY;
         getObjectReq.downloadProgress = { (bytesWritten: Int64,totalBytesWritten : Int64, totalBytesExpectedToWrite: Int64) -> Void in
             print("bytesWritten:\(bytesWritten),totalBytesWritten:\(totalBytesWritten),totalBytesExpectedToWrite:\(totalBytesExpectedToWrite)");
         };
@@ -377,7 +383,6 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         request.objectKey = "wangwang(swift).zip"
         request.partSize = 102400;
         request.deleteUploadIdOnCancelling = false;
-        request.contentSHA1 = OSSUtil.sha1(withFilePath: request.uploadingFileURL.path)
         request.recordDirectoryPath = cacheDir!
         request.uploadProgress = { (bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Void in
             print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
@@ -425,16 +430,44 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         }).waitUntilFinished()
     }
     
+    func getObjectACL() {
+        let request = OSSGetObjectACLRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = OSS_IMAGE_KEY
+        
+        let task = mClient.getObjectACL(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    func deleteMultipleObjects() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.keys = ["testFor5m"]
+        request.quiet = false
+        request.encodingType = "url"
+        
+        let task = mClient.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
+            self.showResult(task: t)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+
     func triggerCallBack() {
-        let provider = OSSPlainTextAKSKPairCredentialProvider.init(plainTextAccessKey: "AK", secretKey: "SKs")
+        let provider = OSSPlainTextAKSKPairCredentialProvider.init(plainTextAccessKey: "AK", secretKey: "SK")
         let pClient = OSSClient.init(endpoint: OSS_ENDPOINT, credentialProvider: provider);
         
         let request = OSSCallBackRequest()
         request.bucketName = OSS_BUCKET_PRIVATE
-        request.objectName = "objectName"
+        request.objectName = "file1m"
         request.callbackVar = ["key1": "value1",
                                "key2": "value2"]
-        request.callbackParam = ["callbackUrl": "callbackUrl",
+        request.callbackParam = ["callbackUrl": OSS_CALLBACK_URL,
                                 "callbackBody": "test"]
         
         let task = pClient.triggerCallBack(request)

@@ -201,6 +201,24 @@ class OSSNormalObjectTests: OSSSwiftDemoTests {
         }).waitUntilFinished()
     }
     
+    func testAPI_getObjectACL() -> Void {
+        let request = OSSGetObjectACLRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.objectName = OSS_IMAGE_KEY
+        
+        let task = client.getObjectACL(request)
+        task.continue({ (t) -> Any? in
+            XCTAssertNil(t.error)
+            if (t.result != nil)
+            {
+                let result = t.result! as! OSSGetObjectACLResult
+                XCTAssertEqual(result.grant, "default")
+            }
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
     func testAPI_getObjectWithImage() -> Void {
         let request = OSSGetObjectRequest()
         request.bucketName = OSS_BUCKET_PRIVATE
@@ -386,6 +404,25 @@ class OSSNormalObjectTests: OSSSwiftDemoTests {
         
         let otherTask = client.deleteObject(otherRequest)
         otherTask.continue({ (t) -> Any? in
+            XCTAssertNil(t.error)
+            
+            return nil
+        }).waitUntilFinished()
+    }
+    
+    /**
+     * This sample demonstrates how to delete objects under specfied bucket 
+     * from Aliyun OSS using the OSS SDK for Java.
+     */
+    func testAPI_DeleteObjects() {
+        let request = OSSDeleteMultipleObjectsRequest()
+        request.bucketName = OSS_BUCKET_PRIVATE
+        request.encodingType = "url"
+        request.keys = ["file1k","file10k","file100k"]
+        request.quiet = false
+        
+        let task = client.deleteMultipleObjects(request)
+        task.continue({ (t) -> Any? in
             XCTAssertNil(t.error)
             
             return nil
