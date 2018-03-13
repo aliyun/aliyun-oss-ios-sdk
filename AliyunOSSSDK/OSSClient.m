@@ -1748,4 +1748,9 @@ static NSObject *lock;
     return error;
 }
 
+- (void)dealloc{
+    [self.networking.dataSession invalidateAndCancel];
+    [self.networking.uploadFileSession invalidateAndCancel];
+}
+
 @end
