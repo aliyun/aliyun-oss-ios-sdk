@@ -634,6 +634,36 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 @end
 
+@implementation OSSListMultipartUploadsRequest
+- (NSDictionary *)getQueryDict {
+    NSMutableDictionary * querys = [NSMutableDictionary new];
+    if (self.delimiter) {
+        [querys setObject:self.delimiter forKey:@"delimiter"];
+    }
+    if (self.prefix) {
+        [querys setObject:self.prefix forKey:@"prefix"];
+    }
+    if (self.keyMarker) {
+        [querys setObject:self.keyMarker forKey:@"key-marker"];
+    }
+    if (self.maxUploads) {
+        [querys setObject:[@(self.maxUploads) stringValue] forKey:@"max-uploads"];
+    }
+    
+    if (self.uploadIdMarker) {
+        [querys setObject:self.uploadIdMarker forKey:@"upload-id-marker"];
+    }
+    
+    if (self.encodingType) {
+        [querys setObject:self.encodingType forKey:@"encoding-type"];
+    }
+    return querys;
+}
+@end
+
+@implementation OSSListMultipartUploadsResult
+@end
+
 @implementation OSSGetBucketResult
 @end
 

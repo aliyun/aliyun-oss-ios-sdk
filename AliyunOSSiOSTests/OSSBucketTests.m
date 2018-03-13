@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OSSTestMacros.h"
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import "OSSTestUtils.h"
 
 @interface OSSBucketTests : XCTestCase
 {
@@ -41,8 +42,9 @@
 
 - (void)testAPI_creatBucket
 {
+    NSString *bucket = @"oss-ios-create-bucket-test";
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
-    req.bucketName = @"bucket-testcases";
+    req.bucketName = bucket;
     req.xOssACL = @"public-read";
     OSSTask *task = [_client createBucket:req];
     
@@ -52,59 +54,17 @@
         return nil;
     }] waitUntilFinished];
     
-    OSSDeleteBucketRequest *request = [OSSDeleteBucketRequest new];
-    request.bucketName = @"bucket-testcases";
-    task = [_client deleteBucket:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        return nil;
-    }] waitUntilFinished];
-}
-
-- (void)testAPI_getBucket
-{
-    OSSGetBucketRequest * request = [OSSGetBucketRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
-    request.delimiter = @"";
-    request.marker = @"";
-    request.maxKeys = 1000;
-    request.prefix = @"";
-    
-    OSSTask * task = [_client getBucket:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        return nil;
-    }] waitUntilFinished];
-    
-    request = [OSSGetBucketRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
-    request.delimiter = @"";
-    request.marker = @"";
-    request.maxKeys = 2;
-    request.prefix = @"";
-    
-    task = [_client getBucket:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        return nil;
-    }] waitUntilFinished];
-    
-    request = [OSSGetBucketRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
-    request.prefix = @"fileDir";
-    request.delimiter = @"/";
-    
-    task = [_client getBucket:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        return nil;
-    }] waitUntilFinished];
+    [OSSTestUtils cleanBucket:bucket with:_client];
 }
 
 - (void)testAPI_getBucketACL
 {
+    OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
+    req.bucketName = @"oss-ios-get-bucket-acl-test";
+    [[_client createBucket:req] waitUntilFinished];
+    
     OSSGetBucketACLRequest * request = [OSSGetBucketACLRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.bucketName = @"oss-ios-get-bucket-acl-test";
     OSSTask * task = [_client getBucketACL:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -112,6 +72,8 @@
         XCTAssertEqualObjects(@"private", result.aclGranted);
         return nil;
     }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:@"oss-ios-get-bucket-acl-test" with:_client];
 }
 
 - (void)testAPI_getService
@@ -126,8 +88,9 @@
 
 - (void)testAPI_deleteBucket
 {
+    NSString * bucket = @"oss-ios-delete-bucket-test";
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
-    req.bucketName = @"bucket-testcases";
+    req.bucketName = bucket;
     req.xOssACL = @"public-read";
     OSSTask *task = [_client createBucket:req];
     
@@ -138,12 +101,33 @@
     }] waitUntilFinished];
     
     OSSDeleteBucketRequest *request = [OSSDeleteBucketRequest new];
-    request.bucketName = @"bucket-testcases";
+    request.bucketName = bucket;
     task = [_client deleteBucket:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+}
+
+- (void)testListMultipartUploads
+{
+    OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
+    req.bucketName = @"oss-ios-bucket-list-multipart-uploads-test";
+    [[_client createBucket:req] waitUntilFinished];
+    
+    OSSListMultipartUploadsRequest *listreq = [OSSListMultipartUploadsRequest new];
+    listreq.bucketName = @"oss-ios-bucket-list-multipart-uploads-test";
+    listreq.maxUploads = 1000;
+    OSSTask *task = [_client listMultipartUploads:listreq];
+    
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSListMultipartUploadsResult * result = task.result;
+        XCTAssertTrue(result.maxUploads == 1000);
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:@"oss-ios-bucket-list-multipart-uploads-test" with:_client];
 }
 
 @end

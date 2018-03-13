@@ -198,6 +198,28 @@ static NSObject * lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
+- (OSSTask *)listMultipartUploads:(OSSListMultipartUploadsRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    NSMutableDictionary *querys = [request getQueryDict];
+    [querys setObject:@"" forKey:@"uploads"];
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeListMultipartUploads];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                                                 httpMethod:@"GET"
+                                                                                 bucketName:request.bucketName
+                                                                                  objectKey:nil
+                                                                                       type:nil
+                                                                                        md5:nil
+                                                                                      range:nil
+                                                                                       date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue]
+                                                                               headerParams:nil
+                                                                                     querys:querys
+                                                                                       sha1:nil];
+    requestDelegate.operType = OSSOperationTypeListMultipartUploads;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 

@@ -24,6 +24,7 @@
 @class OSSUploadPartRequest;
 @class OSSCompleteMultipartUploadRequest;
 @class OSSListPartsRequest;
+@class OSSListMultipartUploadsRequest;
 @class OSSAbortMultipartUploadRequest;
 @class OSSAppendObjectRequest;
 @class OSSResumableUploadRequest;
@@ -240,6 +241,12 @@ The corresponding RESTFul API: ListParts
 - (OSSTask *)listParts:(OSSListPartsRequest *)request;
 
 /**
+ The corresponding RESTFul API: ListMultipartUploads
+ Lists all multipart uploads with the specified bucket.
+ */
+- (OSSTask *)listMultipartUploads:(OSSListMultipartUploadsRequest *)request;
+
+/**
 The corresponding RESTFul API: AbortMultipartUpload
 Aborts the multipart upload by the specified upload Id.
  Once the multipart upload is aborted by this API, all parts data will be deleted and the upload Id is invalid anymore.
@@ -249,6 +256,7 @@ Aborts the multipart upload by the specified upload Id.
 - (OSSTask *)abortResumableMultipartUpload:(OSSResumableUploadRequest *)request;
 
 - (OSSTask *)triggerCallBack:(OSSCallBackRequest *)request;
+
 
 #pragma mark extention method
 

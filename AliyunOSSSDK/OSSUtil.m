@@ -1071,10 +1071,10 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     OSSReachability *reach=[OSSReachability reachabilityWithHostName:@"www.apple.com"];
     if(reach){
         switch([reach currentReachabilityStatus]){
-            case ReachableViaWWAN:
+            case OSSReachableViaWWAN:
                 tempMessage = @"[network_state]: connected";
                 break;
-            case ReachableViaWiFi:
+            case OSSReachableViaWiFi:
                 tempMessage = @"[network_state]: connected";
                 break;
             default:

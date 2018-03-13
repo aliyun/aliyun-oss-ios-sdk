@@ -296,6 +296,55 @@
             return getBucketResult;
         }
             
+        case OSSOperationTypeListMultipartUploads:
+        {
+            OSSListMultipartUploadsResult * listMultipartUploadsResult = [OSSListMultipartUploadsResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:listMultipartUploadsResult];
+            }
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"List multipart uploads dict: %@", parsedDict);
+                
+                if (parsedDict) {
+                    listMultipartUploadsResult.bucketName = [parsedDict objectForKey:OSSBucketXMLTOKEN];
+                    listMultipartUploadsResult.prefix = [parsedDict objectForKey:OSSPrefixXMLTOKEN];
+                    listMultipartUploadsResult.uploadIdMarker = [parsedDict objectForKey:OSSUploadIdMarkerXMLTOKEN];
+                    listMultipartUploadsResult.nextUploadIdMarker = [parsedDict objectForKey:OSSUploadIdMarkerXMLTOKEN];
+                    listMultipartUploadsResult.keyMarker = [parsedDict objectForKey:OSSKeyMarkerXMLTOKEN];
+                    listMultipartUploadsResult.nextKeyMarker = [parsedDict objectForKey:OSSNextKeyMarkerXMLTOKEN];
+                    listMultipartUploadsResult.maxUploads = (int32_t)[[parsedDict objectForKey:OSSMaxUploadsXMLTOKEN] integerValue];
+                    listMultipartUploadsResult.delimiter = [parsedDict objectForKey:OSSDelimiterXMLTOKEN];
+                    listMultipartUploadsResult.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
+                    
+                    id contentObject = [parsedDict objectForKey:OSSUploadXMLTOKEN];
+                    if ([contentObject isKindOfClass:[NSArray class]]) {
+                        listMultipartUploadsResult.uploads = contentObject;
+                    } else if ([contentObject isKindOfClass:[NSDictionary class]]) {
+                        NSArray * arr = [NSArray arrayWithObject:contentObject];
+                        listMultipartUploadsResult.uploads = arr;
+                    } else {
+                        listMultipartUploadsResult.uploads = nil;
+                    }
+                    
+                    NSMutableArray * commentPrefixesArr = [NSMutableArray new];
+                    id commentPrefixes = [parsedDict objectForKey:OSSCommonPrefixesXMLTOKEN];
+                    if ([commentPrefixes isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary * prefix in commentPrefixes) {
+                            [commentPrefixesArr addObject:[prefix objectForKey:@"Prefix"]];
+                        }
+                    } else if ([commentPrefixes isKindOfClass:[NSDictionary class]]) {
+                        [commentPrefixesArr addObject:[(NSDictionary *)commentPrefixes objectForKey:@"Prefix"]];
+                    } else {
+                        commentPrefixesArr = nil;
+                    }
+                    
+                    listMultipartUploadsResult.commonPrefixes = commentPrefixesArr;
+                }
+            }
+            return listMultipartUploadsResult;
+        }
+            
         case OSSOperationTypeHeadObject:
         {
             OSSHeadObjectResult * headObjectResult = [OSSHeadObjectResult new];
