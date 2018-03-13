@@ -63,6 +63,7 @@
 		D87183D01FC581FA000DD9EC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
+		D87A0E022057F54B006D2F48 /* ConcurrencyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */; };
 		D8C41A641FCC002C0091699B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
 /* End PBXBuildFile section */
 
@@ -167,6 +168,7 @@
 		D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSXMLDictionaryTests.m; sourceTree = "<group>"; };
 		D87183C01FC572C6000DD9EC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
+		D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConcurrencyTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +356,7 @@
 				D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */,
 				4C7B5BE120411D1900FDD612 /* OSSTestUtils.h */,
 				4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */,
+				D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -537,6 +540,7 @@
 				D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */,
 				D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */,
 				D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */,
+				D87A0E022057F54B006D2F48 /* ConcurrencyTests.m in Sources */,
 				D87183C21FC572C6000DD9EC /* OSSLogTests.m in Sources */,
 				D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */,
 				D83D58581FC681F90022761B /* OSSModelTests.m in Sources */,
