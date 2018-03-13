@@ -716,9 +716,7 @@ static NSObject * lock;
     OSSTask *errorTask = nil;
     if(resumable) {
         OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
-        NSString *uploadingFilePath = [resumableRequest.uploadingFileURL path];
-        NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String:uploadingFilePath];
-        NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%zi",uploadingFilePathMd5, resumableRequest.bucketName, resumableRequest.objectKey, resumableRequest.partSize];
+        NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%zi",request.md5String, resumableRequest.bucketName, resumableRequest.objectKey, resumableRequest.partSize];
         if (sequential) {
             nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_sequential];
         }
@@ -1079,7 +1077,6 @@ static NSObject * lock;
     [queue setMaxConcurrentOperationCount: 5];
     
     OSSRequestCRCFlag crcFlag = request.crcFlag;
-    __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = nil;
     
@@ -1091,106 +1088,117 @@ static NSObject * lock;
         localPartInfos = [NSMutableDictionary dictionary];
     }
     
-    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:request.uploadingFileURL];
-    [inputStream open];
+    NSError *readError;
+    NSFileHandle *fileHande = [NSFileHandle fileHandleForReadingFromURL:request.uploadingFileURL error:&readError];
+    if (readError) {
+        return [OSSTask taskWithError: readError];
+    }
     
     NSData * uploadPartData;
     NSInteger realPartLength = request.partSize;
     
-    for (int i = 1; i <= partCout; i++) {
-        // if current transport is sequential and has error occurs,stop upload and return error!
-        if (isCancel) {
-            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+    for (NSUInteger idx = 1; idx <= partCout; idx++)
+    {
+        if (request.isCancelled)
+        {
+            [queue cancelAllOperations];
             break;
         }
-        @autoreleasepool{
-            if (i == partCout) {
-                realPartLength = uploadFileSize - request.partSize * (i - 1);
-            }
-            NSMutableData *myBuffer = [NSMutableData dataWithLength:realPartLength];
-            uint8_t *buffer = [myBuffer mutableBytes];
-            NSInteger length = [inputStream read:buffer maxLength:realPartLength];
-            uploadPartData = [NSData dataWithBytes:buffer length:length];
         
-            if (![inputStream hasBytesAvailable]) {
-                [inputStream close];
-            }
-            //alreadyUploadIndex 为空 return false
-            if (alreadyUploadIndex && [alreadyUploadIndex containsObject:@(i)]) {
-                continue;
-            }
+        if ([alreadyUploadIndex containsObject:@(idx)])
+        {
+            continue;
+        }
+        
+        // while operationCount >= 5,the loop will stay here
+        while (queue.operationCount >= 5) {
             
-            NSBlockOperation * operation = [[NSBlockOperation alloc] init];
-            [operation addExecutionBlock:^{
+        }
+        
+        if (idx == partCout) {
+            realPartLength = uploadFileSize - request.partSize * (idx - 1);
+        }
+        @autoreleasepool
+        {
+            [fileHande seekToFileOffset: request.partSize * (idx - 1)];
+            uploadPartData = [fileHande readDataOfLength:realPartLength];
+            
+            NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
                 @autoreleasepool {
-                    if (request.isCancelled) {
-                        @synchronized(lock){
-                            if(!isCancel){
-                                isCancel = YES;
-                                [queue cancelAllOperations];
-                            }
-                        }
-                    }else{
-                        OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
-                        uploadPart.bucketName = request.bucketName;
-                        uploadPart.objectkey = request.objectKey;
-                        uploadPart.partNumber = i;
-                        uploadPart.uploadId = request.uploadId;
-                        uploadPart.uploadPartData = uploadPartData;
-                        uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
-                        uploadPart.crcFlag = request.crcFlag;
-                        
-                        OSSTask * uploadPartTask = [self uploadPart:uploadPart];
-                        [uploadPartTask waitUntilFinished];
-                        if (uploadPartTask.error && uploadPartTask.error.code != 409) {
-                            errorTask = uploadPartTask;
-                        } else {
-                            OSSUploadPartResult * result = uploadPartTask.result;
-                            OSSPartInfo * partInfo = [OSSPartInfo new];
-                            partInfo.partNum = i;
-                            partInfo.eTag = result.eTag;
-                            partInfo.size = realPartLength;
-                            uint64_t crc64OfPart;
-                            @try {
-                                NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
-                                [scanner scanUnsignedLongLong:&crc64OfPart];
-                                partInfo.crc64 = crc64OfPart;
-                            } @catch (NSException *exception) {
-                                OSSLogError(@"multipart upload error with nil remote crc64!");
-                            }
-                            
-                            @synchronized(lock){
-                                [alreadyUploadPart addObject:partInfo];
-                                
-                                if (crcFlag == OSSRequestCRCOpen)
-                                {
-                                    [self processForLocalPartInfos:localPartInfos
-                                                          partInfo:partInfo
-                                                          uploadId:request.uploadId];
-                                    [self persistencePartInfos:localPartInfos
-                                                  withUploadId:request.uploadId];
-                                }
-                                
-                                *uploadedLength += realPartLength;
-                                if (request.uploadProgress)
-                                {
-                                    request.uploadProgress(realPartLength, *uploadedLength, uploadFileSize);
-                                }
-                            }
-                        }
-                    }
+                    [self executePartUpload:request
+                   totalBytesExpectedToSend:uploadFileSize
+                             totalBytesSent:uploadedLength
+                                      index:idx
+                                   partData:uploadPartData
+                          alreadyUploadPart:alreadyUploadPart
+                                 localParts:localPartInfos
+                                  errorTask:&errorTask];
                 }
             }];
             [queue addOperation:operation];
+        }
+    }
+    [fileHande closeFile];
+    [queue waitUntilAllOperationsAreFinished];
+    
+    if (!errorTask && request.isCancelled) {
+        errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+    }
+    
+    return errorTask;
+}
+
+- (void)executePartUpload:(OSSMultipartUploadRequest *)request totalBytesExpectedToSend:(unsigned long long)totalBytesExpectedToSend totalBytesSent:(NSUInteger *)totalBytesSent index:(NSUInteger)idx partData:(NSData *)partData alreadyUploadPart:(NSMutableArray *)uploadedParts localParts:(NSMutableDictionary *)localParts errorTask:(OSSTask **)errorTask
+{
+    NSUInteger bytesSent = partData.length;
+
+    OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+    uploadPart.bucketName = request.bucketName;
+    uploadPart.objectkey = request.objectKey;
+    uploadPart.partNumber = idx;
+    uploadPart.uploadId = request.uploadId;
+    uploadPart.uploadPartData = partData;
+    uploadPart.contentMd5 = [OSSUtil base64Md5ForData:partData];
+    uploadPart.crcFlag = request.crcFlag;
+    
+    OSSTask * uploadPartTask = [self uploadPart:uploadPart];
+    [uploadPartTask waitUntilFinished];
+    if (uploadPartTask.error && uploadPartTask.error.code != 409) {
+        *errorTask = uploadPartTask;
+    } else {
+        OSSUploadPartResult * result = uploadPartTask.result;
+        OSSPartInfo * partInfo = [OSSPartInfo new];
+        partInfo.partNum = idx;
+        partInfo.eTag = result.eTag;
+        partInfo.size = bytesSent;
+        uint64_t crc64OfPart;
+        @try {
+            NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
+            [scanner scanUnsignedLongLong:&crc64OfPart];
+            partInfo.crc64 = crc64OfPart;
+        } @catch (NSException *exception) {
+            OSSLogError(@"multipart upload error with nil remote crc64!");
+        }
+        
+        @synchronized(lock){
+            [uploadedParts addObject:partInfo];
             
-            if (queue.operationCount >= 5) {
-                [queue waitUntilAllOperationsAreFinished];
+            if (request.crcFlag == OSSRequestCRCOpen)
+            {
+                [self processForLocalPartInfos:localParts
+                                      partInfo:partInfo
+                                      uploadId:request.uploadId];
+                [self persistencePartInfos:localParts
+                              withUploadId:request.uploadId];
+            }
+            
+            *totalBytesSent += bytesSent;
+            if (request.uploadProgress)
+            {
+                request.uploadProgress(bytesSent, *totalBytesSent, totalBytesExpectedToSend);
             }
         }
     }
-    [queue waitUntilAllOperationsAreFinished];
-    
-    return errorTask;
 }
 
 - (void)processForLocalPartInfos:(NSMutableDictionary *)localPartInfoDict partInfo:(OSSPartInfo *)partInfo uploadId:(NSString *)uploadId
@@ -1277,26 +1285,18 @@ static NSObject * lock;
         if (resumable) {
             OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
             NSString *recordDirectoryPath = resumableRequest.recordDirectoryPath;
-            localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
-            localPartInfos = [NSDictionary dictionaryWithContentsOfFile:localPartInfosPath];
-            if ([recordDirectoryPath oss_isNotEmpty]) {
-                uploadId = [self readUploadIdWithFilePath: request.uploadingFileURL.path
-                                               recordPath: recordDirectoryPath
-                                                   bucket: request.bucketName
-                                                objectKey: request.objectKey
-                                                 partSize: request.partSize
-                                           recordFilePath: &recordFilePath
-                                               sequential: sequential
-                                                  crcFlag:request.crcFlag];
+            request.md5String = [OSSUtil fileMD5String:request.uploadingFileURL.path];
+            if ([recordDirectoryPath oss_isNotEmpty])
+            {
+                uploadId = [self readUploadIdForRequest:request recordFilePath:&recordFilePath sequential:sequential];
                 OSSLogVerbose(@"local uploadId: %@,recordFilePath: %@",uploadId, recordFilePath);
             }
             
-            if(uploadId.oss_isNotEmpty)
+            if([uploadId oss_isNotEmpty])
             {
-                NSString *localPartInfosPath = [NSString oss_documentDirectory];
-                localPartInfosPath = [[localPartInfosPath stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
                 
-                localPartInfos = [[NSDictionary alloc] initWithContentsOfURL:[NSURL fileURLWithPath:localPartInfosPath]];
+                localPartInfos = [[NSDictionary alloc] initWithContentsOfFile:localPartInfosPath];
                 
                 OSSTask *listPartTask = [self processListPartsWithObjectKey:request.objectKey
                                                                      bucket:request.bucketName
@@ -1595,28 +1595,20 @@ static NSObject * lock;
     return [fileSizeNumber unsignedLongLongValue];
 }
 
-- (NSString *)readUploadIdWithFilePath:(NSString *)filePath
-                            recordPath:(NSString *)recordPath
-                                bucket:(NSString *)bucket
-                             objectKey:(NSString *)objectKey
-                              partSize:(NSInteger)partSize
-                        recordFilePath:(NSString **)recordFilePath
-                            sequential:(BOOL)sequential
-                               crcFlag:(OSSRequestCRCFlag)flag
+- (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential
 {
     NSString *uploadId = nil;
-    NSString *uploadingFilePathMd5 = [OSSUtil fileMD5String: filePath];
-    NSString *record = [NSString stringWithFormat:@"%@%@%@%zi", uploadingFilePathMd5, bucket, objectKey, partSize];
+    NSString *record = [NSString stringWithFormat:@"%@%@%@%zd", request.md5String, request.bucketName, request.objectKey, request.partSize];
     if (sequential) {
         record = [record stringByAppendingString:oss_record_info_suffix_with_sequential];
     }
-    if (flag == OSSRequestCRCOpen) {
+    if (request.crcFlag == OSSRequestCRCOpen) {
         record = [record stringByAppendingString:oss_record_info_suffix_with_crc];
     }
     
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
     NSString *recordFileName = [OSSUtil dataMD5String:data];
-    *recordFilePath = [recordPath stringByAppendingPathComponent: recordFileName];
+    *recordFilePath = [request.recordDirectoryPath stringByAppendingPathComponent: recordFileName];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath: *recordFilePath]) {
         NSFileHandle * read = [NSFileHandle fileHandleForReadingAtPath:*recordFilePath];
@@ -1650,29 +1642,32 @@ static NSObject * lock;
         localPartInfos = [NSMutableDictionary dictionary];
     }
     
-    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:request.uploadingFileURL];
-    [inputStream open];
+    NSError *readError;
+    NSFileHandle *fileHande = [NSFileHandle fileHandleForReadingFromURL:request.uploadingFileURL error:&readError];
+    if (readError) {
+        return [OSSTask taskWithError: readError];
+    }
     
     NSData * uploadPartData;
     NSInteger realPartLength = request.partSize;
     
     for (int i = 1; i <= partCout; i++) {
+        realPartLength = request.partSize;
+        if (isCancel) {
+            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+            break;
+        }
+        realPartLength = request.partSize;
         @autoreleasepool{
-            if (i == partCout) {
-                realPartLength = uploadFileSize - request.partSize * (i - 1);
-            }
-            NSMutableData *myBuffer = [NSMutableData dataWithLength:realPartLength];
-            uint8_t *buffer = [myBuffer mutableBytes];
-            NSInteger length = [inputStream read:buffer maxLength:realPartLength];
-            uploadPartData = [NSData dataWithBytes:buffer length:length];
-            
-            if (![inputStream hasBytesAvailable]) {
-                [inputStream close];
-            }
             //alreadyUploadIndex 为空 return false
             if (alreadyUploadIndex && [alreadyUploadIndex containsObject:@(i)]) {
                 continue;
             }
+            [fileHande seekToFileOffset:request.partSize * (i - 1)];
+            if (i == partCout) {
+                realPartLength = uploadFileSize - request.partSize * (i - 1);
+            }
+            uploadPartData = [fileHande readDataOfLength:realPartLength];
             
             if (request.isCancelled) {
                 @synchronized(lock){
@@ -1736,6 +1731,7 @@ static NSObject * lock;
             }
         }
     }
+    [fileHande closeFile];
     
     return errorTask;
 }
