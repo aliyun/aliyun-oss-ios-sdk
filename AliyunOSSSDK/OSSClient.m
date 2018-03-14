@@ -42,7 +42,7 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 
 @implementation OSSClient
 
-static NSObject * lock;
+static NSObject *lock;
 
 - (instancetype)initWithEndpoint:(NSString *)endpoint credentialProvider:(id<OSSCredentialProvider>)credentialProvider {
     return [self initWithEndpoint:endpoint credentialProvider:credentialProvider clientConfiguration:[OSSClientConfiguration new]];
@@ -52,7 +52,9 @@ static NSObject * lock;
               credentialProvider:(id<OSSCredentialProvider>)credentialProvider
              clientConfiguration:(OSSClientConfiguration *)conf {
     if (self = [super init]) {
-        lock = [NSObject new];
+        if (!lock) {
+            lock = [NSObject new];
+        }
         // Monitor the network. If the network type is changed, recheck the IPv6 status.
         [OSSReachabilityManager shareInstance];
 
@@ -1813,6 +1815,11 @@ static NSObject * lock;
                                 userInfo:@{OSSErrorMessageTOKEN: @"This task has been cancelled!"}];
     });
     return error;
+}
+
+- (void)dealloc{
+    [self.networking.dataSession invalidateAndCancel];
+    [self.networking.uploadFileSession invalidateAndCancel];
 }
 
 @end
