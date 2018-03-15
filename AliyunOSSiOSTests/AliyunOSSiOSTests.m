@@ -1516,7 +1516,8 @@ id<OSSCredentialProvider> credential, authCredential;
     request.fromObject = OSS_IMAGE_KEY;
     request.toBucket = _privateBucketName;
     request.toObject = @"image_persist_key";
-    request.action = @"resize,w_100";
+    request.action = @"image/resize,w_100";
+    //request.action = @"resize,w_100";也可以
     
     [[[client imageActionPersist:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
         XCTAssertNil(task.error);
