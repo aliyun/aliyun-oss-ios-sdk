@@ -1208,6 +1208,35 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return [bodyString dataUsingEncoding:NSUTF8StringEncoding];
 }
 
++ (NSData *)constructHttpBodyForImagePersist:(NSString *)action toBucket:(NSString *)toBucket toObjectKey:(NSString *)toObjectKey
+{
+    /*
+     * parameter has checked before
+     */
+    NSMutableString *bodyString = [NSMutableString string];
+    [bodyString appendString:@"x-oss-process="];
+    if ([action rangeOfString:@"image/"].location == NSNotFound)
+    {
+        [bodyString appendString:@"image/"];
+        
+    }
+    [bodyString appendString:action];
+    [bodyString appendString:@"|sys/"];
+    
+    
+    NSString * bucket_base64 = [[toBucket dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+    
+    NSString * objectkey_base64 = [[toObjectKey dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+    
+    [bodyString appendString:@"saveas,o_"];
+    [bodyString appendString:objectkey_base64];
+    [bodyString appendString:@",b_"];
+    [bodyString appendString:bucket_base64];
+
+    return [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+
 @end
 
 @implementation NSString (OSS)

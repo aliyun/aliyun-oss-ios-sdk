@@ -579,7 +579,13 @@
             }
             return callbackResult;
         }
-            
+        case OSSOperationTypeImagePersist: {
+            OSSImagePersistResult *imagePersistResult = [OSSImagePersistResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:imagePersistResult];
+            }
+            return imagePersistResult;
+        }
         default: {
             OSSLogError(@"unknown operation type");
             break;

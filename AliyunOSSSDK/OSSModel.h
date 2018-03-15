@@ -1433,7 +1433,7 @@ The result class of listing uploaded parts.
 
 
 /**
- for more information,Please refer to the link https://help.aliyun.com/document_detail/31989.html?spm=5176.doc31988.6.908.CkOpBW
+ for more information,Please refer to the link https://help.aliyun.com/document_detail/31989.html
  */
 @interface OSSCallBackRequest : OSSRequest
 
@@ -1465,6 +1465,28 @@ The result class of listing uploaded parts.
  If the callback is specified, this is the callback response result.
  */
 @property (nonatomic, copy) NSString *serverReturnJsonString;
+
+@end
+
+
+/**
+ for more information,Please refer to the link https://help.aliyun.com/document_detail/55811.html
+ */
+@interface OSSImagePersistRequest : OSSRequest
+
+@property (nonatomic, copy) NSString *fromBucket;
+
+@property (nonatomic, copy) NSString *fromObject;
+
+@property (nonatomic, copy) NSString *toBucket;
+
+@property (nonatomic, copy) NSString *toObject;
+
+@property (nonatomic, copy) NSString *action;
+
+@end
+
+@interface OSSImagePersistResult : OSSResult
 
 @end
 
