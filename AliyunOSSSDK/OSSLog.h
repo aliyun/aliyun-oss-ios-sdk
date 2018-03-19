@@ -39,6 +39,11 @@ if ([OSSLog isLogEnable]) {\
 OSSDDLogError(@"[Error]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
 }
 
+#define OSSLogWarn(frmt, ...)\
+if ([OSSLog isLogEnable]) {\
+OSSDDLogWarn(@"[Warning]: %@", [NSString stringWithFormat:(frmt), ##__VA_ARGS__]);\
+}
+
 static BOOL isEnable;
 
 @interface OSSLog : NSObject

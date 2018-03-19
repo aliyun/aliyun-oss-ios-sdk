@@ -271,6 +271,13 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)fileMD5String:(NSString *)path {
+    BOOL isDirectory = NO;
+    BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+    if (isDirectory || !isExist) {
+        OSSLogWarn(@"a file doesn't exists at a specified path(%@)", path);
+        return nil;
+    }
+
     unsigned char * md5Bytes = (unsigned char *)[[self fileMD5:path] bytes];
     return [self convertMd5Bytes2String:md5Bytes];
 }
