@@ -45,6 +45,13 @@ id<OSSCredentialProvider> credential, authCredential;
     OSSCreateBucketRequest *createBucket1 = [OSSCreateBucketRequest new];
     createBucket1.bucketName = _privateBucketName;
     [[client createBucket:createBucket1] waitUntilFinished];
+    
+    //upload test image
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = _privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    [[client putObject:put] waitUntilFinished];
 }
 
 - (void)initLocalFiles {
@@ -1502,6 +1509,23 @@ id<OSSCredentialProvider> credential, authCredential;
     //    BOOL isEqual = [self isFileOnOSSBucket:OSS_BUCKET_PRIVATE objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[multipartUploadRequest.uploadingFileURL path]];
     //    XCTAssertTrue(isEqual);
 }
+
+- (void)testImagePersist {
+    OSSImagePersistRequest *request = [OSSImagePersistRequest new];
+    request.fromBucket = _privateBucketName;
+    request.fromObject = OSS_IMAGE_KEY;
+    request.toBucket = _privateBucketName;
+    request.toObject = @"image_persist_key";
+    request.action = @"image/resize,w_100";
+    //request.action = @"resize,w_100";也可以
+    
+    [[[client imageActionPersist:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
+
+
 
 #pragma mark - token update
 /*

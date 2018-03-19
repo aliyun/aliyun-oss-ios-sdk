@@ -32,6 +32,7 @@
 @class OSSTask;
 @class OSSExecutor;
 @class OSSCallBackRequest;
+@class OSSImagePersistRequest;
 
 @class OSSNetworking;
 @class OSSClientConfiguration;
@@ -335,6 +336,15 @@ Aborts the multipart upload by the specified upload Id.
  */
 - (OSSTask *)sequentialMultipartUpload:(OSSResumableUploadRequest *)request;
 
+/*
+ * image persist action
+ * https://help.aliyun.com/document_detail/55811.html
+ */
+- (OSSTask *)imageActionPersist:(OSSImagePersistRequest *)request;
+
 @end
+
+
+
 
 NS_ASSUME_NONNULL_END

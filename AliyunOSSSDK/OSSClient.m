@@ -1487,6 +1487,45 @@ static NSObject *lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
+
+- (OSSTask *)imageActionPersist:(OSSImagePersistRequest *)request
+{
+    if (![request.fromBucket oss_isNotEmpty]
+        || ![request.fromObject oss_isNotEmpty]
+        || ![request.toBucket oss_isNotEmpty]
+        || ![request.toObject oss_isNotEmpty]
+        || ![request.action oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSTaskErrorDomain
+                                             code:OSSClientErrorCodeInvalidArgument
+                                         userInfo:@{OSSErrorMessageTOKEN: @"imagePersist parameters not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    OSSNetworkingRequestDelegate *requestDelegate = request.requestDelegate;
+    NSMutableDictionary *querys = [NSMutableDictionary dictionary];
+    [querys setObject:@"" forKey:@"x-oss-process"];
+    
+    requestDelegate.uploadingData = [OSSUtil constructHttpBodyForImagePersist:request.action toBucket:request.toBucket toObjectKey:request.toObject];
+//    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    
+    
+    OSSHttpResponseParser *responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeImagePersist];
+    requestDelegate.responseParser = responseParser;
+    NSString *dateString = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
+                                                                                 httpMethod:@"POST" bucketName:request.fromBucket objectKey:request.fromObject                      type:nil
+                                                                                        md5:nil
+                                                                                      range:nil
+                                                                                       date:dateString
+                                                                               headerParams:nil
+                                                                                     querys:querys
+                                                                                       sha1:nil];
+    requestDelegate.operType = OSSOperationTypeImagePersist;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 # pragma mark - Private Methods
 
 - (void)enableCRC64WithFlag:(OSSRequestCRCFlag)flag requestDelegate:(OSSNetworkingRequestDelegate *)delegate
@@ -1787,7 +1826,8 @@ static NSObject *lock;
         error = [NSError errorWithDomain:OSSClientErrorDomain
                                     code:OSSClientErrorCodeInvalidArgument
                                 userInfo:@{OSSErrorMessageTOKEN: @"Please check your request's uploadingFileURL!"}];
-    }else
+    }
+    else
     {
         NSFileManager *dfm = [NSFileManager defaultManager];
         NSDictionary *attributes = [dfm attributesOfItemAtPath:request.uploadingFileURL.path error:&error];
