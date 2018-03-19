@@ -89,6 +89,7 @@
 		D85278112015DF4900D7B1DE /* OSSConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = D852780E2015DF4900D7B1DE /* OSSConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D85278122015DF4900D7B1DE /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D852780F2015DF4900D7B1DE /* OSSConstants.m */; };
 		D85278132015DF4900D7B1DE /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D852780F2015DF4900D7B1DE /* OSSConstants.m */; };
+		D88698CB205FA46400659EC8 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F81FC82508008E3900 /* libresolv.tbd */; };
 		D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183071FC56358000DD9EC /* OSSNetworking.m */; };
 		D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */ = {isa = PBXBuildFile; fileRef = D87183081FC56358000DD9EC /* OSSHttpdns.m */; };
 		D8C41AAA1FCC284F0091699B /* OSSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D871830A1FC56358000DD9EC /* OSSClient.m */; };
@@ -289,6 +290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88698CB205FA46400659EC8 /* libresolv.tbd in Frameworks */,
 				D80C81F71FC824FF008E3900 /* CoreTelephony.framework in Frameworks */,
 				D80C81F51FC824E2008E3900 /* SystemConfiguration.framework in Frameworks */,
 			);
