@@ -9,12 +9,12 @@
 #ifndef OSSTestMacros_h
 #define OSSTestMacros_h
 
-#define OSS_ACCESSKEY_ID                @"LTAIdJcQW6Uap6cL"
-#define OSS_SECRETKEY_ID                @"ssnJED1Ro4inSpE2NF71bGZD6IEbN1"
+#define OSS_ACCESSKEY_ID                @"******"
+#define OSS_SECRETKEY_ID                @"******"
 
-#define OSS_BUCKET_PUBLIC               @"zq-public"
-#define OSS_BUCKET_PRIVATE              @"zq-hangzhou"
-#define OSS_ENDPOINT                    @"http://oss-cn-hangzhou.aliyuncs.com"
+#define OSS_BUCKET_PUBLIC               @"public"
+#define OSS_BUCKET_PRIVATE              @"private"
+#define OSS_ENDPOINT                    @"http://oss-cn-region.aliyuncs.com"
 #define OSS_MULTIPART_UPLOADKEY         @"multipart_key"
 #define OSS_RESUMABLE_UPLOADKEY         @"resumable_key"
 #define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"
