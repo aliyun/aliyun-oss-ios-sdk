@@ -32,6 +32,8 @@ $ sh ./buildFramework.sh
 $ cd Products && ls
 ```
 
+注意：buildFramework.sh脚本生成的framework是支持i386,x86_64,armv7,arm64架构的版本，所以当您需要archive product时，需要直接使用工程文件生成只支持真机的framework版本。
+
 在Xcode中，直接把framework拖入您对应的Target下即可，在弹出框勾选`Copy items if needed`。
 
 ### Pod依赖
