@@ -7,4 +7,4 @@ iOS 发版流程
 5.	修改OSSDefine.h中的OSSSDKVersion的版本号。
 	http://www.jianshu.com/p/3a365f273439
 	pod spec lint AliyunOSSiOS.podspec
-	pod trunk push AliyunOSSiOS.podspec 
+	pod trunk push AliyunOSSiOS.podspec
