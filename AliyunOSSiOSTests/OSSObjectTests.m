@@ -1357,6 +1357,31 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_multipartRequest_concurrently {
+    NSOperationQueue *queue = [NSOperationQueue new];
+    queue.maxConcurrentOperationCount = 5;
+    
+    for (int pIndex = 0; pIndex < 5; pIndex++) {
+        OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+        multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+        multipartUploadRequest.bucketName = _privateBucketName;
+        multipartUploadRequest.objectKey = [NSString stringWithFormat:@"multipart-concurrently-%d", pIndex];
+        multipartUploadRequest.contentType = @"application/octet-stream";
+        multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file5m"]];
+        multipartUploadRequest.partSize = 256 * 1024;
+        multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+            XCTAssertTrue(totalBytesExpectedToSend >= totalByteSent);
+        };
+        
+        [queue addOperationWithBlock:^{
+            OSSTask * task = [_client multipartUpload:multipartUploadRequest];
+            [task waitUntilFinished];
+            XCTAssertNotNil(task.result);
+        }];
+    }
+    [queue waitUntilAllOperationsAreFinished];
+}
+
 - (void)testAPI_multipartRequestWithWrongFileURL {
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];

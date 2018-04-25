@@ -1259,7 +1259,7 @@ static NSObject *lock;
     
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
         
-        static NSUInteger uploadedLength = 0;
+        __block NSUInteger uploadedLength = 0;
         uploadedLength = 0;
         __block OSSTask * errorTask;
         __block NSString *uploadId;
