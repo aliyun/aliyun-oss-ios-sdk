@@ -397,7 +397,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             @"mets": @"application/mets+xml",
             @"mods": @"application/mods+xml",
             @"m21": @"application/mp21",
-            @"mp4": @"application/mp4",
+            @"mp4": @"video/mp4",
             @"doc": @"application/msword",
             @"mxf": @"application/mxf",
             @"bin": @"application/octet-stream",
@@ -1051,15 +1051,15 @@ int32_t const CHUNK_SIZE = 8 * 1024;
         extention = [filePath pathExtension];
     }
 
-    if ((!extention || [extention isEqualToString:@""]) && uploadName) {
+    if (![extention oss_isNotEmpty] && uploadName) {
         extention = [uploadName pathExtension];
     }
 
-    if (!extention || [extention isEqualToString:@""]) {
+    if (![extention oss_isNotEmpty]) {
         return @"application/octet-stream";
     }
 
-    NSString * mimeType = [mimeMap objectForKey:extention];
+    NSString * mimeType = [mimeMap objectForKey:extention.lowercaseString];
     return mimeType ? mimeType : @"application/octet-stream";
 }
 
