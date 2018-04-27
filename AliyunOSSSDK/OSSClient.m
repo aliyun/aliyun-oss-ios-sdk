@@ -984,7 +984,7 @@ static NSObject *lock;
     [listPartsTask waitUntilFinished];
     if (listPartsTask.error)
     {
-        if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -1 * 404)
+        if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -404)
         {
             OSSLogVerbose(@"local record existes but the remote record is deleted");
             *uploadId = nil;
@@ -1165,8 +1165,10 @@ static NSObject *lock;
     
     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
     [uploadPartTask waitUntilFinished];
-    if (uploadPartTask.error && uploadPartTask.error.code != 409) {
-        *errorTask = uploadPartTask;
+    if (uploadPartTask.error) {
+        if (uploadPartTask.error.code != -409) {
+            *errorTask = uploadPartTask;
+        }
     } else {
         OSSUploadPartResult * result = uploadPartTask.result;
         OSSPartInfo * partInfo = [OSSPartInfo new];
@@ -1728,9 +1730,11 @@ static NSObject *lock;
                 
                 OSSTask * uploadPartTask = [self uploadPart:uploadPart];
                 [uploadPartTask waitUntilFinished];
-                if (uploadPartTask.error && uploadPartTask.error.code != 409) {
-                    errorTask = uploadPartTask;
-                    break;
+                if (uploadPartTask.error) {
+                    if (uploadPartTask.error.code != -409) {
+                        errorTask = uploadPartTask;
+                        break;
+                    }
                 } else {
                     OSSUploadPartResult * result = uploadPartTask.result;
                     OSSPartInfo * partInfo = [OSSPartInfo new];
