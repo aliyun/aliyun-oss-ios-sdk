@@ -14,6 +14,10 @@ github address：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
+2018/04/27
+- release 2.10.2
+1. fix error which type is partAlreadyExist for sequentialUpload.
+
 2018/04/25
 - release 2.10.1
 1. fix in case there are serveral multipart Task excuting, uploadProgress’s totalBytesSent greater than totalBytesExpectedToSend.
