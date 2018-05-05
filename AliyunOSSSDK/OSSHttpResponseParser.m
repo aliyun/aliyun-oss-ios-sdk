@@ -537,8 +537,8 @@
                 OSSLogVerbose(@"list multipart upload result: %@", parsedDict);
                 if (parsedDict) {
                     listPartsReuslt.nextPartNumberMarker = [[parsedDict objectForKey:OSSNextPartNumberMarkerXMLTOKEN] intValue];
-                    listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
-                    listPartsReuslt.isTruncated = [[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] boolValue];
+                    listPartsReuslt.maxParts = [[parsedDict objectForKey:OSSMaxPartsXMLTOKEN] intValue];
+                    listPartsReuslt.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
                     
                     id partsObject = [parsedDict objectForKey:OSSPartXMLTOKEN];
                     if ([partsObject isKindOfClass:[NSArray class]]) {

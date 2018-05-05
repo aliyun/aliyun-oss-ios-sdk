@@ -671,7 +671,10 @@ static NSObject *lock;
 - (OSSTask *)listParts:(OSSListPartsRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
 
-    NSMutableDictionary * querys = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.uploadId, @"uploadId", nil];
+    NSMutableDictionary *querys = [NSMutableDictionary dictionary];
+    [querys setObject: request.uploadId forKey: @"uploadId"];
+    [querys setObject: [NSString stringWithFormat:@"%d",request.partNumberMarker] forKey: @"part-number-marker"];
+    
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeListMultipart];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"GET"
