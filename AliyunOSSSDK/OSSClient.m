@@ -979,10 +979,10 @@ static NSObject *lock;
 
 - (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(NSUInteger)totalSize partSize:(NSUInteger)partSize
 {
-    BOOL isTruncated = YES;
+    BOOL isTruncated = NO;
     int nextPartNumberMarker = 0;
     
-    while (isTruncated) {
+    do {
         OSSListPartsRequest * listParts = [OSSListPartsRequest new];
         listParts.bucketName = bucket;
         listParts.objectKey = objectKey;
@@ -1012,7 +1012,7 @@ static NSObject *lock;
                 [uploadedParts addObjectsFromArray:res.parts];
             }
         }
-    }
+    } while (isTruncated);
     
     __block NSUInteger firstPartSize = 0;
     __block NSUInteger bUploadedLength = 0;
