@@ -272,7 +272,9 @@
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"oss-browser" withExtension:@"zip"];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
+        if (bytesSent != 0) {
+            XCTAssertTrue(totalByteSent / bytesSent >= 1000);
+        }
     };
     resumeTask = [_client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
