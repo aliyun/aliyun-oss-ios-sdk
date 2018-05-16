@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 2018/05/15
+- release 2.10.4
+optimize CPU usage when using multipart to upload object to server.
+
+2018/05/15
 - release 2.10.3
 1. fix list parts error when upload more than 1000 parts.
 
