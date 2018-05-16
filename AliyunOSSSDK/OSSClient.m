@@ -1132,6 +1132,7 @@ static NSObject *lock;
         // while operationCount >= 5,the loop will stay here
         while (queue.operationCount >= 5) {
             
+            [NSThread sleepForTimeInterval:1.f];
         }
         
         if (idx == partCout) {
