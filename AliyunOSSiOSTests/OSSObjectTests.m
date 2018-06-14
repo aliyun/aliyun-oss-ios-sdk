@@ -410,6 +410,32 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_getObjectByIpV6
+{
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    //    config.crc64Verifiable = YES;
+    NSString * ipEndpoint = @"http://oss-cn-hangzhou.aliyuncs.com";
+    
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient * ipClient = [[OSSClient alloc] initWithEndpoint:ipEndpoint
+                               credentialProvider:authProv
+                              clientConfiguration:config];
+    
+
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = @"abc";
+    request.objectKey = _fileNames[0];
+    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    };
+    
+    OSSTask * task = [ipClient getObject:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testAPI_getObjectACL
 {
     OSSGetObjectACLRequest * request = [OSSGetObjectACLRequest new];

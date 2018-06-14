@@ -76,8 +76,12 @@
     NSString * urlString = self.allNeededMessage.endpoint;
     
     NSURL * endPointURL = [NSURL URLWithString:self.allNeededMessage.endpoint];
+    
+    
     if ([OSSUtil isOssOriginBucketHost:endPointURL.host] && self.allNeededMessage.bucketName) {
         urlString = [NSString stringWithFormat:@"%@://%@.%@", endPointURL.scheme, self.allNeededMessage.bucketName, endPointURL.host];
+    }else{
+        urlString = [NSString stringWithFormat:@"%@://%@/%@", endPointURL.scheme, endPointURL.host,self.allNeededMessage.bucketName];
     }
     
     endPointURL = [NSURL URLWithString:urlString];
