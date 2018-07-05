@@ -855,9 +855,13 @@ It's the MD5 value for put object request. If the object is created by other API
 @property (nonatomic, copy) NSString * objectKey;
 
 /**
- Source object's address (the caller needs the read permission on this object)
+ * Source object's address (the caller needs the read permission on this object)
  */
-@property (nonatomic, copy) NSString * sourceCopyFrom;
+@property (nonatomic, copy) NSString * sourceCopyFrom DEPRECATED_MSG_ATTRIBUTE("please use sourceBucketName & sourceObjectKey instead!it will be removed in next version.");
+
+@property (nonatomic, copy) NSString * sourceBucketName;
+
+@property (nonatomic, copy) NSString * sourceObjectKey;
 
 /**
  The content type
