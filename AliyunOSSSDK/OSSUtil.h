@@ -67,5 +67,6 @@
 - (BOOL)oss_isNotEmpty;
 - (NSString *)oss_stringByAppendingPathComponentForURL:(NSString *)path;
 + (NSString *)oss_documentDirectory;
+- (NSString *)oss_urlEncodedString;
 
 @end
