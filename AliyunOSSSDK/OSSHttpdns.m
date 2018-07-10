@@ -10,8 +10,8 @@
 #import "OSSHttpdns.h"
 #import "OSSIPv6Adapter.h"
 
-NSString * const HTTPDNS_SERVER_IP = @"203.107.1.1";
-NSString * const HTTPDNS_SERVER_PORT = @"80";
+NSString * const OSS_HTTPDNS_SERVER_IP = @"203.107.1.1";
+NSString * const OSS_HTTPDNS_SERVER_PORT = @"80";
 
 NSString * const ACCOUNT_ID = @"181345";
 NSTimeInterval const MAX_ENDURABLE_EXPIRED_TIME_IN_SECOND = 60; // The DNS entry's expiration time in seconds. After it expires, the entry is invalid.
@@ -98,7 +98,7 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // Once the remaining
         }
     }
 
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/%@/d?host=%@", [[OSSIPv6Adapter getInstance] handleIpv4Address:HTTPDNS_SERVER_IP], ACCOUNT_ID, host]];
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@/%@/d?host=%@", [[OSSIPv6Adapter getInstance] handleIpv4Address:OSS_HTTPDNS_SERVER_IP], ACCOUNT_ID, host]];
     NSURLSession * session = [NSURLSession sharedSession];
 
     NSURLSessionDataTask * dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
