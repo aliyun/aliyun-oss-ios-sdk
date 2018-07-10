@@ -23,6 +23,7 @@
 #import "OSSHttpResponseParser.h"
 #import "OSSGetObjectACLRequest.h"
 #import "OSSDeleteMultipleObjectsRequest.h"
+#import "OSSGetBucketInfoRequest.h"
 
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
@@ -197,6 +198,23 @@ static NSObject *lock;
                                                     querys:[request getQueryDict] sha1:nil];
     requestDelegate.operType = OSSOperationTypeGetBucket;
 
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketInfo:(OSSGetBucketInfoRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    if (![request.bucketName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"request's bucketName should not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    NSMutableDictionary *queries = [NSMutableDictionary dictionaryWithCapacity:1];
+    [queries setObject:@"" forKey:@"bucketInfo"];
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketInfo];
+    requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint httpMethod:@"GET" bucketName:request.bucketName objectKey:nil type:nil md5:nil range:nil date:[[NSDate oss_clockSkewFixedDate] oss_asStringValue] headerParams:nil querys:queries sha1:nil];
+    requestDelegate.operType = OSSOperationTypeGetBucketInfo;
+    
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
