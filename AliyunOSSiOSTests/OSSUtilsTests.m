@@ -46,4 +46,22 @@
     }];
 }
 
+- (void)testOriginHost {
+    NSString *host = @"*.aliyuncs.com";
+    BOOL isTrue = [OSSUtil isOssOriginBucketHost:host];
+    XCTAssertTrue(isTrue);
+}
+
+- (void)testCnameHost {
+    NSString *host = @"*.abc.com";
+    BOOL isFalse = [OSSUtil isOssOriginBucketHost:host];
+    XCTAssertFalse(isFalse);
+}
+
+- (void)testIpHost {
+    NSString *host = @"10.0.0.2";
+    BOOL isFalse = [OSSUtil isOssOriginBucketHost:host];
+    XCTAssertFalse(isFalse);
+}
+
 @end
