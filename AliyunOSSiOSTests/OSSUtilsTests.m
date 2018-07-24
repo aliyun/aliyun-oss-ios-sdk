@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/OSSUtil.h>
+#import <AliyunOSSiOS/OSSIPv6Adapter.h>
 
 @interface OSSUtilsTests : XCTestCase
 
@@ -37,6 +38,30 @@
     NSString *fileName = @"testMIME.MP4";
     NSString *mime = [OSSUtil detemineMimeTypeForFilePath:fileName uploadName:nil];
     XCTAssertTrue([mime isEqualToString:@"video/mp4"]);
+}
+
+- (void)testForIpv4 {
+    OSSIPv6Adapter *adapter = [OSSIPv6Adapter getInstance];
+    BOOL isIPv4 = [adapter isIPv4Address: @"http://www.baidu.com"];
+    XCTAssertFalse(isIPv4);
+    
+    isIPv4 = [adapter isIPv4Address: @"0:0:0:0:0:0:0:1"];
+    XCTAssertFalse(isIPv4);
+    
+    isIPv4 = [adapter isIPv4Address: @"30.43.120.112"];
+    XCTAssertTrue(isIPv4);
+}
+
+- (void)testForIpv6 {
+    OSSIPv6Adapter *adapter = [OSSIPv6Adapter getInstance];
+    BOOL isIPv6 = [adapter isIPv6Address: @"http://www.baidu.com"];
+    XCTAssertFalse(isIPv6);
+    
+    isIPv6 = [adapter isIPv6Address: @"30.43.120.112"];
+    XCTAssertFalse(isIPv6);
+    
+    isIPv6 = [adapter isIPv6Address: @"0:0:0:0:0:0:0:1"];
+    XCTAssertTrue(isIPv6);
 }
 
 - (void)testPerformanceExample {
