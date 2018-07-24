@@ -23,6 +23,7 @@
 #import "OSSGetObjectACLResult.h"
 #import "OSSDeleteMultipleObjectsRequest.h"
 #import "OSSDeleteMultipleObjectsResult.h"
+#import "OSSGetBucketInfoRequest.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"

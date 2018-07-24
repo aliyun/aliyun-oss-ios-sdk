@@ -768,6 +768,55 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_copyObjectWithZhongWenAndDeleteObject
+{
+    NSString *objectKey = @"中文";
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file1m"];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+    request.bucketName = _privateBucketName;
+    request.objectKey = objectKey;
+    request.uploadingFileURL = fileURL;
+    request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    
+    OSSTask * putTask = [_client putObject:request];
+    [putTask waitUntilFinished];
+    
+    OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
+    head.bucketName = _privateBucketName;
+    head.objectKey = @"中文_copyTo";
+    OSSTask * headTask = [_client headObject:head];
+    [[headTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(-404, task.error.code);
+        NSLog(@"404 error: %@", task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSCopyObjectRequest * copy = [OSSCopyObjectRequest new];
+    copy.bucketName = _privateBucketName;
+    copy.objectKey = @"中文_copyTo";
+    copy.sourceBucketName = _privateBucketName;
+    copy.sourceObjectKey = objectKey;
+    OSSTask *cpTask = [_client copyObject:copy];
+    [[cpTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteObjectRequest * delete = [OSSDeleteObjectRequest new];
+    delete.bucketName = _privateBucketName;
+    delete.objectKey = @"中文_copyTo";
+    OSSTask *dTask = [_client deleteObject:delete];
+    [[dTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSDeleteObjectResult * result = task.result;
+        XCTAssertEqual(204, result.httpResponseCode);
+        return nil;
+    }] waitUntilFinished];
+}
+
 - (void)testAPI_DeleteMultipleObjects {
     OSSDeleteMultipleObjectsRequest *request = [OSSDeleteMultipleObjectsRequest new];
     request.bucketName = OSS_BUCKET_PRIVATE;

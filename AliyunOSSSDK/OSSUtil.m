@@ -1276,4 +1276,14 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return documentDirectory;
 }
 
+- (NSString *)oss_urlEncodedString {
+    static NSCharacterSet *allowCharacterSet = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?#[]"] invertedSet];
+    });
+    
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:allowCharacterSet];
+}
+
 @end
