@@ -535,9 +535,35 @@ static NSObject *lock;
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     NSMutableDictionary * headerParams = [NSMutableDictionary dictionaryWithDictionary:request.objectMeta];
 
+    NSString *copySourceHeader = nil;
     if (request.sourceCopyFrom) {
-        [headerParams setObject:request.sourceCopyFrom forKey:@"x-oss-copy-source"];
+        copySourceHeader = request.sourceCopyFrom;
+    } else{
+        if (![request.sourceBucketName oss_isNotEmpty]) {
+            NSError *error = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"sourceBucketName should not be empty!"}];
+            return [OSSTask taskWithError:error];
+        }
+        
+        if (![request.sourceObjectKey oss_isNotEmpty]) {
+            NSError *error = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"sourceObjectKey should not be empty!"}];
+            return [OSSTask taskWithError:error];
+        }
+        
+        copySourceHeader = [NSString stringWithFormat:@"/%@/%@",request.bucketName, request.sourceObjectKey.oss_urlEncodedString];
     }
+    [headerParams setObject:copySourceHeader forKey:@"x-oss-copy-source"];
+    
+    if (![request.bucketName oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"bucketName should not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    if (![request.objectKey oss_isNotEmpty]) {
+        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"objectKey should not be empty!"}];
+        return [OSSTask taskWithError:error];
+    }
+    
+    
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCopyObject];
     requestDelegate.allNeededMessage = [[OSSAllRequestNeededMessage alloc] initWithEndpoint:self.endpoint
                                                 httpMethod:@"PUT"
