@@ -281,6 +281,8 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error
 {
+    OSSLogVerbose(@"didCompleteWithError : %@:",error);
+    
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(sessionTask.taskIdentifier)];
     [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
 
@@ -299,7 +301,7 @@
         NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
         [NSDate oss_setClockSkew:skewTime];
     } else {
-        OSSLogError(@"date header does not exist, unable to adjust the time skew");
+        OSSLogDebug(@"date header does not exist, unable to adjust the time skew");
     }
 
     /* background upload task will not call back didRecieveResponse */
@@ -443,10 +445,11 @@
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
-    OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
-
     /* background upload task will not call back didRecieveResponse */
     OSSLogVerbose(@"did receive response: %@", response);
+    
+    OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
+    
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 && httpResponse.statusCode != 203) {
         [delegate.responseParser consumeHttpResponse:httpResponse];
@@ -458,6 +461,9 @@
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
+    
+    OSSLogVerbose(@"didReceiveData");
+    
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
 
     /* background upload task will not call back didRecieveResponse.
@@ -480,6 +486,7 @@
         [delegate.httpRequestNotSuccessResponseBody appendData:data];
     }
     else {
+        OSSLogVerbose(@"process body");
         if (delegate.onRecieveData) {
             delegate.onRecieveData(data);
         } else {
