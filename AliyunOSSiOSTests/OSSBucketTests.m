@@ -57,6 +57,24 @@
     [OSSTestUtils cleanBucket:bucket with:_client];
 }
 
+- (void)testAPI_getBucketInfo {
+    NSString *bucketName = @"oss-ios-get-bucket-info-test";
+    OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
+    req.bucketName = bucketName;
+    [[_client createBucket:req] waitUntilFinished];
+    
+    OSSGetBucketInfoRequest * request = [OSSGetBucketInfoRequest new];
+    request.bucketName = bucketName;
+    OSSTask * task = [_client getBucketInfo:request];
+    [[task continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        XCTAssertNotNil(task.result);
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:bucketName with:_client];
+}
+
 - (void)testAPI_getBucketACL
 {
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];

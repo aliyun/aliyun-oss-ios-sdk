@@ -24,6 +24,7 @@
 #import "OSSDeleteMultipleObjectsRequest.h"
 #import "OSSDeleteMultipleObjectsResult.h"
 #import "OSSGetBucketInfoRequest.h"
+#import "OSSGetBucketInfoResult.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"
