@@ -99,7 +99,8 @@
         (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
          && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
          && operType != OSSOperationTypeGetBucketACL&& operType != OSSOperationTypeDeleteMultipleObjects
-         && operType != OSSOperationTypeListMultipartUploads)) {
+         && operType != OSSOperationTypeListMultipartUploads
+         && operType != OSSOperationTypeGetBucketInfo)) {
             errorMessage = @"Object key should not be nil";
         }
     

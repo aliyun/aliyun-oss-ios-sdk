@@ -29,11 +29,12 @@
 @class OSSAppendObjectRequest;
 @class OSSResumableUploadRequest;
 @class OSSMultipartUploadRequest;
-@class OSSTask;
-@class OSSExecutor;
 @class OSSCallBackRequest;
 @class OSSImagePersistRequest;
+@class OSSGetBucketInfoRequest;
 
+@class OSSTask;
+@class OSSExecutor;
 @class OSSNetworking;
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
@@ -123,6 +124,12 @@ The corresponding RESTFul API: GetBucket
  Lists all objects in a bucket. It could be specified with filters such as prefix, marker, delimeter and max-keys.
  */
 - (OSSTask *)getBucket:(OSSGetBucketRequest *)request;
+
+/**
+ The corresponding RESTFul API: GetBucketInfo
+ Gets the {@link Bucket}'s basic information as well as its ACL.
+ */
+- (OSSTask *)getBucketInfo:(OSSGetBucketInfoRequest *)request;
 
 /**
 The corresponding RESTFul API: GetBucketACL
