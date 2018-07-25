@@ -281,6 +281,10 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error
 {
+    if (error) {
+        OSSLogError(@"%@,error: %@", NSStringFromSelector(_cmd), error);
+    }
+    
     OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(sessionTask.taskIdentifier)];
     [self.sessionDelagateManager removeObjectForKey:@(sessionTask.taskIdentifier)];
 
@@ -292,14 +296,17 @@
         return ;
     }
 
+    //Correct Clock Skew
     NSString * dateStr = [[httpResponse allHeaderFields] objectForKey:@"Date"];
-    if ([dateStr length]) {
+    if ([dateStr length] > 0) {
         NSDate * serverTime = [NSDate oss_dateFromString:dateStr];
         NSDate * deviceTime = [NSDate date];
         NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
         [NSDate oss_setClockSkew:skewTime];
     } else {
-        OSSLogError(@"date header does not exist, unable to adjust the time skew");
+        // The response header does not have the 'Date' field.
+        // This should not happen.
+        OSSLogError(@"Date header does not exist, unable to fix the clock skew");
     }
 
     /* background upload task will not call back didRecieveResponse */
@@ -443,10 +450,10 @@
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
-    OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
-
     /* background upload task will not call back didRecieveResponse */
-    OSSLogVerbose(@"did receive response: %@", response);
+    OSSLogVerbose(@"%@,response: %@", NSStringFromSelector(_cmd), response);
+    
+    OSSNetworkingRequestDelegate * delegate = [self.sessionDelagateManager objectForKey:@(dataTask.taskIdentifier)];
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 && httpResponse.statusCode != 203) {
         [delegate.responseParser consumeHttpResponse:httpResponse];
