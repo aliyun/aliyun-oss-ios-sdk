@@ -23,6 +23,9 @@
 #import "OSSGetObjectACLRequest.h"
 #import "OSSDeleteMultipleObjectsRequest.h"
 #import "OSSGetBucketInfoRequest.h"
+#import "OSSPutSymlinkRequest.h"
+#import "OSSGetSymlinkRequest.h"
+#import "OSSRestoreObjectRequest.h"
 
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
@@ -388,11 +391,16 @@ static NSObject *lock;
     
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCreateBucket];
     
+    NSString *bodyString = [NSString stringWithFormat:@"<?xml version='1.0' encoding='UTF-8'?><CreateBucketConfiguration><StorageClass>%@</StorageClass></CreateBucketConfiguration>", request.storageClassAsString];
+    requestDelegate.uploadingData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *md5String = [OSSUtil base64Md5ForData:requestDelegate.uploadingData];
+    
     OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
     neededMsg.endpoint = self.endpoint;
     neededMsg.httpMethod = OSSHTTPMethodPUT;
     neededMsg.bucketName = request.bucketName;
     neededMsg.headerParams = headerParams;
+    neededMsg.contentMd5 = md5String;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeCreateBucket;
@@ -767,6 +775,65 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeCopyObject;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putSymlink:(OSSPutSymlinkRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutSymlink];
+    
+    NSMutableDictionary *headerFields = [NSMutableDictionary dictionary];
+    [headerFields oss_setObject:[request.targetObjectName oss_urlEncodedString] forKey:OSSHttpHeaderSymlinkTarget];
+    if (request.objectMeta) {
+        [headerFields addEntriesFromDictionary:request.objectMeta];
+    }
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    neededMsg.headerParams = headerFields;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypePutSymlink;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getSymlink:(OSSGetSymlinkRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetSymlink];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetSymlink;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)restoreObject:(OSSRestoreObjectRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeRestoreObject];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPOST;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeRestoreObject;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }

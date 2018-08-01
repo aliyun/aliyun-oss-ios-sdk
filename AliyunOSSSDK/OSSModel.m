@@ -335,7 +335,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         OSSSubResourceARRAY = @[@"acl", @"uploadId", @"partNumber", @"uploads", @"logging", @"website", @"location",
-                                @"lifecycle", @"referer", @"cors", @"delete", @"append", @"position", @"security-token", @"x-oss-process", @"sequential",@"bucketInfo"];
+                                @"lifecycle", @"referer", @"cors", @"delete", @"append", @"position", @"security-token", @"x-oss-process", @"sequential",@"bucketInfo",@"symlink", @"restore"];
     });
     /****************************************************************/
 
@@ -550,6 +550,35 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @end
 
 @implementation OSSCreateBucketRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _storageClass = OSSBucketStorageClassStandard;
+    }
+    return self;
+}
+
+- (NSString *)storageClassAsString {
+    NSString *storageClassString = nil;
+    switch (_storageClass) {
+        case OSSBucketStorageClassStandard:
+            storageClassString = @"Standard";
+            break;
+        case OSSBucketStorageClassIA:
+            storageClassString = @"IA";
+            break;
+        case OSSBucketStorageClassArchive:
+            storageClassString = @"Archive";
+            break;
+        default:
+            storageClassString = @"Unknown";
+            break;
+    }
+    return storageClassString;
+}
+
 @end
 
 @implementation OSSCreateBucketResult

@@ -336,6 +336,11 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, copy) NSString * xOssACL;
 
+@property (nonatomic, assign) OSSBucketStorageClass storageClass;
+
+
+- (NSString *)storageClassAsString;
+
 @end
 
 /**

@@ -32,6 +32,9 @@
 @class OSSCallBackRequest;
 @class OSSImagePersistRequest;
 @class OSSGetBucketInfoRequest;
+@class OSSPutSymlinkRequest;
+@class OSSGetSymlinkRequest;
+@class OSSRestoreObjectRequest;
 
 @class OSSTask;
 @class OSSExecutor;
@@ -222,6 +225,22 @@ NS_ASSUME_NONNULL_BEGIN
  Deletes an object
  */
 - (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request;
+
+- (OSSTask *)putSymlink:(OSSPutSymlinkRequest *)request;
+
+- (OSSTask *)getSymlink:(OSSGetSymlinkRequest *)request;
+
+/**
+ Restores an archived copy of an object back into Aliyun OSS
+ 
+ @param request A container for the necessary parameters to execute the RestoreObject service method.
+ 
+ @return An instance of `OSSTask`. On successful execution, `task.result` will contain an instance of `OSSRestoreObjectResult`. for more information,please refer to `https://help.aliyun.com/document_detail/52930.html`.
+ 
+ @see OSSRestoreObjectRequest
+ @see OSSRestoreObjectResult
+ */
+- (OSSTask *)restoreObject:(OSSRestoreObjectRequest *)request;
 
 @end
 

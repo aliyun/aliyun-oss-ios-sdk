@@ -17,6 +17,9 @@
 #import "OSSGetObjectACLResult.h"
 #import "OSSDeleteMultipleObjectsResult.h"
 #import "OSSGetBucketInfoResult.h"
+#import "OSSRestoreObjectResult.h"
+#import "OSSPutSymlinkResult.h"
+#import "OSSGetSymlinkResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -619,6 +622,27 @@
                 [self parseResponseHeader:_response toResultObject:bucketInfoResult];
             }
             return bucketInfoResult;
+        }
+        case OSSOperationTypeRestoreObject: {
+            OSSRestoreObjectResult * restoreObjectResult = [OSSRestoreObjectResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:restoreObjectResult];
+            }
+            return restoreObjectResult;
+        }
+        case OSSOperationTypePutSymlink: {
+            OSSPutSymlinkResult * putSymlinkResult = [OSSPutSymlinkResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putSymlinkResult];
+            }
+            return putSymlinkResult;
+        }
+        case OSSOperationTypeGetSymlink: {
+            OSSGetSymlinkResult * getSymlinkResult = [OSSGetSymlinkResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getSymlinkResult];
+            }
+            return getSymlinkResult;
         }
         default: {
             OSSLogError(@"unknown operation type");

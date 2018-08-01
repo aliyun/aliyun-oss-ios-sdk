@@ -629,6 +629,142 @@
     [[NSFileManager defaultManager] removeItemAtPath:tmpFilePath error:nil];
 }
 
+- (void)testAPI_putSymlink {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[2]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = _publicBucketName;
+    putObjectRequest.objectKey = @"test-symlink-targetObjectName";
+    putObjectRequest.uploadingFileURL = fileURL;
+    putObjectRequest.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"test-symlink-target", @"x-oss-meta-name", nil];
+    
+    OSSTask * task = [_client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    
+    OSSPutSymlinkRequest * putSymlinkRequest = [OSSPutSymlinkRequest new];
+    putSymlinkRequest.bucketName = _publicBucketName;
+    putSymlinkRequest.objectKey = @"test-symlink-objectName";
+    putSymlinkRequest.targetObjectName = @"test-symlink-targetObjectName";
+    putSymlinkRequest.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"HONGKONG", @"x-oss-meta-location", nil];
+    
+    OSSTask * putSymlinktask = [_client putSymlink:putSymlinkRequest];
+    
+    [[putSymlinktask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetSymlinkRequest * getSymlinkRequest = [OSSGetSymlinkRequest new];
+    getSymlinkRequest.bucketName = _publicBucketName;
+    getSymlinkRequest.objectKey = @"test-symlink-objectName";
+    
+    OSSTask * getSymlinktask = [_client getSymlink:getSymlinkRequest];
+    
+    [[getSymlinktask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetSymlinkResult *result = (OSSGetSymlinkResult *)task.result;
+        NSString *targetObjectName = (NSString *)[result.httpResponseHeaderFields valueForKey:OSSHttpHeaderSymlinkTarget];
+        NSString *metaLocation = (NSString *)[result.httpResponseHeaderFields valueForKey:@"x-oss-meta-location"];
+        
+        XCTAssertTrue([targetObjectName isEqualToString:@"test-symlink-targetObjectName"]);
+        XCTAssertTrue([metaLocation isEqualToString:@"HONGKONG"]);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_getSymlink {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[2]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = _publicBucketName;
+    putObjectRequest.objectKey = @"test-symlink-targetObjectName";
+    putObjectRequest.uploadingFileURL = fileURL;
+    putObjectRequest.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"test-symlink-target", @"x-oss-meta-name", nil];
+    
+    OSSTask * task = [_client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    
+    OSSPutSymlinkRequest * putSymlinkRequest = [OSSPutSymlinkRequest new];
+    putSymlinkRequest.bucketName = _publicBucketName;
+    putSymlinkRequest.objectKey = @"test-symlink-objectName";
+    putSymlinkRequest.targetObjectName = @"test-symlink-targetObjectName";
+    putSymlinkRequest.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"HONGKONG", @"x-oss-meta-location", nil];
+    
+    OSSTask * putSymlinktask = [_client putSymlink:putSymlinkRequest];
+    
+    [[putSymlinktask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetSymlinkRequest * getSymlinkRequest = [OSSGetSymlinkRequest new];
+    getSymlinkRequest.bucketName = _publicBucketName;
+    getSymlinkRequest.objectKey = @"test-symlink-objectName";
+    
+    OSSTask * getSymlinktask = [_client getSymlink:getSymlinkRequest];
+    
+    [[getSymlinktask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSGetSymlinkResult *result = (OSSGetSymlinkResult *)task.result;
+        NSString *targetObjectName = (NSString *)[result.httpResponseHeaderFields valueForKey:OSSHttpHeaderSymlinkTarget];
+        NSString *metaLocation = (NSString *)[result.httpResponseHeaderFields valueForKey:@"x-oss-meta-location"];
+        
+        XCTAssertTrue([targetObjectName isEqualToString:@"test-symlink-targetObjectName"]);
+        XCTAssertTrue([metaLocation isEqualToString:@"HONGKONG"]);
+        
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_restoreObject {
+    NSString *bucketName = @"aliyun-oss-ios-restore-object-test";
+    NSString *objectName = @"test-restore-objectName";
+    
+    OSSCreateBucketRequest *createBucketRequest = [OSSCreateBucketRequest new];
+    createBucketRequest.bucketName = bucketName;
+    createBucketRequest.storageClass = OSSBucketStorageClassArchive;
+    [[_client createBucket:createBucketRequest] waitUntilFinished];
+    
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[2]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    OSSPutObjectRequest * putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectName;
+    putObjectRequest.uploadingFileURL = fileURL;
+    putObjectRequest.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:objectName, @"x-oss-meta-name", nil];
+    
+    OSSTask * task = [_client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    
+    OSSRestoreObjectRequest * restoreObjectRequest = [OSSRestoreObjectRequest new];
+    restoreObjectRequest.bucketName = bucketName;
+    restoreObjectRequest.objectKey = objectName;
+    
+    OSSTask * restoreObjecTtask = [_client restoreObject:restoreObjectRequest];
+    [[restoreObjecTtask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSRestoreObjectResult *result = (OSSRestoreObjectResult *)task.result;
+        XCTAssertEqual(result.httpResponseCode, 202);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSTask * restoreObjectTask1 = [_client restoreObject:restoreObjectRequest];
+    [[restoreObjectTask1 continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:bucketName with:_client];
+}
+
 #pragma mark - others
 
 - (void)testAPI_get_Bucket_list_Objects

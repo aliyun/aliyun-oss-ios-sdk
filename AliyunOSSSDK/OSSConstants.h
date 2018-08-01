@@ -65,7 +65,10 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeListMultipart,
     OSSOperationTypeListMultipartUploads,
     OSSOperationTypeTriggerCallBack,
-    OSSOperationTypeImagePersist
+    OSSOperationTypeImagePersist,
+    OSSOperationTypeRestoreObject,
+    OSSOperationTypePutSymlink,
+    OSSOperationTypeGetSymlink,
 };
 
 /**
@@ -99,6 +102,13 @@ typedef NS_ENUM(NSInteger, OSSXMLDictionaryNodeNameMode)
     OSSXMLDictionaryNodeNameModeRootOnly = 0, //default
     OSSXMLDictionaryNodeNameModeAlways,
     OSSXMLDictionaryNodeNameModeNever
+};
+
+typedef NS_ENUM(NSInteger, OSSBucketStorageClass)
+{
+    OSSBucketStorageClassStandard,
+    OSSBucketStorageClassIA,
+    OSSBucketStorageClassArchive
 };
 
 typedef NSString * OSSXMLDictionaryAttributeName NS_EXTENSIBLE_STRING_ENUM;

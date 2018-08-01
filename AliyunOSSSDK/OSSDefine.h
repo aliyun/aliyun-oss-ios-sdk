@@ -72,6 +72,7 @@
 #define OSSHttpHeaderBucketACL                  @"x-oss-acl"
 #define OSSHttpHeaderObjectACL                  @"x-oss-object-acl"
 #define OSSHttpHeaderCopySource                 @"x-oss-copy-source"
+#define OSSHttpHeaderSymlinkTarget              @"x-oss-symlink-target"
 
 #define OSSHttpQueryProcess                     @"x-oss-process"
 
