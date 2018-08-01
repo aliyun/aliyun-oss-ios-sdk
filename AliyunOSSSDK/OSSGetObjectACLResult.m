@@ -10,9 +10,4 @@
 
 @implementation OSSGetObjectACLResult
 
-- (NSString *)description
-{
-  return [NSString stringWithFormat:@"<OSSGetObjectACLResult: %p>: {\n\tcode: %zd;\n\tgrant:%@ \n}", self, self.httpResponseCode, _grant];
-}
-
 @end

@@ -104,6 +104,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (OSSTask *)getService:(OSSGetServiceRequest *)request;
 
+@end
+
+
+@interface OSSClient (Bucket)
+
 /**
  The corresponding RESTFul API: PutBucket
  Creates a bucket--it does not support anonymous access. By default, the datacenter used is oss-cn-hangzhou.
@@ -120,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (OSSTask *)deleteBucket:(OSSDeleteBucketRequest *)request;
 
 /**
-The corresponding RESTFul API: GetBucket
+ The corresponding RESTFul API: GetBucket
  Lists all objects in a bucket. It could be specified with filters such as prefix, marker, delimeter and max-keys.
  */
 - (OSSTask *)getBucket:(OSSGetBucketRequest *)request;
@@ -132,36 +137,36 @@ The corresponding RESTFul API: GetBucket
 - (OSSTask *)getBucketInfo:(OSSGetBucketInfoRequest *)request;
 
 /**
-The corresponding RESTFul API: GetBucketACL
+ The corresponding RESTFul API: GetBucketACL
  Gets the bucket ACL.
  */
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request;
 
+@end
+
+
+@interface OSSClient (Object)
+
 /**
-The corresponding RESTFul API: HeadObject
+ The corresponding RESTFul API: HeadObject
  Gets the object's metadata information. The object's content is not returned.
  */
 - (OSSTask *)headObject:(OSSHeadObjectRequest *)request;
 
 /**
-The corresponding RESTFul API: GetObject
+ The corresponding RESTFul API: GetObject
  Gets the whole object (includes content). It requires caller have read permission on the object.
  */
 - (OSSTask *)getObject:(OSSGetObjectRequest *)request;
 
 /**
- * Gets the Access Control List (ACL) of the OSS object.
- *
- * @param bucketName
- *            Bucket name.
- * @param key
- *            Object Key.
- * @return The OSSTask with result of objectAcls instance of the object.
+ The corresponding RESTFul API: GetObjectACL
+ get the acl of an object.
  */
 - (OSSTask *)getObjectACL:(OSSGetObjectACLRequest *)request;
 
 /**
-The corresponding RESTFul API: PutObject
+ The corresponding RESTFul API: PutObject
  Uploads a file.
  */
 - (OSSTask *)putObject:(OSSPutObjectRequest *)request;
@@ -174,22 +179,25 @@ The corresponding RESTFul API: PutObject
 - (OSSTask *)putObjectACL:(OSSPutObjectACLRequest *)request;
 
 /**
-The corresponding RESTFul API: AppendObject
- Appends data to an existing or non-existing object. The object created by this operation is appendable. 
+ The corresponding RESTFul API: AppendObject
+ Appends data to an existing or non-existing object. The object created by this operation is appendable.
  As a comparison, the object created by Put Object is normal (non-appendable).
  */
 - (OSSTask *)appendObject:(OSSAppendObjectRequest *)request;
 
 /**
- @brief : Appends data to an existing or non-existing object on the OSS server. The object created by this operation is appendable.
- request    : request
- crc64ecma  : 如果服务器上面已经存在对象,需要客户端先调用headObject获取到对象的crc64ecma,然后再调用
-              该接口上传数据
+ *  @brief      Appends data to an existing or non-existing object on the OSS server.
+ *              The object created by this operation is appendable.
+ *  @request    request
+ *  @crc64ecma  crc64ecma
+ *             if object has been stored on OSS server, you need to invoke headObject
+ *             api get object's crc64ecma,then use this api to append data to the
+ *             object.
  */
 - (OSSTask *)appendObject:(OSSAppendObjectRequest *)request withCrc64ecma:(nullable NSString *)crc64ecma;
 
 /**
-The corresponding RESTFul API: copyObject
+ The corresponding RESTFul API: copyObject
  Copies an existing object to another one.The operation sends a PUT request with x-oss-copy-source header to specify the source object.
  OSS server side will detect and copy the object. If it succeeds, the new object's metadata information will be returned.
  The operation applies for files less than 1GB. For big files, use UploadPartCopy RESTFul API.
@@ -200,7 +208,7 @@ The corresponding RESTFul API: copyObject
  * Batch deletes the specified files under a specific bucket. If the files
  * are non-exist, the operation will still return successful.
  *
- * @param deleteObjectsRequest
+ * @param request
  *            A OSSDeleteMultipleObjectsRequest instance which specifies the
  *            bucket and file keys to delete.
  * @return A OSSTask with result of OSSDeleteMultipleObjectsResult instance which specifies each
@@ -215,35 +223,39 @@ The corresponding RESTFul API: copyObject
  */
 - (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request;
 
+@end
+
+@interface OSSClient (MultipartUpload)
+
 /**
-The corresponding RESTFul API: InitiateMultipartUpload
- Initiates a multipart upload to get a upload Id. It's needed before starting uploading parts data. 
+ The corresponding RESTFul API: InitiateMultipartUpload
+ Initiates a multipart upload to get a upload Id. It's needed before starting uploading parts data.
  The upload Id is used for subsequential operations such as aborting the upload, querying the uploaded parts, etc.
  */
 - (OSSTask *)multipartUploadInit:(OSSInitMultipartUploadRequest *)request;
 
 /**
-The corresponding RESTFul API: UploadPart
+ The corresponding RESTFul API: UploadPart
  After the multipart upload is initiated, this API could be called to upload the data to the target file with the upload Id.
- Every uploaded part has a unique id called part number, which ranges from 1 to 10,000. 
- For a given upload Id, the part number identifies the specific range of the data in the whole file. 
- If the same part number is used for another upload, the existing data will be overwritten by the new upload. 
+ Every uploaded part has a unique id called part number, which ranges from 1 to 10,000.
+ For a given upload Id, the part number identifies the specific range of the data in the whole file.
+ If the same part number is used for another upload, the existing data will be overwritten by the new upload.
  Except the last part, all other part's minimal size is 100KB.
  But no minimal size requirement on the last part.
  */
 - (OSSTask *)uploadPart:(OSSUploadPartRequest *)request;
 
 /**
-The corresponding RESTFul API: CompleteMultipartUpload
+ The corresponding RESTFul API: CompleteMultipartUpload
  This API is to complete the multipart upload after all parts data have been uploaded.
- It must be provided with a valid part list (each part has the part number and ETag). 
+ It must be provided with a valid part list (each part has the part number and ETag).
  OSS will validate every part and then complete the multipart upload.
  If any part is invalid (e.g. the part is updated by another part upload), this API will fail.
  */
 - (OSSTask *)completeMultipartUpload:(OSSCompleteMultipartUploadRequest *)request;
 
 /**
-The corresponding RESTFul API: ListParts
+ The corresponding RESTFul API: ListParts
  Lists all uploaded parts of the specified upload id.
  */
 - (OSSTask *)listParts:(OSSListPartsRequest *)request;
@@ -255,18 +267,39 @@ The corresponding RESTFul API: ListParts
 - (OSSTask *)listMultipartUploads:(OSSListMultipartUploadsRequest *)request;
 
 /**
-The corresponding RESTFul API: AbortMultipartUpload
-Aborts the multipart upload by the specified upload Id.
+ The corresponding RESTFul API: AbortMultipartUpload
+ Aborts the multipart upload by the specified upload Id.
  Once the multipart upload is aborted by this API, all parts data will be deleted and the upload Id is invalid anymore.
  */
 - (OSSTask *)abortMultipartUpload:(OSSAbortMultipartUploadRequest *)request;
 
 - (OSSTask *)abortResumableMultipartUpload:(OSSResumableUploadRequest *)request;
 
-- (OSSTask *)triggerCallBack:(OSSCallBackRequest *)request;
+/**
+ Multipart upload API
+ */
+- (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request;
+/**
+ TODOTODO
+ Resumable upload API
+ This API wraps the multipart upload and also enables resuming upload by reading/writing  the checkpoint data.
+ For a new file, multipartUploadInit() needs to be called first to get the upload Id. Then use this upload id to call this API to upload the data.
+ If the upload fails, checks the error messages:
+ If it's a recoverable error, then call this API again with the same upload Id to retry. The uploaded data will not be uploaded again.
+ Otherwise then you may need to recreates a new upload Id and call this method again.
+ Check out demo for the detail.
+ */
+- (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request;
+
+/**
+ * multipart upload sequentially in order,support resume upload
+ */
+- (OSSTask *)sequentialMultipartUpload:(OSSResumableUploadRequest *)request;
+
+@end
 
 
-#pragma mark extention method
+@interface OSSClient (PresignURL)
 
 /**
  Generates a signed URL for the object and anyone has this URL will get the GET permission on the object.
@@ -275,15 +308,15 @@ Aborts the multipart upload by the specified upload Id.
  @interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
  */
 - (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
-                                withObjectKey:(NSString *)objectKey
-                       withExpirationInterval:(NSTimeInterval)interval;
+                                 withObjectKey:(NSString *)objectKey
+                        withExpirationInterval:(NSTimeInterval)interval;
 
 /**
  Generates a signed URL for the object and anyone has this URL will get the specified permission on the object.
  @bucketName object's bucket name
  @objectKey Object name
  @interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
- @parameter it could specify allowed HTTP methods 
+ @parameter it could specify allowed HTTP methods
  */
 - (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
                                  withObjectKey:(NSString *)objectKey
@@ -296,7 +329,7 @@ Aborts the multipart upload by the specified upload Id.
  @objectKey Object name
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                            withObjectKey:(NSString *)objectKey;
+                              withObjectKey:(NSString *)objectKey;
 
 /** TODOTODO
  If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
@@ -305,25 +338,24 @@ Aborts the multipart upload by the specified upload Id.
  @parameter the request parameters.
  */
 - (OSSTask *)presignPublicURLWithBucketName:(NSString *)bucketName
-                             withObjectKey:(NSString *)objectKey
+                              withObjectKey:(NSString *)objectKey
                              withParameters:(NSDictionary *)parameters;
 
-/**
- TODOTODO
- Multipart upload API
+@end
+
+
+@interface OSSClient (ImageService)
+
+/*
+ * image persist action
+ * https://help.aliyun.com/document_detail/55811.html
  */
-- (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request;
-/**
- TODOTODO
- Resumable upload API
- This API wraps the multipart upload and also enables resuming upload by reading/writing  the checkpoint data.
- For a new file, multipartUploadInit() needs to be called first to get the upload Id. Then use this upload id to call this API to upload the data.
- If the upload fails, checks the error messages:
-     If it's a recoverable error, then call this API again with the same upload Id to retry. The uploaded data will not be uploaded again.
-     Otherwise then you may need to recreates a new upload Id and call this method again.
- Check out demo for the detail.
- */
-- (OSSTask *)resumableUpload:(OSSResumableUploadRequest *)request;
+- (OSSTask *)imageActionPersist:(OSSImagePersistRequest *)request;
+
+@end
+
+
+@interface OSSClient (Utilities)
 
 /**
  Checks if the object exists
@@ -338,20 +370,13 @@ Aborts the multipart upload by the specified upload Id.
                       objectKey:(NSString *)objectKey
                           error:(const NSError **)error;
 
-/**
- * multipart upload sequentially in order,support resume upload
- */
-- (OSSTask *)sequentialMultipartUpload:(OSSResumableUploadRequest *)request;
-
-/*
- * image persist action
- * https://help.aliyun.com/document_detail/55811.html
- */
-- (OSSTask *)imageActionPersist:(OSSImagePersistRequest *)request;
-
 @end
 
 
+@interface OSSClient (Callback)
 
+- (OSSTask *)triggerCallBack:(OSSCallBackRequest *)request;
+
+@end
 
 NS_ASSUME_NONNULL_END

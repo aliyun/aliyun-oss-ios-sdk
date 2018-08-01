@@ -69,6 +69,11 @@
 #define OSSHttpHeaderCacheControl               @"Cache-Control"
 #define OSSHttpHeaderExpires                    @"Expires"
 #define OSSHttpHeaderHashSHA1                   @"x-oss-hash-sha1"
+#define OSSHttpHeaderBucketACL                  @"x-oss-acl"
+#define OSSHttpHeaderObjectACL                  @"x-oss-object-acl"
+#define OSSHttpHeaderCopySource                 @"x-oss-copy-source"
+
+#define OSSHttpQueryProcess                     @"x-oss-process"
 
 #define OSSDefaultRetryCount                    3
 #define OSSDefaultMaxConcurrentNum              5

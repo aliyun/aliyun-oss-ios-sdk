@@ -10,4 +10,8 @@
 
 @implementation OSSGetBucketInfoRequest
 
+- (NSDictionary *)requestParams {
+    return @{@"bucketInfo": @""};
+}
+
 @end

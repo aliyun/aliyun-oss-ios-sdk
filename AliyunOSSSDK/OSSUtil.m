@@ -1172,7 +1172,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
         @autoreleasepool{
             NSData* fileData = [handle readDataOfLength: CHUNK_SIZE];
             if(fileData.length == 0) {
-                done = YES;
                 break;
             }
             // Malloc a buffer to hold hash.

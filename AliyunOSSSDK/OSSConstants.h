@@ -109,4 +109,11 @@ OBJC_EXTERN OSSXMLDictionaryAttributeName const OSSXMLDictionaryTextKey;
 OBJC_EXTERN OSSXMLDictionaryAttributeName const OSSXMLDictionaryNodeNameKey;
 OBJC_EXTERN OSSXMLDictionaryAttributeName const OSSXMLDictionaryAttributePrefix;
 
+OBJC_EXTERN NSString * const OSSHTTPMethodHEAD;
+OBJC_EXTERN NSString * const OSSHTTPMethodGET;
+OBJC_EXTERN NSString * const OSSHTTPMethodPUT;
+OBJC_EXTERN NSString * const OSSHTTPMethodPOST;
+OBJC_EXTERN NSString * const OSSHTTPMethodDELETE;
+
+
 NS_ASSUME_NONNULL_END

@@ -34,3 +34,6 @@ doc/
 
 Pods/
 Products/
+
+# big Resource for test
+Example/AliyunOSSSDK-iOS-Example/Resources/

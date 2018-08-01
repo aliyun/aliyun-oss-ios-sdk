@@ -13,13 +13,10 @@
 #import "OSSUtil.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
-#import "NSMutableData+OSS_CRC.h"
 #import "OSSInputStreamHelper.h"
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
-
-
 
 @implementation OSSNetworkingConfiguration
 @end

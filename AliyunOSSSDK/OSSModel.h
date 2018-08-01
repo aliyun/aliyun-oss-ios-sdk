@@ -27,16 +27,6 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
 @end
 
 /**
- Categories NSDate
- */
-@interface NSDate (OSS)
-+ (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
-+ (NSDate *)oss_dateFromString:(NSString *)string;
-+ (NSDate *)oss_clockSkewFixedDate;
-- (NSString *)oss_asStringValue;
-@end
-
-/**
  A thread-safe dictionary
  */
 @interface OSSSyncMutableDictionary : NSObject
@@ -277,10 +267,6 @@ Sets the session Id for background file transmission
 @property (nonatomic, assign) int32_t maxKeys;
 
 
-/**
- Gets the query parameters' dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
 @end
 
 /**
@@ -415,10 +401,7 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, copy) NSString * prefix;
 
-/**
- Generates the query parameter dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
+
 @end
 
 /**
@@ -1235,11 +1218,6 @@ The result class of listing uploaded parts.
  The encoding type of the object in the response body.
  */
 @property (nonatomic, copy) NSString * encodingType;
-
-/**
- Generates the query parameter dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
 
 @end
 
