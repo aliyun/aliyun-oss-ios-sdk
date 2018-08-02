@@ -1418,6 +1418,39 @@ static NSObject *lock;
 
 - (OSSTask *)multipartUpload:(OSSMultipartUploadRequest *)request resumable:(BOOL)resumable sequential:(BOOL)sequential
 {
+    NSError *preCheckError;
+    if (!request.uploadingFileURL.fileURL) {
+        preCheckError = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:@{NSLocalizedDescriptionKey: @"the request's uploadingFileURL must be a file's URL!"}];
+    }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSError *readAttributeError;
+    NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:request.uploadingFileURL.path error:&readAttributeError];
+    
+    if (readAttributeError) {
+        preCheckError = [NSError errorWithDomain:OSSClientErrorDomain code:OSSClientErrorCodeInvalidArgument userInfo:readAttributeError.userInfo];
+    }
+    
+    if (preCheckError) {
+        return [OSSTask taskWithError: preCheckError];
+    }
+    
+    if (fileAttributes.fileSize <= 102400) {
+        OSSPutObjectRequest *putObjectRequest = [OSSPutObjectRequest new];
+        putObjectRequest.uploadingFileURL = request.uploadingFileURL;
+        putObjectRequest.bucketName = request.bucketName;
+        putObjectRequest.objectKey = request.objectKey;
+        putObjectRequest.uploadProgress = request.uploadProgress;
+        putObjectRequest.contentType = request.contentType;
+        putObjectRequest.callbackParam = request.callbackParam;
+        putObjectRequest.callbackVar = request.callbackVar;
+        putObjectRequest.objectMeta = request.completeMetaHeader;
+        putObjectRequest.contentSHA1 = request.contentSHA1;
+        
+        return [self putObject:putObjectRequest];
+    }
+    
     if (resumable) {
         if (![request isKindOfClass:[OSSResumableUploadRequest class]]) {
             NSError *typoError = [NSError errorWithDomain:OSSClientErrorDomain
