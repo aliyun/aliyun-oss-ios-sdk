@@ -21,7 +21,6 @@ Update Logs:
 2.add api which named getSymlink;
 3.add api which named restoreObect;
 4.support setting storageClass for createBucket api;
-5.optimize multipartUpload's logic(if a file's size is less than 100k,it will invoke putOjbect api to upload object and return the async task);
 
 2018/05/15
 - release 2.10.4
