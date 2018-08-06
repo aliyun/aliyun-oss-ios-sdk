@@ -28,6 +28,7 @@
     if (self = [super init]) {
         self.configuration = configuration;
         NSURLSessionConfiguration * conf = nil;
+        NSOperationQueue *delegateQueue = [NSOperationQueue new];
 
         if (configuration.enableBackgroundTransmitService) {
             conf = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.configuration.backgroundSessionIdentifier];
@@ -59,16 +60,16 @@
 
         _session = [NSURLSession sessionWithConfiguration:conf
                                                  delegate:self
-                                            delegateQueue:nil];
+                                            delegateQueue:delegateQueue];
 
         self.isUsingBackgroundSession = configuration.enableBackgroundTransmitService;
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
 
-        NSOperationQueue * taskQueue = [NSOperationQueue new];
+        NSOperationQueue * operationQueue = [NSOperationQueue new];
         if (configuration.maxConcurrentRequestCount > 0) {
-            taskQueue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
+            operationQueue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
         }
-        self.taskExecutor = [OSSExecutor executorWithOperationQueue:taskQueue];
+        self.taskExecutor = [OSSExecutor executorWithOperationQueue: operationQueue];
     }
     return self;
 }
