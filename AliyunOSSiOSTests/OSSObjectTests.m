@@ -17,6 +17,7 @@
     NSArray<NSString *> *_fileNames;
     NSString *_privateBucketName;
     NSString *_publicBucketName;
+    OSSClient *_specialClient;
 }
 
 @end
@@ -52,6 +53,11 @@
     _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
                                credentialProvider:authProv
                               clientConfiguration:config];
+    
+    _specialClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                                      credentialProvider:authProv
+                                     clientConfiguration:config];
+    
     [OSSLog enableLog];
     
     OSSCreateBucketRequest *createBucket1 = [OSSCreateBucketRequest new];
@@ -1649,6 +1655,39 @@
         
         return nil;
     }] waitUntilFinished];
+}
+
+- (void)testAPI_dataTaskAndUploadTaskSimultaneously {
+    [OSSTestUtils putTestDataWithKey:@"file10k" withClient:_client withBucket:_privateBucketName];
+    
+    OSSPutObjectRequest *putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = _privateBucketName;
+    putObjectRequest.objectKey = @"test-bucket";
+    putObjectRequest.uploadingFileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
+    
+    OSSHeadObjectRequest *headObjectRequest = [OSSHeadObjectRequest new];
+    headObjectRequest.bucketName = _privateBucketName;
+    headObjectRequest.objectKey = @"file10k";
+    
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    dispatch_group_enter(group);
+    
+    [[_specialClient putObject:putObjectRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        dispatch_group_leave(group);
+        return nil;
+    }];
+
+    [[_specialClient headObject:headObjectRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        dispatch_group_leave(group);
+        return nil;
+    }];
+
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+    
+    XCTAssertTrue(YES);
 }
 
 @end
