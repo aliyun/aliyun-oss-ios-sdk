@@ -259,9 +259,6 @@
         }
         OSSPutObjectResult * result = task.result;
         XCTAssertEqual(200, result.httpResponseCode);
-        NSLog(@"Result - requestId: %@, headerFields: %@",
-              result.requestId,
-              result.httpResponseHeaderFields);
         return nil;
     }] waitUntilFinished];
     
@@ -421,7 +418,6 @@
         XCTAssertNil(task.error);
         if (t.result != nil) {
             OSSGetObjectACLResult *result = (OSSGetObjectACLResult *)t.result;
-            NSLog(@"grant %@", result.grant);
             XCTAssertEqualObjects(result.grant, @"default");
         }
         
@@ -878,7 +874,6 @@
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(-404, task.error.code);
-        NSLog(@"404 error: %@", task.error);
         return nil;
     }] waitUntilFinished];
     
@@ -926,7 +921,6 @@
     [[headTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
         XCTAssertEqual(-404, task.error.code);
-        NSLog(@"404 error: %@", task.error);
         return nil;
     }] waitUntilFinished];
     
@@ -977,9 +971,8 @@
     NSURL * fileURL = [NSURL fileURLWithPath:filePath];
     NSError *readError;
     NSFileHandle * readFile = [NSFileHandle fileHandleForReadingFromURL:fileURL error:&readError];
-    if (readError) {
-        NSLog(@"readError: %@",readError);
-    }
+    
+    XCTAssertNil(readError);
     
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
     request.bucketName = _privateBucketName;
@@ -1096,7 +1089,7 @@
     request.contentMd5 = @"invliadmd5valuetotest";
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        // NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     
     OSSTask * task = [_client putObject:request];
@@ -1135,10 +1128,7 @@
         XCTAssertEqual(200, result.httpResponseCode);
         XCTAssertEqual(1024 * 1024, [result.downloadedData length]);
         XCTAssertEqualObjects(@"1048576", [result.objectMeta objectForKey:@"Content-Length"]);
-        NSLog(@"Result - requestId: %@, headerFields: %@, dataLength: %lu",
-              result.requestId,
-              result.httpResponseHeaderFields,
-              (unsigned long)[result.downloadedData length]);
+
         return nil;
     }] waitUntilFinished];
 }
@@ -1374,7 +1364,6 @@
         XCTAssertNotNil(task.error);
         XCTAssertTrue([OSSServerErrorDomain isEqualToString:task.error.domain]);
         XCTAssertEqual(-1 * 403, task.error.code);
-        NSLog(@"error: %@", task.error);
         return nil;
     }] waitUntilFinished];
 }
@@ -1394,7 +1383,6 @@
         XCTAssertNotNil(task.error);
         XCTAssertTrue([OSSClientErrorDomain isEqualToString:task.error.domain]);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
-        NSLog(@"ErrorMessage: %@", [task.error.userInfo objectForKey:OSSErrorMessageTOKEN]);
         return nil;
     }] waitUntilFinished];
 }
@@ -1414,7 +1402,6 @@
         XCTAssertNotNil(task.error);
         XCTAssertTrue([OSSClientErrorDomain isEqualToString:task.error.domain]);
         XCTAssertEqual(OSSClientErrorCodeInvalidArgument, task.error.code);
-        NSLog(@"ErrorMessage: %@", [task.error.userInfo objectForKey:OSSErrorMessageTOKEN]);
         return nil;
     }] waitUntilFinished];
 }
@@ -1447,7 +1434,6 @@
     task = [tempClient presignConstrainURLWithBucketName:_privateBucketName withObjectKey:@"file1m" withExpirationInterval:3600];
     [task waitUntilFinished];
      XCTAssertTrue([OSSClientErrorDomain isEqualToString:task.error.domain]);
-    NSLog(@"error: %@", task.error);
 }
 
 #pragma mark - cname
@@ -1536,8 +1522,6 @@
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
-        NSLog(@"Error: %@", task.error);
-        
         return nil;
     }] waitUntilFinished];
 }
@@ -1606,8 +1590,6 @@
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
-        NSLog(@"Error: %@", task.error);
-        
         return nil;
     }] waitUntilFinished];
 }
@@ -1645,7 +1627,6 @@
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
-        NSLog(@"Error: %@", task.error);
         
         return nil;
     }] waitUntilFinished];
@@ -1665,7 +1646,6 @@
     
     [[multipartTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
-        NSLog(@"Error: %@", task.error);
         
         return nil;
     }] waitUntilFinished];
