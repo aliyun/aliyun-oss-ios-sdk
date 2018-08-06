@@ -27,28 +27,22 @@
 - (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration {
     if (self = [super init]) {
         self.configuration = configuration;
-
-        NSOperationQueue * operationQueue = [NSOperationQueue new];
-        NSURLSessionConfiguration * dataSessionConfig = nil;
-        NSURLSessionConfiguration * uploadSessionConfig = nil;
+        NSURLSessionConfiguration * conf = nil;
 
         if (configuration.enableBackgroundTransmitService) {
-            uploadSessionConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.configuration.backgroundSessionIdentifier];
+            conf = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.configuration.backgroundSessionIdentifier];
         } else {
-            uploadSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+            conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         }
-        dataSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        conf.URLCache = nil;
 
         if (configuration.timeoutIntervalForRequest > 0) {
-            uploadSessionConfig.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
-            dataSessionConfig.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
+            conf.timeoutIntervalForRequest = configuration.timeoutIntervalForRequest;
         }
         if (configuration.timeoutIntervalForResource > 0) {
-            uploadSessionConfig.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
-            dataSessionConfig.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
+            conf.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
         }
-        dataSessionConfig.URLCache = nil;
-        uploadSessionConfig.URLCache = nil;
+        
         if (configuration.proxyHost && configuration.proxyPort) {
             // Create an NSURLSessionConfiguration that uses the proxy
             NSDictionary *proxyDict = @{
@@ -60,25 +54,21 @@
                                         (NSString *)kCFStreamPropertyHTTPSProxyHost : configuration.proxyHost,
                                         (NSString *)kCFStreamPropertyHTTPSProxyPort : configuration.proxyPort,
                                         };
-            dataSessionConfig.connectionProxyDictionary = proxyDict;
-            uploadSessionConfig.connectionProxyDictionary = proxyDict;
+            conf.connectionProxyDictionary = proxyDict;
         }
 
-        _dataSession = [NSURLSession sessionWithConfiguration:dataSessionConfig
+        _session = [NSURLSession sessionWithConfiguration:conf
                                                  delegate:self
-                                            delegateQueue:operationQueue];
-        _uploadFileSession = [NSURLSession sessionWithConfiguration:uploadSessionConfig
-                                                       delegate:self
-                                                  delegateQueue:operationQueue];
+                                            delegateQueue:nil];
 
         self.isUsingBackgroundSession = configuration.enableBackgroundTransmitService;
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
 
-        NSOperationQueue * queue = [NSOperationQueue new];
-        if (configuration.maxConcurrentRequestCount) {
-            queue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
+        NSOperationQueue * taskQueue = [NSOperationQueue new];
+        if (configuration.maxConcurrentRequestCount > 0) {
+            taskQueue.maxConcurrentOperationCount = configuration.maxConcurrentRequestCount;
         }
-        self.taskExecutor = [OSSExecutor executorWithOperationQueue:queue];
+        self.taskExecutor = [OSSExecutor executorWithOperationQueue:taskQueue];
     }
     return self;
 }
@@ -238,15 +228,13 @@
 
         if (requestDelegate.uploadingData) {
             [requestDelegate.internalRequest setHTTPBody:requestDelegate.uploadingData];
-            sessionTask = [_dataSession dataTaskWithRequest:requestDelegate.internalRequest];
+            sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
         } else if (requestDelegate.uploadingFileURL) {
-            sessionTask = [_uploadFileSession uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
+            sessionTask = [_session uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
 
-            if (self.isUsingBackgroundSession) {
-                requestDelegate.isBackgroundUploadFileTask = YES;
-            }
+                requestDelegate.isBackgroundUploadFileTask = self.isUsingBackgroundSession;
         } else { // not upload request
-            sessionTask = [_dataSession dataTaskWithRequest:requestDelegate.internalRequest];
+            sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
         }
 
         requestDelegate.currentSessionTask = sessionTask;

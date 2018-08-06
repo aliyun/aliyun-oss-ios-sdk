@@ -371,8 +371,7 @@ static NSObject *lock;
 }
 
 - (void)dealloc{
-    [self.networking.dataSession invalidateAndCancel];
-    [self.networking.uploadFileSession invalidateAndCancel];
+    [self.networking.session invalidateAndCancel];
 }
 
 @end
