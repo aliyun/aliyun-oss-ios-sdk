@@ -14,6 +14,14 @@ github address：https://github.com/aliyun/aliyun-oss-ios-sdk
 pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
+
+2018/08/02
+- release 2.11.0
+1.add api which named putSymlink;
+2.add api which named getSymlink;
+3.add api which named restoreObect;
+4.support setting storageClass for createBucket api;
+
 2018/05/15
 - release 2.10.4
 optimize CPU usage when using multipart to upload object to server.

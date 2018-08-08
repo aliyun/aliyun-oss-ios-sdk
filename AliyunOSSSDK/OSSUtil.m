@@ -301,7 +301,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             @"tagging", @"objectMeta", @"uploadId", @"partNumber", @"security-token", @"position", @"img", @"style",
             @"styleName", @"replication", @"replicationProgress", @"replicationLocation", @"cname", @"bucketInfo", @"comp",
             @"qos", @"live", @"status", @"vod", @"startTime", @"endTime", @"symlink", @"x-oss-process", @"response-content-type",
-            @"response-content-language", @"response-expires", @"response-cache-control", @"response-content-disposition", @"response-content-encoding"
+            @"response-content-language", @"response-expires", @"response-cache-control", @"response-content-disposition", @"response-content-encoding",@"restore"
             ];
     });
     /****************************************************************/
@@ -1172,7 +1172,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
         @autoreleasepool{
             NSData* fileData = [handle readDataOfLength: CHUNK_SIZE];
             if(fileData.length == 0) {
-                done = YES;
                 break;
             }
             // Malloc a buffer to hold hash.

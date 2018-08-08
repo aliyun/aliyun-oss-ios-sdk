@@ -33,4 +33,9 @@
  */
 - (void)cancel;
 
+/**
+ Gets the query parameters' dictionary according to the properties.
+ */
+- (NSDictionary *)requestParams;
+
 @end

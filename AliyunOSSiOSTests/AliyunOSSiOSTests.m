@@ -440,7 +440,7 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
-    NSString * docDir = [NSString oss_documentDirectory];
+    
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
     

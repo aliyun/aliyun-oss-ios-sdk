@@ -34,4 +34,8 @@
     }
 }
 
+- (NSDictionary *)requestParams {
+    return nil;
+}
+
 @end

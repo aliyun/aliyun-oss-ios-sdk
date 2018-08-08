@@ -92,10 +92,10 @@
     }
     
     // join query string
-    if (self.allNeededMessage.querys) {
+    if (self.allNeededMessage.params) {
         NSMutableArray * querys = [[NSMutableArray alloc] init];
-        for (NSString * key in [self.allNeededMessage.querys allKeys]) {
-            NSString * value = [self.allNeededMessage.querys objectForKey:key];
+        for (NSString * key in [self.allNeededMessage.params allKeys]) {
+            NSString * value = [self.allNeededMessage.params objectForKey:key];
             if (value) {
                 if ([value isEqualToString:@""]) {
                     [querys addObject:URLENCODE(key)];
