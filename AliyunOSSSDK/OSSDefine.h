@@ -16,7 +16,7 @@
 #elif TARGET_OS_OSX
 #define OSSUAPrefix                             @"aliyun-sdk-mac"
 #endif
-#define OSSSDKVersion                           @"2.10.4"
+#define OSSSDKVersion                           @"2.11.0"
 
 #define OSSListBucketResultXMLTOKEN             @"ListBucketResult"
 #define OSSNameXMLTOKEN                         @"Name"
@@ -69,6 +69,12 @@
 #define OSSHttpHeaderCacheControl               @"Cache-Control"
 #define OSSHttpHeaderExpires                    @"Expires"
 #define OSSHttpHeaderHashSHA1                   @"x-oss-hash-sha1"
+#define OSSHttpHeaderBucketACL                  @"x-oss-acl"
+#define OSSHttpHeaderObjectACL                  @"x-oss-object-acl"
+#define OSSHttpHeaderCopySource                 @"x-oss-copy-source"
+#define OSSHttpHeaderSymlinkTarget              @"x-oss-symlink-target"
+
+#define OSSHttpQueryProcess                     @"x-oss-process"
 
 #define OSSDefaultRetryCount                    3
 #define OSSDefaultMaxConcurrentNum              5

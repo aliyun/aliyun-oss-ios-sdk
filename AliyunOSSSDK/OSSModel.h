@@ -27,16 +27,6 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
 @end
 
 /**
- Categories NSDate
- */
-@interface NSDate (OSS)
-+ (void)oss_setClockSkew:(NSTimeInterval)clockSkew;
-+ (NSDate *)oss_dateFromString:(NSString *)string;
-+ (NSDate *)oss_clockSkewFixedDate;
-- (NSString *)oss_asStringValue;
-@end
-
-/**
  A thread-safe dictionary
  */
 @interface OSSSyncMutableDictionary : NSObject
@@ -277,10 +267,6 @@ Sets the session Id for background file transmission
 @property (nonatomic, assign) int32_t maxKeys;
 
 
-/**
- Gets the query parameters' dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
 @end
 
 /**
@@ -350,6 +336,11 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, copy) NSString * xOssACL;
 
+@property (nonatomic, assign) OSSBucketStorageClass storageClass;
+
+
+- (NSString *)storageClassAsString;
+
 @end
 
 /**
@@ -415,10 +406,7 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, copy) NSString * prefix;
 
-/**
- Generates the query parameter dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
+
 @end
 
 /**
@@ -855,9 +843,13 @@ It's the MD5 value for put object request. If the object is created by other API
 @property (nonatomic, copy) NSString * objectKey;
 
 /**
- Source object's address (the caller needs the read permission on this object)
+ * Source object's address (the caller needs the read permission on this object)
  */
-@property (nonatomic, copy) NSString * sourceCopyFrom;
+@property (nonatomic, copy) NSString * sourceCopyFrom DEPRECATED_MSG_ATTRIBUTE("please use sourceBucketName & sourceObjectKey instead!it will be removed in next version.");
+
+@property (nonatomic, copy) NSString * sourceBucketName;
+
+@property (nonatomic, copy) NSString * sourceObjectKey;
 
 /**
  The content type
@@ -1231,11 +1223,6 @@ The result class of listing uploaded parts.
  The encoding type of the object in the response body.
  */
 @property (nonatomic, copy) NSString * encodingType;
-
-/**
- Generates the query parameter dictionary according to the properties.
- */
-- (NSMutableDictionary *)getQueryDict;
 
 @end
 

@@ -16,6 +16,10 @@
 #import "OSSLog.h"
 #import "OSSGetObjectACLResult.h"
 #import "OSSDeleteMultipleObjectsResult.h"
+#import "OSSGetBucketInfoResult.h"
+#import "OSSRestoreObjectResult.h"
+#import "OSSPutSymlinkResult.h"
+#import "OSSGetSymlinkResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -585,6 +589,60 @@
                 [self parseResponseHeader:_response toResultObject:imagePersistResult];
             }
             return imagePersistResult;
+        }
+        case OSSOperationTypeGetBucketInfo: {
+            OSSGetBucketInfoResult *bucketInfoResult = [[OSSGetBucketInfoResult alloc] init];
+            if (_collectingData)
+            {
+                NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                if ([parseDict valueForKey:@"Bucket"])
+                {
+                    NSDictionary *result = [parseDict valueForKey:@"Bucket"];
+                    OSSLogVerbose(@"Get bucketInfo dict: %@", parseDict);
+                    bucketInfoResult.bucketName = [result valueForKey:@"Name"];
+                    bucketInfoResult.storageClass = [result valueForKey:@"StorageClass"];
+                    bucketInfoResult.location = [result valueForKey:@"Location"];
+                    bucketInfoResult.intranetEndpoint = [result valueForKey:@"IntranetEndpoint"];
+                    bucketInfoResult.extranetEndpoint = [result valueForKey:@"ExtranetEndpoint"];
+                    bucketInfoResult.creationDate = [result valueForKey:@"CreationDate"];
+                    
+                    if ([result valueForKey:@"Owner"]) {
+                        bucketInfoResult.owner = [[OSSBucketOwner alloc] init];
+                        bucketInfoResult.owner.userName = [[result valueForKey:@"Owner"] valueForKey:@"DisplayName"];
+                        bucketInfoResult.owner.userId = [[result valueForKey:@"Owner"] valueForKey:@"ID"];
+                    }
+                    
+                    if ([result valueForKey:@"AccessControlList"]) {
+                        bucketInfoResult.acl = [OSSAccessControlList new];
+                        bucketInfoResult.acl.grant = [[result valueForKey:@"AccessControlList"] valueForKey:@"Grant"];
+                    }
+                }
+            }
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:bucketInfoResult];
+            }
+            return bucketInfoResult;
+        }
+        case OSSOperationTypeRestoreObject: {
+            OSSRestoreObjectResult * restoreObjectResult = [OSSRestoreObjectResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:restoreObjectResult];
+            }
+            return restoreObjectResult;
+        }
+        case OSSOperationTypePutSymlink: {
+            OSSPutSymlinkResult * putSymlinkResult = [OSSPutSymlinkResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putSymlinkResult];
+            }
+            return putSymlinkResult;
+        }
+        case OSSOperationTypeGetSymlink: {
+            OSSGetSymlinkResult * getSymlinkResult = [OSSGetSymlinkResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getSymlinkResult];
+            }
+            return getSymlinkResult;
         }
         default: {
             OSSLogError(@"unknown operation type");
