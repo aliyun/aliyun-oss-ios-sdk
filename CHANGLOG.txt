@@ -16,7 +16,7 @@ pod dependency：   pod 'AliyunOSSiOS'
 Update Logs:
 
 2018/08/02
-- release 2.11.0
+- release 2.10.5
 1.add api which named putSymlink;
 2.add api which named getSymlink;
 3.add api which named restoreObect;
