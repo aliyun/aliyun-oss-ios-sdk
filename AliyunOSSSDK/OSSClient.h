@@ -226,19 +226,49 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (OSSTask *)deleteObject:(OSSDeleteObjectRequest *)request;
 
+/**
+ * Creates a symbol link to a target file under the bucket---this is not
+ * supported for archive class bucket.
+ *
+ * @param request
+ *            A OSSPutSymlinkRequest instance that specifies the
+ *            bucket name, symlink name.
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSPutSymlinkResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/45126.html
+ */
 - (OSSTask *)putSymlink:(OSSPutSymlinkRequest *)request;
 
+/**
+ * Gets the symlink information for the given symlink name.
+ *
+ * @param request
+ *            A OSSGetSymlinkRequest instance which specifies the bucket
+ *            name and symlink name.
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSGetSymlinkResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/45146.html
+ */
 - (OSSTask *)getSymlink:(OSSGetSymlinkRequest *)request;
 
 /**
- Restores an archived copy of an object back into Aliyun OSS
- 
- @param request A container for the necessary parameters to execute the RestoreObject service method.
- 
- @return An instance of `OSSTask`. On successful execution, `task.result` will contain an instance of `OSSRestoreObjectResult`. for more information,please refer to `https://help.aliyun.com/document_detail/52930.html`.
- 
- @see OSSRestoreObjectRequest
- @see OSSRestoreObjectResult
+ * Restores the object of archive storage. The function is not applicable to
+ * Normal or IA storage. The restoreObject() needs to be called prior to
+ * calling getObject() on an archive object.
+ *
+ * @param request
+ *          A container for the necessary parameters to execute the RestoreObject
+ *          service method.
+ *
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSRestoreObjectResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/52930.html
  */
 - (OSSTask *)restoreObject:(OSSRestoreObjectRequest *)request;
 
