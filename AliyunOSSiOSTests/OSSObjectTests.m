@@ -1690,4 +1690,59 @@
     XCTAssertTrue(YES);
 }
 
+- (void)testAPI_multipartUploadWithFileSizeLessThan100k {
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file10k"];
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.bucketName = _privateBucketName;
+    request.objectKey = @"file10k";
+    
+    OSSTask *task = [_client multipartUpload:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+}
+
+- (void)testAPI_multipartUploadWithPartSizeLessThan100k {
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    request.uploadingFileURL = fileURL;
+    request.partSize = 51200;
+    request.bucketName = _privateBucketName;
+    request.objectKey = @"test-part-size-less-than-100k";
+    
+    OSSTask *task = [_client multipartUpload:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNotNil(task.error);
+}
+
+- (void)testAPI_multipartUploadWithFileAndPartSizeLessThan100k {
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file10k"];
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.partSize = 51200;
+    request.bucketName = _privateBucketName;
+    request.objectKey = @"test-part-size-less-than-100k";
+    
+    OSSTask *task = [_client multipartUpload:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+}
+
+- (void)testAPI_multipartUploadWithPartSizeEqualToZero {
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"file10k"];
+    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    request.partSize = 0;
+    request.bucketName = _privateBucketName;
+    request.objectKey = @"test-part-size-less-than-100k";
+    
+    OSSTask *task = [_client multipartUpload:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNotNil(task.error);
+}
+
 @end

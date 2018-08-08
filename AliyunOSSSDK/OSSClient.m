@@ -233,7 +233,9 @@ static NSObject *lock;
 - (OSSTask *)checkPartSizeForRequest:(OSSMultipartUploadRequest *)request
 {
     OSSTask *errorTask = nil;
-    if (request.partSize < 100 * 1024) {
+    unsigned long long fileSize = [self getSizeWithFilePath:request.uploadingFileURL.path error:nil];
+    
+    if (request.partSize == 0 || (fileSize > 102400 && request.partSize < 102400)) {
         NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
                                              code:OSSClientErrorCodeInvalidArgument
                                          userInfo:@{OSSErrorMessageTOKEN: @"Part size must be greater than equal to 100KB"}];
@@ -1457,6 +1459,13 @@ static NSObject *lock;
         }
         
         NSUInteger partCount = [self judgePartSizeForMultipartRequest:request fileSize:uploadFileSize];
+        
+        if (partCount > 1 && request.partSize < 102400) {
+            NSError *checkPartSizeError = [NSError errorWithDomain:OSSClientErrorDomain
+                                                 code:OSSClientErrorCodeInvalidArgument
+                                             userInfo:@{OSSErrorMessageTOKEN: @"Part size must be greater than equal to 100KB"}];
+            return [OSSTask taskWithError:checkPartSizeError];
+        }
         
         if (request.isCancelled) {
             return [OSSTask taskWithError:[OSSClient cancelError]];
