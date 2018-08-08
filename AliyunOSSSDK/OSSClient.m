@@ -48,7 +48,7 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 - (void)checkRequestCrc64Setting:(OSSRequest *)request;
 - (OSSTask *)checkNecessaryParamsOfRequest:(OSSMultipartUploadRequest *)request;
 - (OSSTask *)checkPartSizeForRequest:(OSSMultipartUploadRequest *)request;
-- (NSInteger)judgePartSizeForMultipartRequest:(OSSMultipartUploadRequest *)request fileSize:(int64_t)fileSize;
+- (NSUInteger)judgePartSizeForMultipartRequest:(OSSMultipartUploadRequest *)request fileSize:(unsigned long long)fileSize;
 - (unsigned long long)getSizeWithFilePath:(nonnull NSString *)filePath error:(NSError **)error;
 - (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential;
 - (NSMutableDictionary *)localPartInfosDictoryWithUploadId:(NSString *)uploadId;
@@ -242,10 +242,12 @@ static NSObject *lock;
     return errorTask;
 }
 
-- (NSInteger)judgePartSizeForMultipartRequest:(OSSMultipartUploadRequest *)request fileSize:(int64_t)fileSize
+- (NSUInteger)judgePartSizeForMultipartRequest:(OSSMultipartUploadRequest *)request fileSize:(unsigned long long)fileSize
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
     BOOL divisible = (fileSize % request.partSize == 0);
-    NSInteger partCount = (fileSize / request.partSize) + (divisible? 0 : 1);
+    NSUInteger partCount = (fileSize / request.partSize) + (divisible? 0 : 1);
     
     if(partCount > oss_multipart_max_part_number)
     {
@@ -253,14 +255,14 @@ static NSObject *lock;
         partCount = oss_multipart_max_part_number;
     }
     return partCount;
+#pragma clang diagnostic pop
 }
 
 - (unsigned long long)getSizeWithFilePath:(nonnull NSString *)filePath error:(NSError **)error
 {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSDictionary *attributes = [fm attributesOfItemAtPath:filePath error:error];
-    NSNumber *fileSizeNumber = attributes[NSFileSize];
-    return [fileSizeNumber unsignedLongLongValue];
+    return attributes.fileSize;
 }
 
 - (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential
@@ -1158,7 +1160,7 @@ static NSObject *lock;
     return [self multipartUpload: request resumable: YES sequential: NO];
 }
 
-- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(NSUInteger)totalSize partSize:(NSUInteger)partSize
+- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(unsigned long long)totalSize partSize:(NSUInteger)partSize
 {
     BOOL isTruncated = NO;
     int nextPartNumberMarker = 0;
@@ -1316,7 +1318,10 @@ static NSObject *lock;
         }
         
         if (idx == partCout) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
             realPartLength = uploadFileSize - request.partSize * (idx - 1);
+#pragma clang diagnostic pop
         }
         @autoreleasepool
         {
@@ -1355,7 +1360,10 @@ static NSObject *lock;
     OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
     uploadPart.bucketName = request.bucketName;
     uploadPart.objectkey = request.objectKey;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
     uploadPart.partNumber = idx;
+#pragma clang diagnostic pop
     uploadPart.uploadId = request.uploadId;
     uploadPart.uploadPartData = partData;
     uploadPart.contentMd5 = [OSSUtil base64Md5ForData:partData];
@@ -1370,7 +1378,10 @@ static NSObject *lock;
     } else {
         OSSUploadPartResult * result = uploadPartTask.result;
         OSSPartInfo * partInfo = [OSSPartInfo new];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
         partInfo.partNum = idx;
+#pragma clang diagnostic pop
         partInfo.eTag = result.eTag;
         partInfo.size = bytesSent;
         uint64_t crc64OfPart;
@@ -1611,7 +1622,10 @@ static NSObject *lock;
             {
                 uint64_t partCrc64 = uploadedPartInfos[index].crc64;
                 int64_t partSize = uploadedPartInfos[index].size;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
                 local_crc64 = [OSSUtil crc64ForCombineCRC1:local_crc64 CRC2:partCrc64 length:partSize];
+#pragma clang diagnostic pop
             }
         }
         return [self processCompleteMultipartUpload:request
@@ -1649,7 +1663,7 @@ static NSObject *lock;
     }
     
     NSData * uploadPartData;
-    NSInteger realPartLength = request.partSize;
+    NSUInteger realPartLength = request.partSize;
     
     for (int i = 1; i <= partCout; i++) {
         realPartLength = request.partSize;
@@ -1665,7 +1679,10 @@ static NSObject *lock;
             }
             [fileHande seekToFileOffset:request.partSize * (i - 1)];
             if (i == partCout) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
                 realPartLength = uploadFileSize - request.partSize * (i - 1);
+#pragma clang diagnostic pop
             }
             uploadPartData = [fileHande readDataOfLength:realPartLength];
             
