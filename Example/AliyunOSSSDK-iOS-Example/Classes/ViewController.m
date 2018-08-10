@@ -12,14 +12,17 @@
 #import "OSSConstants.h"
 #import <AliyunOSSiOS/OSSService.h>
 #import "OSSTestMacros.h"
+#import "DownloadService.h"
 
 @interface ViewController ()
 {
     OssService * service;
     OssService * imageService;
+    DownloadService *downloadService;
     ImageService * imageOperation;
     NSString * uploadFilePath;
     int originConstraintValue;
+    NSString *etag;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewBottom;
@@ -48,6 +51,8 @@
 - (IBAction)onOssButtonResize:(UIButton *)sender;
 - (IBAction)onOssButtonWatermark:(UIButton *)sender;
 
+@property (nonatomic, strong) DownloadRequest *downloadRequest;
+
 @end
 
 @implementation ViewController
@@ -60,6 +65,8 @@
     [service setCallbackAddress:callbackAddress];
     imageService = [[OssService alloc] initWithViewController:self withEndPoint:imageEndPoint];
     imageOperation = [[ImageService alloc] initImageService:imageService];
+    
+    downloadService = [[DownloadService alloc] init];
     
     [OSSLog enableLog];
 }
@@ -261,4 +268,43 @@
     [service triggerCallback];
 }
 
+- (IBAction)resumeDownloadClicked:(id)sender {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (_downloadRequest) {
+            [_downloadRequest cancel];
+            _downloadRequest = nil;
+            return;
+        }
+        _downloadRequest = [DownloadRequest new];
+        _downloadRequest.bucketName = OSS_BUCKET_PUBLIC;
+        _downloadRequest.objectName = @"测试文件";
+        _downloadRequest.downloadProgress = ^(NSProgress *progress) {
+            NSLog(@"download Progress is %@", progress);
+        };
+        
+        NSMutableDictionary *header = [NSMutableDictionary dictionary];
+        [header oss_setObject:etag forKey:@"If-Match"];
+        _downloadRequest.headers = header;
+        
+        NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        _downloadRequest.downloadFilePath = [documentPath stringByAppendingPathComponent:@"下载文件"];
+        
+        OSSTask *task = [downloadService downloadObject:_downloadRequest];
+        [task waitUntilFinished];
+        
+        if (task.error) {
+            NSError *taskError = task.error;
+            etag = taskError.userInfo[@"etag"];
+            NSLog(@"%@", task.error);
+            if (taskError.code == 412) {
+                NSLog(@"服务器上的文件已经发生变化,删除本地缓存的临时文件,需要重新发起网络请求");
+            }
+        } else {
+            NSLog(@"%@", task.result);
+            etag = nil;
+            _downloadRequest = nil;
+        }
+    });
+}
 @end

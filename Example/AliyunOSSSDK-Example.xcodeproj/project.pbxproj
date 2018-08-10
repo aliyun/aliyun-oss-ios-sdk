@@ -15,6 +15,8 @@
 		4C7B5BEA2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D810A00A2092F76900425D19 /* OSSUtilsTests.m */; };
+		D8125E91211BCC4C00DB687C /* DownloadService.m in Sources */ = {isa = PBXBuildFile; fileRef = D8125E90211BCC4C00DB687C /* DownloadService.m */; };
+		D8125E96211DAFA500DB687C /* OSSClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8125E95211DAFA500DB687C /* OSSClientTests.m */; };
 		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
 		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
 		D827E4151FCD0FC60085380C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D827E4141FCD0FC60085380C /* Assets.xcassets */; };
@@ -108,6 +110,9 @@
 		4C7B5BE42041680300FDD612 /* hasky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hasky.jpeg; sourceTree = "<group>"; };
 		4C7B5BE82043A15100FDD612 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D810A00A2092F76900425D19 /* OSSUtilsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSUtilsTests.m; sourceTree = "<group>"; };
+		D8125E8F211BCC4C00DB687C /* DownloadService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadService.h; sourceTree = "<group>"; };
+		D8125E90211BCC4C00DB687C /* DownloadService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadService.m; sourceTree = "<group>"; };
+		D8125E95211DAFA500DB687C /* OSSClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSClientTests.m; sourceTree = "<group>"; };
 		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D827E40F1FCD0FC60085380C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -256,6 +261,8 @@
 				D83D58C91FC6B3100022761B /* OssService.m */,
 				D83D58CA1FC6B3100022761B /* ImageService.h */,
 				D83D58CB1FC6B3100022761B /* OssService.h */,
+				D8125E8F211BCC4C00DB687C /* DownloadService.h */,
+				D8125E90211BCC4C00DB687C /* DownloadService.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -358,6 +365,7 @@
 				4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */,
 				D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */,
 				D810A00A2092F76900425D19 /* OSSUtilsTests.m */,
+				D8125E95211DAFA500DB687C /* OSSClientTests.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -528,6 +536,7 @@
 				D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */,
 				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
 				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
+				D8125E91211BCC4C00DB687C /* DownloadService.m in Sources */,
 				D83D58E21FC6B61F0022761B /* main.m in Sources */,
 				D83D58CE1FC6B3100022761B /* ViewController.m in Sources */,
 			);
@@ -537,6 +546,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8125E96211DAFA500DB687C /* OSSClientTests.m in Sources */,
 				D852773B2010439A00D7B1DE /* SequentialMultipartUploadTests.m in Sources */,
 				D87183C61FC572C6000DD9EC /* OSSExecutorTests.m in Sources */,
 				D87183C71FC572C6000DD9EC /* OSSXMLDictionaryTests.m in Sources */,

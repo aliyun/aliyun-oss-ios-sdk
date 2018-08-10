@@ -545,6 +545,7 @@ static NSObject *lock;
     neededMsg.objectKey = request.objectKey;
     neededMsg.range = rangeString;
     neededMsg.params = params;
+    neededMsg.headerParams = request.headerFields;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObject;
