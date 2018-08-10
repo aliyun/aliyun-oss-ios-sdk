@@ -15,6 +15,7 @@
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"
+#import "OSSIPv6Adapter.h"
 
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
@@ -80,9 +81,24 @@ static NSObject *lock;
         // using for resumable upload and compat old interface
         queue.maxConcurrentOperationCount = 3;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
+        
+        if (![endpoint oss_isNotEmpty]) {
+            [NSException raise:NSInvalidArgumentException
+                        format:@"endpoint should not be nil or empty!"];
+        }
+        
         if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
             endpoint = [@"https://" stringByAppendingString:endpoint];
         }
+        
+        NSURL *endpointURL = [NSURL URLWithString:endpoint];
+        if ([endpointURL.scheme.lowercaseString isEqualToString:@"https"]) {
+            if ([[OSSIPv6Adapter getInstance] isIPv4Address: endpointURL.host] || [[OSSIPv6Adapter getInstance] isIPv6Address: endpointURL.host]) {
+                [NSException raise:NSInvalidArgumentException
+                            format:@"unsupported format of endpoint, please use right endpoint format!"];
+            }
+        }
+        
         self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;
         self.clientConfiguration = conf;
