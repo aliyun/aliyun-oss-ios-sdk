@@ -15,6 +15,7 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
 
 @property (nonatomic, strong) NSURLSessionTask *internalTask;
 @property (nonatomic, copy) OnReceiveData onReceiveData;
+@property (nonatomic, copy) DownloadProgressBlock downloadProgress;
 @property (nonatomic, copy) NSString *downloadFilePath;
 @property (nonatomic, strong) OSSTaskCompletionSource *taskCompletionSource;
 @property (nonatomic, assign) BOOL isDownloadTask;
@@ -24,6 +25,7 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
 @property (nonatomic, copy) NSString *etag;
 @property (nonatomic, copy) NSString *crc64String;
 @property (nonatomic, copy) NSString *contentMD5;
+@property (nonatomic, assign) unsigned long long totalSize;
 @property (nonatomic, copy) DownloadManagerCompleteBlock completeHandler;
 @property (nonatomic, assign) BOOL statusCodeCheckSuccess;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
@@ -81,8 +83,8 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
         
         _session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:processQueue];
         
-        OSSAuthCredentialProvider *provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
-        _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
+        OSSPlainTextAKSKPairCredentialProvider *credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
+        _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credential];
         
         NSOperationQueue *executorQueue = [NSOperationQueue new];
         _executor = [OSSExecutor executorWithOperationQueue:executorQueue];
@@ -105,6 +107,7 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
     return [[OSSTask taskWithResult:nil] continueWithExecutor:self.executor withBlock:^id _Nullable(OSSTask * _Nonnull task) {
         RequestDelegate *requestDelegate = [[RequestDelegate alloc] init];
         requestDelegate.onReceiveData = request.onReceiveData;
+        requestDelegate.downloadProgress = request.downloadProgress;
         requestDelegate.downloadFilePath = request.downloadFilePath;
         requestDelegate.taskCompletionSource = [OSSTaskCompletionSource taskCompletionSource];
         requestDelegate.isDownloadTask = YES;
@@ -141,6 +144,8 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
         if (requestDelegate.totalByteReceived > 0) {
             [internalRequest setValue:[NSString stringWithFormat:@"bytes=%lld-", requestDelegate.totalByteReceived] forHTTPHeaderField:@"Range"];
         }
+        
+        [requestDelegate.fileHandle seekToFileOffset:requestDelegate.totalByteReceived];
         
         requestDelegate.internalTask = [self.session dataTaskWithRequest:internalRequest];
         
@@ -211,12 +216,15 @@ didCompleteWithError:(nullable NSError *)error {
         if (httpResponse.statusCode == 200) {
             requestDelegate.etag = [[httpResponse allHeaderFields] objectForKey:@"Etag"];
             requestDelegate.contentMD5 = [[httpResponse allHeaderFields] objectForKey:@"Content-MD5"];
+            NSString *contentLength = (NSString *)[[httpResponse allHeaderFields] objectForKey:@"Content-Length"];
+            requestDelegate.totalSize = [contentLength longLongValue];
             requestDelegate.crc64String = [[httpResponse allHeaderFields] objectForKey:@"x-oss-hash-crc64ecma"];
             requestDelegate.statusCodeCheckSuccess = YES;
             OSSLogVerbose(@"正常下载文件内容%@",response);
         } else if (httpResponse.statusCode == 412) {
             OSSLogVerbose(@"服务器上面的文件已经发生了变化%@",response);
-        } else {
+        } else if (httpResponse.statusCode == 206) {
+            requestDelegate.statusCodeCheckSuccess = YES;
             OSSLogVerbose(@"未处理的网络返回%@",response);
         }
     }
@@ -229,6 +237,9 @@ didCompleteWithError:(nullable NSError *)error {
     if (requestDelegate.isDownloadTask) {
         [requestDelegate.fileHandle writeData:data];
         requestDelegate.totalByteReceived += data.length;
+        if (requestDelegate.downloadProgress) {
+            requestDelegate.downloadProgress(data.length, requestDelegate.totalByteReceived, requestDelegate.totalSize);
+        }
     }
 }
 

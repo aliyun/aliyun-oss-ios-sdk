@@ -277,14 +277,14 @@
             return;
         }
         _downloadRequest = [DownloadRequest new];
-        _downloadRequest.bucketName = OSS_BUCKET_PUBLIC;
-        _downloadRequest.objectName = @"测试文件";
-        _downloadRequest.downloadProgress = ^(NSProgress *progress) {
-            NSLog(@"download Progress is %@", progress);
+        _downloadRequest.bucketName = OSS_BUCKET_PUBLIC;       // 设置bucket name
+        _downloadRequest.objectName = @"test.mkv";          // 设置object name
+        _downloadRequest.downloadProgress = ^(int64_t bytesReceived, int64_t totalBytesReceived, int64_t totalBytesExpectToReceived) {
+            // totalBytesReceived是当前客户端已经缓存了的字节数,totalBytesExpectToReceived是总共需要下载的字节数。
         };
         
         NSMutableDictionary *header = [NSMutableDictionary dictionary];
-        [header oss_setObject:etag forKey:@"If-Match"];
+        [header oss_setObject:etag forKey:@"If-Match"];         // 携带取消下载的etag
         _downloadRequest.headers = header;
         
         NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
@@ -294,16 +294,15 @@
         [task waitUntilFinished];
         
         if (task.error) {
+            // 下载失败
             NSError *taskError = task.error;
-            etag = taskError.userInfo[@"etag"];
+            etag = taskError.userInfo[@"etag"];         //保存此次请求object的etag
             NSLog(@"%@", task.error);
             if (taskError.code == 412) {
                 NSLog(@"服务器上的文件已经发生变化,删除本地缓存的临时文件,需要重新发起网络请求");
             }
         } else {
-            NSLog(@"%@", task.result);
-            etag = nil;
-            _downloadRequest = nil;
+            // 下载任务成功完成
         }
     });
 }

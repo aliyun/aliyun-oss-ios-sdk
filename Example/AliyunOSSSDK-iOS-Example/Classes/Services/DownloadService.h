@@ -10,7 +10,7 @@
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
 
 typedef void(^OnReceiveData)(NSData *data);
-typedef void(^DownloadProgressBlock)(NSProgress *progress);
+typedef void(^DownloadProgressBlock)(int64_t bytesReceived, int64_t totalBytesReceived, int64_t totalBytesExpectToReceived);
 
 @interface DownloadRequest : NSObject
 
