@@ -80,7 +80,7 @@
         if ([OSSUtil isOssOriginBucketHost:endPointURL.host]) {
             urlString = [NSString stringWithFormat:@"%@://%@.%@", endPointURL.scheme, self.allNeededMessage.bucketName, endPointURL.host];
         } else {
-            urlString = [NSString stringWithFormat:@"%@://%@/%@", endPointURL.scheme, endPointURL.host, self.allNeededMessage.bucketName];
+            urlString = [NSString stringWithFormat:@"%@://%@/%@/", endPointURL.scheme, endPointURL.host, self.allNeededMessage.bucketName];
         }
     }
     
