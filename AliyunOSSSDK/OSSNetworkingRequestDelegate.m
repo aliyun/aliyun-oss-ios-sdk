@@ -14,6 +14,7 @@
 #import "OSSDefine.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
+#import "OSSIPv6Adapter.h"
 
 @implementation OSSNetworkingRequestDelegate
 
@@ -77,9 +78,10 @@
     
     NSURL * endPointURL = [NSURL URLWithString:self.allNeededMessage.endpoint];
     if (self.allNeededMessage.bucketName) {
+        OSSIPv6Adapter *ipv6Adapter = [OSSIPv6Adapter getInstance];
         if ([OSSUtil isOssOriginBucketHost:endPointURL.host]) {
             urlString = [NSString stringWithFormat:@"%@://%@.%@", endPointURL.scheme, self.allNeededMessage.bucketName, endPointURL.host];
-        } else {
+        } else if ([ipv6Adapter isIPv4Address: endPointURL.host] || [ipv6Adapter isIPv6Address: endPointURL.host]) {
             urlString = [NSString stringWithFormat:@"%@://%@/%@/", endPointURL.scheme, endPointURL.host, self.allNeededMessage.bucketName];
         }
     }
