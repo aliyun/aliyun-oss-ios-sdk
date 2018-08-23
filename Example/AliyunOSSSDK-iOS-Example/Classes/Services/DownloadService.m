@@ -9,51 +9,19 @@
 #import "DownloadService.h"
 #import "OSSTestMacros.h"
 
-typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
-
-@interface RequestDelegate : NSObject
-
-@property (nonatomic, strong) NSURLSessionTask *internalTask;
-@property (nonatomic, copy) OnReceiveData onReceiveData;
-@property (nonatomic, copy) DownloadProgressBlock downloadProgress;
-@property (nonatomic, copy) NSString *downloadFilePath;
-@property (nonatomic, strong) OSSTaskCompletionSource *taskCompletionSource;
-@property (nonatomic, assign) BOOL isDownloadTask;
-@property (nonatomic, copy) NSString *tmpFilePath;
-@property (nonatomic, assign) unsigned long long totalByteReceived;
-@property (nonatomic, strong) NSFileHandle *fileHandle;
-@property (nonatomic, copy) NSString *etag;
-@property (nonatomic, copy) NSString *crc64String;
-@property (nonatomic, copy) NSString *contentMD5;
-@property (nonatomic, assign) unsigned long long totalSize;
-@property (nonatomic, copy) DownloadManagerCompleteBlock completeHandler;
-@property (nonatomic, assign) BOOL statusCodeCheckSuccess;
-@property (nonatomic, strong) NSHTTPURLResponse *response;
-
-@end
-
-@implementation RequestDelegate
-
-- (void)dealloc {
-    OSSLogDebug(@"RequestDelegate dealloc!");
-}
-
-@end
-
-@interface DownloadRequest()
-
-@property (nonatomic, strong) RequestDelegate *delegate;
-
-@end
-
 @implementation DownloadRequest
 
-- (void)cancel {
-    [_delegate.internalTask cancel];
-}
+@end
 
-- (void)dealloc {
-    OSSLogDebug(@"DownloadRequest dealloc!");
+@implementation Checkpoint
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+    Checkpoint *other = [[[self class] allocWithZone:zone] init];
+    
+    other.etag = self.etag;
+    other.totalExpectedLength = self.totalExpectedLength;
+    
+    return other;
 }
 
 @end
@@ -61,12 +29,17 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
 
 @interface DownloadService()<NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, strong) OSSSyncMutableDictionary *requestDelegates;
-@property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) OSSClient *client;
-@property (nonatomic, strong) OSSExecutor *executor;
-@property (nonatomic, strong) OSSExecutor *callbackExecutor;
-@property (nonatomic, strong) OSSSyncMutableDictionary *kvStorage;
+@property (nonatomic, strong) NSURLSession *session;         //网络会话
+@property (nonatomic, strong) NSURLSessionDataTask *dataTask;   //数据请求任务
+@property (nonatomic, copy) DownloadFailureBlock failure;    //请求出错
+@property (nonatomic, copy) DownloadSuccessBlock success;    //请求成功
+@property (nonatomic, copy) DownloadProgressBlock progress;  //下载进度
+@property (nonatomic, copy) Checkpoint *checkpoint;        //检查节点
+@property (nonatomic, copy) NSString *requestURLString;    //文件资源地址,用于下载请求
+@property (nonatomic, copy) NSString *headURLString;       //文件资源地址,用于head请求
+@property (nonatomic, copy) NSString *targetPath;     //文件存储路径
+@property (nonatomic, assign) unsigned long long totalReceivedContentLength; //已下载大小
+@property (nonatomic, strong) dispatch_semaphore_t semaphore;
 
 @end
 
@@ -80,152 +53,150 @@ typedef void(^DownloadManagerCompleteBlock)(id result, NSError *error);
         conf.timeoutIntervalForRequest = 15;
         
         NSOperationQueue *processQueue = [NSOperationQueue new];
-        
         _session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:processQueue];
-        
-        OSSPlainTextAKSKPairCredentialProvider *credential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
-        _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credential];
-        
-        NSOperationQueue *executorQueue = [NSOperationQueue new];
-        _executor = [OSSExecutor executorWithOperationQueue:executorQueue];
-        
-        NSOperationQueue *callbackExecutorQueue = [NSOperationQueue new];
-        _callbackExecutor = [OSSExecutor executorWithOperationQueue:callbackExecutorQueue];
-        
-        _requestDelegates = [[OSSSyncMutableDictionary alloc] init];
-        _kvStorage = [[OSSSyncMutableDictionary alloc] init];
+        _semaphore = dispatch_semaphore_create(0);
+        _checkpoint = [[Checkpoint alloc] init];
     }
     return self;
 }
 
-- (OSSTask *)downloadObject:(DownloadRequest *)request {
-    OSSTask *signTask = [self.client presignConstrainURLWithBucketName:request.bucketName withObjectKey:request.objectName withExpirationInterval:1800];
-    if (signTask.error) {
-        return signTask;
++ (instancetype)downloadServiceWithRequest:(DownloadRequest *)request {
+    DownloadService *service = [[DownloadService alloc] init];
+    if (service) {
+        service.failure = request.failure;
+        service.success = request.success;
+        service.requestURLString = request.sourceURLString;
+        service.headURLString = request.headURLString;
+        service.targetPath = request.downloadFilePath;
+        service.progress = request.downloadProgress;
+        if (request.checkpoint) {
+            service.checkpoint = request.checkpoint;
+        }
+    }
+    return service;
+}
+
+/**
+ * head文件信息，取出来文件的etag和本地checkpoint中保存的etag进行对比,并且将结果返回
+ */
+- (BOOL)getFileInfo {
+    __block BOOL resumable = NO;
+    NSURL *url = [NSURL URLWithString:self.headURLString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url];
+    [request setHTTPMethod:@"HEAD"];
+    
+    NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"获取文件meta信息失败,error : %@", error);
+        } else {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSString *etag = [httpResponse.allHeaderFields objectForKey:@"Etag"];
+            if ([self.checkpoint.etag isEqualToString:etag]) {
+                resumable = YES;
+            } else {
+                resumable = NO;
+            }
+        }
+        dispatch_semaphore_signal(self.semaphore);
+    }];
+    [task resume];
+    
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    return resumable;
+}
+
+/**
+ * 用于获取本地文件的大小
+ */
+- (unsigned long long)fileSizeAtPath:(NSString *)filePath {
+    unsigned long long fileSize = 0;
+    NSFileManager *dfm = [NSFileManager defaultManager];
+    if ([dfm fileExistsAtPath:filePath]) {
+        NSError *error = nil;
+        NSDictionary *attributes = [dfm attributesOfItemAtPath:filePath error:&error];
+        if (!error && attributes) {
+            fileSize = attributes.fileSize;
+        } else if (error) {
+            NSLog(@"error: %@", error);
+        }
+    }
+    return fileSize;
+}
+
+- (void)resume {
+    NSURL *url = [NSURL URLWithString:self.requestURLString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc]initWithURL:url];
+    [request setHTTPMethod:@"GET"];
+    
+    BOOL resumable = [self getFileInfo];    // 如果resumable为NO,则证明不能断点续传,否则走续传逻辑。
+    if (resumable) {
+        self.totalReceivedContentLength = [self fileSizeAtPath:self.targetPath];
+        NSString *requestRange = [NSString stringWithFormat:@"bytes=%llu-", self.totalReceivedContentLength];
+        [request setValue:requestRange forHTTPHeaderField:@"Range"];
+    } else {
+        self.totalReceivedContentLength = 0;
+        [[NSFileManager defaultManager] createFileAtPath:self.targetPath contents:nil attributes:nil];
     }
     
-    return [[OSSTask taskWithResult:nil] continueWithExecutor:self.executor withBlock:^id _Nullable(OSSTask * _Nonnull task) {
-        RequestDelegate *requestDelegate = [[RequestDelegate alloc] init];
-        requestDelegate.onReceiveData = request.onReceiveData;
-        requestDelegate.downloadProgress = request.downloadProgress;
-        requestDelegate.downloadFilePath = request.downloadFilePath;
-        requestDelegate.taskCompletionSource = [OSSTaskCompletionSource taskCompletionSource];
-        requestDelegate.isDownloadTask = YES;
-        
-        NSString *tmpFilePath = [self.kvStorage objectForKey:request.downloadFilePath];
-        if (!tmpFilePath) {
-            NSString *tmpFileName = [NSString stringWithFormat:@"%@.tmp",[[NSUUID UUID] UUIDString]];
-            tmpFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:tmpFileName];
-            [self.kvStorage setObject:tmpFilePath forKey:requestDelegate.downloadFilePath];
-        }
-        requestDelegate.tmpFilePath = tmpFilePath;
-        
-        NSString *documentDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-        if (![[NSFileManager defaultManager] fileExistsAtPath:tmpFilePath]) {
-            BOOL isCreated = [[NSFileManager defaultManager] createFileAtPath:tmpFilePath contents:nil attributes:nil];
-            if (!isCreated) {
-                NSError *error = [NSError errorWithDomain:@"SystemErrorDomain" code:0 userInfo:@{NSLocalizedDescriptionKey: @"can not create tmp file!"}];
-                return [OSSTask taskWithError:error];
-            }
-        }
-        
-        requestDelegate.tmpFilePath = tmpFilePath;
-        requestDelegate.fileHandle = [NSFileHandle fileHandleForWritingAtPath:tmpFilePath];
-        
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tmpFilePath error:nil];
-        requestDelegate.totalByteReceived = fileAttributes.fileSize;
-        
-        NSMutableURLRequest *internalRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:signTask.result]];
-        [internalRequest setHTTPMethod:@"GET"];
-        [request.headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [internalRequest setValue:obj forHTTPHeaderField:key];
-        }];
-        
-        if (requestDelegate.totalByteReceived > 0) {
-            [internalRequest setValue:[NSString stringWithFormat:@"bytes=%lld-", requestDelegate.totalByteReceived] forHTTPHeaderField:@"Range"];
-        }
-        
-        [requestDelegate.fileHandle seekToFileOffset:requestDelegate.totalByteReceived];
-        
-        requestDelegate.internalTask = [self.session dataTaskWithRequest:internalRequest];
-        
-        __weak typeof(RequestDelegate *)wDelegate = requestDelegate;
-        requestDelegate.completeHandler = ^(id result, NSError *error) {
-            __strong typeof(RequestDelegate *)sDelegate = wDelegate;
-            [sDelegate.fileHandle closeFile];
-            if (error) {
-                [sDelegate.taskCompletionSource setError:error];
-            } else {
-                [sDelegate.taskCompletionSource setResult:result];
-            }
-        };
-        
-        request.delegate = requestDelegate;
-        
-        [self.requestDelegates setObject:requestDelegate forKey:@(requestDelegate.internalTask.taskIdentifier)];
-        [requestDelegate.internalTask resume];
-        
-        return requestDelegate.taskCompletionSource.task;
-    }];
+    self.dataTask = [self.session dataTaskWithRequest:request];
+    [self.dataTask resume];
+}
+
+- (void)pause {
+    [self.dataTask cancel];
+    self.dataTask = nil;
+}
+
+- (void)cancel {
+    [self.dataTask cancel];
+    self.dataTask = nil;
+    [self removeFileAtPath: self.targetPath];
+}
+
+- (void)removeFileAtPath:(NSString *)filePath {
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:self.targetPath error:&error];
+    if (error) {
+        NSLog(@"remove file with error : %@", error);
+    }
 }
 
 #pragma mark - NSURLSessionDataDelegate
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error {
-    RequestDelegate *requestDelegate = [self.requestDelegates objectForKey:@(task.taskIdentifier)];
-    [self.requestDelegates removeObjectForKey:@(task.taskIdentifier)];
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+    if ([httpResponse isKindOfClass:[NSHTTPURLResponse class]]) {
+        if (httpResponse.statusCode == 200) {
+            self.checkpoint.etag = [[httpResponse allHeaderFields] objectForKey:@"Etag"];
+            self.checkpoint.totalExpectedLength = httpResponse.expectedContentLength;
+        } else if (httpResponse.statusCode == 206) {
+            self.checkpoint.etag = [[httpResponse allHeaderFields] objectForKey:@"Etag"];
+            self.checkpoint.totalExpectedLength = self.totalReceivedContentLength + httpResponse.expectedContentLength;
+        }
+    }
+    
     if (error) {
-        if (requestDelegate.isDownloadTask) {
+        if (self.failure) {
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:error.userInfo];
-            [userInfo oss_setObject:requestDelegate.etag forKey:@"etag"];
+            [userInfo oss_setObject:self.checkpoint forKey:@"checkpoint"];
             
-            NSError *downloadError = [NSError errorWithDomain:error.domain code:error.code userInfo:userInfo];
-            requestDelegate.completeHandler(nil, downloadError);
+            NSError *tError = [NSError errorWithDomain:error.domain code:error.code userInfo:userInfo];
+            self.failure(tError);
         }
-    } else {
-        if (requestDelegate.isDownloadTask && requestDelegate.statusCodeCheckSuccess) {
-            //TODO 1.校验md5,crc64等
-            //2.将临时文件拷贝到目标位置
-            NSError *moveError = nil;
-            [[NSFileManager defaultManager] moveItemAtPath:requestDelegate.tmpFilePath toPath:requestDelegate.downloadFilePath error:&moveError];
-            if (moveError) {
-                requestDelegate.completeHandler(nil, moveError);
-            } else {
-                NSMutableDictionary *result = [NSMutableDictionary dictionary];
-                [result oss_setObject:requestDelegate.downloadFilePath forKey:@"destFilePath"];
-                [result oss_setObject:requestDelegate.etag forKey:@"Etag"];
-                [result oss_setObject:requestDelegate.contentMD5 forKey:@"Content-MD5"];
-                [result oss_setObject:requestDelegate.crc64String forKey:@""];
-                
-                requestDelegate.completeHandler(result, nil);
-            }
-        }else {
-            NSError *error = [NSError errorWithDomain:@"DownloadServiceErrorDomain" code:requestDelegate.response.statusCode userInfo:@{NSLocalizedDescriptionKey: @"请求完成,但是有未处理的数据信息"}];
-            requestDelegate.completeHandler(nil, error);
-        }
+    } else if (self.success) {
+        self.success(@{@"status": @"success"});
     }
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
-    RequestDelegate *requestDelegate = [self.requestDelegates objectForKey:@(dataTask.taskIdentifier)];
-    requestDelegate.response = (NSHTTPURLResponse *)response;
-    if (requestDelegate.isDownloadTask) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)dataTask.response;
+    if ([httpResponse isKindOfClass:[NSHTTPURLResponse class]]) {
         if (httpResponse.statusCode == 200) {
-            requestDelegate.etag = [[httpResponse allHeaderFields] objectForKey:@"Etag"];
-            requestDelegate.contentMD5 = [[httpResponse allHeaderFields] objectForKey:@"Content-MD5"];
-            NSString *contentLength = (NSString *)[[httpResponse allHeaderFields] objectForKey:@"Content-Length"];
-            requestDelegate.totalSize = [contentLength longLongValue];
-            requestDelegate.crc64String = [[httpResponse allHeaderFields] objectForKey:@"x-oss-hash-crc64ecma"];
-            requestDelegate.statusCodeCheckSuccess = YES;
-            OSSLogVerbose(@"正常下载文件内容%@",response);
-        } else if (httpResponse.statusCode == 412) {
-            OSSLogVerbose(@"服务器上面的文件已经发生了变化%@",response);
+            self.checkpoint.totalExpectedLength = httpResponse.expectedContentLength;
         } else if (httpResponse.statusCode == 206) {
-            requestDelegate.statusCodeCheckSuccess = YES;
-            OSSLogVerbose(@"未处理的网络返回%@",response);
+            self.checkpoint.totalExpectedLength = self.totalReceivedContentLength +  httpResponse.expectedContentLength;
         }
     }
     
@@ -233,13 +204,15 @@ didCompleteWithError:(nullable NSError *)error {
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-    RequestDelegate *requestDelegate = [self.requestDelegates objectForKey:@(dataTask.taskIdentifier)];
-    if (requestDelegate.isDownloadTask) {
-        [requestDelegate.fileHandle writeData:data];
-        requestDelegate.totalByteReceived += data.length;
-        if (requestDelegate.downloadProgress) {
-            requestDelegate.downloadProgress(data.length, requestDelegate.totalByteReceived, requestDelegate.totalSize);
-        }
+    
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.targetPath];
+    [fileHandle seekToEndOfFile];
+    [fileHandle writeData:data];
+    [fileHandle closeFile];
+    
+    self.totalReceivedContentLength += data.length;
+    if (self.progress) {
+        self.progress(data.length, self.totalReceivedContentLength, self.checkpoint.totalExpectedLength);
     }
 }
 

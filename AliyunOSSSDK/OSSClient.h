@@ -372,7 +372,21 @@ NS_ASSUME_NONNULL_BEGIN
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters;
 
-/** TODOTODO
+/**
+ Generates a signed URL for the object and anyone has this URL will get the specified permission on the object. currently only support get and head method.
+ @bucketName object's bucket name
+ @objectKey Object name
+ @httpMethod http method.currently only support get and head.
+ @interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
+ @parameter it could specify allowed HTTP methods
+ */
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters;
+
+/**
  If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
  @bucketName Object's bucket name
  @objectKey Object name

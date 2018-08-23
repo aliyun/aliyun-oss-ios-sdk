@@ -1800,17 +1800,31 @@ static NSObject *lock;
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters {
     
+    return [self presignConstrainURLWithBucketName: bucketName
+                                     withObjectKey: objectKey
+                                        httpMethod: @"GET"
+                            withExpirationInterval: interval
+                                    withParameters: parameters];
+}
+
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
+{
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
-        NSString * wholeSign = nil;
-        OSSFederationToken * token = nil;
-        NSError * error = nil;
-        NSMutableDictionary * params = [NSMutableDictionary new];
         
-        if (parameters) {
+        NSMutableDictionary * params = [NSMutableDictionary dictionary];
+        if (parameters.count > 0) {
             [params addEntriesFromDictionary:parameters];
         }
+        
+        NSString * wholeSign = nil;
+        OSSFederationToken *token = nil;
+        NSError *error = nil;
         
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
@@ -1826,14 +1840,14 @@ static NSObject *lock;
         {
             [params oss_setObject:token.tToken forKey:@"security-token"];
             resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
-            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@", method, expires, resource];
             wholeSign = [OSSUtil sign:string2sign withToken:token];
         } else {
             NSString * subresource = [OSSUtil populateSubresourceStringFromParameter:params];
             if ([subresource length] > 0) {
                 resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
             }
-            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@",  method, expires, resource];
             wholeSign = [self.credentialProvider sign:string2sign error:&error];
             if (error) {
                 return [OSSTask taskWithError:error];
@@ -1855,6 +1869,7 @@ static NSObject *lock;
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
         }
+        
         [params oss_setObject:signature forKey:@"Signature"];
         [params oss_setObject:accessKey forKey:@"OSSAccessKeyId"];
         [params oss_setObject:expires forKey:@"Expires"];

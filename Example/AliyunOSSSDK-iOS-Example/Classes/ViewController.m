@@ -18,11 +18,9 @@
 {
     OssService * service;
     OssService * imageService;
-    DownloadService *downloadService;
     ImageService * imageOperation;
     NSString * uploadFilePath;
     int originConstraintValue;
-    NSString *etag;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewBottom;
@@ -50,8 +48,16 @@
 - (IBAction)onOssButtonNormalCancel:(UIButton *)sender;
 - (IBAction)onOssButtonResize:(UIButton *)sender;
 - (IBAction)onOssButtonWatermark:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet UILabel *progressLab;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
+@property (weak, nonatomic) IBOutlet UIButton *downloadButton;
 
 @property (nonatomic, strong) DownloadRequest *downloadRequest;
+@property (nonatomic, strong) OSSClient *mClient;
+@property (nonatomic, copy) Checkpoint *checkpoint;
+@property (nonatomic, copy) NSString *downloadURLString;
+@property (nonatomic, copy) NSString *headURLString;
+@property (nonatomic, strong) DownloadService *downloadService;
 
 @end
 
@@ -66,9 +72,10 @@
     imageService = [[OssService alloc] initWithViewController:self withEndPoint:imageEndPoint];
     imageOperation = [[ImageService alloc] initImageService:imageService];
     
-    downloadService = [[DownloadService alloc] init];
-    
     [OSSLog enableLog];
+    
+    [self initDownloadURLs];
+    self.progressBar.progress = 0;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -268,42 +275,59 @@
     [service triggerCallback];
 }
 
-- (IBAction)resumeDownloadClicked:(id)sender {
+- (void)initDownloadURLs {
+    OSSPlainTextAKSKPairCredentialProvider *pCredential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
+    _mClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:pCredential];
+    OSSTask *downloadURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME withExpirationInterval:1800];
+    [downloadURLTask waitUntilFinished];
+    _downloadURLString = downloadURLTask.result;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (_downloadRequest) {
-            [_downloadRequest cancel];
-            _downloadRequest = nil;
-            return;
-        }
-        _downloadRequest = [DownloadRequest new];
-        _downloadRequest.bucketName = OSS_BUCKET_PUBLIC;       // 设置bucket name
-        _downloadRequest.objectName = @"test.mkv";          // 设置object name
-        _downloadRequest.downloadProgress = ^(int64_t bytesReceived, int64_t totalBytesReceived, int64_t totalBytesExpectToReceived) {
-            // totalBytesReceived是当前客户端已经缓存了的字节数,totalBytesExpectToReceived是总共需要下载的字节数。
-        };
-        
-        NSMutableDictionary *header = [NSMutableDictionary dictionary];
-        [header oss_setObject:etag forKey:@"If-Match"];         // 携带取消下载的etag
-        _downloadRequest.headers = header;
-        
-        NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-        _downloadRequest.downloadFilePath = [documentPath stringByAppendingPathComponent:@"下载文件"];
-        
-        OSSTask *task = [downloadService downloadObject:_downloadRequest];
-        [task waitUntilFinished];
-        
-        if (task.error) {
-            // 下载失败
-            NSError *taskError = task.error;
-            etag = taskError.userInfo[@"etag"];         //保存此次请求object的etag
-            NSLog(@"%@", task.error);
-            if (taskError.code == 412) {
-                NSLog(@"服务器上的文件已经发生变化,删除本地缓存的临时文件,需要重新发起网络请求");
-            }
-        } else {
-            // 下载任务成功完成
-        }
-    });
+    OSSTask *headURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME httpMethod:@"HEAD" withExpirationInterval:1800 withParameters:nil];
+    [headURLTask waitUntilFinished];
+    
+    _headURLString = headURLTask.result;
 }
+
+- (IBAction)resumeDownloadClicked:(id)sender {
+    _downloadRequest = [DownloadRequest new];
+    _downloadRequest.sourceURLString = _downloadURLString;       // 设置资源的url
+    _downloadRequest.headURLString = _headURLString;
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    _downloadRequest.downloadFilePath = [documentPath stringByAppendingPathComponent:OSS_DOWNLOAD_FILE_NAME];   //设置下载文件的本地保存路径
+    
+    __weak typeof(self) wSelf = self;
+    _downloadRequest.downloadProgress = ^(int64_t bytesReceived, int64_t totalBytesReceived, int64_t totalBytesExpectToReceived) {
+        // totalBytesReceived是当前客户端已经缓存了的字节数,totalBytesExpectToReceived是总共需要下载的字节数。
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) sSelf = wSelf;
+            CGFloat fProgress = totalBytesReceived * 1.f / totalBytesExpectToReceived;
+            sSelf.progressLab.text = [NSString stringWithFormat:@"%.2f%%", fProgress * 100];
+            sSelf.progressBar.progress = fProgress;
+        });
+    };
+    _downloadRequest.failure = ^(NSError *error) {
+        __strong typeof(self) sSelf = wSelf;
+        sSelf.checkpoint = error.userInfo[@"checkpoint"];
+    };
+    _downloadRequest.success = ^(NSDictionary *result) {
+        NSLog(@"下载成功");
+    };
+    _downloadRequest.checkpoint = self.checkpoint;
+    
+    NSString *titleText = [[_downloadButton titleLabel] text];
+    if ([titleText isEqualToString:@"download"]) {
+        [_downloadButton setTitle:@"pause" forState: UIControlStateNormal];
+        _downloadService = [DownloadService downloadServiceWithRequest:_downloadRequest];
+        [_downloadService resume];
+    } else {
+        [_downloadButton setTitle:@"download" forState: UIControlStateNormal];
+        [_downloadService pause];
+    }
+}
+
+- (IBAction)cancelDownloadClicked:(id)sender {
+    [_downloadButton setTitle:@"download" forState: UIControlStateNormal];
+    [_downloadService cancel];
+}
+
 @end
