@@ -14,6 +14,7 @@
 		4C7B5BE92043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		4C7B5BEA2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
+		D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */ = {isa = PBXBuildFile; fileRef = D1805034212EA0F700A1E647 /* OSSHttp2Test.m */; };
 		D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D810A00A2092F76900425D19 /* OSSUtilsTests.m */; };
 		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
 		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
@@ -107,6 +108,7 @@
 		4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSTestUtils.m; sourceTree = "<group>"; };
 		4C7B5BE42041680300FDD612 /* hasky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hasky.jpeg; sourceTree = "<group>"; };
 		4C7B5BE82043A15100FDD612 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
+		D1805034212EA0F700A1E647 /* OSSHttp2Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttp2Test.m; sourceTree = "<group>"; };
 		D810A00A2092F76900425D19 /* OSSUtilsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSUtilsTests.m; sourceTree = "<group>"; };
 		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 		D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				D1805034212EA0F700A1E647 /* OSSHttp2Test.m */,
 				D83D58511FC680840022761B /* OSSCredentialProviderTests.m */,
 				D83D58521FC680850022761B /* OSSModelTests.m */,
 				D83D58501FC680840022761B /* OSSRangeTests.m */,
@@ -550,6 +553,7 @@
 				D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */,
 				D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */,
 				D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */,
+				D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */,
 				D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */,
 				D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */,
 				D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */,
