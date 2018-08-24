@@ -1698,7 +1698,9 @@ static NSObject *lock;
     for (int i = 1; i <= partCout; i++) {
         realPartLength = request.partSize;
         if (isCancel && errorTask != nil) {
-            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+            if (errorTask == nil) {
+                errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+            }
             break;
         }
         realPartLength = request.partSize;
