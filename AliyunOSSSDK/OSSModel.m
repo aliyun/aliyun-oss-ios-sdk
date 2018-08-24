@@ -433,6 +433,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         NSString * signature = [provider sign:stringToSign error:&customSignError];
         if (customSignError) {
             OSSLogError(@"OSSCustomSignerError: %@",customSignError);
+            return [OSSTask taskWithError:customSignError];
         }
         [requestMessage.headerParams oss_setObject:signature forKey:@"Authorization"];
     }else
