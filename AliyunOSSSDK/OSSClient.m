@@ -1392,7 +1392,11 @@ static NSObject *lock;
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
         if (uploadPartTask.error.code != -409) {
-            *errorTask = uploadPartTask;
+            @synchronized(request) {
+                if (*errorTask == nil) {
+                    *errorTask = uploadPartTask;
+                }
+            }
         }
     } else {
         OSSUploadPartResult * result = uploadPartTask.result;
@@ -1693,7 +1697,7 @@ static NSObject *lock;
     
     for (int i = 1; i <= partCout; i++) {
         realPartLength = request.partSize;
-        if (isCancel) {
+        if (isCancel && errorTask != nil) {
             errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
             break;
         }
