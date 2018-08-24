@@ -198,22 +198,5 @@
     }] waitUntilFinished];
 }
 
-- (void)resumeDownloadSample:(BOOL)cancel {
-    OSSTask *signTask = [client presignConstrainURLWithBucketName:OSS_BUCKET_PUBLIC withObjectKey:@"测试文件" withExpirationInterval:1800];
-    [signTask waitUntilFinished];
-    NSString *signedURLString = (NSString *)signTask.result;
-    
-    NSMutableURLRequest *downloadRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:signedURLString]];
-    [downloadRequest setValue:self.etag forHTTPHeaderField:@"If-Match"];
-    if (self.bytesToalReceived > 0) {
-        [downloadRequest setValue:[NSString stringWithFormat:@"bytes=%lld-",self.bytesToalReceived] forHTTPHeaderField:@"If-Match"];
-    }
-    
-    
-    
-    
-}
-
-
 @end
 

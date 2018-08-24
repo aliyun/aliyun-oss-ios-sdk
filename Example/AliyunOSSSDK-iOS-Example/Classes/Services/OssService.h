@@ -25,8 +25,6 @@
 
 - (void)triggerCallback;
 
-- (void)resumeDownloadSample:(BOOL)cancel;
-
 @end
 
 #endif /* OssService_h */
