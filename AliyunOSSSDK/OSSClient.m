@@ -1297,6 +1297,8 @@ static NSObject *lock;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
     
+    NSObject *localLock = [[NSObject alloc] init];
+    
     OSSRequestCRCFlag crcFlag = request.crcFlag;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = nil;
@@ -1317,6 +1319,7 @@ static NSObject *lock;
     
     NSData * uploadPartData;
     NSInteger realPartLength = request.partSize;
+    __block BOOL hasError = NO;
     
     for (NSUInteger idx = 1; idx <= partCout; idx++)
     {
@@ -1348,15 +1351,25 @@ static NSObject *lock;
             uploadPartData = [fileHande readDataOfLength:realPartLength];
             
             NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-                @autoreleasepool {
-                    [self executePartUpload:request
-                   totalBytesExpectedToSend:uploadFileSize
-                             totalBytesSent:uploadedLength
-                                      index:idx
-                                   partData:uploadPartData
-                          alreadyUploadPart:alreadyUploadPart
-                                 localParts:localPartInfos
-                                  errorTask:&errorTask];
+                OSSTask *uploadPartErrorTask = nil;
+                
+                [self executePartUpload:request
+               totalBytesExpectedToSend:uploadFileSize
+                         totalBytesSent:uploadedLength
+                                  index:idx
+                               partData:uploadPartData
+                      alreadyUploadPart:alreadyUploadPart
+                             localParts:localPartInfos
+                              errorTask:&uploadPartErrorTask];
+                
+                if (uploadPartErrorTask != nil) {
+                    @synchronized(localLock) {
+                        if (!hasError) {
+                            hasError = YES;
+                            errorTask = uploadPartErrorTask;
+                        }
+                    }
+                    uploadPartErrorTask = nil;
                 }
             }];
             [queue addOperation:operation];
@@ -1364,6 +1377,8 @@ static NSObject *lock;
     }
     [fileHande closeFile];
     [queue waitUntilAllOperationsAreFinished];
+    
+    localLock = nil;
     
     if (!errorTask && request.isCancelled) {
         errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
