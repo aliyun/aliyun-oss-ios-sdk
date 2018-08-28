@@ -1407,11 +1407,7 @@ static NSObject *lock;
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
         if (uploadPartTask.error.code != -409) {
-            @synchronized(request) {
-                if (*errorTask == nil) {
-                    *errorTask = uploadPartTask;
-                }
-            }
+            *errorTask = uploadPartTask;
         }
     } else {
         OSSUploadPartResult * result = uploadPartTask.result;
