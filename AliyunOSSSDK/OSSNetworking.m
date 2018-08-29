@@ -289,7 +289,7 @@
         NSDate * deviceTime = [NSDate date];
         NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
         [NSDate oss_setClockSkew:skewTime];
-    } else {
+    } else if (!error) {
         // The response header does not have the 'Date' field.
         // This should not happen.
         OSSLogError(@"Date header does not exist, unable to fix the clock skew");
