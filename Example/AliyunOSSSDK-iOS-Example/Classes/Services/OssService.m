@@ -10,6 +10,14 @@
 #import "OssService.h"
 #import "OSSTestMacros.h"
 
+@interface OssService()
+
+@property (nonatomic, copy) NSString *etag;
+@property (nonatomic, assign) unsigned long long bytesToalReceived;
+@property (nonatomic, strong) NSMutableURLRequest *downloadRequest;
+
+@end
+
 @implementation OssService
 {
     OSSClient * client;
@@ -189,7 +197,6 @@
         return nil;
     }] waitUntilFinished];
 }
-
 
 @end
 

@@ -12,6 +12,7 @@
 #import "OSSConstants.h"
 #import <AliyunOSSiOS/OSSService.h>
 #import "OSSTestMacros.h"
+#import "DownloadService.h"
 
 @interface ViewController ()
 {
@@ -47,6 +48,16 @@
 - (IBAction)onOssButtonNormalCancel:(UIButton *)sender;
 - (IBAction)onOssButtonResize:(UIButton *)sender;
 - (IBAction)onOssButtonWatermark:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet UILabel *progressLab;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
+@property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+
+@property (nonatomic, strong) DownloadRequest *downloadRequest;
+@property (nonatomic, strong) OSSClient *mClient;
+@property (nonatomic, copy) Checkpoint *checkpoint;
+@property (nonatomic, copy) NSString *downloadURLString;
+@property (nonatomic, copy) NSString *headURLString;
+@property (nonatomic, strong) DownloadService *downloadService;
 
 @end
 
@@ -62,6 +73,9 @@
     imageOperation = [[ImageService alloc] initImageService:imageService];
     
     [OSSLog enableLog];
+    
+    [self initDownloadURLs];
+    self.progressBar.progress = 0;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -259,6 +273,61 @@
 
 - (IBAction)triggerCallbackClicked:(id)sender {
     [service triggerCallback];
+}
+
+- (void)initDownloadURLs {
+    OSSPlainTextAKSKPairCredentialProvider *pCredential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
+    _mClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:pCredential];
+    OSSTask *downloadURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME withExpirationInterval:1800];
+    [downloadURLTask waitUntilFinished];
+    _downloadURLString = downloadURLTask.result;
+    
+    OSSTask *headURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME httpMethod:@"HEAD" withExpirationInterval:1800 withParameters:nil];
+    [headURLTask waitUntilFinished];
+    
+    _headURLString = headURLTask.result;
+}
+
+- (IBAction)resumeDownloadClicked:(id)sender {
+    _downloadRequest = [DownloadRequest new];
+    _downloadRequest.sourceURLString = _downloadURLString;       // 设置资源的url
+    _downloadRequest.headURLString = _headURLString;
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    _downloadRequest.downloadFilePath = [documentPath stringByAppendingPathComponent:OSS_DOWNLOAD_FILE_NAME];   //设置下载文件的本地保存路径
+    
+    __weak typeof(self) wSelf = self;
+    _downloadRequest.downloadProgress = ^(int64_t bytesReceived, int64_t totalBytesReceived, int64_t totalBytesExpectToReceived) {
+        // totalBytesReceived是当前客户端已经缓存了的字节数,totalBytesExpectToReceived是总共需要下载的字节数。
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) sSelf = wSelf;
+            CGFloat fProgress = totalBytesReceived * 1.f / totalBytesExpectToReceived;
+            sSelf.progressLab.text = [NSString stringWithFormat:@"%.2f%%", fProgress * 100];
+            sSelf.progressBar.progress = fProgress;
+        });
+    };
+    _downloadRequest.failure = ^(NSError *error) {
+        __strong typeof(self) sSelf = wSelf;
+        sSelf.checkpoint = error.userInfo[@"checkpoint"];
+    };
+    _downloadRequest.success = ^(NSDictionary *result) {
+        NSLog(@"下载成功");
+    };
+    _downloadRequest.checkpoint = self.checkpoint;
+    
+    NSString *titleText = [[_downloadButton titleLabel] text];
+    if ([titleText isEqualToString:@"download"]) {
+        [_downloadButton setTitle:@"pause" forState: UIControlStateNormal];
+        _downloadService = [DownloadService downloadServiceWithRequest:_downloadRequest];
+        [_downloadService resume];
+    } else {
+        [_downloadButton setTitle:@"download" forState: UIControlStateNormal];
+        [_downloadService pause];
+    }
+}
+
+- (IBAction)cancelDownloadClicked:(id)sender {
+    [_downloadButton setTitle:@"download" forState: UIControlStateNormal];
+    [_downloadService cancel];
 }
 
 @end

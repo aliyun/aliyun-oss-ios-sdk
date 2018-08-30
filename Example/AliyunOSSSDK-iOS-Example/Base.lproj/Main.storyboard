@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -191,15 +191,58 @@
                                     <action selector="triggerCallbackClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="eVa-JC-Y1j"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLo-3i-nMf">
+                                <rect key="frame" x="137.5" y="498" width="100" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Uyq-Ri-v8x"/>
+                                    <constraint firstAttribute="width" constant="100" id="vLm-tB-WmS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T2X-8V-im7">
+                                <rect key="frame" x="37.5" y="521" width="300" height="10"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="10" id="DSV-xW-Ygc"/>
+                                    <constraint firstAttribute="width" constant="300" id="vmf-T0-I70"/>
+                                </constraints>
+                            </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQQ-TR-u2F">
+                                <rect key="frame" x="37.5" y="546" width="67" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="tRF-r4-b2J"/>
+                                    <constraint firstAttribute="height" constant="30" id="zjo-Xk-YT8"/>
+                                </constraints>
+                                <state key="normal" title="download"/>
+                                <connections>
+                                    <action selector="resumeDownloadClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="sFq-K0-aUo"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ieb-SJ-uyF">
+                                <rect key="frame" x="283.5" y="546" width="54" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="6k5-4W-mHS"/>
+                                    <constraint firstAttribute="height" constant="30" id="iPK-o8-n9p"/>
+                                </constraints>
+                                <state key="normal" title="cancel"/>
+                                <connections>
+                                    <action selector="cancelDownloadClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="qqw-fQ-ZBd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="HPe-Fv-2H5" firstAttribute="leading" secondItem="yzB-vT-XdQ" secondAttribute="leading" id="0Nt-rP-S2q"/>
                             <constraint firstItem="ZWd-Av-N8U" firstAttribute="centerY" secondItem="HPe-Fv-2H5" secondAttribute="centerY" id="1g3-Tp-4Jp"/>
                             <constraint firstAttribute="trailing" secondItem="ZWd-Av-N8U" secondAttribute="trailing" constant="71" id="4eF-H0-vfO"/>
+                            <constraint firstItem="T2X-8V-im7" firstAttribute="centerX" secondItem="Mo3-C7-4iC" secondAttribute="centerX" id="4vW-bs-KIl"/>
+                            <constraint firstItem="ieb-SJ-uyF" firstAttribute="top" secondItem="T2X-8V-im7" secondAttribute="bottom" constant="15" id="5RU-wy-Lvm"/>
                             <constraint firstItem="HPe-Fv-2H5" firstAttribute="top" secondItem="yzB-vT-XdQ" secondAttribute="bottom" constant="20" id="70o-iX-3Da"/>
                             <constraint firstItem="fC0-Fv-DOy" firstAttribute="leading" secondItem="L6N-s3-fvF" secondAttribute="trailing" constant="10" id="7Wf-Ha-ldP"/>
+                            <constraint firstItem="xLo-3i-nMf" firstAttribute="centerX" secondItem="T2X-8V-im7" secondAttribute="centerX" id="Chk-1f-0B6"/>
                             <constraint firstItem="NMq-er-YK5" firstAttribute="top" secondItem="oSW-1o-zHG" secondAttribute="bottom" constant="10" id="E5o-zr-kAr"/>
+                            <constraint firstItem="eQQ-TR-u2F" firstAttribute="top" secondItem="T2X-8V-im7" secondAttribute="bottom" constant="15" id="EVD-jh-oa6"/>
                             <constraint firstItem="ng6-dg-j7g" firstAttribute="centerY" secondItem="yzB-vT-XdQ" secondAttribute="centerY" id="HH9-IC-TKQ"/>
                             <constraint firstItem="JdC-4m-t1M" firstAttribute="centerY" secondItem="NMq-er-YK5" secondAttribute="centerY" id="JEv-Bb-TA2"/>
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fC0-Fv-DOy" secondAttribute="trailing" constant="8" symbolic="YES" id="Jad-6Q-Rus"/>
@@ -208,13 +251,16 @@
                             <constraint firstItem="JdC-4m-t1M" firstAttribute="leading" secondItem="A1J-IR-M9e" secondAttribute="trailing" constant="5" id="LMH-rx-eig"/>
                             <constraint firstItem="ng6-dg-j7g" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Jgi-Is-fxv" secondAttribute="trailing" symbolic="YES" id="TJi-X6-53X"/>
                             <constraint firstItem="NMq-er-YK5" firstAttribute="leading" secondItem="Mo3-C7-4iC" secondAttribute="leading" constant="20" id="V8W-dp-3cC"/>
+                            <constraint firstItem="T2X-8V-im7" firstAttribute="top" secondItem="fQ0-Oe-x2O" secondAttribute="bottom" constant="30" id="a1i-Sj-aO6"/>
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="centerY" secondItem="L6N-s3-fvF" secondAttribute="centerY" id="bVK-PN-lSC"/>
                             <constraint firstAttribute="trailing" secondItem="PNm-Gl-Hkx" secondAttribute="trailing" constant="31.5" id="bo5-ge-ibG"/>
                             <constraint firstItem="yzB-vT-XdQ" firstAttribute="top" secondItem="NMq-er-YK5" secondAttribute="bottom" constant="20" id="dWJ-Fu-hXx"/>
                             <constraint firstItem="2l1-kO-u42" firstAttribute="centerY" secondItem="HPe-Fv-2H5" secondAttribute="centerY" id="eBt-pE-vMj"/>
                             <constraint firstItem="L6N-s3-fvF" firstAttribute="top" secondItem="HPe-Fv-2H5" secondAttribute="bottom" constant="20" id="fNp-A7-U17"/>
                             <constraint firstItem="2l1-kO-u42" firstAttribute="leading" secondItem="HPe-Fv-2H5" secondAttribute="trailing" constant="10" id="gDZ-6q-YfL"/>
+                            <constraint firstItem="eQQ-TR-u2F" firstAttribute="leading" secondItem="T2X-8V-im7" secondAttribute="leading" id="gkj-gi-cTv"/>
                             <constraint firstItem="yzB-vT-XdQ" firstAttribute="leading" secondItem="NMq-er-YK5" secondAttribute="leading" id="gzL-i3-2hS"/>
+                            <constraint firstItem="ieb-SJ-uyF" firstAttribute="trailing" secondItem="T2X-8V-im7" secondAttribute="trailing" id="lDa-Sh-Pg3"/>
                             <constraint firstItem="unZ-gL-zRz" firstAttribute="centerY" secondItem="NMq-er-YK5" secondAttribute="centerY" id="len-9p-eTy"/>
                             <constraint firstAttribute="trailing" secondItem="JdC-4m-t1M" secondAttribute="trailing" constant="20" id="m4v-vm-5Iv"/>
                             <constraint firstItem="bbY-gy-LrS" firstAttribute="centerY" secondItem="yzB-vT-XdQ" secondAttribute="centerY" id="m9b-vx-2gg"/>
@@ -226,6 +272,7 @@
                             <constraint firstItem="oSW-1o-zHG" firstAttribute="leading" secondItem="Mo3-C7-4iC" secondAttribute="leading" constant="20" id="t4G-Q6-Tps"/>
                             <constraint firstItem="fQ0-Oe-x2O" firstAttribute="leading" secondItem="L6N-s3-fvF" secondAttribute="leading" id="uGI-OH-kAr"/>
                             <constraint firstItem="unZ-gL-zRz" firstAttribute="leading" secondItem="NMq-er-YK5" secondAttribute="trailing" constant="10" id="uLK-DS-lKe"/>
+                            <constraint firstItem="T2X-8V-im7" firstAttribute="top" secondItem="xLo-3i-nMf" secondAttribute="bottom" constant="2" id="xmF-S7-b8Y"/>
                             <constraint firstItem="fQ0-Oe-x2O" firstAttribute="top" secondItem="L6N-s3-fvF" secondAttribute="bottom" constant="20" id="xn0-3B-Gho"/>
                             <constraint firstItem="fC0-Fv-DOy" firstAttribute="centerY" secondItem="L6N-s3-fvF" secondAttribute="centerY" id="xpK-AK-F2r"/>
                             <constraint firstAttribute="trailing" secondItem="oSW-1o-zHG" secondAttribute="trailing" constant="20" id="yWw-pS-pzD"/>
@@ -234,6 +281,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="downloadButton" destination="eQQ-TR-u2F" id="efl-BT-ZTn"/>
                         <outlet property="ossButtonCancel" destination="JdC-4m-t1M" id="1fj-x5-4X0"/>
                         <outlet property="ossButtonNormalCancel" destination="ng6-dg-j7g" id="lGe-yi-mHQ"/>
                         <outlet property="ossButtonNormalGet" destination="Jgi-Is-fxv" id="hb4-z2-uCX"/>
@@ -247,6 +295,8 @@
                         <outlet property="ossTextSize" destination="fC0-Fv-DOy" id="2FO-1g-cL9"/>
                         <outlet property="ossTextWaterMark" destination="L6N-s3-fvF" id="NjV-9Y-rns"/>
                         <outlet property="ossTextWidth" destination="HPe-Fv-2H5" id="AeT-bt-NEp"/>
+                        <outlet property="progressBar" destination="T2X-8V-im7" id="Nxr-oD-HUH"/>
+                        <outlet property="progressLab" destination="xLo-3i-nMf" id="sro-Mk-eRw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fQ4-bj-dUO" sceneMemberID="firstResponder"/>

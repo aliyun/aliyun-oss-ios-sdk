@@ -15,6 +15,7 @@
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"
+#import "OSSIPv6Adapter.h"
 
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
@@ -80,9 +81,24 @@ static NSObject *lock;
         // using for resumable upload and compat old interface
         queue.maxConcurrentOperationCount = 3;
         _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
+        
+        if (![endpoint oss_isNotEmpty]) {
+            [NSException raise:NSInvalidArgumentException
+                        format:@"endpoint should not be nil or empty!"];
+        }
+        
         if ([endpoint rangeOfString:@"://"].location == NSNotFound) {
             endpoint = [@"https://" stringByAppendingString:endpoint];
         }
+        
+        NSURL *endpointURL = [NSURL URLWithString:endpoint];
+        if ([endpointURL.scheme.lowercaseString isEqualToString:@"https"]) {
+            if ([[OSSIPv6Adapter getInstance] isIPv4Address: endpointURL.host] || [[OSSIPv6Adapter getInstance] isIPv6Address: endpointURL.host]) {
+                [NSException raise:NSInvalidArgumentException
+                            format:@"unsupported format of endpoint, please use right endpoint format!"];
+            }
+        }
+        
         self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;
         self.clientConfiguration = conf;
@@ -529,6 +545,7 @@ static NSObject *lock;
     neededMsg.objectKey = request.objectKey;
     neededMsg.range = rangeString;
     neededMsg.params = params;
+    neededMsg.headerParams = request.headerFields;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObject;
@@ -1280,6 +1297,8 @@ static NSObject *lock;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount: 5];
     
+    NSObject *localLock = [[NSObject alloc] init];
+    
     OSSRequestCRCFlag crcFlag = request.crcFlag;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = nil;
@@ -1300,6 +1319,7 @@ static NSObject *lock;
     
     NSData * uploadPartData;
     NSInteger realPartLength = request.partSize;
+    __block BOOL hasError = NO;
     
     for (NSUInteger idx = 1; idx <= partCout; idx++)
     {
@@ -1331,15 +1351,25 @@ static NSObject *lock;
             uploadPartData = [fileHande readDataOfLength:realPartLength];
             
             NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-                @autoreleasepool {
-                    [self executePartUpload:request
-                   totalBytesExpectedToSend:uploadFileSize
-                             totalBytesSent:uploadedLength
-                                      index:idx
-                                   partData:uploadPartData
-                          alreadyUploadPart:alreadyUploadPart
-                                 localParts:localPartInfos
-                                  errorTask:&errorTask];
+                OSSTask *uploadPartErrorTask = nil;
+                
+                [self executePartUpload:request
+               totalBytesExpectedToSend:uploadFileSize
+                         totalBytesSent:uploadedLength
+                                  index:idx
+                               partData:uploadPartData
+                      alreadyUploadPart:alreadyUploadPart
+                             localParts:localPartInfos
+                              errorTask:&uploadPartErrorTask];
+                
+                if (uploadPartErrorTask != nil) {
+                    @synchronized(localLock) {
+                        if (!hasError) {
+                            hasError = YES;
+                            errorTask = uploadPartErrorTask;
+                        }
+                    }
+                    uploadPartErrorTask = nil;
                 }
             }];
             [queue addOperation:operation];
@@ -1347,6 +1377,8 @@ static NSObject *lock;
     }
     [fileHande closeFile];
     [queue waitUntilAllOperationsAreFinished];
+    
+    localLock = nil;
     
     if (!errorTask && request.isCancelled) {
         errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
@@ -1676,8 +1708,10 @@ static NSObject *lock;
     
     for (int i = 1; i <= partCout; i++) {
         realPartLength = request.partSize;
-        if (isCancel) {
-            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+        if (isCancel && errorTask != nil) {
+            if (errorTask == nil) {
+                errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+            }
             break;
         }
         realPartLength = request.partSize;
@@ -1783,17 +1817,31 @@ static NSObject *lock;
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters {
     
+    return [self presignConstrainURLWithBucketName: bucketName
+                                     withObjectKey: objectKey
+                                        httpMethod: @"GET"
+                            withExpirationInterval: interval
+                                    withParameters: parameters];
+}
+
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
+{
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
-        NSString * wholeSign = nil;
-        OSSFederationToken * token = nil;
-        NSError * error = nil;
-        NSMutableDictionary * params = [NSMutableDictionary new];
         
-        if (parameters) {
+        NSMutableDictionary * params = [NSMutableDictionary dictionary];
+        if (parameters.count > 0) {
             [params addEntriesFromDictionary:parameters];
         }
+        
+        NSString * wholeSign = nil;
+        OSSFederationToken *token = nil;
+        NSError *error = nil;
         
         if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
             token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
@@ -1809,14 +1857,14 @@ static NSObject *lock;
         {
             [params oss_setObject:token.tToken forKey:@"security-token"];
             resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
-            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@", method, expires, resource];
             wholeSign = [OSSUtil sign:string2sign withToken:token];
         } else {
             NSString * subresource = [OSSUtil populateSubresourceStringFromParameter:params];
             if ([subresource length] > 0) {
                 resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
             }
-            NSString * string2sign = [NSString stringWithFormat:@"GET\n\n\n%@\n%@", expires, resource];
+            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@",  method, expires, resource];
             wholeSign = [self.credentialProvider sign:string2sign error:&error];
             if (error) {
                 return [OSSTask taskWithError:error];
@@ -1838,6 +1886,7 @@ static NSObject *lock;
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
         }
+        
         [params oss_setObject:signature forKey:@"Signature"];
         [params oss_setObject:accessKey forKey:@"OSSAccessKeyId"];
         [params oss_setObject:expires forKey:@"Expires"];

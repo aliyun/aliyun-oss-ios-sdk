@@ -551,6 +551,12 @@ Sets the session Id for background file transmission
  It runs under background thread (not UI thread)
  */
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveData;
+
+/**
+ * set request headers
+ */
+@property (nonatomic, copy) NSDictionary *headerFields;
+
 @end
 
 /**

@@ -22,4 +22,6 @@
 #define OSS_STSTOKEN_URL                @"http://*.*.*.*:*/sts/getsts"
 #define OSS_IMAGE_KEY                   @"hasky.jpeg"
 
+#define OSS_DOWNLOAD_FILE_NAME          @"OSS_DOWNLOAD_FILE_NAME"
+
 #endif /* OSSTestMacros_h */
