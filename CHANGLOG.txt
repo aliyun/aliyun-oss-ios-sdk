@@ -15,6 +15,14 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2018/08/30
+- release 2.10.6
+1.Add sample about resume download object task from oss server;
+2.Endpoints should not be formatted as https://ip;
+3.if there is no error occurs in network session,date header should not be empty;
+4.Error returning signature when calculating signature error;
+5.fix bug about data race;
+
 2018/08/02
 - release 2.10.5
 1.add api which named putSymlink;
