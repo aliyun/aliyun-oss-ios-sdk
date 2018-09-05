@@ -21,7 +21,7 @@
 /**
  the flag of request canceled.
  */
-@property (nonatomic, assign) BOOL isCancelled;
+@property (atomic, assign) BOOL isCancelled;
 
 /**
  the flag of verification about crc64

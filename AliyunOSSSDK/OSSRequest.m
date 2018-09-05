@@ -27,7 +27,7 @@
 }
 
 - (void)cancel {
-    _isCancelled = YES;
+    self.isCancelled = YES;
     
     if (self.requestDelegate) {
         [self.requestDelegate cancel];
