@@ -1541,35 +1541,44 @@ static NSObject *lock;
             }
             
             [uploadedPart enumerateObjectsUsingBlock:^(NSDictionary *partInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-                unsigned long long iPartNum = 0;
-                NSString *partNumberString = [partInfo objectForKey:OSSPartNumberXMLTOKEN];
-                NSScanner *scanner = [NSScanner scannerWithString:partNumberString];
-                [scanner scanUnsignedLongLong:&iPartNum];
+                unsigned long long remotePartNumber = 0;
+                NSString *partNumberString = [partInfo objectForKey: OSSPartNumberXMLTOKEN];
+                NSScanner *scanner = [NSScanner scannerWithString: partNumberString];
+                [scanner scanUnsignedLongLong: &remotePartNumber];
                 
-                unsigned long long iPartSize = 0;
+                unsigned long long remotePartHashCode = 0;
+                NSString *hashCode = [partInfo objectForKey:OSSPartHashCodeXMLTOKEN];
+                scanner = [NSScanner scannerWithString:hashCode];
+                [scanner scanUnsignedLongLong:&remotePartHashCode];
+                
+                NSString *remotePartEtag = [partInfo objectForKey:OSSETagXMLTOKEN];
+                
+                unsigned long long remotePartSize = 0;
                 NSString *partSizeString = [partInfo objectForKey:OSSSizeXMLTOKEN];
                 scanner = [NSScanner scannerWithString:partSizeString];
-                [scanner scanUnsignedLongLong:&iPartSize];
-                
-                NSString *eTag = [partInfo objectForKey:OSSETagXMLTOKEN];
+                [scanner scanUnsignedLongLong:&remotePartSize];
                 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
                 
-                OSSPartInfo * info = [OSSPartInfo partInfoWithPartNum:iPartNum
-                                                                 eTag:eTag
-                                                                 size:iPartSize
-                                                                crc64:0];
+                OSSPartInfo * info = [[OSSPartInfo alloc] init];
+                info.partNum = remotePartNumber;
+                info.size = remotePartSize;
+                info.crc64 = remotePartHashCode;
+                info.eTag = remotePartEtag;
+                
 #pragma clang diagnostic pop
                 
-                NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%llu",iPartNum]];
-                if (tPartInfo)
-                {
-                    info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
+                if (!hashCode) {
+                    NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%llu",remotePartNumber]];
+                    if (tPartInfo[@"crc64"])
+                    {
+                        info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
+                    }
                 }
                 
                 [uploadedPartInfos addObject:info];
-                [alreadyUploadIndex addObject:@(info.partNum)];
+                [alreadyUploadIndex addObject:@(remotePartNumber)];
             }];
             
             if ([alreadyUploadIndex count] > 0 && request.uploadProgress && uploadFileSize) {
