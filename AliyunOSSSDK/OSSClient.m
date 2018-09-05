@@ -1606,6 +1606,8 @@ static NSObject *lock;
         }
         
         request.uploadId = uploadId;
+        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+        
         if (request.isCancelled)
         {
             if(resumable)
