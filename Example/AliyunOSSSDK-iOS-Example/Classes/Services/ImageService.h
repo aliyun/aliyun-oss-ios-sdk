@@ -22,7 +22,9 @@
  */
 - (void)textWaterMark:(NSString *)object
             waterText:(NSString *)text
-           objectSize:(int)size;
+           objectSize:(int)size
+              success:(void (^_Nullable)(id))success
+              failure:(void (^_Nullable)(NSError*))failure;
 
 /**
  *    @brief    图片缩放下载
@@ -33,7 +35,9 @@
  */
 - (void)reSize:(NSString *) object
       picWidth:(int) width
-     picHeight:(int) height;
+     picHeight:(int) height
+       success:(void (^_Nullable)(id))success
+       failure:(void (^_Nullable)(NSError*))failure;
 
 @end
 

@@ -35,7 +35,9 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
  */
 - (void)textWaterMark:(NSString *)object
             waterText:(NSString *)text
-           objectSize:(int)size {
+           objectSize:(int)size
+              success:(void (^_Nullable)(id))success
+              failure:(void (^_Nullable)(NSError*))failure {
     NSString * base64Text = [OSSUtil calBase64WithData:(UTF8Char*)[text cStringUsingEncoding:NSASCIIStringEncoding]];
     NSString * queryString = [NSString stringWithFormat:@"@watermark=2&type=%@&text=%@&size=%d",
                               font, base64Text, size];
@@ -43,7 +45,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     NSLog(@"Text: %@", text);
     NSLog(@"QueryString: %@", queryString);
     NSLog(@"%@%@", object, queryString);
-    [imageService asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString]];
+    [imageService asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] success:success failure:failure];
 }
 
 
@@ -58,13 +60,15 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
 - (void)reSize:(NSString *)object
       picWidth:(int)width
      picHeight:(int)height
+       success:(void (^_Nullable)(id))success
+       failure:(void (^_Nullable)(NSError*))failure
 {
-    NSString * queryString = [NSString stringWithFormat:@"@%dw_%dh_2e", width, height];
+    NSString * queryString = [NSString stringWithFormat:@"@%dw_%dh_1e_1c", width, height];
     NSLog(@"ResizeImage: %@", object);
     NSLog(@"Width: %d", width);
     NSLog(@"Height: %d", height);
     NSLog(@"QueryString: %@", queryString);
-    [imageService asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString]];
+    [imageService asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] success:success failure:failure];
 }
 
 @end

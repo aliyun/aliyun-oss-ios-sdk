@@ -11,19 +11,18 @@
 #import "ViewController.h"
 @interface OssService : NSObject
 
-- (id)initWithViewController:(ViewController *)view
-                withEndPoint:(NSString *)enpoint;
-
-- (void)setCallbackAddress:(NSString *)address;
-
 - (void)asyncPutImage:(NSString *)objectKey
-        localFilePath:(NSString *)filePath;
+        localFilePath:(NSString *)filePath
+              success:(void (^_Nullable)(id))success
+              failure:(void (^_Nullable)(NSError*))failure;
 
-- (void)asyncGetImage:(NSString *)objectKey;
+- (void)asyncGetImage:(NSString *)objectKey success:(void (^_Nullable)(id))success failure:(void (^_Nullable)(NSError*))failure;
 
 - (void)normalRequestCancel;
 
-- (void)triggerCallback;
+- (void)triggerCallbackWithObjectKey:(NSString *)objectKey success:(void (^_Nullable)(id))success failure:(void (^_Nullable)(NSError*))failure;
+
+- (void)multipartUploadWithSuccess:(void (^_Nullable)(id))success failure:(void (^_Nullable)(NSError*))failure;
 
 @end
 

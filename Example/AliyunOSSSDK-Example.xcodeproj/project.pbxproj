@@ -36,7 +36,6 @@
 		D83D58591FC682010022761B /* OSSCredentialProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58511FC680840022761B /* OSSCredentialProviderTests.m */; };
 		D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58501FC680840022761B /* OSSRangeTests.m */; };
 		D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58531FC680850022761B /* OSSSignTests.m */; };
-		D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BE1FC6B3100022761B /* OSSConstants.m */; };
 		D83D58CE1FC6B3100022761B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BF1FC6B3100022761B /* ViewController.m */; };
 		D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C51FC6B3100022761B /* AppDelegate.m */; };
 		D83D58D21FC6B3100022761B /* ImageService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C81FC6B3100022761B /* ImageService.m */; };
@@ -141,10 +140,8 @@
 		D83D58531FC680850022761B /* OSSSignTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSSignTests.m; sourceTree = "<group>"; };
 		D83D58A61FC6B2850022761B /* AliyunOSSSDK-iOS-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-iOS-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D83D58BD1FC6B3100022761B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		D83D58BE1FC6B3100022761B /* OSSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSConstants.m; sourceTree = "<group>"; };
 		D83D58BF1FC6B3100022761B /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D83D58C51FC6B3100022761B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D83D58C61FC6B3100022761B /* OSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSConstants.h; sourceTree = "<group>"; };
 		D83D58C81FC6B3100022761B /* ImageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageService.m; sourceTree = "<group>"; };
 		D83D58C91FC6B3100022761B /* OssService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OssService.m; sourceTree = "<group>"; };
 		D83D58CA1FC6B3100022761B /* ImageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageService.h; sourceTree = "<group>"; };
@@ -247,8 +244,6 @@
 			children = (
 				D83D58BD1FC6B3100022761B /* AppDelegate.h */,
 				D83D58C51FC6B3100022761B /* AppDelegate.m */,
-				D83D58C61FC6B3100022761B /* OSSConstants.h */,
-				D83D58BE1FC6B3100022761B /* OSSConstants.m */,
 				D83D58CC1FC6B3100022761B /* ViewController.h */,
 				D83D58BF1FC6B3100022761B /* ViewController.m */,
 				D83D58C71FC6B3100022761B /* Services */,
@@ -536,7 +531,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D83D58D31FC6B3100022761B /* OssService.m in Sources */,
-				D83D58CD1FC6B3100022761B /* OSSConstants.m in Sources */,
 				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
 				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
 				D8125E91211BCC4C00DB687C /* DownloadService.m in Sources */,

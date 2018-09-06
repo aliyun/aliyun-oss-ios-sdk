@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 #import "ImageService.h"
-#import "OSSConstants.h"
 #import <AliyunOSSiOS/OSSService.h>
 #import "OSSTestMacros.h"
 #import "DownloadService.h"
@@ -51,6 +50,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *progressLab;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *uploadBigFileButton;
 
 @property (nonatomic, strong) DownloadRequest *downloadRequest;
 @property (nonatomic, strong) OSSClient *mClient;
@@ -66,14 +66,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [OSSLog enableLog];     // 开启sdk的日志功能
+    
+    
+    [_uploadBigFileButton addTarget:self action:@selector(uploadBigFileClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
     // init ossService
-    service = [[OssService alloc] initWithViewController:self withEndPoint:endPoint];
-    [service setCallbackAddress:callbackAddress];
-    imageService = [[OssService alloc] initWithViewController:self withEndPoint:imageEndPoint];
+    service = [[OssService alloc] init];
+    imageService = [[OssService alloc] init];
     imageOperation = [[ImageService alloc] initImageService:imageService];
-    
-    [OSSLog enableLog];
-    
     [self initDownloadURLs];
     self.progressBar.progress = 0;
 }
@@ -187,8 +189,14 @@
     if (![self verifyFileName]) {
         return;
     }
+    
+    NSString *funcStr = @"普通上传";
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncPutImage:objectKey localFilePath:uploadFilePath];
+    [service asyncPutImage:objectKey localFilePath:uploadFilePath success:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success"];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
 }
 
 // 普通下载
@@ -196,8 +204,14 @@
     if (![self verifyFileName]) {
         return;
     }
+    
+    NSString *funcStr = @"普通下载";
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncGetImage:objectKey];
+    [service asyncGetImage:objectKey success:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success"];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
 }
 
 // 取消普通上传/下载任务
@@ -216,7 +230,15 @@
     NSString * objectKey = _ossTextFileName.text;
     int width = [_ossTextWidth.text intValue];
     int height = [_ossTextHeight.text intValue];
-    [imageOperation reSize:objectKey picWidth:width picHeight:height];
+    
+    NSString *funcStr = @"图片缩放";
+    [imageOperation reSize:objectKey picWidth:width picHeight:height success:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success!"];
+        NSString *filePath = (NSString *)result;
+        self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
 }
 
 // 图片水印
@@ -227,7 +249,15 @@
     NSString * objectKey = _ossTextFileName.text;
     NSString * waterMark = _ossTextWaterMark.text;
     int size = [_ossTextSize.text intValue];
-    [imageOperation textWaterMark:objectKey waterText:waterMark objectSize:size];
+    
+    NSString *funcStr = @"图片水印";
+    [imageOperation textWaterMark:objectKey waterText:waterMark objectSize:size success:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success!"];
+        NSString *filePath = (NSString *)result;
+        self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
 }
 
 /**
@@ -272,7 +302,23 @@
 }
 
 - (IBAction)triggerCallbackClicked:(id)sender {
-    [service triggerCallback];
+    NSString *funcStr = @"上传回调";
+    
+    [service triggerCallbackWithObjectKey:_ossTextFileName.text success:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success"];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
+}
+
+- (void)uploadBigFileClicked:(id)sender {
+    NSString *funcStr = @"大文件上传";
+    
+    [service multipartUploadWithSuccess:^(id result) {
+        [self showMessage:funcStr inputMessage:@"success"];
+    } failure:^(NSError *error) {
+        [self showMessage:funcStr inputMessage:error.localizedDescription];
+    }];
 }
 
 - (void)initDownloadURLs {
