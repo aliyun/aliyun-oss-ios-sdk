@@ -54,6 +54,7 @@
 #define OSSMaxPartsXMLTOKEN                     @"MaxParts"
 #define OSSPartXMLTOKEN                         @"Part"
 #define OSSPartNumberXMLTOKEN                   @"PartNumber"
+#define OSSPartHashCodeXMLTOKEN                 @"HashCrc64ecma"
 
 #define OSSClientErrorDomain                    @"com.aliyun.oss.clientError"
 #define OSSServerErrorDomain                    @"com.aliyun.oss.serverError"
