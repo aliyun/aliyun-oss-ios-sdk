@@ -76,21 +76,24 @@
     // build base url string
     NSString * urlString = self.allNeededMessage.endpoint;
     
-    NSURL * endPointURL = [NSURL URLWithString:self.allNeededMessage.endpoint];
+    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    
     if (self.allNeededMessage.bucketName) {
         OSSIPv6Adapter *ipv6Adapter = [OSSIPv6Adapter getInstance];
-        if ([OSSUtil isOssOriginBucketHost:endPointURL.host]) {
-            urlString = [NSString stringWithFormat:@"%@://%@.%@", endPointURL.scheme, self.allNeededMessage.bucketName, endPointURL.host];
-        } else if ([ipv6Adapter isIPv4Address: endPointURL.host] || [ipv6Adapter isIPv6Address: endPointURL.host]) {
-            urlString = [NSString stringWithFormat:@"%@://%@/%@/", endPointURL.scheme, endPointURL.host, self.allNeededMessage.bucketName];
+        if ([OSSUtil isOssOriginBucketHost:urlComponents.host]) {
+            // eg. insert bucket to the begining of host.
+            urlComponents.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlComponents.host];
+            urlString = urlComponents.URL.absoluteString;
+        } else if ([ipv6Adapter isIPv4Address: urlComponents.host] || [ipv6Adapter isIPv6Address: urlComponents.host]) {
+            urlString = [urlString stringByAppendingFormat:@"/%@/", self.allNeededMessage.bucketName];
         }
     }
     
-    endPointURL = [NSURL URLWithString:urlString];
-    NSString * urlHost = endPointURL.host;
+    urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    NSString * urlHost = urlComponents.host;
     if (!self.isAccessViaProxy && [OSSUtil isOssOriginBucketHost:urlHost] && self.isHttpdnsEnable) {
         NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:urlHost];
-        urlString = [NSString stringWithFormat:@"%@://%@", endPointURL.scheme, httpdnsResolvedResult];
+        urlString = [NSString stringWithFormat:@"%@://%@", urlComponents.scheme, httpdnsResolvedResult];
     }
     
     if (self.allNeededMessage.objectKey) {
