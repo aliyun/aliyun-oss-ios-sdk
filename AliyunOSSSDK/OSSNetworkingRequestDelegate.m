@@ -72,31 +72,29 @@
     }
     
 #define URLENCODE(a) [OSSUtil encodeURL:(a)]
-    OSSLogDebug(@"start to build request");
+    OSSLogDebug(@"start to build request")
     // build base url string
-    NSString * urlString = self.allNeededMessage.endpoint;
-    
+    NSString *urlString = self.allNeededMessage.endpoint;
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
+    NSString *headerHost = urlComponents.host;
     
-    if (self.allNeededMessage.bucketName) {
-        OSSIPv6Adapter *ipv6Adapter = [OSSIPv6Adapter getInstance];
+    if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
         if ([OSSUtil isOssOriginBucketHost:urlComponents.host]) {
             // eg. insert bucket to the begining of host.
             urlComponents.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlComponents.host];
-            urlString = urlComponents.URL.absoluteString;
-        } else if ([ipv6Adapter isIPv4Address: urlComponents.host] || [ipv6Adapter isIPv6Address: urlComponents.host]) {
-            urlString = [urlString stringByAppendingFormat:@"/%@/", self.allNeededMessage.bucketName];
+            headerHost = urlComponents.host;
+            
+            if (self.isHttpdnsEnable) {
+                NSString *dnsResult = [OSSUtil getIpByHost: urlComponents.host];
+                urlComponents.host = dnsResult;
+            }
         }
     }
     
-    urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    NSString * urlHost = urlComponents.host;
-    if (!self.isAccessViaProxy && [OSSUtil isOssOriginBucketHost:urlHost] && self.isHttpdnsEnable) {
-        NSString * httpdnsResolvedResult = [OSSUtil getIpByHost:urlHost];
-        urlString = [NSString stringWithFormat:@"%@://%@", urlComponents.scheme, httpdnsResolvedResult];
-    }
+    urlString = urlComponents.string;
     
-    if (self.allNeededMessage.objectKey) {
+    // join object name
+    if ([self.allNeededMessage.objectKey oss_isNotEmpty]) {
         urlString = [urlString oss_stringByAppendingPathComponentForURL:URLENCODE(self.allNeededMessage.objectKey)];
     }
     
@@ -118,22 +116,21 @@
             urlString = [NSString stringWithFormat:@"%@?%@", urlString, queryString];
         }
     }
-    OSSLogDebug(@"built full url: %@", urlString);
+    OSSLogDebug(@"built full url: %@", urlString)
     
-    NSString * headerHost = urlHost;
-    if (![OSSUtil isOssOriginBucketHost:urlHost] && self.allNeededMessage.isHostInCnameExcludeList && self.allNeededMessage.bucketName) {
-        headerHost = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlHost];
-    }
-    
-    // set header fields
+    // generate internal request For NSURLSession
     self.internalRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     
-    // override default host
-    [self.internalRequest setValue:headerHost forHTTPHeaderField:@"Host"];
-    
+    // set http method of request
     if (self.allNeededMessage.httpMethod) {
         [self.internalRequest setHTTPMethod:self.allNeededMessage.httpMethod];
     }
+    
+    // set host of header fields
+    if ([headerHost oss_isNotEmpty]) {
+        [self.internalRequest setValue:headerHost forHTTPHeaderField:@"Host"];
+    }
+    
     if (self.allNeededMessage.contentType) {
         [self.internalRequest setValue:self.allNeededMessage.contentType forHTTPHeaderField:@"Content-Type"];
     }
@@ -157,7 +154,7 @@
     
     
     OSSLogVerbose(@"buidlInternalHttpRequest -\nmethod: %@\nurl: %@\nheader: %@", self.internalRequest.HTTPMethod,
-                  self.internalRequest.URL, self.internalRequest.allHTTPHeaderFields);
+                  self.internalRequest.URL, self.internalRequest.allHTTPHeaderFields)
     
 #undef URLENCODE//(a)
     return [OSSTask taskWithResult:nil];
