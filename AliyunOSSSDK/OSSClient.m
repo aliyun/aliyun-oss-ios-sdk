@@ -1546,11 +1546,6 @@ static NSObject *lock;
                 NSScanner *scanner = [NSScanner scannerWithString: partNumberString];
                 [scanner scanUnsignedLongLong: &remotePartNumber];
                 
-                unsigned long long remotePartHashCode = 0;
-                NSString *hashCode = [partInfo objectForKey:OSSPartHashCodeXMLTOKEN];
-                scanner = [NSScanner scannerWithString:hashCode];
-                [scanner scanUnsignedLongLong:&remotePartHashCode];
-                
                 NSString *remotePartEtag = [partInfo objectForKey:OSSETagXMLTOKEN];
                 
                 unsigned long long remotePartSize = 0;
@@ -1564,18 +1559,12 @@ static NSObject *lock;
                 OSSPartInfo * info = [[OSSPartInfo alloc] init];
                 info.partNum = remotePartNumber;
                 info.size = remotePartSize;
-                info.crc64 = remotePartHashCode;
                 info.eTag = remotePartEtag;
                 
 #pragma clang diagnostic pop
-                
-                if (!hashCode) {
-                    NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%llu",remotePartNumber]];
-                    if (tPartInfo[@"crc64"])
-                    {
-                        info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
-                    }
-                }
+            
+                NSDictionary *tPartInfo = [localPartInfos objectForKey: [@(remotePartNumber) stringValue]];
+                info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
                 
                 [uploadedPartInfos addObject:info];
                 [alreadyUploadIndex addObject:@(remotePartNumber)];
