@@ -15,6 +15,13 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2018/09/13
+- release 2.10.7
+1.refactor code of building canonical url for request,Keep its logic consistent with android sdk.
+2.fix bug about 409 error when using sequentialUpload api.
+3.optimize synchronization of time.
+4.
+
 2018/08/30
 - release 2.10.6
 1.Add sample about resume download object task from oss server;
