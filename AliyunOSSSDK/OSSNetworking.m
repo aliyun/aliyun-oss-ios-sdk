@@ -410,9 +410,6 @@
      */
     
     NSString * host = [[task.currentRequest allHTTPHeaderFields] objectForKey:@"Host"];
-    if (!host) {
-        host = task.currentRequest.URL.host;
-    }
     
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         if ([self evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:host]) {
@@ -423,7 +420,7 @@
         disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     }
     // Uses the default evaluation for other challenges.
-    completionHandler(disposition,credential);
+    completionHandler(disposition, credential);
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session

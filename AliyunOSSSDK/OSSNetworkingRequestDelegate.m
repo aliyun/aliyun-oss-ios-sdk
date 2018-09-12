@@ -76,7 +76,7 @@
     // build base url string
     NSString *urlString = self.allNeededMessage.endpoint;
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    NSString *headerHost = urlComponents.host;
+    NSString *headerHost = nil;
     
     if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
         if ([OSSUtil isOssOriginBucketHost:urlComponents.host]) {
