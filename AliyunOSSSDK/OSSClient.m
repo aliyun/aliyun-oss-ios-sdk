@@ -1406,7 +1406,7 @@ static NSObject *lock;
     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
-        if (uploadPartTask.error.code != -409) {
+        if (abs(uploadPartTask.error.code) != 409) {
             *errorTask = uploadPartTask;
         }
     } else {
@@ -1541,35 +1541,33 @@ static NSObject *lock;
             }
             
             [uploadedPart enumerateObjectsUsingBlock:^(NSDictionary *partInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-                unsigned long long iPartNum = 0;
-                NSString *partNumberString = [partInfo objectForKey:OSSPartNumberXMLTOKEN];
-                NSScanner *scanner = [NSScanner scannerWithString:partNumberString];
-                [scanner scanUnsignedLongLong:&iPartNum];
+                unsigned long long remotePartNumber = 0;
+                NSString *partNumberString = [partInfo objectForKey: OSSPartNumberXMLTOKEN];
+                NSScanner *scanner = [NSScanner scannerWithString: partNumberString];
+                [scanner scanUnsignedLongLong: &remotePartNumber];
                 
-                unsigned long long iPartSize = 0;
+                NSString *remotePartEtag = [partInfo objectForKey:OSSETagXMLTOKEN];
+                
+                unsigned long long remotePartSize = 0;
                 NSString *partSizeString = [partInfo objectForKey:OSSSizeXMLTOKEN];
                 scanner = [NSScanner scannerWithString:partSizeString];
-                [scanner scanUnsignedLongLong:&iPartSize];
-                
-                NSString *eTag = [partInfo objectForKey:OSSETagXMLTOKEN];
+                [scanner scanUnsignedLongLong:&remotePartSize];
                 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
                 
-                OSSPartInfo * info = [OSSPartInfo partInfoWithPartNum:iPartNum
-                                                                 eTag:eTag
-                                                                 size:iPartSize
-                                                                crc64:0];
-#pragma clang diagnostic pop
+                OSSPartInfo * info = [[OSSPartInfo alloc] init];
+                info.partNum = remotePartNumber;
+                info.size = remotePartSize;
+                info.eTag = remotePartEtag;
                 
-                NSDictionary *tPartInfo = [localPartInfos objectForKey:[NSString stringWithFormat:@"%llu",iPartNum]];
-                if (tPartInfo)
-                {
-                    info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
-                }
+#pragma clang diagnostic pop
+            
+                NSDictionary *tPartInfo = [localPartInfos objectForKey: [@(remotePartNumber) stringValue]];
+                info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
                 
                 [uploadedPartInfos addObject:info];
-                [alreadyUploadIndex addObject:@(info.partNum)];
+                [alreadyUploadIndex addObject:@(remotePartNumber)];
             }];
             
             if ([alreadyUploadIndex count] > 0 && request.uploadProgress && uploadFileSize) {
@@ -1597,6 +1595,8 @@ static NSObject *lock;
         }
         
         request.uploadId = uploadId;
+        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+        
         if (request.isCancelled)
         {
             if(resumable)
@@ -1685,7 +1685,6 @@ static NSObject *lock;
                      fileSize:(unsigned long long)uploadFileSize
 {
     OSSRequestCRCFlag crcFlag = request.crcFlag;
-    __block BOOL isCancel = NO;
     __block OSSTask *errorTask;
     __block NSMutableDictionary *localPartInfos = nil;
     
@@ -1703,93 +1702,94 @@ static NSObject *lock;
         return [OSSTask taskWithError: readError];
     }
     
-    NSData * uploadPartData;
     NSUInteger realPartLength = request.partSize;
     
     for (int i = 1; i <= partCout; i++) {
-        realPartLength = request.partSize;
-        if (isCancel && errorTask != nil) {
-            if (errorTask == nil) {
-                errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
-            }
+        if (errorTask) {
             break;
         }
+        
+        if (request.isCancelled) {
+            errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
+            break;
+        }
+        
+        if ([alreadyUploadIndex containsObject:@(i)]) {
+            continue;
+        }
+        
         realPartLength = request.partSize;
-        @autoreleasepool{
-            //alreadyUploadIndex 为空 return false
-            if (alreadyUploadIndex && [alreadyUploadIndex containsObject:@(i)]) {
-                continue;
-            }
-            [fileHande seekToFileOffset:request.partSize * (i - 1)];
-            if (i == partCout) {
+        [fileHande seekToFileOffset:request.partSize * (i - 1)];
+        if (i == partCout) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
-                realPartLength = uploadFileSize - request.partSize * (i - 1);
+            realPartLength = uploadFileSize - request.partSize * (i - 1);
 #pragma clang diagnostic pop
-            }
-            uploadPartData = [fileHande readDataOfLength:realPartLength];
+        }
+        NSData *uploadPartData = [fileHande readDataOfLength:realPartLength];
+        
+        @autoreleasepool {
+            OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
+            uploadPart.bucketName = request.bucketName;
+            uploadPart.objectkey = request.objectKey;
+            uploadPart.partNumber = i;
+            uploadPart.uploadId = request.uploadId;
+            uploadPart.uploadPartData = uploadPartData;
+            uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
+            uploadPart.crcFlag = request.crcFlag;
             
-            if (request.isCancelled) {
-                @synchronized(lock){
-                    if(!isCancel){
-                        isCancel = YES;
-                    }
+            OSSTask * uploadPartTask = [self uploadPart:uploadPart];
+            [uploadPartTask waitUntilFinished];
+            
+            if (uploadPartTask.error) {
+                if (abs(uploadPartTask.error.code) != 409) {
+                    errorTask = uploadPartTask;
+                    break;
+                } else {
+                    NSDictionary *partDict = uploadPartTask.error.userInfo;
+                    OSSPartInfo *partInfo = [[OSSPartInfo alloc] init];
+                    partInfo.eTag = partDict[@"PartEtag"];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+                    partInfo.partNum = [(NSString *)partDict[@"PartNumber"] integerValue];
+                    partInfo.size = realPartLength;
+#pragma clang diagnostic push
+                    partInfo.crc64 = [[uploadPartData mutableCopy] oss_crc64];
+
+                    [alreadyUploadPart addObject:partInfo];
                 }
             } else {
-                OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
-                uploadPart.bucketName = request.bucketName;
-                uploadPart.objectkey = request.objectKey;
-                uploadPart.partNumber = i;
-                uploadPart.uploadId = request.uploadId;
-                uploadPart.uploadPartData = uploadPartData;
-                uploadPart.contentMd5 = [OSSUtil base64Md5ForData:uploadPartData];
-                uploadPart.crcFlag = request.crcFlag;
+                OSSUploadPartResult * result = uploadPartTask.result;
+                OSSPartInfo * partInfo = [OSSPartInfo new];
+                partInfo.partNum = i;
+                partInfo.eTag = result.eTag;
+                partInfo.size = realPartLength;
+                uint64_t crc64OfPart;
+                @try {
+                    NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
+                    [scanner scanUnsignedLongLong:&crc64OfPart];
+                    partInfo.crc64 = crc64OfPart;
+                } @catch (NSException *exception) {
+                    OSSLogError(@"multipart upload error with nil remote crc64!");
+                }
                 
-                OSSTask * uploadPartTask = [self uploadPart:uploadPart];
-                [uploadPartTask waitUntilFinished];
-                if (uploadPartTask.error) {
-                    if (uploadPartTask.error.code != -409) {
-                        errorTask = uploadPartTask;
-                        break;
-                    }
-                } else {
-                    OSSUploadPartResult * result = uploadPartTask.result;
-                    OSSPartInfo * partInfo = [OSSPartInfo new];
-                    partInfo.partNum = i;
-                    partInfo.eTag = result.eTag;
-                    partInfo.size = realPartLength;
-                    uint64_t crc64OfPart;
-                    @try {
-                        NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
-                        [scanner scanUnsignedLongLong:&crc64OfPart];
-                        partInfo.crc64 = crc64OfPart;
-                    } @catch (NSException *exception) {
-                        OSSLogError(@"multipart upload error with nil remote crc64!");
-                    }
-                    
-                    @synchronized(lock){
-                        
-                        [alreadyUploadPart addObject:partInfo];
-                        
-                        if (crcFlag == OSSRequestCRCOpen)
-                        {
-                            [self processForLocalPartInfos:localPartInfos
-                                                  partInfo:partInfo
-                                                  uploadId:request.uploadId];
-                            [self persistencePartInfos:localPartInfos
-                                          withUploadId:request.uploadId];
-                        }
-                        *uploadedLength += realPartLength;
-                        if (request.uploadProgress)
-                        {
-                            request.uploadProgress(realPartLength, *uploadedLength, uploadFileSize);
-                        }
+                [alreadyUploadPart addObject:partInfo];
+                if (crcFlag == OSSRequestCRCOpen)
+                {
+                    [self processForLocalPartInfos:localPartInfos
+                                          partInfo:partInfo
+                                          uploadId:request.uploadId];
+                    [self persistencePartInfos:localPartInfos
+                                  withUploadId:request.uploadId];
+                }
+                
+                @synchronized(lock) {
+                    *uploadedLength += realPartLength;
+                    if (request.uploadProgress)
+                    {
+                        request.uploadProgress(realPartLength, *uploadedLength, uploadFileSize);
                     }
                 }
-            }
-            if (isCancel) {
-                errorTask = [OSSTask taskWithError:[OSSClient cancelError]];
-                break;
             }
         }
     }
