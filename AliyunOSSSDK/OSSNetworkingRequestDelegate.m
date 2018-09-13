@@ -79,6 +79,7 @@
     NSString *headerHost = nil;
     
     if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
+        OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
         if ([OSSUtil isOssOriginBucketHost:urlComponents.host]) {
             // eg. insert bucket to the begining of host.
             urlComponents.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlComponents.host];
@@ -88,6 +89,8 @@
                 NSString *dnsResult = [OSSUtil getIpByHost: urlComponents.host];
                 urlComponents.host = dnsResult;
             }
+        } else if ([ipAdapter isIPv4Address:urlComponents.host] || [ipAdapter isIPv6Address:urlComponents.host]) {
+            urlComponents.path = [NSString stringWithFormat:@"/%@%@",self.allNeededMessage.bucketName, urlComponents.path];
         }
     }
     
