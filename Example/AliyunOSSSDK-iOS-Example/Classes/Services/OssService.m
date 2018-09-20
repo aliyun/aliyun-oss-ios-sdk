@@ -88,19 +88,20 @@
                                   // callbackBody可自定义传入的信息
                                   @"callbackBody": @"filename=${object}"
                                   };
-    
-    OSSTask * task = [_client putObject:_putRequest];
-    [task continueWithBlock:^id(OSSTask *task) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (task.error) {
-                failure(task.error);
-            } else {
-                success(nil);
-            }
-        });
-        
-        return nil;
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        OSSTask * task = [_client putObject:_putRequest];
+        [task continueWithBlock:^id(OSSTask *task) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (task.error) {
+                    failure(task.error);
+                } else {
+                    success(nil);
+                }
+            });
+            
+            return nil;
+        }];
+    });
 }
 
 /**
@@ -124,17 +125,19 @@
         OSSLogDebug(@"下载文件进度: %f", progress);
     };
     
-    OSSTask * task = [_imgClient getObject:_getRequest];
-    [task continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (task.error) {
-                failure(task.error);
-            } else {
-                success(downloadFilePath);
-            }
-        });
-        return nil;
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        OSSTask * task = [_imgClient getObject:_getRequest];
+        [task continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (task.error) {
+                    failure(task.error);
+                } else {
+                    success(downloadFilePath);
+                }
+            });
+            return nil;
+        }];
+    });
 }
 
 
@@ -201,7 +204,7 @@
         
         //
         OSSTask * resumeTask = [_client resumableUpload:resumableUpload];
-        [resumeTask waitUntilFinished];                             // 阻塞当前线程知道上传任务完成
+        [resumeTask waitUntilFinished];                             // 阻塞当前线程直到上传任务完成
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (resumeTask.result) {
