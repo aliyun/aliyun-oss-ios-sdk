@@ -79,6 +79,8 @@ WWDC 2016开发者大会上，苹果宣布从2017年1月1日起，苹果App Stor
 
 ### 对于OSSTask的一些说明
 
+**注意: 建议OSSClient的生命周期和应用程序的生命周期保持一致(如果您不希望这样，也可以在调用API时增加[task waitUntilFinished]以确保在task完成之前OSSClient不被释放)。**
+
 所有调用api的操作，都会立即获得一个OSSTask，如：
 
 ```
@@ -99,7 +101,7 @@ OSSTask * task = [client getObject:get];
 也可以等待这个Task完成，以实现同步等待，如：
 
 ```
-[task waitUntilFinished];
+[task waitUntilFinished];	// 调用此方法时会阻塞当前线程直到task完成
 
 ...
 ```
