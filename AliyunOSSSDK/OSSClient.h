@@ -38,7 +38,6 @@
 
 @class OSSTask;
 @class OSSExecutor;
-@class OSSNetworking;
 @class OSSClientConfiguration;
 @protocol OSSCredentialProvider;
 
@@ -54,11 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
  OSS endpoint. It varies in different regions. Please check out OSS official website for the exact endpoints for your data.
  */
 @property (nonatomic, strong) NSString * endpoint;
-
-/**
- The networking instance for sending and receiving data
- */
-@property (nonatomic, strong) OSSNetworking * networking;
 
 /**
  The credential provider instance

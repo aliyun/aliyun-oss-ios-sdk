@@ -114,7 +114,8 @@ static NSObject *lock;
             netConf.proxyPort = conf.proxyPort;
             netConf.maxConcurrentRequestCount = conf.maxConcurrentRequestCount;
         }
-        self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
+        
+        [OSSNetworking setupWithConfiguration:netConf];
     }
     return self;
 }
@@ -146,7 +147,7 @@ static NSObject *lock;
 
     request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
 
-    return [_networking sendRequest:request];
+    return [[OSSNetworking sharedNetworking] sendRequest:request];
 }
 
 #pragma implement restful apis
@@ -388,10 +389,6 @@ static NSObject *lock;
                                 userInfo:@{OSSErrorMessageTOKEN: @"This task has been cancelled!"}];
     });
     return error;
-}
-
-- (void)dealloc{
-    [self.networking.session invalidateAndCancel];
 }
 
 @end

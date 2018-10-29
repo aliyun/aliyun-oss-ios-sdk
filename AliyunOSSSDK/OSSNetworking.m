@@ -52,8 +52,36 @@
 
 @end
 
+@interface OSSNetworking ()
+
+@property (nonatomic, copy) OSSNetworkingConfiguration *configuration;
+
+@end
 
 @implementation OSSNetworking
+
+static OSSNetworkingConfiguration * globalDefaultConfiguration = nil;
+
++ (void)setupWithConfiguration:(OSSNetworkingConfiguration *)cfg {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (cfg) {
+            globalDefaultConfiguration = [OSSNetworkingConfiguration defaultConfiguration];
+        } else {
+            globalDefaultConfiguration = cfg;
+        }
+    });
+}
+
++ (instancetype)sharedNetworking {
+    static OSSNetworking *_sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[OSSNetworking alloc] initWithConfiguration:globalDefaultConfiguration];
+    });
+    
+    return _sharedInstance;
+}
 
 - (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration {
     if (self = [super init]) {
@@ -102,6 +130,7 @@
         }
         self.taskExecutor = [OSSExecutor executorWithOperationQueue: operationQueue];
     }
+    
     return self;
 }
 
@@ -260,13 +289,13 @@
 
         if (requestDelegate.uploadingData) {
             [requestDelegate.internalRequest setHTTPBody:requestDelegate.uploadingData];
-            sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
+            sessionTask = [self->_session dataTaskWithRequest:requestDelegate.internalRequest];
         } else if (requestDelegate.uploadingFileURL) {
-            sessionTask = [_session uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
+            sessionTask = [self->_session uploadTaskWithRequest:requestDelegate.internalRequest fromFile:requestDelegate.uploadingFileURL];
 
                 requestDelegate.isBackgroundUploadFileTask = self.isUsingBackgroundSession;
         } else { // not upload request
-            sessionTask = [_session dataTaskWithRequest:requestDelegate.internalRequest];
+            sessionTask = [self->_session dataTaskWithRequest:requestDelegate.internalRequest];
         }
 
         requestDelegate.currentSessionTask = sessionTask;

@@ -46,9 +46,25 @@
 @property (nonatomic, strong) NSURLSession * session;
 @property (nonatomic, assign) BOOL isUsingBackgroundSession;
 @property (nonatomic, strong) OSSSyncMutableDictionary * sessionDelagateManager;
-@property (nonatomic, strong) OSSNetworkingConfiguration * configuration;
+@property (nonatomic, copy, readonly) OSSNetworkingConfiguration *configuration;
 @property (nonatomic, strong) OSSExecutor * taskExecutor;
 
-- (instancetype)initWithConfiguration:(OSSNetworkingConfiguration *)configuration;
+
+/**
+ set default configuration for networking,you should only invoke this method once,subsequent invoking does not work.
+
+ @param cfg A default oss networking configuration object.
+ */
++ (void)setupWithConfiguration:(OSSNetworkingConfiguration *)cfg;
+
+
+/**
+ The shared singleton networking object.
+
+ @return The shared singleton networking object.
+ */
++ (instancetype)sharedNetworking;
+
+
 - (OSSTask *)sendRequest:(OSSNetworkingRequestDelegate *)request;
 @end
