@@ -404,10 +404,6 @@ static NSObject *lock;
     NSMutableDictionary *headerParams = [NSMutableDictionary dictionary];
     [headerParams oss_setObject:request.xOssACL forKey:OSSHttpHeaderBucketACL];
     
-    if (request.location) {
-        requestDelegate.uploadingData = [OSSUtil constructHttpBodyForCreateBucketWithLocation:request.location];
-    }
-    
     requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeCreateBucket];
     
     NSString *bodyString = [NSString stringWithFormat:@"<?xml version='1.0' encoding='UTF-8'?><CreateBucketConfiguration><StorageClass>%@</StorageClass></CreateBucketConfiguration>", request.storageClassAsString];

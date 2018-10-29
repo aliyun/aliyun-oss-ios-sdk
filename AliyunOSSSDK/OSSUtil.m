@@ -121,16 +121,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return [body dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSData *)constructHttpBodyForCreateBucketWithLocation:(NSString *)location {
-    NSString * body = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                       @"<CreateBucketConfiguration>\n"
-                       @"<LocationConstraint>%@</LocationConstraint>\n"
-                       @"</CreateBucketConfiguration>\n",
-                       location];
-    OSSLogVerbose(@"constucted create bucket body:\n%@", body);
-    return [body dataUsingEncoding:NSUTF8StringEncoding];
-}
-
 + (BOOL)validateBucketName:(NSString *)bucketName {
     if (bucketName == nil) {
         return false;
