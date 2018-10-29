@@ -127,10 +127,10 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // Once the remaining
 
         @synchronized (self) {
             if (ipObject) {
-                gHostIpMap[host] = ipObject;
+                self->gHostIpMap[host] = ipObject;
             }
 
-            [penddingSet removeObject:host];
+            [self->penddingSet removeObject:host];
         }
     }];
 

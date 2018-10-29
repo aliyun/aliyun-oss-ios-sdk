@@ -113,14 +113,14 @@ typedef enum {
                 hints.ai_flags = AI_DEFAULT;
                 
                 if (0 != getaddrinfo("ipv4only.arpa", "http", &hints, &addr)) {
-                    ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
+                    self->ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
                     return;
                 }
                 
                 if (addr && AF_INET6 == addr->ai_addr->sa_family) {
                     struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)(addr->ai_addr);
                     if ( !addr6 ) {
-                        ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
+                        self->ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
                         return;
                     }
                     
@@ -131,13 +131,13 @@ typedef enum {
                                         withIP:u8
                                      withIPLen:16]) {
                             
-                            ipv6Prefix = (__uint8_t *)V6_PREFIX_CONTENT_TABLE[i];
-                            prefixLen = V6_PREFIX_SIZE_TABLE[i];
-                            ipv6PrefixResolveStatus = IPv6PrefixResolved;
+                            self->ipv6Prefix = (__uint8_t *)V6_PREFIX_CONTENT_TABLE[i];
+                            self->prefixLen = V6_PREFIX_SIZE_TABLE[i];
+                            self->ipv6PrefixResolveStatus = IPv6PrefixResolved;
                             break;
                         }
                     }
-                    ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
+                    self->ipv6PrefixResolveStatus = IPv6PrefixUnResolved;
                 }
                 
             });
