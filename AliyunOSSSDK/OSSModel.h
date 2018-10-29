@@ -115,6 +115,7 @@ TODOTODO
 /**
  The STS token's credential provider.
  */
+__attribute__((deprecated("Please use OSSAuthCredentialProvider or its subClass instead!")))
 @interface OSSStsTokenCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, copy) NSString * accessKeyId;
 @property (nonatomic, copy) NSString * secretKeyId;
