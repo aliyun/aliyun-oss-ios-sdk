@@ -19,6 +19,37 @@
 #import "OSSHttpResponseParser.h"
 
 @implementation OSSNetworkingConfiguration
+
++ (instancetype)defaultConfiguration {
+    OSSNetworkingConfiguration *cfg = [[[self class] alloc] init];
+    if (cfg) {
+        cfg.maxRetryCount = OSSDefaultRetryCount;
+        cfg.maxConcurrentRequestCount = OSSDefaultMaxConcurrentNum;
+        cfg.enableBackgroundTransmitService = NO;
+        cfg.backgroundSessionIdentifier = nil;
+        cfg.timeoutIntervalForRequest = OSSDefaultTimeoutForRequestInSecond;
+        cfg.timeoutIntervalForResource = OSSDefaultTimeoutForResourceInSecond;
+    }
+    
+    return cfg;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    OSSNetworkingConfiguration *copy = [[[self class] allocWithZone:zone] init];
+    if (copy) {
+        copy.maxRetryCount = self.maxRetryCount;
+        copy.maxConcurrentRequestCount = self.maxConcurrentRequestCount;
+        copy.enableBackgroundTransmitService = self.enableBackgroundTransmitService;
+        copy.backgroundSessionIdentifier = self.backgroundSessionIdentifier;
+        copy.timeoutIntervalForRequest = self.timeoutIntervalForRequest;
+        copy.timeoutIntervalForResource = self.timeoutIntervalForResource;
+        copy.proxyHost = self.proxyHost;
+        copy.proxyPort = self.proxyPort;
+    }
+    
+    return copy;
+}
+
 @end
 
 

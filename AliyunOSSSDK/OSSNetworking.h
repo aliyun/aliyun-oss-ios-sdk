@@ -18,7 +18,8 @@
 /**
  Network parameters
  */
-@interface OSSNetworkingConfiguration : NSObject
+@interface OSSNetworkingConfiguration : NSObject<NSCopying>
+
 @property (nonatomic, assign) uint32_t maxRetryCount;
 @property (nonatomic, assign) uint32_t maxConcurrentRequestCount;
 @property (nonatomic, assign) BOOL enableBackgroundTransmitService;
@@ -27,6 +28,14 @@
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
+
+/**
+ A default oss networking configuration object.
+ 
+ @return A default oss networking configuration object.
+ */
++ (instancetype)defaultConfiguration;
+
 @end
 
 
