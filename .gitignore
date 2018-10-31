@@ -37,3 +37,6 @@ Products/
 
 # big Resource for test
 Example/AliyunOSSSDK-iOS-Example/Resources/
+
+# Script files
+Scripts/*.pyc
