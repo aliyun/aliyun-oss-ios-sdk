@@ -538,7 +538,7 @@ static NSObject *lock;
     neededMsg.objectKey = request.objectKey;
     neededMsg.range = rangeString;
     neededMsg.params = params;
-    neededMsg.headerParams = request.headerFields;
+    neededMsg.headerParams = [request.headerFields mutableCopy];
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObject;
@@ -1399,7 +1399,7 @@ static NSObject *lock;
     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
-        if (abs(uploadPartTask.error.code) != 409) {
+        if (labs(uploadPartTask.error.code) != 409) {
             *errorTask = uploadPartTask;
         }
     } else {
@@ -1735,7 +1735,7 @@ static NSObject *lock;
             [uploadPartTask waitUntilFinished];
             
             if (uploadPartTask.error) {
-                if (abs(uploadPartTask.error.code) != 409) {
+                if (labs(uploadPartTask.error.code) != 409) {
                     errorTask = uploadPartTask;
                     break;
                 } else {
