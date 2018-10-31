@@ -32,6 +32,7 @@ static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_nam
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
 static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
+static OSSExecutor *global_oss_multi_executor;
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -77,10 +78,12 @@ static NSObject *lock;
         // Monitor the network. If the network type is changed, recheck the IPv6 status.
         [OSSReachabilityManager shareInstance];
 
-        NSOperationQueue * queue = [NSOperationQueue new];
-        // using for resumable upload and compat old interface
-        queue.maxConcurrentOperationCount = 3;
-        _ossOperationExecutor = [OSSExecutor executorWithOperationQueue:queue];
+        if (!global_oss_multi_executor) {
+            NSOperationQueue * queue = [NSOperationQueue new];
+            // using for resumable upload and compat old interface
+            queue.maxConcurrentOperationCount = 3;
+            global_oss_multi_executor = [OSSExecutor executorWithOperationQueue:queue];
+        }
         
         if (![endpoint oss_isNotEmpty]) {
             [NSException raise:NSInvalidArgumentException
@@ -1470,7 +1473,7 @@ static NSObject *lock;
         return preTask;
     }
     
-    return [[OSSTask taskWithResult:nil] continueWithExecutor:self.ossOperationExecutor withBlock:^id(OSSTask *task) {
+    return [[OSSTask taskWithResult:nil] continueWithExecutor:global_oss_multi_executor withBlock:^id(OSSTask *task) {
         
         __block NSUInteger uploadedLength = 0;
         uploadedLength = 0;

@@ -65,11 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) OSSClientConfiguration * clientConfiguration;
 
 /**
- oss operation task queue
- */
-@property (nonatomic, strong, readonly) OSSExecutor * ossOperationExecutor;
-
-/**
  Initializes an OSSClient instance with the default client configuration.
  @endpoint it specifies domain of the bucket's region. Starting 2017, the domain must be prefixed with "https://" to follow Apple's ATS policy.
              For example: "https://oss-cn-hangzhou.aliyuncs.com"
