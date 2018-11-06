@@ -142,46 +142,9 @@ TODOTODO
 @interface OSSClientConfiguration : NSObject
 
 /**
- Max retry count
- */
-@property (nonatomic, assign) uint32_t maxRetryCount;
-
-/**
- Max concurrent requests
- */
-@property (nonatomic, assign) uint32_t maxConcurrentRequestCount;
-
-/**
- Flag of enabling background file transmit service.
- Note: it's only applicable for file upload.
- */
-@property (nonatomic, assign) BOOL enableBackgroundTransmitService;
-
-/**
  Flag of using Http request for DNS resolution.
  */
 @property (nonatomic, assign) BOOL isHttpdnsEnable;
-
-/**
-Sets the session Id for background file transmission
- */
-@property (nonatomic, copy) NSString * backgroundSesseionIdentifier;
-
-/**
- Sets request timeout
- */
-@property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;
-
-/**
- Sets single object download's max time
- */
-@property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
-
-/**
- Sets proxy host and port.
- */
-@property (nonatomic, copy) NSString * proxyHost;
-@property (nonatomic, strong) NSNumber * proxyPort;
 
 /**
  Sets UA
