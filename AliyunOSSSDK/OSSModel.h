@@ -217,8 +217,12 @@ Sets the session Id for background file transmission
  Updates the UA when creating the request.
  */
 @interface OSSUASettingInterceptor : NSObject <OSSRequestInterceptor>
-@property (nonatomic, weak) OSSClientConfiguration *clientConfiguration;
-- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *) clientConfiguration;
+
+
+@property (nonatomic, copy, readonly) NSString *userAgent;
+
+- (instancetype)initWithUserAgent:(NSString *)userAgent;
+
 @end
 
 /**

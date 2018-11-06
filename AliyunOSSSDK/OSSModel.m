@@ -449,18 +449,32 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 @end
 
+@interface OSSUASettingInterceptor ()
+
+@property (nonatomic, copy) NSString *userAgent;
+
+@end
 @implementation OSSUASettingInterceptor
 
-- (instancetype)initWithClientConfiguration:(OSSClientConfiguration *)clientConfiguration{
-    if (self = [super init]) {
-        self.clientConfiguration = clientConfiguration;
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _userAgent = [self getUserAgent:nil];
     }
     return self;
 }
 
+- (instancetype)initWithUserAgent:(NSString *)userAgent {
+    if (self = [super init]) {
+        _userAgent = [self getUserAgent:userAgent];
+    }
+    
+    return self;
+}
+
 - (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
-    NSString * userAgent = [self getUserAgent:self.clientConfiguration.userAgentMark];
-    [request.headerParams oss_setObject:userAgent forKey:@"User-Agent"];
+    [request.headerParams oss_setObject:self.userAgent forKey:@"User-Agent"];
     return [OSSTask taskWithResult:nil];
 }
 

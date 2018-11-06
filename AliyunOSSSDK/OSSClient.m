@@ -139,7 +139,7 @@ static NSObject *lock;
         }
     }];
 
-    id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:self.clientConfiguration];
+    id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithUserAgent:self.clientConfiguration.userAgentMark];
     [request.interceptors addObject:uaSetting];
 
     /* check if the authentication is required */
