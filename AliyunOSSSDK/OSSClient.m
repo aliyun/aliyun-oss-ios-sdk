@@ -105,20 +105,6 @@ static NSObject *lock;
         self.endpoint = [endpoint oss_trim];
         self.credentialProvider = credentialProvider;
         self.clientConfiguration = conf;
-
-        OSSNetworkingConfiguration * netConf = [OSSNetworkingConfiguration new];
-        if (conf) {
-            netConf.maxRetryCount = conf.maxRetryCount;
-            netConf.timeoutIntervalForRequest = conf.timeoutIntervalForRequest;
-            netConf.timeoutIntervalForResource = conf.timeoutIntervalForResource;
-            netConf.enableBackgroundTransmitService = conf.enableBackgroundTransmitService;
-            netConf.backgroundSessionIdentifier = conf.backgroundSesseionIdentifier;
-            netConf.proxyHost = conf.proxyHost;
-            netConf.proxyPort = conf.proxyPort;
-            netConf.maxConcurrentRequestCount = conf.maxConcurrentRequestCount;
-        }
-        
-        [OSSNetworking setupWithConfiguration:netConf];
     }
     return self;
 }
