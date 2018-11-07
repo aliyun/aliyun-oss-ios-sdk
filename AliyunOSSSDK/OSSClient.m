@@ -28,11 +28,13 @@
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
 
-static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
-static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
-static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
-static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
+static NSString * const kClientRecordNameWithCommonPrefix = @"oss_partInfos_storage_name";
+static NSString * const kClientRecordNameWithCRC64Suffix = @"-crc64";
+static NSString * const kClientRecordNameWithSequentialSuffix = @"-sequential";
+static NSUInteger const kClientMaximumOfChunks = 5000;   //max part number
+
 static NSString * const kClientErrorMessageForEmptyFile = @"the length of file should not be 0!";
+static NSString * const kClientErrorMessageForCancelledTask = @"This task has been cancelled!";
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -268,10 +270,10 @@ static NSObject *lock;
     BOOL divisible = (fileSize % request.partSize == 0);
     NSUInteger partCount = (fileSize / request.partSize) + (divisible? 0 : 1);
     
-    if(partCount > oss_multipart_max_part_number)
+    if(partCount > kClientMaximumOfChunks)
     {
-        request.partSize = fileSize / oss_multipart_max_part_number;
-        partCount = oss_multipart_max_part_number;
+        request.partSize = fileSize / kClientMaximumOfChunks;
+        partCount = kClientMaximumOfChunks;
     }
     return partCount;
 #pragma clang diagnostic pop
@@ -289,10 +291,10 @@ static NSObject *lock;
     NSString *uploadId = nil;
     NSString *record = [NSString stringWithFormat:@"%@%@%@%lu", request.md5String, request.bucketName, request.objectKey, (unsigned long)request.partSize];
     if (sequential) {
-        record = [record stringByAppendingString:oss_record_info_suffix_with_sequential];
+        record = [record stringByAppendingString:kClientRecordNameWithSequentialSuffix];
     }
     if (request.crcFlag == OSSRequestCRCOpen) {
-        record = [record stringByAppendingString:oss_record_info_suffix_with_crc];
+        record = [record stringByAppendingString:kClientRecordNameWithCRC64Suffix];
     }
     
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
@@ -314,7 +316,7 @@ static NSObject *lock;
 - (NSMutableDictionary *)localPartInfosDictoryWithUploadId:(NSString *)uploadId
 {
     NSMutableDictionary *localPartInfoDict = nil;
-    NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name];
+    NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix];
     NSString *partInfosPath = [partInfosDirectory stringByAppendingPathComponent:uploadId];
     BOOL isDirectory;
     NSFileManager *defaultFM = [NSFileManager defaultManager];
@@ -342,7 +344,7 @@ static NSObject *lock;
 
 - (OSSTask *)persistencePartInfos:(NSDictionary *)partInfos withUploadId:(NSString *)uploadId
 {
-    NSString *filePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+    NSString *filePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
     if (![partInfos writeToFile:filePath atomically:YES])
     {
         NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
@@ -410,7 +412,7 @@ static NSObject *lock;
     dispatch_once(&onceToken, ^{
         error = [NSError errorWithDomain:OSSClientErrorDomain
                                     code:OSSClientErrorCodeTaskCancelled
-                                userInfo:@{OSSErrorMessageTOKEN: @"This task has been cancelled!"}];
+                                userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForCancelledTask}];
     });
     return error;
 }
@@ -1072,17 +1074,17 @@ static NSObject *lock;
         OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
         NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%lu",request.md5String, resumableRequest.bucketName, resumableRequest.objectKey, (unsigned long)resumableRequest.partSize];
         if (sequential) {
-            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_sequential];
+            nameInfoString = [nameInfoString stringByAppendingString:kClientRecordNameWithSequentialSuffix];
         }
         if (request.crcFlag == OSSRequestCRCOpen) {
-            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_crc];
+            nameInfoString = [nameInfoString stringByAppendingString:kClientRecordNameWithCRC64Suffix];
         }
         
         NSData *data = [nameInfoString dataUsingEncoding:NSUTF8StringEncoding];
         NSString *recordFileName = [OSSUtil dataMD5String:data];
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",resumableRequest.recordDirectoryPath,recordFileName];
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:resumableRequest.uploadId];
+        NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:resumableRequest.uploadId];
         
         if([fileManager fileExistsAtPath:recordFilePath])
         {
@@ -1552,7 +1554,7 @@ static NSObject *lock;
             
             if([uploadId oss_isNotEmpty])
             {
-                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
                 
                 localPartInfos = [[NSDictionary alloc] initWithContentsOfFile:localPartInfosPath];
                 
@@ -1624,7 +1626,7 @@ static NSObject *lock;
         }
         
         request.uploadId = uploadId;
-        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
         
         if (request.isCancelled)
         {
