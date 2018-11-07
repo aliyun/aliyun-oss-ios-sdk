@@ -1228,7 +1228,7 @@ static NSObject *lock;
         {
             isTruncated = NO;
             [uploadedParts removeAllObjects];
-            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] &&   labs(listPartsTask.error.code) == 404)
+            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && labs(listPartsTask.error.code) == 404)
             {
                 OSSLogVerbose(@"local record existes but the remote record is deleted");
                 *uploadId = nil;
