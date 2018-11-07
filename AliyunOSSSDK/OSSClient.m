@@ -1228,7 +1228,7 @@ static NSObject *lock;
         {
             isTruncated = NO;
             [uploadedParts removeAllObjects];
-            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -404)
+            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] &&   labs(listPartsTask.error.code) == 404)
             {
                 OSSLogVerbose(@"local record existes but the remote record is deleted");
                 *uploadId = nil;
@@ -1437,7 +1437,7 @@ static NSObject *lock;
     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
-        if (abs(uploadPartTask.error.code) != 409) {
+        if (labs(uploadPartTask.error.code) != 409) {
             *errorTask = uploadPartTask;
         }
     } else {
@@ -1773,7 +1773,7 @@ static NSObject *lock;
             [uploadPartTask waitUntilFinished];
             
             if (uploadPartTask.error) {
-                if (abs(uploadPartTask.error.code) != 409) {
+                if (labs(uploadPartTask.error.code) != 409) {
                     errorTask = uploadPartTask;
                     break;
                 } else {
@@ -1982,7 +1982,7 @@ static NSObject *lock;
     if (!headError) {
         return YES;
     } else {
-        if ([headError.domain isEqualToString: OSSServerErrorDomain] && headError.code == -404) {
+        if ([headError.domain isEqualToString: OSSServerErrorDomain] && labs(headError.code) == 404) {
             return NO;
         } else {
             if (error != nil) {
