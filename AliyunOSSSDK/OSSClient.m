@@ -32,6 +32,7 @@ static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_nam
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
 static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
+static NSString * const kClientErrorMessageForEmptyFile = @"the length of file should not be 0!";
 
 /**
  * extend OSSRequest to include the ref to networking request object
@@ -353,6 +354,30 @@ static NSObject *lock;
     return nil;
 }
 
+- (OSSTask *)checkPutObjectFileURL:(OSSPutObjectRequest *)request {
+    NSError *error = nil;
+    if (!request.uploadingFileURL || ![request.uploadingFileURL.path oss_isNotEmpty]) {
+        error = [NSError errorWithDomain:OSSClientErrorDomain
+                                    code:OSSClientErrorCodeInvalidArgument
+                                userInfo:@{OSSErrorMessageTOKEN: @"Please check your request's uploadingFileURL!"}];
+    } else {
+        NSFileManager *dfm = [NSFileManager defaultManager];
+        NSDictionary *attributes = [dfm attributesOfItemAtPath:request.uploadingFileURL.path error:&error];
+        unsigned long long fileSize = [attributes[NSFileSize] unsignedLongLongValue];
+        if (!error && fileSize == 0) {
+            error = [NSError errorWithDomain:OSSClientErrorDomain
+                                        code:OSSClientErrorCodeInvalidArgument
+                                    userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForEmptyFile}];
+        }
+    }
+    
+    if (error) {
+        return [OSSTask taskWithError:error];
+    } else {
+        return [OSSTask taskWithResult:nil];
+    }
+}
+
 - (OSSTask *)checkFileSizeWithRequest:(OSSMultipartUploadRequest *)request {
     NSError *error = nil;
     if (!request.uploadingFileURL || ![request.uploadingFileURL.path oss_isNotEmpty]) {
@@ -368,7 +393,7 @@ static NSObject *lock;
         if (!error && fileSize == 0) {
             error = [NSError errorWithDomain:OSSClientErrorDomain
                                         code:OSSClientErrorCodeInvalidArgument
-                                    userInfo:@{OSSErrorMessageTOKEN: @"File length must not be 0!"}];
+                                    userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForEmptyFile}];
         }
     }
     
@@ -589,6 +614,10 @@ static NSObject *lock;
         }
     }
     if (request.uploadingFileURL) {
+        OSSTask *checkIfEmptyTask = [self checkPutObjectFileURL:request];
+        if (checkIfEmptyTask.error) {
+            return checkIfEmptyTask;
+        }
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
     }
     
