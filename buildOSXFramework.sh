@@ -1,0 +1,46 @@
+#!/bin/sh
+
+PROJECT_NAME='AliyunOSSSDK'
+TARGET_NAME="AliyunOSSSDK OSX"
+SRCROOT='.'
+
+# Sets the target folders and the final framework product.
+FMK_NAME='AliyunOSSOSX'
+
+# Install dir will be the final output to the framework.
+# The following line create it in the root folder of the current project.
+INSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework
+
+# Working dir will be deleted after the framework creation.
+WRK_DIR=./build
+DEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework
+
+# -configuration ${CONFIGURATION}
+# Clean and Building both architectures.
+# xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphoneos clean build
+# xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphonesimulator clean build
+xcodebuild -configuration Release -workspace "${PROJECT_NAME}.xcworkspace" -scheme "${TARGET_NAME}" -sdk macosx clean build SYMROOT="${WRK_DIR}"
+
+# Cleaning the oldest.
+if [ -d "${INSTALL_DIR}" ]
+then
+    rm -rf "${INSTALL_DIR}"
+fi
+
+mkdir -p ${SRCROOT}/Products
+
+cp -LR "${DEVICE_DIR}" "${INSTALL_DIR}"
+
+
+rm -r "${WRK_DIR}"
+
+if [ -d "${INSTALL_DIR}/_CodeSignature" ]
+then
+    rm -rf "${INSTALL_DIR}/_CodeSignature"
+fi
+
+if [ -f "${INSTALL_DIR}/Info.plist" ]
+then
+    rm "${INSTALL_DIR}/Info.plist"
+fi
+
