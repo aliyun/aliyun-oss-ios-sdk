@@ -27,6 +27,7 @@
 #import "OSSPutSymlinkRequest.h"
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
+#import "OSSPutBucketACLRequest.h"
 
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
@@ -41,6 +42,38 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 @property (nonatomic, strong) OSSNetworkingRequestDelegate * requestDelegate;
 
 @end
+
+
+@interface OSSPutBucketACLRequest ()
+
+@property (nonatomic, copy, readonly) NSString *acl;
+
+@end
+
+
+@implementation OSSPutBucketACLRequest
+
+- (NSString *)acl {
+    NSString *rAcl = nil;
+    switch (self.aclType) {
+        case OSSBucketACLPublicRead:
+            rAcl = @"public-read";
+            break;
+        case OSSBucketACLPublicReadAndWrite:
+            rAcl = @"public-read-write";
+            break;
+            
+        default:
+            rAcl = @"private";
+            break;
+    }
+    
+    return rAcl;
+}
+
+@end
+
+
 
 @interface OSSClient()
 
@@ -473,6 +506,24 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucketInfo;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketACL:(OSSPutBucketACLRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketACL];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    neededMsg.headerParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.acl, OSSHttpHeaderBucketACL, nil];
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketACL;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }

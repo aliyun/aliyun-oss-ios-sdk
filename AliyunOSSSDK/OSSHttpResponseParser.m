@@ -20,6 +20,7 @@
 #import "OSSRestoreObjectResult.h"
 #import "OSSPutSymlinkResult.h"
 #import "OSSGetSymlinkResult.h"
+#import "OSSPutBucketACLResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -223,6 +224,17 @@
                 }];
             }
             return createBucketResult;
+        }
+            
+        case OSSOperationTypePutBucketACL:
+        {
+            OSSPutBucketACLResult * putBucketACLResult = [OSSPutBucketACLResult new];
+            if (_response)
+            {
+                [self parseResponseHeader:_response toResultObject:putBucketACLResult];
+            }
+            
+            return putBucketACLResult;
         }
             
         case OSSOperationTypeGetBucketACL:

@@ -12,6 +12,7 @@
 @class OSSDeleteBucketRequest;
 @class OSSHeadObjectRequest;
 @class OSSGetBucketRequest;
+@class OSSPutBucketACLRequest;
 @class OSSGetBucketACLRequest;
 @class OSSGetObjectRequest;
 @class OSSGetObjectACLRequest;
@@ -138,6 +139,8 @@ NS_ASSUME_NONNULL_BEGIN
  Gets the {@link Bucket}'s basic information as well as its ACL.
  */
 - (OSSTask *)getBucketInfo:(OSSGetBucketInfoRequest *)request;
+
+- (OSSTask *)putBucketACL:(OSSPutBucketACLRequest *)request;
 
 /**
  The corresponding RESTFul API: GetBucketACL

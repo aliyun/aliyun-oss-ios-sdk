@@ -148,4 +148,24 @@
     [OSSTestUtils cleanBucket:@"oss-ios-bucket-list-multipart-uploads-test" with:_client];
 }
 
+- (void)testPutBucketACL
+{
+    OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
+    req.bucketName = @"oss-ios-bucket-put-bucket-acl";
+    [[_client createBucket:req] waitUntilFinished];
+    
+    OSSPutBucketACLRequest *putBucketACLReq = [OSSPutBucketACLRequest new];
+    putBucketACLReq.bucketName = @"oss-ios-bucket-put-bucket-acl";
+    putBucketACLReq.aclType = 100;
+    
+    OSSTask *putBucketACLTask = [_client putBucketACL:putBucketACLReq];
+    
+    [[putBucketACLTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:@"oss-ios-bucket-put-bucket-acl" with:_client];
+}
+
 @end

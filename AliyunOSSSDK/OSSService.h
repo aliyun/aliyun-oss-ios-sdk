@@ -31,6 +31,8 @@
 #import "OSSGetSymlinkResult.h"
 #import "OSSRestoreObjectRequest.h"
 #import "OSSRestoreObjectResult.h"
+#import "OSSPutBucketACLRequest.h"
+#import "OSSPutBucketACLResult.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"
