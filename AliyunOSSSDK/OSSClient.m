@@ -27,7 +27,6 @@
 #import "OSSPutSymlinkRequest.h"
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
-#import "OSSPutBucketACLRequest.h"
 
 static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
 static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
@@ -44,22 +43,22 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 @end
 
 
-@interface OSSPutBucketACLRequest ()
+@interface OSSPutBucketACLRequest (ACL)
 
 @property (nonatomic, copy, readonly) NSString *acl;
 
 @end
 
 
-@implementation OSSPutBucketACLRequest
+@implementation OSSPutBucketACLRequest (ACL)
 
 - (NSString *)acl {
     NSString *rAcl = nil;
     switch (self.aclType) {
-        case OSSBucketACLPublicRead:
+        case OSSACLPublicRead:
             rAcl = @"public-read";
             break;
-        case OSSBucketACLPublicReadAndWrite:
+        case OSSACLPublicReadAndWrite:
             rAcl = @"public-read-write";
             break;
             
@@ -72,7 +71,6 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 }
 
 @end
-
 
 
 @interface OSSClient()

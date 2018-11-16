@@ -154,9 +154,9 @@
     req.bucketName = @"oss-ios-bucket-put-bucket-acl";
     [[_client createBucket:req] waitUntilFinished];
     
-    OSSPutBucketACLRequest *putBucketACLReq = [OSSPutBucketACLRequest new];
+    OSSPutBucketACLRequest *putBucketACLReq = [[OSSPutBucketACLRequest alloc] init];
     putBucketACLReq.bucketName = @"oss-ios-bucket-put-bucket-acl";
-    putBucketACLReq.aclType = 100;
+    putBucketACLReq.aclType = OSSACLPublicRead;
     
     OSSTask *putBucketACLTask = [_client putBucketACL:putBucketACLReq];
     

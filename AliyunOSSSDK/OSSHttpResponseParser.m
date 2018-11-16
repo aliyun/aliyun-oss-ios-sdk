@@ -20,7 +20,6 @@
 #import "OSSRestoreObjectResult.h"
 #import "OSSPutSymlinkResult.h"
 #import "OSSGetSymlinkResult.h"
-#import "OSSPutBucketACLResult.h"
 
 
 @implementation OSSHttpResponseParser {

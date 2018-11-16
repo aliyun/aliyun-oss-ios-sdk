@@ -464,6 +464,31 @@ Sets the session Id for background file transmission
 /**
  The request class to get the bucket ACL.
  */
+@interface OSSPutBucketACLRequest : OSSRequest
+
+/**
+ Bucket name
+ */
+@property (nonatomic, copy) NSString * bucketName;
+
+/**
+ acl type
+ */
+@property (nonatomic, assign) OSSACLType aclType;
+
+@end
+
+
+/**
+ The result class to put the bucket's ACL.
+ */
+@interface OSSPutBucketACLResult : OSSResult
+
+@end
+
+/**
+ The request class to get the bucket ACL.
+ */
 @interface OSSGetBucketACLRequest : OSSRequest
 
 /**

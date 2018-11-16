@@ -629,6 +629,18 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSGetBucketResult
 @end
 
+@implementation OSSPutBucketACLRequest
+
+- (NSDictionary *)requestParams {
+    return @{@"acl": @""};
+}
+
+@end
+
+@implementation OSSPutBucketACLResult
+
+@end
+
 @implementation OSSGetBucketACLRequest
 
 - (NSDictionary *)requestParams {
