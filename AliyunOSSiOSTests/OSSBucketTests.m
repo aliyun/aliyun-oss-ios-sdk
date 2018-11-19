@@ -168,4 +168,50 @@
     [OSSTestUtils cleanBucket:@"oss-ios-bucket-put-bucket-acl" with:_client];
 }
 
+- (void)testBucketLogging
+{
+    OSSCreateBucketRequest *createBucketSrcReq = [OSSCreateBucketRequest new];
+    createBucketSrcReq.bucketName = @"oss-ios-bucket-logging-source";
+    [[_client createBucket:createBucketSrcReq] waitUntilFinished];
+    
+    OSSCreateBucketRequest *createBucketTargetReq = [OSSCreateBucketRequest new];
+    createBucketTargetReq.bucketName = @"oss-ios-bucket-logging-target";
+    [[_client createBucket:createBucketTargetReq] waitUntilFinished];
+    
+    OSSPutBucketLoggingRequest *putBucketLoggingReq = [[OSSPutBucketLoggingRequest alloc] init];
+    putBucketLoggingReq.bucketName = @"oss-ios-bucket-logging-source";
+    putBucketLoggingReq.targetBucketName = @"oss-ios-bucket-logging-target";
+    putBucketLoggingReq.targetPrefix = @"oss-ios-bucket-target-prefix";
+    
+    OSSTask *putBucketLoggingTask = [_client putBucketLogging:putBucketLoggingReq];
+    
+    [[putBucketLoggingTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetBucketLoggingRequest *getBucketLoggingReq = [[OSSGetBucketLoggingRequest alloc] init];
+    getBucketLoggingReq.bucketName = @"oss-ios-bucket-logging-source";
+    
+    OSSTask *getBucketLoggingTask = [_client getBucketLogging:getBucketLoggingReq];
+    
+    [[getBucketLoggingTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketLoggingRequest *delBucketLoggingReq = [[OSSDeleteBucketLoggingRequest alloc] init];
+    delBucketLoggingReq.bucketName = @"oss-ios-bucket-logging-source";
+    
+    OSSTask *delBucketLoggingTask = [_client deleteBucketLogging:delBucketLoggingReq];
+    
+    [[delBucketLoggingTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:@"oss-ios-bucket-logging-target" with:_client];
+    [OSSTestUtils cleanBucket:@"oss-ios-bucket-logging-source" with:_client];
+}
+
 @end
