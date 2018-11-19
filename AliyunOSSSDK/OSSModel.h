@@ -508,6 +508,57 @@ Sets the session Id for background file transmission
 @property (nonatomic, copy) NSString * aclGranted;
 @end
 
+@interface OSSPutBucketLoggingRequest : OSSRequest
+
+/**
+ bucket's name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ target bucket's name
+ */
+@property (nonatomic, copy) NSString *targetBucketName;
+
+/**
+ prefix path name to store the log files
+ */
+@property (nonatomic, copy) NSString *targetPrefix;
+
+@end
+
+@interface OSSPutBucketLoggingResult : OSSResult
+
+@end
+
+
+@interface OSSGetBucketLoggingRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSGetBucketLoggingResult : OSSResult
+
+@end
+
+
+@interface OSSDeleteBucketLoggingRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSDeleteBucketLoggingResult : OSSResult
+
+@end
+
 /**
  The request class to get object metadata
  */

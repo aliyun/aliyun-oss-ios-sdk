@@ -10,10 +10,15 @@
 @class OSSGetServiceRequest;
 @class OSSCreateBucketRequest;
 @class OSSDeleteBucketRequest;
-@class OSSHeadObjectRequest;
-@class OSSGetBucketRequest;
 @class OSSPutBucketACLRequest;
 @class OSSGetBucketACLRequest;
+@class OSSGetBucketInfoRequest;
+@class OSSPutBucketLoggingRequest;
+@class OSSGetBucketLoggingRequest;
+@class OSSDeleteBucketLoggingRequest;
+
+@class OSSGetBucketRequest;
+@class OSSHeadObjectRequest;
 @class OSSGetObjectRequest;
 @class OSSGetObjectACLRequest;
 @class OSSPutObjectRequest;
@@ -32,7 +37,6 @@
 @class OSSMultipartUploadRequest;
 @class OSSCallBackRequest;
 @class OSSImagePersistRequest;
-@class OSSGetBucketInfoRequest;
 @class OSSPutSymlinkRequest;
 @class OSSGetSymlinkRequest;
 @class OSSRestoreObjectRequest;
@@ -147,6 +151,30 @@ NS_ASSUME_NONNULL_BEGIN
  Gets the bucket ACL.
  */
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request;
+
+/**
+ Update the bucket logging settings. Log file will create every one hour and name format: <prefix><bucket>-YYYY-mm-DD-HH-MM-SS-UniqueString
+
+ @param request an instance of OSSPutBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)putBucketLogging:(OSSPutBucketLoggingRequest *)request;
+
+/**
+ Get the bucket logging settings.
+
+ @param request an instance of OSSGetBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)getBucketLogging:(OSSGetBucketLoggingRequest *)request;
+
+/**
+ Delete the bucket logging settings.
+
+ @param request an instance of OSSDeleteBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)deleteBucketLogging:(OSSDeleteBucketLoggingRequest *)request;
 
 @end
 

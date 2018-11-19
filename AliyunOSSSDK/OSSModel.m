@@ -652,6 +652,45 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSGetBucketACLResult
 @end
 
+@implementation OSSPutBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSPutBucketLoggingResult
+
+@end
+
+@implementation OSSGetBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSGetBucketLoggingResult
+
+@end
+
+@implementation OSSDeleteBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSDeleteBucketLoggingResult
+
+@end
+
 @implementation OSSHeadObjectRequest
 @end
 

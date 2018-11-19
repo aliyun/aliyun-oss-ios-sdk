@@ -33,6 +33,8 @@ static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
 static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
 
+#pragma mark - OSSRequest and its subClasses's category
+
 /**
  * extend OSSRequest to include the ref to networking request object
  */
@@ -72,6 +74,24 @@ static NSUInteger const oss_multipart_max_part_number = 5000;   //max part numbe
 
 @end
 
+@interface OSSPutBucketLoggingRequest (Logging)
+
+@property (nonatomic, copy, readonly) NSData *xmlBody;
+
+@end
+
+@implementation OSSPutBucketLoggingRequest (Logging)
+
+- (NSData *)xmlBody
+{
+    NSMutableString *sRetBody = [NSMutableString string];
+    [sRetBody appendFormat:@"<?xml version='1.0' encoding='UTF-8'?>\n<BucketLoggingStatus>\n<LoggingEnabled>\n<TargetBucket>%@</TargetBucket>\n<TargetPrefix>%@</TargetPrefix>\n</LoggingEnabled>\n</BucketLoggingStatus>", self.targetBucketName, self.targetPrefix];
+    return [sRetBody dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+#pragma mark - OSSClient
 
 @interface OSSClient()
 
@@ -539,6 +559,61 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucketACL;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketLogging:(OSSPutBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    requestDelegate.uploadingData = request.xmlBody;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketLogging:(OSSGetBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteBucketLogging:(OSSDeleteBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodDELETE;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeDeleteBucketLogging;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
