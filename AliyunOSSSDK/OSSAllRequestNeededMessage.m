@@ -78,6 +78,8 @@ static NSString * const kOSSInvalidObjectNameMessage = @"The object key is inval
         case OSSOperationTypePutBucketLogging:
         case OSSOperationTypeGetBucketLogging:
         case OSSOperationTypeDeleteBucketLogging:
+        case OSSOperationTypePutBucketReferer:
+        case OSSOperationTypeGetBucketReferer:
             belongsToBucket = YES;
             break;
         default:

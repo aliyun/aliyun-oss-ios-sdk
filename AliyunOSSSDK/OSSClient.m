@@ -16,8 +16,8 @@
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"
 #import "OSSIPv6Adapter.h"
+#import "OSSRequest+Utils.h"
 
-#import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
@@ -33,63 +33,7 @@ static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
 static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
 static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
 
-#pragma mark - OSSRequest and its subClasses's category
 
-/**
- * extend OSSRequest to include the ref to networking request object
- */
-@interface OSSRequest ()
-
-@property (nonatomic, strong) OSSNetworkingRequestDelegate * requestDelegate;
-
-@end
-
-
-@interface OSSPutBucketACLRequest (ACL)
-
-@property (nonatomic, copy, readonly) NSString *acl;
-
-@end
-
-
-@implementation OSSPutBucketACLRequest (ACL)
-
-- (NSString *)acl {
-    NSString *rAcl = nil;
-    switch (self.aclType) {
-        case OSSACLPublicRead:
-            rAcl = @"public-read";
-            break;
-        case OSSACLPublicReadAndWrite:
-            rAcl = @"public-read-write";
-            break;
-            
-        default:
-            rAcl = @"private";
-            break;
-    }
-    
-    return rAcl;
-}
-
-@end
-
-@interface OSSPutBucketLoggingRequest (Logging)
-
-@property (nonatomic, copy, readonly) NSData *xmlBody;
-
-@end
-
-@implementation OSSPutBucketLoggingRequest (Logging)
-
-- (NSData *)xmlBody
-{
-    NSMutableString *sRetBody = [NSMutableString string];
-    [sRetBody appendFormat:@"<?xml version='1.0' encoding='UTF-8'?>\n<BucketLoggingStatus>\n<LoggingEnabled>\n<TargetBucket>%@</TargetBucket>\n<TargetPrefix>%@</TargetPrefix>\n</LoggingEnabled>\n</BucketLoggingStatus>", self.targetBucketName, self.targetPrefix];
-    return [sRetBody dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-@end
 
 #pragma mark - OSSClient
 
@@ -614,6 +558,43 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeDeleteBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketReferer:(OSSPutBucketRefererRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketReferer];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    requestDelegate.uploadingData = request.xmlBody;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketReferer;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketReferer:(OSSGetBucketRefererRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketReferer];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketReferer;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }

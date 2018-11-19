@@ -16,6 +16,8 @@
 @class OSSPutBucketLoggingRequest;
 @class OSSGetBucketLoggingRequest;
 @class OSSDeleteBucketLoggingRequest;
+@class OSSPutBucketRefererRequest;
+@class OSSGetBucketRefererRequest;
 
 @class OSSGetBucketRequest;
 @class OSSHeadObjectRequest;
@@ -175,6 +177,22 @@ NS_ASSUME_NONNULL_BEGIN
  @return an instance of OSSTask
  */
 - (OSSTask *)deleteBucketLogging:(OSSDeleteBucketLoggingRequest *)request;
+
+/**
+ Set the bucket request Referer white list.
+
+ @param request an OSSPutBucketRefererRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)putBucketReferer:(OSSPutBucketRefererRequest *)request;
+
+/**
+ Get the bucket request Referer white list.
+
+ @param request an OSSGetBucketRefererRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)getBucketReferer:(OSSGetBucketRefererRequest *)request;
 
 @end
 

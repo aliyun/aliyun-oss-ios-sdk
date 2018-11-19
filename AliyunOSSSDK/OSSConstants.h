@@ -53,6 +53,8 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypePutBucketLogging,
     OSSOperationTypeGetBucketLogging,
     OSSOperationTypeDeleteBucketLogging,
+    OSSOperationTypePutBucketReferer,
+    OSSOperationTypeGetBucketReferer,
     OSSOperationTypeHeadObject,
     OSSOperationTypeGetObject,
     OSSOperationTypeGetObjectACL,

@@ -543,6 +543,21 @@ Sets the session Id for background file transmission
 
 @interface OSSGetBucketLoggingResult : OSSResult
 
+/**
+ enable logging or not.
+ */
+@property (nonatomic, assign) BOOL loggingEnabled;
+
+/**
+ target bucket's name
+ */
+@property (nonatomic, copy) NSString *targetBucketName;
+
+/**
+ prefix path name to store the log files
+ */
+@property (nonatomic, copy) NSString *targetPrefix;
+
 @end
 
 
@@ -556,6 +571,64 @@ Sets the session Id for background file transmission
 @end
 
 @interface OSSDeleteBucketLoggingResult : OSSResult
+
+@end
+
+/**
+ the request of putting bucket referer operation
+ */
+@interface OSSPutBucketRefererRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ allow empty request referer or not.default value is YES.
+ */
+@property (nonatomic, assign) BOOL allowEmpty;
+
+/**
+ Referer white list, e.g.:['https://npm.taobao.org','http://cnpmjs.org']
+ */
+@property (nonatomic, copy) NSArray<NSString *> *referers;
+
+@end
+
+/**
+ the result of putting bucket referer operation
+ */
+@interface OSSPutBucketRefererResult : OSSResult
+
+@end
+
+/**
+ the request for getting the bucket request Referer white list.
+ */
+@interface OSSGetBucketRefererRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+/**
+ the result of getting bucket referer operation
+ */
+@interface OSSGetBucketRefererResult : OSSResult
+
+/**
+ allow empty request referer or not.
+ */
+@property (nonatomic, assign) BOOL allowEmpty;
+
+/**
+ Referer white list
+ */
+@property (nonatomic, copy) NSArray<NSString *> *referers;
 
 @end
 

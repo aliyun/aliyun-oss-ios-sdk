@@ -691,6 +691,41 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 @end
 
+@implementation OSSPutBucketRefererRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _allowEmpty = YES;
+    }
+    return self;
+}
+
+- (NSDictionary *)requestParams
+{
+    return @{@"referer" : @""};
+}
+
+@end
+
+@implementation OSSPutBucketRefererResult
+
+@end
+
+@implementation OSSGetBucketRefererRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"referer" : @""};
+}
+
+@end
+
+@implementation OSSGetBucketRefererResult
+
+@end
+
 @implementation OSSHeadObjectRequest
 @end
 

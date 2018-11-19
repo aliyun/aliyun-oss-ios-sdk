@@ -264,6 +264,85 @@
             return deleteBucketResult;
         }
             
+        case OSSOperationTypePutBucketLogging:
+        {
+            OSSPutBucketLoggingResult * putBucketLogging = [OSSPutBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putBucketLogging];
+            }
+            return putBucketLogging;
+        }
+            
+        case OSSOperationTypeGetBucketLogging:
+        {
+            OSSGetBucketLoggingResult * getBucketLogging = [OSSGetBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketLogging];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket logging dict: %@", parsedDict);
+                
+                NSDictionary *loggingInfo = [parsedDict valueForKey:@"LoggingEnabled"];
+                if (loggingInfo) {
+                    getBucketLogging.loggingEnabled = YES;
+                    getBucketLogging.targetBucketName = [loggingInfo objectForKey:@"TargetBucket"];
+                    getBucketLogging.targetPrefix = [loggingInfo objectForKey:@"TargetPrefix"];
+                } else {
+                    getBucketLogging.loggingEnabled = NO;
+                }
+            }
+            
+            return getBucketLogging;
+        }
+            
+        case OSSOperationTypeDeleteBucketLogging:
+        {
+            OSSDeleteBucketLoggingResult * deleteBucketLogging = [OSSDeleteBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:deleteBucketLogging];
+            }
+            
+            return deleteBucketLogging;
+        }
+            
+        case OSSOperationTypePutBucketReferer:
+        {
+            OSSPutBucketRefererResult * putBucketReferer = [OSSPutBucketRefererResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putBucketReferer];
+            }
+            
+            return putBucketReferer;
+        }
+        
+        case OSSOperationTypeGetBucketReferer:
+        {
+            OSSGetBucketRefererResult * getBucketReferer = [OSSGetBucketRefererResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketReferer];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket logging dict: %@", parsedDict);
+                
+                if (parsedDict) {
+                    NSString *sAllowEmpty = [parsedDict objectForKey:@"AllowEmptyReferer"];
+                    if ([sAllowEmpty isEqual:@"true"]) {
+                        getBucketReferer.allowEmpty = YES;
+                    } else {
+                        getBucketReferer.allowEmpty = NO;
+                    }
+                    
+                    getBucketReferer.referers = [[parsedDict objectForKey:@"RefererList"] objectForKey:@"Referer"];
+                }
+            }
+            
+            return getBucketReferer;
+        }
+            
         case OSSOperationTypeGetBucket:
         {
             OSSGetBucketResult * getBucketResult = [OSSGetBucketResult new];
