@@ -175,13 +175,13 @@
     [[_client createBucket:createBucketSrcReq] waitUntilFinished];
     
     OSSCreateBucketRequest *createBucketTargetReq = [OSSCreateBucketRequest new];
-    createBucketTargetReq.bucketName = @"oss-ios-bucket-logging-target";
+    createBucketTargetReq.bucketName = @"oss-ios-bucket-logging-bucket";
     [[_client createBucket:createBucketTargetReq] waitUntilFinished];
     
     OSSPutBucketLoggingRequest *putBucketLoggingReq = [[OSSPutBucketLoggingRequest alloc] init];
     putBucketLoggingReq.bucketName = @"oss-ios-bucket-logging-source";
-    putBucketLoggingReq.targetBucketName = @"oss-ios-bucket-logging-target";
-    putBucketLoggingReq.targetPrefix = @"oss-ios-bucket-target-prefix";
+    putBucketLoggingReq.targetBucketName = @"oss-ios-bucket-logging-bucket";
+    putBucketLoggingReq.targetPrefix = @"oss-ios-bucket-logging-prefix";
     
     OSSTask *putBucketLoggingTask = [_client putBucketLogging:putBucketLoggingReq];
     
@@ -197,6 +197,12 @@
     
     [[getBucketLoggingTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
+        XCTAssertNotNil(task.result);
+        OSSGetBucketLoggingResult *result = (OSSGetBucketLoggingResult *)task.result;
+        XCTAssertTrue(result.loggingEnabled);
+        XCTAssertTrue([result.targetPrefix isEqualToString:@"oss-ios-bucket-logging-prefix"]);
+        XCTAssertTrue([result.targetBucketName isEqualToString:@"oss-ios-bucket-logging-bucket"]);
+        
         return nil;
     }] waitUntilFinished];
     
@@ -210,8 +216,45 @@
         return nil;
     }] waitUntilFinished];
     
-    [OSSTestUtils cleanBucket:@"oss-ios-bucket-logging-target" with:_client];
+    [OSSTestUtils cleanBucket:@"oss-ios-bucket-logging-bucket" with:_client];
     [OSSTestUtils cleanBucket:@"oss-ios-bucket-logging-source" with:_client];
+}
+
+- (void)testBucketReferer
+{
+    OSSCreateBucketRequest *createBucketSrcReq = [OSSCreateBucketRequest new];
+    createBucketSrcReq.bucketName = @"oss-ios-sdk-test-bucket-referer";
+    [[_client createBucket:createBucketSrcReq] waitUntilFinished];
+    
+    OSSPutBucketRefererRequest *putBucketRefererReq = [[OSSPutBucketRefererRequest alloc] init];
+    putBucketRefererReq.bucketName = @"oss-ios-sdk-test-bucket-referer";
+    putBucketRefererReq.allowEmpty = YES;
+    putBucketRefererReq.referers = @[@"http://www.aliyun.com", @"http://www.taobao.com"];
+    
+    OSSTask *putBucketRefererTask = [_client putBucketReferer:putBucketRefererReq];
+    
+    [[putBucketRefererTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetBucketRefererRequest *getBucketRefererReq = [[OSSGetBucketRefererRequest alloc] init];
+    getBucketRefererReq.bucketName = @"oss-ios-sdk-test-bucket-referer";
+    
+    OSSTask *getBucketRefererTask = [_client getBucketReferer:getBucketRefererReq];
+    
+    [[getBucketRefererTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        XCTAssertNotNil(task.result);
+        OSSGetBucketRefererResult *result = (OSSGetBucketRefererResult *)task.result;
+        XCTAssertTrue(result.allowEmpty);
+        XCTAssertTrue([result.referers containsObject:@"http://www.aliyun.com"]);
+        XCTAssertTrue([result.referers containsObject:@"http://www.taobao.com"]);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:@"oss-ios-sdk-test-bucket-referer" with:_client];
 }
 
 @end
