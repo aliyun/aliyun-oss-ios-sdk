@@ -18,6 +18,9 @@
 @class OSSDeleteBucketLoggingRequest;
 @class OSSPutBucketRefererRequest;
 @class OSSGetBucketRefererRequest;
+@class OSSPutBucketLifecycleRequest;
+@class OSSGetBucketLifecycleRequest;
+@class OSSDeleteBucketLifecycleRequest;
 
 @class OSSGetBucketRequest;
 @class OSSHeadObjectRequest;
@@ -193,6 +196,30 @@ NS_ASSUME_NONNULL_BEGIN
  @return an OSSTask instance.
  */
 - (OSSTask *)getBucketReferer:(OSSGetBucketRefererRequest *)request;
+
+/**
+ The bucket owner can set the lifecycle of a bucket with the PutBucketLifecycle request. After Lifecycle is enabled, OSS automatically deletes the objects or transitions the objects (to another storage class) corresponding the lifecycle rules on a regular basis.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31964.htm
+
+ @param request an OSSPutBucketLifecycleRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)putBucketLifecycle:(OSSPutBucketLifecycleRequest *)request;
+
+/**
+ GetBucketLifecycle is used to view the lifecycle configuration of a bucket.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31972.htm
+
+ @param request an OSSGetBucketLifecycleRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)getBucketLifecycle:(OSSGetBucketLifecycleRequest *)request;
+
+/**
+ The DeleteBucketLifecycle interface is used to delete the lifecycle configuration of a specified bucket.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31976.htm
+
+ @param request an OSSDeleteBucketLifecycleRequest instance
+ @return an OSSTask instance
+ */
+- (OSSTask *)deleteBucketLifecycle:(OSSDeleteBucketLifecycleRequest *)request;
 
 @end
 

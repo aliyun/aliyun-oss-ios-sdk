@@ -63,3 +63,42 @@
 }
 
 @end
+
+
+@implementation OSSPutBucketLifecycleRequest (Lifecycle)
+
+- (NSData *)xmlBody
+{
+    NSMutableString *sRetBody = [NSMutableString string];
+    [sRetBody appendFormat:@"<?xml version='1.0' encoding='UTF-8'?>\n<LifecycleConfiguration>"];
+    
+    if (self.rules.count > 0) {
+        for (OSSBucketLifecycleRule *rule in self.rules) {
+            NSString *s_status = rule.status ? @"Enabled" : @"Disabled";
+            NSString *s_expiration = rule.days ? [NSString stringWithFormat:@"<Days>%@</Days>", rule.days] : [NSString stringWithFormat:@"<Date>%@</Date>", rule.expireDate];
+            
+            [sRetBody appendFormat:@"\n<Rule>\n<ID>%@</ID>\n<Prefix>%@</Prefix>\n<Status>%@</Status>\n<Expiration>\n%@\n</Expiration>", rule.identifier, rule.prefix, s_status, s_expiration];
+            
+            if (rule.multipartDays || rule.multipartExpireDate) {
+                NSString *s_expirationForMultipart = rule.multipartDays ? [NSString stringWithFormat:@"\n<AbortMultipartUpload><Days>%@</Days>\n</AbortMultipartUpload>", rule.multipartDays] : [NSString stringWithFormat:@"\n<AbortMultipartUpload><Date>%@</Date>\n</AbortMultipartUpload>", rule.multipartExpireDate];
+                [sRetBody appendString:s_expirationForMultipart];
+            }
+            
+            if (rule.iaDays || rule.iaExpireDate) {
+                NSString *s_expirationForMultipart = rule.iaDays ? [NSString stringWithFormat:@"\n<Transition>\n<Days>%@</Days>\n<StorageClass>IA</StorageClass>\n</Transition>", rule.iaDays] : [NSString stringWithFormat:@"\n<Transition><Date>%@</Date>\n<StorageClass>IA</<StorageClass>\n</Transition>", rule.iaExpireDate];
+                [sRetBody appendString:s_expirationForMultipart];
+            } else if (rule.archiveDays || rule.archiveExpireDate) {
+                NSString *s_expirationForMultipart = rule.archiveDays ? [NSString stringWithFormat:@"\n<Transition><Days>%@</Days>\n<StorageClass>Archive</<StorageClass>\n</Transition>", rule.archiveDays] : [NSString stringWithFormat:@"\n<Transition><Date>%@</Date>\n<StorageClass>Archive</<StorageClass>\n</Transition>", rule.archiveExpireDate];
+                [sRetBody appendString:s_expirationForMultipart];
+            }
+            
+            [sRetBody appendString:@"\n</Rule>"];
+        }
+        
+    }
+    [sRetBody appendFormat:@"\n</LifecycleConfiguration>"];
+    
+    return [sRetBody dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end

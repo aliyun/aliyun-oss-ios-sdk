@@ -632,6 +632,118 @@ Sets the session Id for background file transmission
 
 @end
 
+
+@interface OSSBucketLifecycleRule : NSObject<NSCopying>
+
+/**
+ rule id, if not set, OSS will auto create it with random string.
+ */
+@property (nonatomic, copy) NSString *identifier;
+
+/**
+ store prefix
+ */
+@property (nonatomic, copy) NSString *prefix;
+
+/**
+ rule status, whether use this rule.default value is YES.
+ */
+@property (nonatomic, assign) BOOL status;
+
+/**
+ expire after the days
+ */
+@property (nonatomic, copy) NSString *days;
+
+/**
+ expire date, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *expireDate;
+
+/**
+ expire after the days for multipart
+ */
+@property (nonatomic, copy) NSString *multipartDays;
+
+/**
+ expire date for multipart, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *multipartExpireDate;
+
+/**
+ expire after the days for bucket storage class IA
+ */
+@property (nonatomic, copy) NSString *iaDays;
+
+/**
+ expire date for bucket storage class IA, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *iaExpireDate;
+
+/**
+ expire after the days for bucket storage class archive
+ */
+@property (nonatomic, copy) NSString *archiveDays;
+
+/**
+ expire date for bucket storage class archive, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *archiveExpireDate;
+
+@end
+
+
+@interface OSSPutBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ rule config list, each Rule is an instance of OSSBucketLifecycleRule.
+ */
+@property (nonatomic, copy) NSArray<OSSBucketLifecycleRule *> *rules;
+
+@end
+
+@interface OSSPutBucketLifecycleResult : OSSResult
+
+@end
+
+
+@interface OSSGetBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+
+@interface OSSGetBucketLifecycleResult : OSSResult
+
+/**
+ rule config list, each Rule is an instance of OSSBucketLifecycleRule.
+ */
+@property (nonatomic, copy) NSArray<OSSBucketLifecycleRule *> *rules;
+
+@end
+
+@interface OSSDeleteBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSDeleteBucketLifecycleResult : OSSResult
+
+@end
+
 /**
  The request class to get object metadata
  */
