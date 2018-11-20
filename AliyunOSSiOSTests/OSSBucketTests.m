@@ -257,4 +257,65 @@
     [OSSTestUtils cleanBucket:@"oss-ios-sdk-test-bucket-referer" with:_client];
 }
 
+- (void)testBucketLifecycle
+{
+    NSString *lifecycle_bucket_name = @"oss-ios-sdk-test-bucket-lifecycle";
+    OSSCreateBucketRequest *createBucketSrcReq = [OSSCreateBucketRequest new];
+    createBucketSrcReq.bucketName = lifecycle_bucket_name;
+    [[_client createBucket:createBucketSrcReq] waitUntilFinished];
+    
+    OSSPutBucketLifecycleRequest *putBucketLifecycleReq = [[OSSPutBucketLifecycleRequest alloc] init];
+    putBucketLifecycleReq.bucketName = lifecycle_bucket_name;
+    
+    OSSBucketLifecycleRule *rule1 = [[OSSBucketLifecycleRule alloc] init];
+    
+    rule1.identifier = @"1";
+    rule1.status = YES;
+    rule1.prefix = @"rule1prefix";
+    rule1.days = @"2";
+    rule1.iaDays = @"1";
+    rule1.multipartDays = @"1";
+    
+    OSSBucketLifecycleRule *rule2 = [[OSSBucketLifecycleRule alloc] init];
+    
+    rule2.identifier = @"2";
+    rule2.status = YES;
+    rule2.prefix = @"rule2prefix";
+    rule2.days = @"3";
+    rule2.iaDays = @"2";
+    rule2.multipartDays = @"2";
+    
+    putBucketLifecycleReq.rules = @[rule1, rule2];
+    
+    OSSTask *putBucketLifecycleTask = [_client putBucketLifecycle:putBucketLifecycleReq];
+    
+    [[putBucketLifecycleTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetBucketLifecycleRequest *getBucketLifecycleReq = [[OSSGetBucketLifecycleRequest alloc] init];
+    getBucketLifecycleReq.bucketName = lifecycle_bucket_name;
+    
+    OSSTask *getBucketLifecycleTask = [_client getBucketLifecycle:getBucketLifecycleReq];
+    
+    [[getBucketLifecycleTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteBucketLifecycleRequest *deleteBucketLifecycleReq = [[OSSDeleteBucketLifecycleRequest alloc] init];
+    deleteBucketLifecycleReq.bucketName = lifecycle_bucket_name;
+    
+    OSSTask *deleteBucketLifecycleTask = [_client deleteBucketLifecycle:deleteBucketLifecycleReq];
+    [[deleteBucketLifecycleTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:lifecycle_bucket_name with:_client];
+}
+
 @end
