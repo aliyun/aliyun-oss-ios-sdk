@@ -118,15 +118,6 @@ demo示例: [点击查看](https://github.com/alibaba/alicloud-ios-demo)。
 
 在移动环境下，我们推荐STS鉴权模式来初始化OSSClient。鉴权细节详见后面链接给出的官网完整文档的`访问控制`章节。
 
-```objc
-NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
-
-id<OSSCredentialProvider> credential = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"<StsToken.AccessKeyId>" secretKeyId:@"<StsToken.SecretKeyId>" securityToken:@"<StsToken.SecurityToken>"];
-
-client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential];
-
-```
-
 **注意: 如果您的应用只用到一个[数据中心](https://help.aliyun.com/document_detail/31837.html)下的bucket,建议保持OSSClient实例与应用程序的生命周期一致(比如在Appdelegate.m的 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions])中进行初始化，如下所示:**
 
 ```objc
