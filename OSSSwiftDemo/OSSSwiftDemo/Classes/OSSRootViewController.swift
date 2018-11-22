@@ -225,13 +225,12 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     }
     
     func ossAlert(title: String?,message:String?) -> Void {
-        let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alertCtrl.addAction(UIAlertAction(title: "confirm", style: UIAlertActionStyle.default, handler: { (action) in
-            print("\(action.title!) has been clicked");
-            alertCtrl.dismiss(animated: true, completion: nil)
-        }))
-        
         DispatchQueue.main.async {
+            let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alertCtrl.addAction(UIAlertAction(title: "confirm", style: UIAlertActionStyle.default, handler: { (action) in
+                print("\(action.title!) has been clicked");
+                alertCtrl.dismiss(animated: true, completion: nil)
+            }))
             self.present(alertCtrl, animated: true, completion: nil)
         }
     }
@@ -479,6 +478,10 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             
             return nil
         }).waitUntilFinished()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 

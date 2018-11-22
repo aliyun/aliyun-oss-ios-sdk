@@ -16,7 +16,7 @@ This document mainly describes how to install and use the OSS iOS SDK. This docu
 
 The OSS iOS SDK framework needs to be introduced.
 
-You can use this project to directly generate a framework in MacOS : 
+You can use this AliyunOSSSDK.xcworkspace,and select scheme which named AliyunOSSSDK OSX to directly generate a framework in MacOS : 
 
 ```bash
 # Clone the project
@@ -26,7 +26,7 @@ $ git clone git@github.com:aliyun/aliyun-oss-ios-sdk.git
 $ cd aliyun-oss-ios-sdk
 
 # Run the packaging script
-$ sh ./buildFramework.sh
+$ sh ./buildiOSFramework.sh
 
 # Enter the generated packaging directory  where the AliyunOSSiOS.framework will be generated
 $ cd Products && ls
@@ -114,12 +114,49 @@ or
 
 We recommend STS authentication mode to initialize the OSSClient on mobile. For details about authentication, refer to the *Access Control* section in the complete official documentation provided in the following link.
 
+
+**Notice:if your app's buckets only at one [data center](https://www.alibabacloud.com/help/doc-detail/31837.htm),we recommend you to keep the lifecycle of OSSClient's instance consistent with your app.the code below demonstrate the usage**
+
 ```objc
-NSString *endpoint = @"https://oss-cn-hangzhou.aliyuncs.com";
+@interface AppDelegate ()
 
-id<OSSCredentialProvider> credential = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"<StsToken.AccessKeyId>" secretKeyId:@"<StsToken.SecretKeyId>" securityToken:@"<StsToken.SecurityToken>"];
+@property (nonatomic, strong) OSSClient *client;
 
-client = [[OSSClient alloc] initWithEndpoint:endpoint credentialProvider:credential];
+@end
+
+/**
+ * the url to fetch sts info,for detail please refer to https://help.aliyun.com/document_detail/31920.html
+ */
+#define OSS_STS_URL                 @"oss_sts_url"
+
+
+/**
+ * the endpoint for OSS used in app, for detail please refer to https://help.aliyun.com/document_detail/31837.html
+ */
+#define OSS_ENDPOINT                @"your bucket's endpoint"
+
+@implementation AppDelegate
+
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // Override point for customization after application launch.
+    
+    // initialize OSSClient
+    [self setupOSSClient];
+    
+    return YES;
+}
+
+- (void)setupOSSClient {
+
+    // initialize credential provider,which auto fetch and update sts info from sts url.
+    OSSAuthCredentialProvider *credentialProvider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STS_URL];
+    
+    // set config for oss client networking
+    OSSClientConfiguration *cfg = [[OSSClientConfiguration alloc] init];
+    
+    _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credentialProvider clientConfiguration:cfg];
+}
 
 ```
 

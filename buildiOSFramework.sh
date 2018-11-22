@@ -20,8 +20,8 @@ SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework
 # Clean and Building both architectures.
 # xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphoneos clean build
 # xcodebuild -configuration "Release" -target "${FMK_NAME}" -sdk iphonesimulator clean build
-xcodebuild -configuration Release -project "${PROJECT_NAME}.xcodeproj" -scheme "${TARGET_NAME}" -sdk iphoneos clean archive SYMROOT="${WRK_DIR}"
-xcodebuild -configuration Release -project "${PROJECT_NAME}.xcodeproj" -scheme "${TARGET_NAME}" -sdk iphonesimulator clean build SYMROOT="${WRK_DIR}"
+xcodebuild -configuration Release -workspace "${PROJECT_NAME}.xcworkspace" -scheme "${TARGET_NAME}" -sdk iphoneos clean build SYMROOT="${WRK_DIR}"
+xcodebuild -configuration Release -workspace "${PROJECT_NAME}.xcworkspace" -scheme "${TARGET_NAME}" -sdk iphonesimulator build SYMROOT="${WRK_DIR}"
 
 # Cleaning the oldest.
 if [ -d "${INSTALL_DIR}" ]
