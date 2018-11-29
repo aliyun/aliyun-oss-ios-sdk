@@ -9,20 +9,20 @@
 #ifndef OSSTestMacros_h
 #define OSSTestMacros_h
 
-#define OSS_ACCESSKEY_ID                @"******"
-#define OSS_SECRETKEY_ID                @"******"
+#define OSS_ACCESSKEY_ID                @"AccessKeyID"                              // 子账号id
+#define OSS_SECRETKEY_ID                @"AccessKeySecret"                          // 子账号secret
 
-#define OSS_BUCKET_PUBLIC               @"public"
-#define OSS_BUCKET_PRIVATE              @"private"
-#define OSS_ENDPOINT                    @"http://oss-cn-region.aliyuncs.com"
-#define OSS_IMG_ENDPOINT                @"http://img-cn-region.aliyuncs.com"
-#define OSS_MULTIPART_UPLOADKEY         @"multipart_key"
-#define OSS_RESUMABLE_UPLOADKEY         @"resumable_key"
-#define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"
-#define OSS_CNAME_URL                   @"http://www.cnametest.com/"
-#define OSS_STSTOKEN_URL                @"http://*.*.*.*:*/sts/getsts"
-#define OSS_IMAGE_KEY                   @"hasky.jpeg"
+#define OSS_BUCKET_PUBLIC               @"public-bucket"                            // bucket名称
+#define OSS_BUCKET_PRIVATE              @"private-bucket"                           // bucket名称
+#define OSS_ENDPOINT                    @"http://oss-cn-region.aliyuncs.com"      // 访问的阿里云endpoint
+#define OSS_IMG_ENDPOINT                @"http://img-cn-region.aliyuncs.com"      // 旧版本图片服务的endpoint
+#define OSS_MULTIPART_UPLOADKEY         @"multipart_key"                            // 分片上传的object key
+#define OSS_RESUMABLE_UPLOADKEY         @"resumable_key"                            // 断点续传的object key
+#define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"       // 对象上传成功时回调的业务服务器地址
+#define OSS_CNAME_URL                   @"http://www.cnametest.com/"                // cname，用于替换bucket.endpoint的访问域名
+#define OSS_STSTOKEN_URL                @"http://*.*.*.*:****/sts/getsts"           // sts授权服务器的地址
+#define OSS_IMAGE_KEY                   @"testImage.png"                            // 测试图片的名称
 
-#define OSS_DOWNLOAD_FILE_NAME          @"OSS_DOWNLOAD_FILE_NAME"
+#define OSS_DOWNLOAD_FILE_NAME          @"OSS_DOWNLOAD_FILE_NAME"                   // 用于下载的object key
 
 #endif /* OSSTestMacros_h */
