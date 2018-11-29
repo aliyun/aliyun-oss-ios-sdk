@@ -15,8 +15,8 @@
 @interface OSSHttp2Tests : XCTestCase
 {
     OSSClient *_client;
-    NSString *bucketName;
-    NSString *http2endpoint;
+    NSString *_bucketName;
+    NSString *_http2endpoint;
 }
 
 @end
@@ -25,14 +25,19 @@
 
 - (void)setUp {
     [super setUp];
-    bucketName = @"zuoqin-public";
-    http2endpoint = @"https://xx.couldplus.com";
+    
+    [OSSLog enableLog];
+    _bucketName = @"aliyun-oss-ios-test-http2";
+    _http2endpoint = @"https://oss-cn-shanghai.aliyuncs.com";
     [self setUpOSSClient];
+    [self createBucket];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+    
+    [self deleteBucket];
 }
 
 - (void)setUpOSSClient
@@ -40,20 +45,23 @@
     OSSClientConfiguration *config = [OSSClientConfiguration new];
     
     OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
-    _client = [[OSSClient alloc] initWithEndpoint:http2endpoint
+    _client = [[OSSClient alloc] initWithEndpoint:_http2endpoint
                                credentialProvider:authProv
                               clientConfiguration:config];
-    [OSSLog enableLog];
-    
-    //upload test image
-    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
-    put.bucketName = bucketName;
-    put.objectKey = OSS_IMAGE_KEY;
-    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
-    [[_client putObject:put] waitUntilFinished];
 }
 
+- (void)createBucket
+{
+    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
+    createBucket.bucketName = _bucketName;
+    
+    [[_client createBucket:createBucket] waitUntilFinished];
+}
 
+- (void)deleteBucket
+{
+    [OSSTestUtils cleanBucket:_bucketName with:_client];
+}
 
 #pragma mark - putObject
 
@@ -61,47 +69,47 @@
 //批量操作测试
 - (void)testAPI_putObjectMultiTimes
 {
+    NSMutableArray<OSSTask *> *allTasks = [NSMutableArray array];
     int max = 30;
     for (int i = 0; i < max; i++){
-        NSString *objectKey = @"putObject-wangwang.zip";
+        NSString *objectKey = @"http2-wangwang.zip";
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"wangwang" ofType:@"zip"];;
         NSURL * fileURL = [NSURL fileURLWithPath:filePath];
         
-        OSSPutObjectRequest * put_request = [OSSPutObjectRequest new];
-        put_request.bucketName = bucketName;
-        put_request.objectKey = objectKey;
-        put_request.uploadingFileURL = fileURL;
+        OSSPutObjectRequest * putRequest = [OSSPutObjectRequest new];
+        putRequest.bucketName = _bucketName;
+        putRequest.objectKey = objectKey;
+        putRequest.uploadingFileURL = fileURL;
         
-        OSSTask * put_task = [_client putObject:put_request];
-        [[put_task continueWithBlock:^id(OSSTask *task) {
-            XCTAssertNil(task.error);
-            return nil;
-        }] waitUntilFinished];
-        
-        
-        OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
-        head.bucketName = bucketName;
-        head.objectKey = objectKey;
-        
-        [[[_client headObject:head] continueWithBlock:^id(OSSTask *task) {
-            XCTAssertNil(task.error);
-            return nil;
-        }] waitUntilFinished];
-        
-        NSString *tmpFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"tempfile"];
-        OSSGetObjectRequest * get_request = [OSSGetObjectRequest new];
-        get_request.bucketName = bucketName;
-        get_request.objectKey = objectKey;
-        get_request.downloadToFileURL = [NSURL fileURLWithPath:tmpFilePath];
-        
-        OSSTask * get_task = [_client getObject:get_request];
-        [[get_task continueWithBlock:^id(OSSTask *task) {
-            XCTAssertNil(task.error);
-            OSSGetObjectResult * result = task.result;
-            XCTAssertNil(result.downloadedData);
-            return nil;
-        }] waitUntilFinished];
+        OSSTask *putTask = [_client putObject:putRequest];
+        [allTasks addObject:putTask];
     }
+    
+    OSSTask *complexTask = [OSSTask taskForCompletionOfAllTasks:allTasks];
+    [complexTask waitUntilFinished];
+    XCTAssertTrue(complexTask.error == nil);
+    
+    [allTasks removeAllObjects];
+    
+    for (int i = 0; i < max; i++){
+        NSString *objectKey = @"http2-wangwang.zip";
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"wangwang" ofType:@"zip"];;
+        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+        
+        OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
+        getRequest.bucketName = _bucketName;
+        getRequest.objectKey = objectKey;
+        NSString *diskFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"local_test%zd.zip", i]];
+        
+        getRequest.downloadToFileURL = [NSURL fileURLWithPath:diskFilePath];
+        
+        OSSTask *getTask = [_client getObject:getRequest];
+        [allTasks addObject:getTask];
+    }
+    
+    complexTask = [OSSTask taskForCompletionOfAllTasks:allTasks];
+    [complexTask waitUntilFinished];
+    XCTAssertTrue(complexTask.error == nil);
 }
 
 
