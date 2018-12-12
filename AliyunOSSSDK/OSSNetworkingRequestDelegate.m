@@ -85,7 +85,7 @@
             urlComponents.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlComponents.host];
             headerHost = urlComponents.host;
             
-            if ([urlComponents.scheme.lowercaseString isEqualToString:@"https"] && self.isHttpdnsEnable) {
+            if ([urlComponents.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
                 NSString *dnsResult = [OSSUtil getIpByHost: urlComponents.host];
                 urlComponents.host = dnsResult;
             }
