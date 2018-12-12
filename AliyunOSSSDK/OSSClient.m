@@ -28,10 +28,13 @@
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
 
-static NSString * const oss_partInfos_storage_name = @"oss_partInfos_storage_name";
-static NSString * const oss_record_info_suffix_with_crc = @"-crc64";
-static NSString * const oss_record_info_suffix_with_sequential = @"-sequential";
-static NSUInteger const oss_multipart_max_part_number = 5000;   //max part number
+static NSString * const kClientRecordNameWithCommonPrefix = @"oss_partInfos_storage_name";
+static NSString * const kClientRecordNameWithCRC64Suffix = @"-crc64";
+static NSString * const kClientRecordNameWithSequentialSuffix = @"-sequential";
+static NSUInteger const kClientMaximumOfChunks = 5000;   //max part number
+
+static NSString * const kClientErrorMessageForEmptyFile = @"the length of file should not be 0!";
+static NSString * const kClientErrorMessageForCancelledTask = @"This task has been cancelled!";
 
 
 
@@ -262,10 +265,10 @@ static NSObject *lock;
     BOOL divisible = (fileSize % request.partSize == 0);
     NSUInteger partCount = (fileSize / request.partSize) + (divisible? 0 : 1);
     
-    if(partCount > oss_multipart_max_part_number)
+    if(partCount > kClientMaximumOfChunks)
     {
-        request.partSize = fileSize / oss_multipart_max_part_number;
-        partCount = oss_multipart_max_part_number;
+        request.partSize = fileSize / kClientMaximumOfChunks;
+        partCount = kClientMaximumOfChunks;
     }
     return partCount;
 #pragma clang diagnostic pop
@@ -283,10 +286,10 @@ static NSObject *lock;
     NSString *uploadId = nil;
     NSString *record = [NSString stringWithFormat:@"%@%@%@%lu", request.md5String, request.bucketName, request.objectKey, (unsigned long)request.partSize];
     if (sequential) {
-        record = [record stringByAppendingString:oss_record_info_suffix_with_sequential];
+        record = [record stringByAppendingString:kClientRecordNameWithSequentialSuffix];
     }
     if (request.crcFlag == OSSRequestCRCOpen) {
-        record = [record stringByAppendingString:oss_record_info_suffix_with_crc];
+        record = [record stringByAppendingString:kClientRecordNameWithCRC64Suffix];
     }
     
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
@@ -308,7 +311,7 @@ static NSObject *lock;
 - (NSMutableDictionary *)localPartInfosDictoryWithUploadId:(NSString *)uploadId
 {
     NSMutableDictionary *localPartInfoDict = nil;
-    NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name];
+    NSString *partInfosDirectory = [[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix];
     NSString *partInfosPath = [partInfosDirectory stringByAppendingPathComponent:uploadId];
     BOOL isDirectory;
     NSFileManager *defaultFM = [NSFileManager defaultManager];
@@ -336,7 +339,7 @@ static NSObject *lock;
 
 - (OSSTask *)persistencePartInfos:(NSDictionary *)partInfos withUploadId:(NSString *)uploadId
 {
-    NSString *filePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+    NSString *filePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
     if (![partInfos writeToFile:filePath atomically:YES])
     {
         NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
@@ -346,6 +349,30 @@ static NSObject *lock;
         return [OSSTask taskWithError:error];
     }
     return nil;
+}
+
+- (OSSTask *)checkPutObjectFileURL:(OSSPutObjectRequest *)request {
+    NSError *error = nil;
+    if (!request.uploadingFileURL || ![request.uploadingFileURL.path oss_isNotEmpty]) {
+        error = [NSError errorWithDomain:OSSClientErrorDomain
+                                    code:OSSClientErrorCodeInvalidArgument
+                                userInfo:@{OSSErrorMessageTOKEN: @"Please check your request's uploadingFileURL!"}];
+    } else {
+        NSFileManager *dfm = [NSFileManager defaultManager];
+        NSDictionary *attributes = [dfm attributesOfItemAtPath:request.uploadingFileURL.path error:&error];
+        unsigned long long fileSize = [attributes[NSFileSize] unsignedLongLongValue];
+        if (!error && fileSize == 0) {
+            error = [NSError errorWithDomain:OSSClientErrorDomain
+                                        code:OSSClientErrorCodeInvalidArgument
+                                    userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForEmptyFile}];
+        }
+    }
+    
+    if (error) {
+        return [OSSTask taskWithError:error];
+    } else {
+        return [OSSTask taskWithResult:nil];
+    }
 }
 
 - (OSSTask *)checkFileSizeWithRequest:(OSSMultipartUploadRequest *)request {
@@ -363,7 +390,7 @@ static NSObject *lock;
         if (!error && fileSize == 0) {
             error = [NSError errorWithDomain:OSSClientErrorDomain
                                         code:OSSClientErrorCodeInvalidArgument
-                                    userInfo:@{OSSErrorMessageTOKEN: @"File length must not be 0!"}];
+                                    userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForEmptyFile}];
         }
     }
     
@@ -380,7 +407,7 @@ static NSObject *lock;
     dispatch_once(&onceToken, ^{
         error = [NSError errorWithDomain:OSSClientErrorDomain
                                     code:OSSClientErrorCodeTaskCancelled
-                                userInfo:@{OSSErrorMessageTOKEN: @"This task has been cancelled!"}];
+                                userInfo:@{OSSErrorMessageTOKEN: kClientErrorMessageForCancelledTask}];
     });
     return error;
 }
@@ -749,6 +776,10 @@ static NSObject *lock;
         }
     }
     if (request.uploadingFileURL) {
+        OSSTask *checkIfEmptyTask = [self checkPutObjectFileURL:request];
+        if (checkIfEmptyTask.error) {
+            return checkIfEmptyTask;
+        }
         requestDelegate.uploadingFileURL = request.uploadingFileURL;
     }
     
@@ -1203,17 +1234,17 @@ static NSObject *lock;
         OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
         NSString *nameInfoString = [NSString stringWithFormat:@"%@%@%@%lu",request.md5String, resumableRequest.bucketName, resumableRequest.objectKey, (unsigned long)resumableRequest.partSize];
         if (sequential) {
-            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_sequential];
+            nameInfoString = [nameInfoString stringByAppendingString:kClientRecordNameWithSequentialSuffix];
         }
         if (request.crcFlag == OSSRequestCRCOpen) {
-            nameInfoString = [nameInfoString stringByAppendingString:oss_record_info_suffix_with_crc];
+            nameInfoString = [nameInfoString stringByAppendingString:kClientRecordNameWithCRC64Suffix];
         }
         
         NSData *data = [nameInfoString dataUsingEncoding:NSUTF8StringEncoding];
         NSString *recordFileName = [OSSUtil dataMD5String:data];
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",resumableRequest.recordDirectoryPath,recordFileName];
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:resumableRequest.uploadId];
+        NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:resumableRequest.uploadId];
         
         if([fileManager fileExistsAtPath:recordFilePath])
         {
@@ -1357,7 +1388,7 @@ static NSObject *lock;
         {
             isTruncated = NO;
             [uploadedParts removeAllObjects];
-            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && listPartsTask.error.code == -404)
+            if ([listPartsTask.error.domain isEqualToString: OSSServerErrorDomain] && labs(listPartsTask.error.code) == 404)
             {
                 OSSLogVerbose(@"local record existes but the remote record is deleted");
                 *uploadId = nil;
@@ -1566,7 +1597,7 @@ static NSObject *lock;
     OSSTask * uploadPartTask = [self uploadPart:uploadPart];
     [uploadPartTask waitUntilFinished];
     if (uploadPartTask.error) {
-        if (abs(uploadPartTask.error.code) != 409) {
+        if (labs(uploadPartTask.error.code) != 409) {
             *errorTask = uploadPartTask;
         }
     } else {
@@ -1683,7 +1714,7 @@ static NSObject *lock;
             
             if([uploadId oss_isNotEmpty])
             {
-                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+                localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
                 
                 localPartInfos = [[NSDictionary alloc] initWithContentsOfFile:localPartInfosPath];
                 
@@ -1755,7 +1786,7 @@ static NSObject *lock;
         }
         
         request.uploadId = uploadId;
-        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:oss_partInfos_storage_name] stringByAppendingPathComponent:uploadId];
+        localPartInfosPath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:uploadId];
         
         if (request.isCancelled)
         {
@@ -1902,7 +1933,7 @@ static NSObject *lock;
             [uploadPartTask waitUntilFinished];
             
             if (uploadPartTask.error) {
-                if (abs(uploadPartTask.error.code) != 409) {
+                if (labs(uploadPartTask.error.code) != 409) {
                     errorTask = uploadPartTask;
                     break;
                 } else {
@@ -2111,7 +2142,7 @@ static NSObject *lock;
     if (!headError) {
         return YES;
     } else {
-        if ([headError.domain isEqualToString: OSSServerErrorDomain] && headError.code == -404) {
+        if ([headError.domain isEqualToString: OSSServerErrorDomain] && labs(headError.code) == 404) {
             return NO;
         } else {
             if (error != nil) {

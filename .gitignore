@@ -38,5 +38,5 @@ Products/
 # big Resource for test
 Example/AliyunOSSSDK-iOS-Example/Resources/
 
-# script generated files
+script generated files
 Scripts/*.pyc

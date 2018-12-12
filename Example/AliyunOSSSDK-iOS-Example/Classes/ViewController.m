@@ -8,16 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
-#import "ImageService.h"
 #import <AliyunOSSiOS/OSSService.h>
 #import "OSSTestMacros.h"
 #import "DownloadService.h"
+#import "OSSWrapper.h"
 
 @interface ViewController ()
 {
-    OssService * service;
-    OssService * imageService;
-    ImageService * imageOperation;
     NSString * uploadFilePath;
     int originConstraintValue;
 }
@@ -58,6 +55,7 @@
 @property (nonatomic, copy) NSString *downloadURLString;
 @property (nonatomic, copy) NSString *headURLString;
 @property (nonatomic, strong) DownloadService *downloadService;
+@property (nonatomic, strong) OSSWrapper *oss;
 
 @end
 
@@ -72,12 +70,13 @@
     
     [_uploadBigFileButton addTarget:self action:@selector(uploadBigFileClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    // init ossService
-    service = [[OssService alloc] init];
-    imageService = [[OssService alloc] init];
-    imageOperation = [[ImageService alloc] initImageService:imageService];
+    [self setupOSS];
     [self initDownloadURLs];
     self.progressBar.progress = 0;
+}
+
+- (void)setupOSS {
+    _oss = [[OSSWrapper alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -192,7 +191,7 @@
     
     NSString *funcStr = @"普通上传";
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncPutImage:objectKey localFilePath:uploadFilePath success:^(id result) {
+    [self.oss asyncPutImage:objectKey localFilePath:uploadFilePath success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
     } failure:^(NSError *error) {
         [self showMessage:funcStr inputMessage:error.localizedDescription];
@@ -207,7 +206,7 @@
     
     NSString *funcStr = @"普通下载";
     NSString * objectKey = _ossTextFileName.text;
-    [service asyncGetImage:objectKey success:^(id result) {
+    [self.oss asyncGetImage:objectKey success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
     } failure:^(NSError *error) {
         [self showMessage:funcStr inputMessage:error.localizedDescription];
@@ -219,7 +218,7 @@
     if (![self verifyFileName]) {
         return;
     }
-    [service normalRequestCancel];
+    [self.oss normalRequestCancel];
 }
 
 // 图片缩放
@@ -232,7 +231,7 @@
     int height = [_ossTextHeight.text intValue];
     
     NSString *funcStr = @"图片缩放";
-    [imageOperation reSize:objectKey picWidth:width picHeight:height success:^(id result) {
+    [self.oss reSize:objectKey picWidth:width picHeight:height success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success!"];
         NSString *filePath = (NSString *)result;
         self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
@@ -251,7 +250,7 @@
     int size = [_ossTextSize.text intValue];
     
     NSString *funcStr = @"图片水印";
-    [imageOperation textWaterMark:objectKey waterText:waterMark objectSize:size success:^(id result) {
+    [self.oss textWaterMark:objectKey waterText:waterMark objectSize:size success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success!"];
         NSString *filePath = (NSString *)result;
         self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
@@ -274,7 +273,6 @@
     UIImage * image = [[UIImage alloc] initWithData:objectData];
     uploadFilePath = fullPath;
     [self.ossImageView setImage:image];
-    
 }
 
 - (void)showMessage:(NSString *)putType
@@ -304,7 +302,7 @@
 - (IBAction)triggerCallbackClicked:(id)sender {
     NSString *funcStr = @"上传回调";
     
-    [service triggerCallbackWithObjectKey:_ossTextFileName.text success:^(id result) {
+    [self.oss triggerCallbackWithObjectKey:_ossTextFileName.text success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
     } failure:^(NSError *error) {
         [self showMessage:funcStr inputMessage:error.localizedDescription];
@@ -314,7 +312,7 @@
 - (void)uploadBigFileClicked:(id)sender {
     NSString *funcStr = @"大文件上传";
     
-    [service multipartUploadWithSuccess:^(id result) {
+    [self.oss multipartUploadWithSuccess:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
     } failure:^(NSError *error) {
         [self showMessage:funcStr inputMessage:error.localizedDescription];

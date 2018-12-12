@@ -8,17 +8,17 @@
 
 import Foundation
 
-let OSS_ACCESSKEY_ID: String = "OSS_ACCESSKEY_ID"
-let OSS_SECRETKEY_ID: String = "OSS_SECRETKEY_ID"
-let OSS_BUCKET_PUBLIC: String = "huaixu-private"
-let OSS_BUCKET_PRIVATE: String = "huaixu-private"
-let OSS_ENDPOINT: String = "http://oss-cn-shenzhen.aliyuncs.com"
+let OSS_ACCESSKEY_ID: String = "access_key_id"
+let OSS_SECRETKEY_ID: String = "access_key_secret"
+let OSS_BUCKET_PUBLIC: String = "public-bucket"
+let OSS_BUCKET_PRIVATE: String = "private-bucket"
+let OSS_ENDPOINT: String = "http://oss-cn-region.aliyuncs.com"
 let OSS_MULTIPART_UPLOADKEY: String = "multipart"
 let OSS_RESUMABLE_UPLOADKEY: String = "resumable"
 let OSS_CALLBACK_URL: String = "http://oss-demo.aliyuncs.com:23450"
-let OSS_CNAME_URL: String = "https://hs.chenhongyu.cn"
-let OSS_STSTOKEN_URL: String = "http://30.40.38.17:3015/sts/getsts"
-let OSS_IMAGE_KEY: String = "zuozhu.jpeg"
+let OSS_CNAME_URL: String = "http://www.cnametest.com/"
+let OSS_STSTOKEN_URL: String = "http://*.*.*.*.****/sts/getsts"
+let OSS_IMAGE_KEY: String = "testImage.png"
 let OSS_CRC64_ENABLE: Bool = true
 let OSS_CONTENT_TYPE: String = "Content-Type"
 let OSS_CONTENT_LENGTH: String = "Content-Length"

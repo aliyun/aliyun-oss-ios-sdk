@@ -233,7 +233,7 @@
 }
 
 - (void)test_resumbleUploadCancelResumble {
-    NSString * objectkey = @"oss-browser.zip";
+    NSString * objectkey = @"bigfile.zip";
     __block bool cancel = NO;
     OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = _privateBucketName;
@@ -248,7 +248,7 @@
             cancel = YES;
         }
     };
-    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"oss-browser" withExtension:@"zip"];
+    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"bigfile" withExtension:@"zip"];
     OSSTask * resumeTask = [_client resumableUpload:resumableUpload];
     [resumeTask continueWithBlock:^id(OSSTask *task) {
         XCTAssertNotNil(task.error);
@@ -269,7 +269,7 @@
     resumableUpload.objectKey = objectkey;
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.partSize = 100 * 1024;
-    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"oss-browser" withExtension:@"zip"];
+    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"bigfile" withExtension:@"zip"];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         if (bytesSent != 0) {

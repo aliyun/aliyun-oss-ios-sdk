@@ -1745,4 +1745,16 @@
     XCTAssertNotNil(task.error);
 }
 
+- (void)testAPI_putObjectWithEmptyFile {
+    OSSPutObjectRequest *req = [OSSPutObjectRequest new];
+    req.bucketName = OSS_BUCKET_PUBLIC;
+    req.objectKey = @"test-empty-file";
+    req.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"empty-file" withExtension:nil];
+    
+    OSSTask *task = [_client putObject:req];
+    [task waitUntilFinished];
+    
+    XCTAssertNotNil(task.error);
+}
+
 @end

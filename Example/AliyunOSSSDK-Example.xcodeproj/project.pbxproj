@@ -16,7 +16,6 @@
 		4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */ = {isa = PBXBuildFile; fileRef = D1805034212EA0F700A1E647 /* OSSHttp2Test.m */; };
 		D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D810A00A2092F76900425D19 /* OSSUtilsTests.m */; };
-		D8125E91211BCC4C00DB687C /* DownloadService.m in Sources */ = {isa = PBXBuildFile; fileRef = D8125E90211BCC4C00DB687C /* DownloadService.m */; };
 		D8125E96211DAFA500DB687C /* OSSClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8125E95211DAFA500DB687C /* OSSClientTests.m */; };
 		D827E4101FCD0FC60085380C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E40F1FCD0FC60085380C /* AppDelegate.m */; };
 		D827E4131FCD0FC60085380C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D827E4121FCD0FC60085380C /* ViewController.m */; };
@@ -38,8 +37,6 @@
 		D83D585B1FC6820B0022761B /* OSSSignTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58531FC680850022761B /* OSSSignTests.m */; };
 		D83D58CE1FC6B3100022761B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58BF1FC6B3100022761B /* ViewController.m */; };
 		D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C51FC6B3100022761B /* AppDelegate.m */; };
-		D83D58D21FC6B3100022761B /* ImageService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C81FC6B3100022761B /* ImageService.m */; };
-		D83D58D31FC6B3100022761B /* OssService.m in Sources */ = {isa = PBXBuildFile; fileRef = D83D58C91FC6B3100022761B /* OssService.m */; };
 		D83D58D81FC6B4350022761B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D83D58D91FC6B43E0022761B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
 		D83D58DA1FC6B4450022761B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F81FC55F46000DD9EC /* libresolv.tbd */; };
@@ -66,6 +63,9 @@
 		D87183D11FC58201000DD9EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182F61FC55F36000DD9EC /* SystemConfiguration.framework */; };
 		D87183D21FC5820B000DD9EC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87182FA1FC560D6000DD9EC /* CoreTelephony.framework */; };
 		D87A0E022057F54B006D2F48 /* ConcurrencyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */; };
+		D88AD7EB2180205600B34D47 /* OSSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D88AD7E52180205600B34D47 /* OSSManager.m */; };
+		D88AD7EC2180205600B34D47 /* OSSWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D88AD7E62180205600B34D47 /* OSSWrapper.m */; };
+		D88AD7ED2180205600B34D47 /* DownloadService.m in Sources */ = {isa = PBXBuildFile; fileRef = D88AD7EA2180205600B34D47 /* DownloadService.m */; };
 		D8C41A641FCC002C0091699B /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D83D58F91FC700C70022761B /* test.xml */; };
 /* End PBXBuildFile section */
 
@@ -111,8 +111,6 @@
 		4C7B5BE82043A15100FDD612 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D1805034212EA0F700A1E647 /* OSSHttp2Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttp2Test.m; sourceTree = "<group>"; };
 		D810A00A2092F76900425D19 /* OSSUtilsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSUtilsTests.m; sourceTree = "<group>"; };
-		D8125E8F211BCC4C00DB687C /* DownloadService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadService.h; sourceTree = "<group>"; };
-		D8125E90211BCC4C00DB687C /* DownloadService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadService.m; sourceTree = "<group>"; };
 		D8125E95211DAFA500DB687C /* OSSClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSClientTests.m; sourceTree = "<group>"; };
 		D827E40C1FCD0FC60085380C /* AliyunOSSSDK-OSX-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AliyunOSSSDK-OSX-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D827E40E1FCD0FC60085380C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -142,10 +140,6 @@
 		D83D58BD1FC6B3100022761B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D83D58BF1FC6B3100022761B /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D83D58C51FC6B3100022761B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D83D58C81FC6B3100022761B /* ImageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageService.m; sourceTree = "<group>"; };
-		D83D58C91FC6B3100022761B /* OssService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OssService.m; sourceTree = "<group>"; };
-		D83D58CA1FC6B3100022761B /* ImageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageService.h; sourceTree = "<group>"; };
-		D83D58CB1FC6B3100022761B /* OssService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OssService.h; sourceTree = "<group>"; };
 		D83D58CC1FC6B3100022761B /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		D83D58DD1FC6B61F0022761B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D83D58DE1FC6B61F0022761B /* AliyunOSSSDK-iOS-Example-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AliyunOSSSDK-iOS-Example-Prefix.pch"; sourceTree = "<group>"; };
@@ -174,6 +168,12 @@
 		D87183C01FC572C6000DD9EC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSReachabilityTests.m; sourceTree = "<group>"; };
 		D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConcurrencyTests.m; sourceTree = "<group>"; };
+		D88AD7E52180205600B34D47 /* OSSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSManager.m; sourceTree = "<group>"; };
+		D88AD7E62180205600B34D47 /* OSSWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSWrapper.m; sourceTree = "<group>"; };
+		D88AD7E72180205600B34D47 /* DownloadService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadService.h; sourceTree = "<group>"; };
+		D88AD7E82180205600B34D47 /* OSSManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSManager.h; sourceTree = "<group>"; };
+		D88AD7E92180205600B34D47 /* OSSWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSWrapper.h; sourceTree = "<group>"; };
+		D88AD7EA2180205600B34D47 /* DownloadService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,26 +242,13 @@
 		D83D58BC1FC6B3100022761B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D88AD7E42180205600B34D47 /* Wrapper */,
 				D83D58BD1FC6B3100022761B /* AppDelegate.h */,
 				D83D58C51FC6B3100022761B /* AppDelegate.m */,
 				D83D58CC1FC6B3100022761B /* ViewController.h */,
 				D83D58BF1FC6B3100022761B /* ViewController.m */,
-				D83D58C71FC6B3100022761B /* Services */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		D83D58C71FC6B3100022761B /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				D83D58C81FC6B3100022761B /* ImageService.m */,
-				D83D58C91FC6B3100022761B /* OssService.m */,
-				D83D58CA1FC6B3100022761B /* ImageService.h */,
-				D83D58CB1FC6B3100022761B /* OssService.h */,
-				D8125E8F211BCC4C00DB687C /* DownloadService.h */,
-				D8125E90211BCC4C00DB687C /* DownloadService.m */,
-			);
-			path = Services;
 			sourceTree = "<group>";
 		};
 		D83D58DC1FC6B61F0022761B /* Supporting Files */ = {
@@ -367,6 +354,19 @@
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
+			sourceTree = "<group>";
+		};
+		D88AD7E42180205600B34D47 /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				D88AD7E52180205600B34D47 /* OSSManager.m */,
+				D88AD7E62180205600B34D47 /* OSSWrapper.m */,
+				D88AD7E72180205600B34D47 /* DownloadService.h */,
+				D88AD7E82180205600B34D47 /* OSSManager.h */,
+				D88AD7E92180205600B34D47 /* OSSWrapper.h */,
+				D88AD7EA2180205600B34D47 /* DownloadService.m */,
+			);
+			path = Wrapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -530,12 +530,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D83D58D31FC6B3100022761B /* OssService.m in Sources */,
-				D83D58D21FC6B3100022761B /* ImageService.m in Sources */,
 				D83D58D11FC6B3100022761B /* AppDelegate.m in Sources */,
-				D8125E91211BCC4C00DB687C /* DownloadService.m in Sources */,
 				D83D58E21FC6B61F0022761B /* main.m in Sources */,
 				D83D58CE1FC6B3100022761B /* ViewController.m in Sources */,
+				D88AD7ED2180205600B34D47 /* DownloadService.m in Sources */,
+				D88AD7EB2180205600B34D47 /* OSSManager.m in Sources */,
+				D88AD7EC2180205600B34D47 /* OSSWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

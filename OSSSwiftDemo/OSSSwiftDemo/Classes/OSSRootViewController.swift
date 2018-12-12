@@ -62,7 +62,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         mProvider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
         mClient = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: mProvider)
         serverURLTF.text = OSS_STSTOKEN_URL
-        bucketNameTF.text = OSS_BUCKET_PUBLIC
+        bucketNameTF.text = OSS_BUCKET_PRIVATE
         objectKeyTF.text = nil
     }
     
@@ -135,7 +135,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     
     func getObject() -> Void {
         let getObjectReq: OSSGetObjectRequest = OSSGetObjectRequest()
-        getObjectReq.bucketName = OSS_BUCKET_PUBLIC;
+        getObjectReq.bucketName = OSS_BUCKET_PRIVATE;
         getObjectReq.objectKey = OSS_IMAGE_KEY;
         getObjectReq.downloadProgress = { (bytesWritten: Int64,totalBytesWritten : Int64, totalBytesExpectedToWrite: Int64) -> Void in
             print("bytesWritten:\(bytesWritten),totalBytesWritten:\(totalBytesWritten),totalBytesExpectedToWrite:\(totalBytesExpectedToWrite)");
@@ -152,7 +152,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
 
     func getImage() -> Void {
         let getObjectReq: OSSGetObjectRequest = OSSGetObjectRequest()
-        getObjectReq.bucketName = OSS_BUCKET_PUBLIC;
+        getObjectReq.bucketName = OSS_BUCKET_PRIVATE;
         getObjectReq.objectKey = objectKeyTF.text!;
         getObjectReq.xOssProcess = "image/resize,m_lfit,w_100,h_100";
         getObjectReq.downloadProgress = { (bytesWritten: Int64,totalBytesWritten : Int64, totalBytesExpectedToWrite: Int64) -> Void in
@@ -213,7 +213,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         }
         
         let request = OSSHeadObjectRequest()
-        request.bucketName = OSS_BUCKET_PUBLIC
+        request.bucketName = OSS_BUCKET_PRIVATE
         request.objectKey = objectKeyTF.text!
     
         let task: OSSTask = mClient.headObject(request)
@@ -396,7 +396,7 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     
     func sequentialMultipartUpload() {
         let request = OSSResumableUploadRequest()
-        request.bucketName = OSS_BUCKET_PUBLIC;
+        request.bucketName = OSS_BUCKET_PRIVATE;
         request.objectKey = "sequential-swift-multipart";
         request.uploadingFileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")!
         request.deleteUploadIdOnCancelling = false
