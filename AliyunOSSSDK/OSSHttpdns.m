@@ -109,7 +109,14 @@ NSTimeInterval const PRERESOLVE_IN_ADVANCE_IN_SECOND = 10; // Once the remaining
             OSSLogError(@"Httpdns resolve host: %@ failed, responseCode: %lu", host, (unsigned long)statusCode);
         } else {
             NSError *error = nil;
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            NSDictionary *json = nil;
+            if (data != nil){
+                json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            }
+            
+            if (error != nil || json == nil){
+                return;
+            }
 
             NSTimeInterval expiredTime = [[NSDate new] timeIntervalSince1970] + [[json objectForKey:@"ttl"] longLongValue];
 
