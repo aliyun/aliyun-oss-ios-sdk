@@ -1210,7 +1210,7 @@ static NSObject *lock;
     return [self multipartUpload: request resumable: YES sequential: NO];
 }
 
-- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(unsigned long long)totalSize partSize:(NSUInteger)partSize
+- (OSSTask *)processListPartsWithObjectKey:(nonnull NSString *)objectKey bucket:(nonnull NSString *)bucket uploadId:(NSString * _Nonnull *)uploadId uploadedParts:(nonnull NSMutableArray *)uploadedParts uploadedLength:(NSUInteger *)uploadedLength totalSize:(unsigned long long)totalSize partSize:(NSUInteger)partSize partCount:(NSUInteger)partCount
 {
     BOOL isTruncated = NO;
     int nextPartNumberMarker = 0;
@@ -1256,10 +1256,16 @@ static NSObject *lock;
         NSString *partSizeString = [part objectForKey:OSSSizeXMLTOKEN];
         NSScanner *scanner = [NSScanner scannerWithString:partSizeString];
         [scanner scanUnsignedLongLong:&iPartSize];
+        
+        unsigned long long iPartNumber = 0;
+        NSString *partNumberString = [part objectForKey: OSSPartNumberXMLTOKEN];
+        NSScanner *scannerPartNumber = [NSScanner scannerWithString: partNumberString];
+        [scannerPartNumber scanUnsignedLongLong: &iPartNumber];
+        
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
         bUploadedLength += iPartSize;
-        if (idx == 0)
+        if (firstPartSize <= 0 && iPartNumber != partCount)
         {
             firstPartSize = iPartSize;
         }
@@ -1564,7 +1570,8 @@ static NSObject *lock;
                                                               uploadedParts:uploadedPart
                                                              uploadedLength:&uploadedLength
                                                                   totalSize:uploadFileSize
-                                                                   partSize:request.partSize];
+                                                                   partSize:request.partSize
+                                                                   partCount:partCount];
                 if (listPartTask.error)
                 {
                     return listPartTask;
