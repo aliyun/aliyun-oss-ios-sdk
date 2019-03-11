@@ -228,12 +228,12 @@ OSSTask * getTask = [client getObject:request];
 
 ## 完整文档
 
-SDK提供进阶的上传、下载功能、断点续传，以及文件管理、Bucket管理等功能。详见官方完整文档：[点击查看](http://help.aliyun.com/document_detail/oss/sdk/ios-sdk/preface.html?spm=5176.product8314910_oss.4.30.tK2G02)
+SDK提供进阶的上传、下载功能、断点续传，以及文件管理、Bucket管理等功能。详见官方完整文档：[点击查看](https://help.aliyun.com/document_detail/32055.html)
 
 
 ## API文档
 
-[点击查看](http://aliyun.github.io/aliyun-oss-ios-sdk/)
+[点击查看](https://help.aliyun.com/document_detail/31947.html)
 
 ## 常见问题
 

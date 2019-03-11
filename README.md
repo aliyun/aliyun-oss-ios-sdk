@@ -225,11 +225,11 @@ OSSTask * getTask = [client getObject:request];
 
 ## Complete documentation
 
-The SDK provides advanced upload, download, resumable upload/download, object management and bucket management features. For details, see the complete official documentation: [click to view details](http://help.aliyun.com/document_detail/oss/sdk/ios-sdk/preface.html?spm=5176.product8314910_oss.4.30.tK2G02). 
+The SDK provides advanced upload, download, resumable upload/download, object management and bucket management features. For details, see the complete official documentation: [click to view details](https://help.aliyun.com/document_detail/32055.html). 
 
 ## API documentation
 
-[Click to view details](http://aliyun.github.io/aliyun-oss-ios-sdk/).
+[Click to view details](https://help.aliyun.com/document_detail/31947.html).
 
 ## F&Q
 
