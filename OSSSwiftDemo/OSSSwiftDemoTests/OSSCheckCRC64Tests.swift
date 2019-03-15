@@ -77,4 +77,27 @@ class OSSCheckCRC64Tests: OSSSwiftDemoTests {
         XCTAssertNil(task.error)
     }
     
+    func testAPI_resumableUpload() {
+        
+        var result: OSSResumableUploadResult? = nil
+        
+        let fileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")
+        let request = OSSResumableUploadRequest()
+        request.uploadingFileURL = fileURL!
+        request.partSize = 307200
+        request.bucketName = OSS_BUCKET_PUBLIC
+        request.objectKey = OSS_RESUMABLE_UPLOADKEY
+        request.uploadProgress = {(bytesSent, totalByteSent, totalBytesExpectedToSend) ->Void in
+            print("bytesSent: \(bytesSent),totalByteSent: \(totalByteSent),totalBytesExpectedToSend: \(totalBytesExpectedToSend)")
+        }
+        
+        let task = client.resumableUpload(request)
+        task.continue({ (t) -> Any? in
+            result = t.result as? OSSResumableUploadResult
+            print("===remoteCRC64ecma=== \(result?.httpResponseHeaderFields["x-oss-hash-crc64ecma"])")
+            XCTAssertNil(t.error)
+            return nil
+        }).waitUntilFinished()
+    }
+    
 }
