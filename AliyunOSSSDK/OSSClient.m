@@ -1199,6 +1199,7 @@ static NSObject *lock;
         result.httpResponseCode = completeResult.httpResponseCode;
         result.httpResponseHeaderFields = completeResult.httpResponseHeaderFields;
         result.serverReturnJsonString = completeResult.serverReturnJsonString;
+        result.remoteCRC64ecma = completeResult.remoteCRC64ecma;
         
         return [OSSTask taskWithResult:result];
     }
