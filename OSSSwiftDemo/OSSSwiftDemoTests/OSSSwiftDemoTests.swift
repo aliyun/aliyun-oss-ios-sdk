@@ -21,7 +21,8 @@ class OSSSwiftDemoTests: XCTestCase {
                                  NSNumber.init(value: 10485760),
                                  NSNumber.init(value: 1024),
                                  NSNumber.init(value: 1024)]
-    let documentDirectory = String.oss_documentDirectory()
+    
+    let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first;
     
     override func setUp() {
         super.setUp()
