@@ -83,8 +83,6 @@
     temComs.host = urlComponents.host;
     temComs.port = urlComponents.port;
     
-    
-    
     if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
            OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
            if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
