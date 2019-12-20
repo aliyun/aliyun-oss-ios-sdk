@@ -95,7 +95,7 @@
                    NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
                    temComs.host = dnsResult;
                }
-           } else if ([ipAdapter isIPv4Address:urlComponents.host] || [ipAdapter isIPv6Address:urlComponents.host]) {
+           } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
                temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
            }
        }
