@@ -72,17 +72,32 @@
 }
 
 - (void)testBucketName{
-    
     ///^[a-z0-9][a-z0-9\\-]{1,61}[a-z0-9]$"
+    
     BOOL result1 = [OSSUtil validateBucketName:@"123-456abc"];
     XCTAssertTrue(result1);
-    BOOL result2 = [OSSUtil validateBucketName:@"123-456abc-"];
+   
+    BOOL result2 = [OSSUtil validateBucketName:@"123-456abc*"];
     XCTAssertFalse(result2);
+    
     BOOL result3 = [OSSUtil validateBucketName:@"-123-456abc"];
     XCTAssertFalse(result3);
+    
     BOOL result4 = [OSSUtil validateBucketName:@"123\\456abc"];
     XCTAssertFalse(result4);
     
+    BOOL result5 = [OSSUtil validateBucketName:@"abc123"];
+    XCTAssertTrue(result5);
+       
+    BOOL result6 = [OSSUtil validateBucketName:@"abc_123"];
+    XCTAssertFalse(result6);
+       
+    BOOL result7 = [OSSUtil validateBucketName:@"a"];
+    XCTAssertFalse(result7);
+       
+    BOOL result8 = [OSSUtil validateBucketName:@"abcdefghig-abcdefghig-abcdefghig-abcdefghig-abcdefghig-abcdefghig"];
+    XCTAssertFalse(result8);
+       
 }
 
 

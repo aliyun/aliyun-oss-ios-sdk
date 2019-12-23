@@ -243,8 +243,6 @@ SDK提供进阶的上传、下载功能、断点续传，以及文件管理、Bu
 
 ![list1](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/Images/list1.png)
 
-
-
 ## License
 
 * Apache License 2.0.
