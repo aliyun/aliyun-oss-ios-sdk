@@ -139,7 +139,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     static NSRegularExpression *regEx;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        regEx = [[NSRegularExpression alloc] initWithPattern:@"^[a-z0-9][a-z0-9_\\-]{2,62}$" options:NSRegularExpressionCaseInsensitive error:nil];
+        regEx = [[NSRegularExpression alloc] initWithPattern:@"^[a-z0-9][a-z0-9\\-]{1,61}[a-z0-9]$" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     NSUInteger regExMatches = [regEx numberOfMatchesInString:bucketName options:0 range:NSMakeRange(0, [bucketName length])];
     return regExMatches != 0;

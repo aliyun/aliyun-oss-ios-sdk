@@ -78,23 +78,27 @@
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
     NSString *headerHost = nil;
     
-    if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
-        OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
-        if ([OSSUtil isOssOriginBucketHost:urlComponents.host]) {
-            // eg. insert bucket to the begining of host.
-            urlComponents.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, urlComponents.host];
-            headerHost = urlComponents.host;
-            
-            if ([urlComponents.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
-                NSString *dnsResult = [OSSUtil getIpByHost: urlComponents.host];
-                urlComponents.host = dnsResult;
-            }
-        } else if ([ipAdapter isIPv4Address:urlComponents.host] || [ipAdapter isIPv6Address:urlComponents.host]) {
-            urlComponents.path = [NSString stringWithFormat:@"/%@%@",self.allNeededMessage.bucketName, urlComponents.path];
-        }
-    }
+    NSURLComponents *temComs = [NSURLComponents new];
+    temComs.scheme = urlComponents.scheme;
+    temComs.host = urlComponents.host;
+    temComs.port = urlComponents.port;
     
-    urlString = urlComponents.string;
+    if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
+           OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
+           if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
+               // eg. insert bucket to the begining of host.
+               temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
+               headerHost = temComs.host;
+               if ([temComs.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
+                   NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
+                   temComs.host = dnsResult;
+               }
+           } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
+               temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
+           }
+       }
+       
+       urlString = temComs.string;
     
     // join object name
     if ([self.allNeededMessage.objectKey oss_isNotEmpty]) {
