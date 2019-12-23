@@ -1,4 +1,4 @@
-2Aliyun Open Services SDK for iOS
+Aliyun Open Services SDK for iOS
 
 Copyright (C) Alibaba Cloud Computing
 All rights reserved.
