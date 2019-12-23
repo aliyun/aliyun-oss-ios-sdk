@@ -1,4 +1,4 @@
-Aliyun Open Services SDK for iOS
+2Aliyun Open Services SDK for iOS
 
 Copyright (C) Alibaba Cloud Computing
 All rights reserved.
@@ -16,7 +16,7 @@ pod dependency：   pod 'AliyunOSSiOS'
 Update Logs:
 
 2019/12/23
-- release 3.0.0
+- release 2.10.8
 1.modify the filter rules about bucketname.
 2.modify the filter rules about endpoint.
 
