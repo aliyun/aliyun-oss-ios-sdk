@@ -15,6 +15,12 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2019/12/23
+- release 2.10.8
+1.modify the filter rules about bucketname.
+2.modify the filter rules about endpoint.
+
+
 2018/09/13
 - release 2.10.7
 1.refactor code of building canonical url for request,Keep its logic consistent with android sdk.
