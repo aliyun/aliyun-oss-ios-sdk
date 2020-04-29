@@ -29,7 +29,7 @@ fi
 
 mkdir -p ${SRCROOT}/Products
 
-cp -LR "${DEVICE_DIR}" "${INSTALL_DIR}"
+ditto "${DEVICE_DIR}" "${INSTALL_DIR}"
 
 
 rm -r "${WRK_DIR}"
