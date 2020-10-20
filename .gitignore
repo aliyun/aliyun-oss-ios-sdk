@@ -17,6 +17,7 @@ src/docs/docset-installed.txt
 ######################
 xcuserdata
 *.xccheckout
+.swiftpm/*
 
 # Patched code #
 ######################
