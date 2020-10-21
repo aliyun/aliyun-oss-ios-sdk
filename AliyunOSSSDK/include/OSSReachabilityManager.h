@@ -1,1 +1,1 @@
-/Users/dsee.Lab/Desktop/OpenSource/aliyun-oss-ios-sdk/AliyunOSSSDK/OSSIPv6/OSSReachabilityManager.h
+../OSSIPv6/OSSReachabilityManager.h

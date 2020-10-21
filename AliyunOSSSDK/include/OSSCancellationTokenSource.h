@@ -1,1 +1,1 @@
-/Users/dsee.Lab/Desktop/OpenSource/aliyun-oss-ios-sdk/AliyunOSSSDK/OSSTask/OSSCancellationTokenSource.h
+../OSSTask/OSSCancellationTokenSource.h

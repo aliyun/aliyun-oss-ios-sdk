@@ -1,1 +1,1 @@
-/Users/dsee.Lab/Desktop/OpenSource/aliyun-oss-ios-sdk/AliyunOSSSDK/OSSGetSymlinkResult.h
+../OSSGetSymlinkResult.h

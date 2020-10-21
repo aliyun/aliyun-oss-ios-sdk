@@ -1,1 +1,1 @@
-/Users/dsee.Lab/Desktop/OpenSource/aliyun-oss-ios-sdk/AliyunOSSSDK/OSSIPv6/OSSIPv6PrefixResolver.h
+../OSSIPv6/OSSIPv6PrefixResolver.h

@@ -1,1 +1,1 @@
-/Users/dsee.Lab/Desktop/OpenSource/aliyun-oss-ios-sdk/AliyunOSSSDK/OSSIPv6/OSSIPv6Adapter.h
+../OSSIPv6/OSSIPv6Adapter.h
