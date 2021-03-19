@@ -74,55 +74,26 @@
 #define URLENCODE(a) [OSSUtil encodeURL:(a)]
     OSSLogDebug(@"start to build request")
     // build base url string
+    NSString *bucketName = self.allNeededMessage.bucketName;
+    NSString *objectKey = self.allNeededMessage.objectKey;
     NSString *urlString = self.allNeededMessage.endpoint;
-    NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
-    NSString *headerHost = nil;
+    NSURLComponents *temComs = [[NSURLComponents alloc] initWithString:urlString];
     
-    NSURLComponents *temComs = [NSURLComponents new];
-    temComs.scheme = urlComponents.scheme;
-    temComs.host = urlComponents.host;
-    temComs.port = urlComponents.port;
+    NSString *host = [self buildCanonicalHost:temComs.host
+                                   bucketName:bucketName];
+    NSString *path = [self buildCanonicalPathWithUrlPath:temComs.path
+                                              bucketName:bucketName
+                                               objectKey:objectKey];
+    NSString *queryString = [self buildQueryStringWithParams:self.allNeededMessage.params];
     
-    if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
-           OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
-           if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
-               // eg. insert bucket to the begining of host.
-               temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
-               headerHost = temComs.host;
-               if ([temComs.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
-                   NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
-                   temComs.host = dnsResult;
-               }
-           } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
-               temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
-           }
-       }
-       
-       urlString = temComs.string;
+    NSURLComponents *urlComponents = [NSURLComponents new];
+    urlComponents.scheme = temComs.scheme;
+    urlComponents.host = host;
+    urlComponents.port = temComs.port;
+    urlComponents.path = path;
+    urlComponents.query = queryString;
     
-    // join object name
-    if ([self.allNeededMessage.objectKey oss_isNotEmpty]) {
-        urlString = [urlString oss_stringByAppendingPathComponentForURL:URLENCODE(self.allNeededMessage.objectKey)];
-    }
-    
-    // join query string
-    if (self.allNeededMessage.params) {
-        NSMutableArray * querys = [[NSMutableArray alloc] init];
-        for (NSString * key in [self.allNeededMessage.params allKeys]) {
-            NSString * value = [self.allNeededMessage.params objectForKey:key];
-            if (value) {
-                if ([value isEqualToString:@""]) {
-                    [querys addObject:URLENCODE(key)];
-                } else {
-                    [querys addObject:[NSString stringWithFormat:@"%@=%@", URLENCODE(key), URLENCODE(value)]];
-                }
-            }
-        }
-        if (querys && [querys count]) {
-            NSString * queryString = [querys componentsJoinedByString:@"&"];
-            urlString = [NSString stringWithFormat:@"%@?%@", urlString, queryString];
-        }
-    }
+    urlString = urlComponents.string;
     OSSLogDebug(@"built full url: %@", urlString)
     
     // generate internal request For NSURLSession
@@ -134,8 +105,8 @@
     }
     
     // set host of header fields
-    if ([headerHost oss_isNotEmpty]) {
-        [self.internalRequest setValue:headerHost forHTTPHeaderField:@"Host"];
+    if ([urlComponents.host oss_isNotEmpty]) {
+        [self.internalRequest setValue:urlComponents.host forHTTPHeaderField:@"Host"];
     }
     
     if (self.allNeededMessage.contentType) {
@@ -166,4 +137,59 @@
 #undef URLENCODE//(a)
     return [OSSTask taskWithResult:nil];
 }
+
+- (NSString *)buildCanonicalHost:(NSString *)originHost bucketName:(NSString *)bucketName {
+    NSMutableString *host = [NSMutableString string];
+    
+    BOOL isCname = (self.isSupportCnameEnable && [self cnameExcludeFilter:originHost]);
+    if (bucketName != nil && !isCname && !self.isPathStyleAccessEnable) {
+        [host appendString:bucketName];
+        [host appendString:@"."];
+    }
+    [host appendString:originHost];
+    return host;
+}
+
+- (BOOL)cnameExcludeFilter:(NSString *)originHost {
+    for (NSString *host in self.cnameExcludeList) {
+        if ([host hasSuffix:originHost]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+- (NSString *)buildCanonicalPathWithUrlPath:(NSString *)urlPath bucketName:(NSString *)bucketName objectKey:(NSString *)objectKey {
+    NSString *basePath = (self.isCustomPathPrefixEnable && [urlPath oss_isNotEmpty]) ? urlPath : @"";
+    NSMutableString *path = [NSMutableString stringWithString:basePath];
+    if (self.isPathStyleAccessEnable && bucketName.oss_isNotEmpty) {
+        [path appendFormat:@"/%@", bucketName];
+    }
+    if (objectKey.oss_isNotEmpty) {
+        [path appendFormat:@"/%@", [OSSUtil encodeURL:objectKey]];
+    }
+    return path;
+}
+
+- (NSString *)buildQueryStringWithParams:(NSDictionary *)params {
+    if (params) {
+        NSMutableArray * querys = [[NSMutableArray alloc] init];
+        for (NSString * key in [params allKeys]) {
+            NSString * value = [params objectForKey:key];
+            if (value) {
+                if ([value isEqualToString:@""]) {
+                    [querys addObject:[OSSUtil encodeURL:key]];
+                } else {
+                    [querys addObject:[NSString stringWithFormat:@"%@=%@", [OSSUtil encodeURL:key], [OSSUtil encodeURL:value]]];
+                }
+            }
+        }
+        if (querys && [querys count]) {
+            NSString * queryString = [querys componentsJoinedByString:@"&"];
+            return queryString;
+        }
+    }
+    return nil;
+}
+
 @end

@@ -148,9 +148,14 @@ static NSObject *lock;
     }
 
     request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
-
+    request.isPathStyleAccessEnable = self.clientConfiguration.isPathStyleAccessEnable;
+    request.isCustomPathPrefixEnable = self.clientConfiguration.isCustomPathPrefixEnable;
+    request.isSupportCnameEnable = self.clientConfiguration.isSupportCnameEnable;
+    request.cnameExcludeList = self.clientConfiguration.cnameExcludeList;
+    
     return [_networking sendRequest:request];
 }
+
 
 #pragma implement restful apis
 

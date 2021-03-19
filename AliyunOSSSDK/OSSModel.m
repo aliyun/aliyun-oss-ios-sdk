@@ -296,6 +296,10 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.backgroundSesseionIdentifier = BACKGROUND_SESSION_IDENTIFIER;
         self.timeoutIntervalForRequest = OSSDefaultTimeoutForRequestInSecond;
         self.timeoutIntervalForResource = OSSDefaultTimeoutForResourceInSecond;
+        self.isPathStyleAccessEnable = NO;
+        self.isCustomPathPrefixEnable = NO;
+        self.isSupportCnameEnable = NO;
+        self.cnameExcludeList = @[];
     }
     return self;
 }

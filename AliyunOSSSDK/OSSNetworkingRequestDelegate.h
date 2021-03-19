@@ -39,6 +39,10 @@
 @property (nonatomic, assign) BOOL isBackgroundUploadFileTask;
 @property (nonatomic, assign) BOOL isHttpdnsEnable;
 
+@property (nonatomic, assign) BOOL isPathStyleAccessEnable;
+@property (nonatomic, assign) BOOL isCustomPathPrefixEnable;
+@property (nonatomic, assign) BOOL isSupportCnameEnable;
+@property (nonatomic, copy) NSArray * cnameExcludeList;
 
 @property (nonatomic, assign) uint32_t currentRetryCount;
 @property (nonatomic, strong) NSError * error;
