@@ -17,6 +17,7 @@
 
 @interface OSSUtil : NSObject
 
++ (BOOL)isIncludeCnameExcludeList:(NSArray *)cnameExcludeList host:(NSString *)host;
 + (NSString *)calBase64Sha1WithData:(NSString *)data withSecret:(NSString *)key;
 + (NSString *)calBase64WithData:(uint8_t *)data;
 + (NSString *)encodeURL:(NSString *)url;

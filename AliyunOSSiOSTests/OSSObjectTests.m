@@ -10,6 +10,15 @@
 #import "OSSTestMacros.h"
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
 #import "OSSTestUtils.h"
+
+#define SCHEME @"https://"
+#define ENDPOINT @"oss-cn-hangzhou.aliyuncs.com"
+#define CNAME_ENDPOINT @"oss.custom.com"
+#define IP_ENDPOINT @"192.168.1.1:8080"
+#define CUSTOMPATH(endpoint) [endpoint stringByAppendingString:@"/path"]
+#define BUCKET_NAME @"BucketName"
+#define OBJECT_KEY @"ObjectKey"
+
 @interface OSSObjectTests : XCTestCase
 {
     OSSClient *_client;
@@ -1487,6 +1496,206 @@
                                               withObjectKey:@"hasky.jpeg"
                                              withParameters:@{@"x-oss-process": @"image/resize,w_50"}];
     XCTAssertNil(task.error);
+}
+
+- (void)testAPI_presignConstrainURLWithDefaultConfig {
+    
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignConstrainURLWithPathStyleConfig {
+    
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[CNAME_ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    urlString = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CNAME_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+}
+
+- (void)testAPI_presignConstrainURLWithCname {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.cnameExcludeList = @[CNAME_ENDPOINT];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignConstrainURLWithCustomPath {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.isCustomPathPrefixEnable = YES;
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:CUSTOMPATH(ENDPOINT) credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, CUSTOMPATH(ENDPOINT), OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignConstrainURLWithIpEndpoint {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:[@"http://" stringByAppendingString:IP_ENDPOINT] credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignConstrainURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY
+                                      withExpirationInterval:30 * 60];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@/%@", IP_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+
+- (void)testAPI_presignPublicURLWithDefaultConfig {
+    
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignPublicURLWithPathStyleConfig {
+    
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[CNAME_ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    urlString = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CNAME_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+}
+
+- (void)testAPI_presignPublicURLWithCname {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.cnameExcludeList = @[CNAME_ENDPOINT];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+    
+    config = [OSSClientConfiguration new];
+    config.isPathStyleAccessEnable = YES;
+    config.cnameExcludeList = @[ENDPOINT];
+    authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    client = [[OSSClient alloc] initWithEndpoint:CNAME_ENDPOINT credentialProvider:authProv clientConfiguration:config];
+    tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    urlString = [NSString stringWithFormat:@"%@%@/%@", SCHEME, CNAME_ENDPOINT, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignPublicURLWithCustomPath {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.isCustomPathPrefixEnable = YES;
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:CUSTOMPATH(ENDPOINT) credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, CUSTOMPATH(ENDPOINT), OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
+}
+
+- (void)testAPI_presignPublicURLWithIpEndpoint {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:[@"http://" stringByAppendingString:IP_ENDPOINT] credentialProvider:authProv clientConfiguration:config];
+    OSSTask * tk = [client presignPublicURLWithBucketName:BUCKET_NAME
+                                               withObjectKey:OBJECT_KEY];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@/%@", IP_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    XCTAssertTrue([tk.result hasPrefix:urlString]);
 }
 
 #pragma mark - utils

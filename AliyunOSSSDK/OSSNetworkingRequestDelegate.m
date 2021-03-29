@@ -74,32 +74,47 @@
 #define URLENCODE(a) [OSSUtil encodeURL:(a)]
     OSSLogDebug(@"start to build request")
     // build base url string
+    NSString *bucketName = self.allNeededMessage.bucketName;
+    NSString *objectKey = self.allNeededMessage.objectKey;
     NSString *urlString = self.allNeededMessage.endpoint;
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
     NSString *headerHost = nil;
+    BOOL isPathStyle = NO;
     
     NSURLComponents *temComs = [NSURLComponents new];
     temComs.scheme = urlComponents.scheme;
     temComs.host = urlComponents.host;
     temComs.port = urlComponents.port;
+    if (self.isCustomPathPrefixEnable) {
+        temComs.path = urlComponents.path;
+    }
     
     if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
-           OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
-           if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
-               // eg. insert bucket to the begining of host.
-               temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
-               headerHost = temComs.host;
-               if ([temComs.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
-                   NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
-                   temComs.host = dnsResult;
-               }
-           } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
-               temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
-           }
-       }
-       
-       urlString = temComs.string;
+        OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
+        if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
+            // eg. insert bucket to the begining of host.
+            temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
+            headerHost = temComs.host;
+            if ([temComs.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
+                NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
+                temComs.host = dnsResult;
+            }
+        } else if (self.allNeededMessage.isHostInCnameExcludeList) {
+            if (self.isPathStyleAccessEnable) {
+                isPathStyle = YES;
+            } else {
+                temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
+            }
+        } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
+            isPathStyle = YES;
+        }
+    }
     
+    urlString = temComs.string;
+    
+    if (isPathStyle) {
+        urlString = [NSString stringWithFormat:@"%@/%@", urlString, bucketName];
+    }
     // join object name
     if ([self.allNeededMessage.objectKey oss_isNotEmpty]) {
         urlString = [urlString oss_stringByAppendingPathComponentForURL:URLENCODE(self.allNeededMessage.objectKey)];
@@ -123,6 +138,7 @@
             urlString = [NSString stringWithFormat:@"%@?%@", urlString, queryString];
         }
     }
+    
     OSSLogDebug(@"built full url: %@", urlString)
     
     // generate internal request For NSURLSession
@@ -166,4 +182,5 @@
 #undef URLENCODE//(a)
     return [OSSTask taskWithResult:nil];
 }
+
 @end

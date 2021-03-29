@@ -25,4 +25,27 @@ let OSS_CONTENT_LENGTH: String = "Content-Length"
 let OSS_TEST_CONTENT_TYPE: String = "application/special"
 let OSS_APPEND_OBJECT_KEY: String = "appendObject"
 
+let SCHEME = "https://"
+let ENDPOINT = "oss-cn-hangzhou.aliyuncs.com"
+let CNAME_ENDPOINT = "oss.custom.com"
+let IP_ENDPOINT = "192.168.1.1:8080"
+let BUCKET_NAME = "BucketName"
+let OBJECT_KEY = "ObjectKey"
 
+
+public protocol Error {
+    var _domain: String { get }
+    var _code: Int { get }
+    var _userInfo: AnyObject? { get }
+}
+
+extension NSError : Error {
+    @nonobjc
+    public var _domain: String { return domain }
+    
+    @nonobjc
+    public var _code: Int { return code }
+    
+    @nonobjc
+    public var _userInfo: AnyObject? { return userInfo as NSDictionary }
+}
