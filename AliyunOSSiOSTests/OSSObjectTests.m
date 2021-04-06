@@ -955,7 +955,7 @@
 
 - (void)testAPI_DeleteMultipleObjects {
     OSSDeleteMultipleObjectsRequest *request = [OSSDeleteMultipleObjectsRequest new];
-    request.bucketName = OSS_BUCKET_PRIVATE;
+    request.bucketName = _publicBucketName;
     request.keys = @[@"file1k",@"file10k",@"file100k",@"file1m"];
     request.encodingType = @"url";
     
