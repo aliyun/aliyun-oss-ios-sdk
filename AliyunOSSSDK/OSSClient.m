@@ -148,9 +148,12 @@ static NSObject *lock;
     }
 
     request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
-
+    request.isPathStyleAccessEnable = self.clientConfiguration.isPathStyleAccessEnable;
+    request.isCustomPathPrefixEnable = self.clientConfiguration.isCustomPathPrefixEnable;
+    
     return [_networking sendRequest:request];
 }
+
 
 #pragma implement restful apis
 
@@ -1913,18 +1916,43 @@ static NSObject *lock;
         NSString * accessKey = [(NSString *)[splitResult objectAtIndex:0] substringFromIndex:4];
         NSString * signature = [splitResult objectAtIndex:1];
         
+        BOOL isPathStyle = false;
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
         NSString * host = endpointURL.host;
+        NSString * port = @"";
+        NSString * path = @"";
+        NSString * pathStylePath = @"";
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+        } else if ([OSSUtil isIncludeCnameExcludeList:self.clientConfiguration.cnameExcludeList host:host]) {
+            if (self.clientConfiguration.isPathStyleAccessEnable) {
+                isPathStyle = true;
+            } else {
+                host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+            }
+        } else if ([[OSSIPv6Adapter getInstance] isIPv4Address:host] ||
+                   [[OSSIPv6Adapter getInstance] isIPv6Address:host]) {
+            isPathStyle = true;
+        }
+        if (endpointURL.port) {
+            port = [NSString stringWithFormat:@":%@", endpointURL.port];
+        }
+        if (self.clientConfiguration.isCustomPathPrefixEnable) {
+            path = endpointURL.path;
+        }
+        if (isPathStyle) {
+            pathStylePath = [@"/" stringByAppendingString:bucketName];
         }
         
         [params oss_setObject:signature forKey:@"Signature"];
         [params oss_setObject:accessKey forKey:@"OSSAccessKeyId"];
         [params oss_setObject:expires forKey:@"Expires"];
-        NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?%@",
+        NSString * stringURL = [NSString stringWithFormat:@"%@://%@%@%@%@/%@?%@",
                                 endpointURL.scheme,
                                 host,
+                                port,
+                                path,
+                                pathStylePath,
                                 [OSSUtil encodeURL:objectKey],
                                 [OSSUtil populateQueryStringFromParameter:params]];
         return [OSSTask taskWithResult:stringURL];
@@ -1944,22 +1972,50 @@ static NSObject *lock;
                              withParameters:(NSDictionary *)parameters {
     
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
+        BOOL isPathStyle = false;
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
         NSString * host = endpointURL.host;
+        NSString * port = @"";
+        NSString * path = @"";
+        NSString * pathStylePath = @"";
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+        } else if ([OSSUtil isIncludeCnameExcludeList:self.clientConfiguration.cnameExcludeList host:host]) {
+            if (self.clientConfiguration.isPathStyleAccessEnable) {
+                isPathStyle = true;
+            } else {
+                host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
+            }
+        } else if ([[OSSIPv6Adapter getInstance] isIPv4Address:host] ||
+                   [[OSSIPv6Adapter getInstance] isIPv6Address:host]) {
+            isPathStyle = true;
+        }
+        if (endpointURL.port) {
+            port = [NSString stringWithFormat:@":%@", endpointURL.port];
+        }
+        if (self.clientConfiguration.isCustomPathPrefixEnable) {
+            path = endpointURL.path;
+        }
+        if (isPathStyle) {
+            pathStylePath = [@"/" stringByAppendingString:bucketName];
         }
         if ([parameters count] > 0) {
-            NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@?%@",
+            NSString * stringURL = [NSString stringWithFormat:@"%@://%@%@%@%@/%@?%@",
                                     endpointURL.scheme,
                                     host,
+                                    port,
+                                    path,
+                                    pathStylePath,
                                     [OSSUtil encodeURL:objectKey],
                                     [OSSUtil populateQueryStringFromParameter:parameters]];
             return [OSSTask taskWithResult:stringURL];
         } else {
-            NSString * stringURL = [NSString stringWithFormat:@"%@://%@/%@",
+            NSString * stringURL = [NSString stringWithFormat:@"%@://%@%@%@%@/%@",
                                     endpointURL.scheme,
                                     host,
+                                    port,
+                                    path,
+                                    pathStylePath,
                                     [OSSUtil encodeURL:objectKey]];
             return [OSSTask taskWithResult:stringURL];
         }

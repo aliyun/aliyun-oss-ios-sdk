@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0F1C7D7023AC9425000B4E56 /* OSSUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */; };
+		5477E9A826117E0900D793F8 /* OSSConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */; };
+		5477E9AB2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */; };
 		D8350C7B1FFF66B400D8DF46 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6D1FFF66B400D8DF46 /* test.xml */; };
 		D8350C7C1FFF66B400D8DF46 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6E1FFF66B400D8DF46 /* wangwang.zip */; };
 		D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */; };
@@ -69,6 +71,8 @@
 
 /* Begin PBXFileReference section */
 		0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSUtilsTests.swift; sourceTree = "<group>"; };
+		5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSConfigurationTest.swift; sourceTree = "<group>"; };
+		5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSNetworkingRequestDelegateTest.swift; sourceTree = "<group>"; };
 		D8350C6D1FFF66B400D8DF46 /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		D8350C6E1FFF66B400D8DF46 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D8350C701FFF66B400D8DF46 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -225,6 +229,8 @@
 				D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */,
 				D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */,
 				0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */,
+				5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */,
+				5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */,
 			);
 			path = OSSSwiftDemoTests;
 			sourceTree = "<group>";
@@ -351,6 +357,8 @@
 			files = (
 				D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */,
 				D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */,
+				5477E9A826117E0900D793F8 /* OSSConfigurationTest.swift in Sources */,
+				5477E9AB2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift in Sources */,
 				D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */,
 				0F1C7D7023AC9425000B4E56 /* OSSUtilsTests.swift in Sources */,
 				D83CEFF6201F1BFD00F917E1 /* TriggerCallBackTests.swift in Sources */,

@@ -509,4 +509,268 @@ class OSSNormalObjectTests: OSSSwiftDemoTests {
             return nil
         }).waitUntilFinished()
     }
+    
+    func testAPI_presignConstrainURLWithDefaultConfig() {
+        let config = OSSClientConfiguration()
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                            withObjectKey: OBJECT_KEY,
+                                            withExpirationInterval: 30 * 60)
+        let urlString = "\(SCHEME)\(BUCKET_NAME).\(ENDPOINT)/\(OBJECT_KEY)"
+        guard let result = tk.result as? String else {
+            XCTAssertTrue(false)
+            return
+        }
+        XCTAssertTrue(result.hasPrefix(urlString))
+    }
+    
+    func testAPI_presignConstrainURLWithPathStyleConfig() {
+        var config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        var authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        var client = OSSClient(endpoint: ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        var tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                            withObjectKey: OBJECT_KEY,
+                                            withExpirationInterval: 30 * 60)
+        var urlString = "\(SCHEME)\(BUCKET_NAME).\(ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                        withObjectKey: OBJECT_KEY,
+                                        withExpirationInterval: 30 * 60)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        config.cnameExcludeList = [CNAME_ENDPOINT]
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                        withObjectKey: OBJECT_KEY,
+                                        withExpirationInterval: 30 * 60)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(BUCKET_NAME)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                        withObjectKey: OBJECT_KEY,
+                                        withExpirationInterval: 30 * 60)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignConstrainURLWithCname() {
+        var config = OSSClientConfiguration()
+        config.cnameExcludeList = [CNAME_ENDPOINT]
+        var authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        var client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        var tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                            withObjectKey: OBJECT_KEY,
+                                            withExpirationInterval: 30 * 60)
+        var urlString = "\(SCHEME)\(BUCKET_NAME).\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                        withObjectKey: OBJECT_KEY,
+                                        withExpirationInterval: 30 * 60)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignConstrainURLWithCustomPath() {
+        let customEndpoint = "\(ENDPOINT)/path"
+        let config = OSSClientConfiguration()
+        config.isCustomPathPrefixEnable = true
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: customEndpoint, credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                            withObjectKey: OBJECT_KEY,
+                                            withExpirationInterval: 30 * 60)
+        let urlString = "\(SCHEME)\(BUCKET_NAME).\(customEndpoint)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignConstrainURLWithIpEndpoint() {
+        let config = OSSClientConfiguration()
+        config.isCustomPathPrefixEnable = true
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: "http://\(IP_ENDPOINT)", credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignConstrainURL(withBucketName: BUCKET_NAME,
+                                            withObjectKey: OBJECT_KEY,
+                                            withExpirationInterval: 30 * 60)
+        let urlString = "http://\(IP_ENDPOINT)/\(BUCKET_NAME)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignPublicURLWithDefaultConfig() {
+        let config = OSSClientConfiguration()
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        let urlString = "\(SCHEME)\(BUCKET_NAME).\(ENDPOINT)/\(OBJECT_KEY)"
+        guard let result = tk.result as? String else {
+            XCTAssertTrue(false)
+            return
+        }
+        XCTAssertTrue(result.hasPrefix(urlString))
+    }
+    
+    func testAPI_presignPublicURLWithPathStyleConfig() {
+        var config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        var authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        var client = OSSClient(endpoint: ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        var tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        var urlString = "\(SCHEME)\(BUCKET_NAME).\(ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                     withObjectKey: OBJECT_KEY)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        config.cnameExcludeList = [CNAME_ENDPOINT]
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                     withObjectKey: OBJECT_KEY)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(BUCKET_NAME)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        config.isPathStyleAccessEnable = true
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                     withObjectKey: OBJECT_KEY)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignPublicURLWithCname() {
+        var config = OSSClientConfiguration()
+        config.cnameExcludeList = [CNAME_ENDPOINT]
+        var authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        var client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        var tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        var urlString = "\(SCHEME)\(BUCKET_NAME).\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+        
+        config = OSSClientConfiguration()
+        authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        client = OSSClient(endpoint: CNAME_ENDPOINT, credentialProvider: authProv, clientConfiguration: config)
+        tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        urlString = "\(SCHEME)\(CNAME_ENDPOINT)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignPublicURLWithCustomPath() {
+        let customEndpoint = "\(ENDPOINT)/path"
+        let config = OSSClientConfiguration()
+        config.isCustomPathPrefixEnable = true
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: customEndpoint, credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        let urlString = "\(SCHEME)\(BUCKET_NAME).\(customEndpoint)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
+    func testAPI_presignPublicURLWithIpEndpoint() {
+        let config = OSSClientConfiguration()
+        config.isCustomPathPrefixEnable = true
+        let authProv = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
+        let client = OSSClient(endpoint: "http://\(IP_ENDPOINT)", credentialProvider: authProv, clientConfiguration: config)
+        let tk = client.presignPublicURL(withBucketName: BUCKET_NAME,
+                                         withObjectKey: OBJECT_KEY)
+        let urlString = "http://\(IP_ENDPOINT)/\(BUCKET_NAME)/\(OBJECT_KEY)"
+        if let result = tk.result as? String {
+            XCTAssertTrue(result.hasPrefix(urlString))
+        } else {
+            XCTAssertTrue(false)
+        }
+    }
+    
 }
