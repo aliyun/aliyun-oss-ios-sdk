@@ -94,7 +94,7 @@
                    temComs.host = dnsResult;
                }
            } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
-               temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
+//               temComs.path = [NSString stringWithFormat:@"/%@",self.allNeededMessage.bucketName];
            }
        }
        

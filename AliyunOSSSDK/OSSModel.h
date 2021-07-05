@@ -209,6 +209,10 @@ Sets the session Id for background file transmission
  是否开启crc校验(当同时设置了此选项和请求中的checkCRC开关时，以请求中的checkCRC开关为准)
  */
 @property (nonatomic, assign) BOOL crc64Verifiable;
+/*
+ ip访问需要添加参数ipWithHeader
+ */
+@property (nonatomic, copy) NSString * ipWithHeader;
 
 @end
 

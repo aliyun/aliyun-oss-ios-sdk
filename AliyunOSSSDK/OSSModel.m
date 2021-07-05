@@ -461,9 +461,25 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 - (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)request {
     NSString * userAgent = [self getUserAgent:self.clientConfiguration.userAgentMark];
     [request.headerParams oss_setObject:userAgent forKey:@"User-Agent"];
+    if ([self isIPAddress:request.endpoint]) {
+           [request.headerParams oss_setObject:self.clientConfiguration.ipWithHeader forKey:@"host"];
+    }
     return [OSSTask taskWithResult:nil];
 }
-
+/**
+ * 判断字符串是否为IP地址
+ * param iPAddress IP地址字符串
+ * return BOOL 是返回YES，否返回NO
+ */
+- (BOOL)isIPAddress:(NSString *)iPAddress{
+    NSString *pattern = @"^(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5]).(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5]).(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5]).(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])$";
+    
+    return [self isText:[iPAddress componentsSeparatedByString:@"//"][1] pattern:pattern];
+}
+- (BOOL)isText:(NSString *)text pattern:(NSString *)pattern{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",pattern];
+    return [predicate evaluateWithObject:text];
+}
 
 - (NSString *)getUserAgent:(NSString *)customUserAgent {
     static NSString * userAgent = nil;
