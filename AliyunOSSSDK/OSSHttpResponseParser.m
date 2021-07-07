@@ -225,6 +225,17 @@
             return createBucketResult;
         }
             
+        case OSSOperationTypePutBucketACL:
+        {
+            OSSPutBucketACLResult * putBucketACLResult = [OSSPutBucketACLResult new];
+            if (_response)
+            {
+                [self parseResponseHeader:_response toResultObject:putBucketACLResult];
+            }
+            
+            return putBucketACLResult;
+        }
+            
         case OSSOperationTypeGetBucketACL:
         {
             OSSGetBucketACLResult * getBucketACLResult = [OSSGetBucketACLResult new];
@@ -251,6 +262,159 @@
                 [self parseResponseHeader:_response toResultObject:deleteBucketResult];
             }
             return deleteBucketResult;
+        }
+            
+        case OSSOperationTypePutBucketLogging:
+        {
+            OSSPutBucketLoggingResult * putBucketLogging = [OSSPutBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putBucketLogging];
+            }
+            return putBucketLogging;
+        }
+            
+        case OSSOperationTypeGetBucketLogging:
+        {
+            OSSGetBucketLoggingResult * getBucketLogging = [OSSGetBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketLogging];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket logging dict: %@", parsedDict);
+                
+                NSDictionary *loggingInfo = [parsedDict valueForKey:@"LoggingEnabled"];
+                if (loggingInfo) {
+                    getBucketLogging.loggingEnabled = YES;
+                    getBucketLogging.targetBucketName = [loggingInfo objectForKey:@"TargetBucket"];
+                    getBucketLogging.targetPrefix = [loggingInfo objectForKey:@"TargetPrefix"];
+                } else {
+                    getBucketLogging.loggingEnabled = NO;
+                }
+            }
+            
+            return getBucketLogging;
+        }
+            
+        case OSSOperationTypeDeleteBucketLogging:
+        {
+            OSSDeleteBucketLoggingResult * deleteBucketLogging = [OSSDeleteBucketLoggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:deleteBucketLogging];
+            }
+            
+            return deleteBucketLogging;
+        }
+            
+        case OSSOperationTypePutBucketReferer:
+        {
+            OSSPutBucketRefererResult * putBucketReferer = [OSSPutBucketRefererResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putBucketReferer];
+            }
+            
+            return putBucketReferer;
+        }
+        
+        case OSSOperationTypeGetBucketReferer:
+        {
+            OSSGetBucketRefererResult * getBucketReferer = [OSSGetBucketRefererResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketReferer];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket logging dict: %@", parsedDict);
+                
+                if (parsedDict) {
+                    NSString *sAllowEmpty = [parsedDict objectForKey:@"AllowEmptyReferer"];
+                    if ([sAllowEmpty isEqual:@"true"]) {
+                        getBucketReferer.allowEmpty = YES;
+                    } else {
+                        getBucketReferer.allowEmpty = NO;
+                    }
+                    
+                    getBucketReferer.referers = [[parsedDict objectForKey:@"RefererList"] objectForKey:@"Referer"];
+                }
+            }
+            
+            return getBucketReferer;
+        }
+            
+        case OSSOperationTypePutBucketLifecycle:
+        {
+            OSSPutBucketLifecycleResult *putBucketLifecycleRes = [OSSPutBucketLifecycleResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:putBucketLifecycleRes];
+            }
+            
+            return putBucketLifecycleRes;
+        }
+            
+        case OSSOperationTypeGetBucketLifecycle:
+        {
+            OSSGetBucketLifecycleResult *getBucketLifecycleRes = [OSSGetBucketLifecycleResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketLifecycleRes];
+            }
+            
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket logging dict: %@", parsedDict);
+                
+                NSArray *rules = [parsedDict objectForKey:@"Rule"];
+                if (rules.count > 0) {
+                    NSMutableArray *ruleArray = [NSMutableArray array];
+                    for (NSDictionary *ruleInfo in rules) {
+                        OSSBucketLifecycleRule *rule = [[OSSBucketLifecycleRule alloc] init];
+                        NSString *status = [ruleInfo objectForKey:@"Status"];
+                        if ([status isEqualToString:@"Enabled"]) {
+                            rule.status = YES;
+                        } else {
+                            rule.status = NO;
+                        }
+                        
+                        rule.identifier = [ruleInfo objectForKey:@"ID"];
+                        rule.prefix = [ruleInfo objectForKey:@"Prefix"];
+                        
+                        NSDictionary *expirationInfo = [ruleInfo objectForKey:@"Expiration"];
+                        rule.days = [expirationInfo objectForKey:@"Days"];
+                        rule.expireDate = [expirationInfo objectForKey:@"Date"];
+                        
+                        NSDictionary *multipartInfo = [ruleInfo objectForKey:@"AbortMultipartUpload"];
+                        rule.multipartDays = [multipartInfo objectForKey:@"Days"];
+                        rule.multipartExpireDate = [multipartInfo objectForKey:@"Date"];
+                        
+                        NSDictionary *transitionInfo = [ruleInfo objectForKey:@"Transition"];
+                        NSString *storageClass = [transitionInfo objectForKey:@"StorageClass"];
+                        if ([storageClass isEqualToString:@"IA"]) {
+                            rule.iaDays = [transitionInfo objectForKey:@"Days"];
+                            rule.iaExpireDate = [transitionInfo objectForKey:@"Date"];
+                        } else if ([storageClass isEqualToString:@"Archive"]) {
+                            rule.archiveDays = [transitionInfo objectForKey:@"Days"];
+                            rule.archiveExpireDate = [transitionInfo objectForKey:@"Date"];
+                        }
+                        
+                        [ruleArray addObject:rule];
+                    }
+                    
+                    getBucketLifecycleRes.rules = [ruleArray copy];
+                }
+            }
+            
+            return getBucketLifecycleRes;
+        }
+            
+        case OSSOperationTypeDeleteBucketLifecycle:
+        {
+            OSSDeleteBucketLifecycleResult *deleteBucketLifecycleRes = [OSSDeleteBucketLifecycleResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:deleteBucketLifecycleRes];
+            }
+            
+            return deleteBucketLifecycleRes;
         }
             
         case OSSOperationTypeGetBucket:

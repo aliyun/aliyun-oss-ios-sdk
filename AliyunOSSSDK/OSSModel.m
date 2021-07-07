@@ -629,6 +629,18 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @implementation OSSGetBucketResult
 @end
 
+@implementation OSSPutBucketACLRequest
+
+- (NSDictionary *)requestParams {
+    return @{@"acl": @""};
+}
+
+@end
+
+@implementation OSSPutBucketACLResult
+
+@end
+
 @implementation OSSGetBucketACLRequest
 
 - (NSDictionary *)requestParams {
@@ -638,6 +650,143 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 @end
 
 @implementation OSSGetBucketACLResult
+@end
+
+@implementation OSSPutBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSPutBucketLoggingResult
+
+@end
+
+@implementation OSSGetBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSGetBucketLoggingResult
+
+@end
+
+@implementation OSSDeleteBucketLoggingRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"logging": @""};
+}
+
+@end
+
+@implementation OSSDeleteBucketLoggingResult
+
+@end
+
+@implementation OSSPutBucketRefererRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _allowEmpty = YES;
+    }
+    return self;
+}
+
+- (NSDictionary *)requestParams
+{
+    return @{@"referer" : @""};
+}
+
+@end
+
+@implementation OSSPutBucketRefererResult
+
+@end
+
+@implementation OSSGetBucketRefererRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"referer" : @""};
+}
+
+@end
+
+@implementation OSSGetBucketRefererResult
+
+@end
+
+@implementation OSSBucketLifecycleRule
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _status = YES;
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    OSSBucketLifecycleRule *other = [[[self class] allocWithZone:zone] init];
+    other.identifier = self.identifier;
+    other.expireDate = self.expireDate;
+    other.prefix = self.prefix;
+    other.status = self.status;
+    other.days = self.days;
+    
+    return other;
+}
+
+@end
+
+@implementation OSSPutBucketLifecycleRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"lifecycle" : @""};
+}
+
+@end
+
+@implementation OSSPutBucketLifecycleResult
+
+@end
+
+@implementation OSSGetBucketLifecycleRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"lifecycle" : @""};
+}
+
+@end
+
+@implementation OSSGetBucketLifecycleResult
+
+@end
+
+@implementation OSSDeleteBucketLifecycleRequest
+
+- (NSDictionary *)requestParams
+{
+    return @{@"lifecycle" : @""};
+}
+
+@end
+
+@implementation OSSDeleteBucketLifecycleResult
+
 @end
 
 @implementation OSSHeadObjectRequest

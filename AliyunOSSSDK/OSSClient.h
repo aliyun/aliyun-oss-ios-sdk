@@ -10,9 +10,20 @@
 @class OSSGetServiceRequest;
 @class OSSCreateBucketRequest;
 @class OSSDeleteBucketRequest;
-@class OSSHeadObjectRequest;
-@class OSSGetBucketRequest;
+@class OSSPutBucketACLRequest;
 @class OSSGetBucketACLRequest;
+@class OSSGetBucketInfoRequest;
+@class OSSPutBucketLoggingRequest;
+@class OSSGetBucketLoggingRequest;
+@class OSSDeleteBucketLoggingRequest;
+@class OSSPutBucketRefererRequest;
+@class OSSGetBucketRefererRequest;
+@class OSSPutBucketLifecycleRequest;
+@class OSSGetBucketLifecycleRequest;
+@class OSSDeleteBucketLifecycleRequest;
+
+@class OSSGetBucketRequest;
+@class OSSHeadObjectRequest;
 @class OSSGetObjectRequest;
 @class OSSGetObjectACLRequest;
 @class OSSPutObjectRequest;
@@ -31,7 +42,6 @@
 @class OSSMultipartUploadRequest;
 @class OSSCallBackRequest;
 @class OSSImagePersistRequest;
-@class OSSGetBucketInfoRequest;
 @class OSSPutSymlinkRequest;
 @class OSSGetSymlinkRequest;
 @class OSSRestoreObjectRequest;
@@ -139,11 +149,77 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (OSSTask *)getBucketInfo:(OSSGetBucketInfoRequest *)request;
 
+- (OSSTask *)putBucketACL:(OSSPutBucketACLRequest *)request;
+
 /**
  The corresponding RESTFul API: GetBucketACL
  Gets the bucket ACL.
  */
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request;
+
+/**
+ Update the bucket logging settings. Log file will create every one hour and name format: <prefix><bucket>-YYYY-mm-DD-HH-MM-SS-UniqueString
+
+ @param request an instance of OSSPutBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)putBucketLogging:(OSSPutBucketLoggingRequest *)request;
+
+/**
+ Get the bucket logging settings.
+
+ @param request an instance of OSSGetBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)getBucketLogging:(OSSGetBucketLoggingRequest *)request;
+
+/**
+ Delete the bucket logging settings.
+
+ @param request an instance of OSSDeleteBucketLoggingRequest
+ @return an instance of OSSTask
+ */
+- (OSSTask *)deleteBucketLogging:(OSSDeleteBucketLoggingRequest *)request;
+
+/**
+ Set the bucket request Referer white list.
+
+ @param request an OSSPutBucketRefererRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)putBucketReferer:(OSSPutBucketRefererRequest *)request;
+
+/**
+ Get the bucket request Referer white list.
+
+ @param request an OSSGetBucketRefererRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)getBucketReferer:(OSSGetBucketRefererRequest *)request;
+
+/**
+ The bucket owner can set the lifecycle of a bucket with the PutBucketLifecycle request. After Lifecycle is enabled, OSS automatically deletes the objects or transitions the objects (to another storage class) corresponding the lifecycle rules on a regular basis.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31964.htm
+
+ @param request an OSSPutBucketLifecycleRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)putBucketLifecycle:(OSSPutBucketLifecycleRequest *)request;
+
+/**
+ GetBucketLifecycle is used to view the lifecycle configuration of a bucket.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31972.htm
+
+ @param request an OSSGetBucketLifecycleRequest instance.
+ @return an OSSTask instance.
+ */
+- (OSSTask *)getBucketLifecycle:(OSSGetBucketLifecycleRequest *)request;
+
+/**
+ The DeleteBucketLifecycle interface is used to delete the lifecycle configuration of a specified bucket.for more information,please refer to https://www.alibabacloud.com/help/doc-detail/31976.htm
+
+ @param request an OSSDeleteBucketLifecycleRequest instance
+ @return an OSSTask instance
+ */
+- (OSSTask *)deleteBucketLifecycle:(OSSDeleteBucketLifecycleRequest *)request;
 
 @end
 

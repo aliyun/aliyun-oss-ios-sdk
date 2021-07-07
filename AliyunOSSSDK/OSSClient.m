@@ -16,8 +16,8 @@
 #import "OSSXMLDictionary.h"
 #import "OSSReachabilityManager.h"
 #import "OSSIPv6Adapter.h"
+#import "OSSRequest+Utils.h"
 
-#import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
@@ -36,14 +36,9 @@ static NSUInteger const kClientMaximumOfChunks = 5000;   //max part number
 static NSString * const kClientErrorMessageForEmptyFile = @"the length of file should not be 0!";
 static NSString * const kClientErrorMessageForCancelledTask = @"This task has been cancelled!";
 
-/**
- * extend OSSRequest to include the ref to networking request object
- */
-@interface OSSRequest ()
 
-@property (nonatomic, strong) OSSNetworkingRequestDelegate * requestDelegate;
 
-@end
+#pragma mark - OSSClient
 
 @interface OSSClient()
 
@@ -504,6 +499,24 @@ static NSObject *lock;
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
 
+- (OSSTask *)putBucketACL:(OSSPutBucketACLRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketACL];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    neededMsg.headerParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:request.acl, OSSHttpHeaderBucketACL, nil];
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketACL;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
 - (OSSTask *)getBucketACL:(OSSGetBucketACLRequest *)request {
     OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
     
@@ -517,6 +530,153 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucketACL;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketLogging:(OSSPutBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    requestDelegate.uploadingData = request.xmlBody;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketLogging:(OSSGetBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteBucketLogging:(OSSDeleteBucketLoggingRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteBucketLogging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodDELETE;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeDeleteBucketLogging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketReferer:(OSSPutBucketRefererRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketReferer];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    requestDelegate.uploadingData = request.xmlBody;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketReferer;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketReferer:(OSSGetBucketRefererRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketReferer];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketReferer;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putBucketLifecycle:(OSSPutBucketLifecycleRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutBucketLifecycle];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    requestDelegate.uploadingData = request.xmlBody;
+    
+    requestDelegate.operType = OSSOperationTypePutBucketLifecycle;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketLifecycle:(OSSGetBucketLifecycleRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketLifecycle];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketLifecycle;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteBucketLifecycle:(OSSDeleteBucketLifecycleRequest *)request
+{
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteBucketLifecycle];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodDELETE;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeDeleteBucketLifecycle;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }

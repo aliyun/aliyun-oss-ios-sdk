@@ -48,7 +48,16 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeDeleteBucket,
     OSSOperationTypeGetBucket,
     OSSOperationTypeGetBucketInfo,
+    OSSOperationTypePutBucketACL,
     OSSOperationTypeGetBucketACL,
+    OSSOperationTypePutBucketLogging,
+    OSSOperationTypeGetBucketLogging,
+    OSSOperationTypeDeleteBucketLogging,
+    OSSOperationTypePutBucketReferer,
+    OSSOperationTypeGetBucketReferer,
+    OSSOperationTypePutBucketLifecycle,
+    OSSOperationTypeGetBucketLifecycle,
+    OSSOperationTypeDeleteBucketLifecycle,
     OSSOperationTypeHeadObject,
     OSSOperationTypeGetObject,
     OSSOperationTypeGetObjectACL,
@@ -96,6 +105,18 @@ typedef NS_ENUM(NSInteger, OSSXMLDictionaryAttributesMode)
     OSSXMLDictionaryAttributesModeDiscard
 };
 
+/**
+ the acl type of OSS resource
+
+ - OSSACLPrivate: private
+ - OSSACLPublicRead: public-reads
+ - OSSACLPublicReadAndWrite: public-read-write
+ */
+typedef NS_ENUM(NSInteger, OSSACLType){
+    OSSACLPrivate,                // private
+    OSSACLPublicRead,             // public-read
+    OSSACLPublicReadAndWrite      // public-read-write
+};
 
 typedef NS_ENUM(NSInteger, OSSXMLDictionaryNodeNameMode)
 {

@@ -476,6 +476,31 @@ Sets the session Id for background file transmission
 /**
  The request class to get the bucket ACL.
  */
+@interface OSSPutBucketACLRequest : OSSRequest
+
+/**
+ Bucket name
+ */
+@property (nonatomic, copy) NSString * bucketName;
+
+/**
+ acl type
+ */
+@property (nonatomic, assign) OSSACLType aclType;
+
+@end
+
+
+/**
+ The result class to put the bucket's ACL.
+ */
+@interface OSSPutBucketACLResult : OSSResult
+
+@end
+
+/**
+ The request class to get the bucket ACL.
+ */
 @interface OSSGetBucketACLRequest : OSSRequest
 
 /**
@@ -493,6 +518,242 @@ Sets the session Id for background file transmission
  The bucket ACL. It could be one of the three values: private/public-read/public-read-write.
  */
 @property (nonatomic, copy) NSString * aclGranted;
+@end
+
+@interface OSSPutBucketLoggingRequest : OSSRequest
+
+/**
+ bucket's name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ target bucket's name
+ */
+@property (nonatomic, copy) NSString *targetBucketName;
+
+/**
+ prefix path name to store the log files
+ */
+@property (nonatomic, copy) NSString *targetPrefix;
+
+@end
+
+@interface OSSPutBucketLoggingResult : OSSResult
+
+@end
+
+
+@interface OSSGetBucketLoggingRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSGetBucketLoggingResult : OSSResult
+
+/**
+ enable logging or not.
+ */
+@property (nonatomic, assign) BOOL loggingEnabled;
+
+/**
+ target bucket's name
+ */
+@property (nonatomic, copy) NSString *targetBucketName;
+
+/**
+ prefix path name to store the log files
+ */
+@property (nonatomic, copy) NSString *targetPrefix;
+
+@end
+
+
+@interface OSSDeleteBucketLoggingRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSDeleteBucketLoggingResult : OSSResult
+
+@end
+
+/**
+ the request of putting bucket referer operation
+ */
+@interface OSSPutBucketRefererRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ allow empty request referer or not.default value is YES.
+ */
+@property (nonatomic, assign) BOOL allowEmpty;
+
+/**
+ Referer white list, e.g.:['https://npm.taobao.org','http://cnpmjs.org']
+ */
+@property (nonatomic, copy) NSArray<NSString *> *referers;
+
+@end
+
+/**
+ the result of putting bucket referer operation
+ */
+@interface OSSPutBucketRefererResult : OSSResult
+
+@end
+
+/**
+ the request for getting the bucket request Referer white list.
+ */
+@interface OSSGetBucketRefererRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+/**
+ the result of getting bucket referer operation
+ */
+@interface OSSGetBucketRefererResult : OSSResult
+
+/**
+ allow empty request referer or not.
+ */
+@property (nonatomic, assign) BOOL allowEmpty;
+
+/**
+ Referer white list
+ */
+@property (nonatomic, copy) NSArray<NSString *> *referers;
+
+@end
+
+
+@interface OSSBucketLifecycleRule : NSObject<NSCopying>
+
+/**
+ rule id, if not set, OSS will auto create it with random string.
+ */
+@property (nonatomic, copy) NSString *identifier;
+
+/**
+ store prefix
+ */
+@property (nonatomic, copy) NSString *prefix;
+
+/**
+ rule status, whether use this rule.default value is YES.
+ */
+@property (nonatomic, assign) BOOL status;
+
+/**
+ expire after the days
+ */
+@property (nonatomic, copy) NSString *days;
+
+/**
+ expire date, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *expireDate;
+
+/**
+ expire after the days for multipart
+ */
+@property (nonatomic, copy) NSString *multipartDays;
+
+/**
+ expire date for multipart, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *multipartExpireDate;
+
+/**
+ expire after the days for bucket storage class IA
+ */
+@property (nonatomic, copy) NSString *iaDays;
+
+/**
+ expire date for bucket storage class IA, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *iaExpireDate;
+
+/**
+ expire after the days for bucket storage class archive
+ */
+@property (nonatomic, copy) NSString *archiveDays;
+
+/**
+ expire date for bucket storage class archive, e.g.: 2022-10-11T00:00:00.000Z date and days only set one.
+ */
+@property (nonatomic, copy) NSString *archiveExpireDate;
+
+@end
+
+
+@interface OSSPutBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+/**
+ rule config list, each Rule is an instance of OSSBucketLifecycleRule.
+ */
+@property (nonatomic, copy) NSArray<OSSBucketLifecycleRule *> *rules;
+
+@end
+
+@interface OSSPutBucketLifecycleResult : OSSResult
+
+@end
+
+
+@interface OSSGetBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+
+@interface OSSGetBucketLifecycleResult : OSSResult
+
+/**
+ rule config list, each Rule is an instance of OSSBucketLifecycleRule.
+ */
+@property (nonatomic, copy) NSArray<OSSBucketLifecycleRule *> *rules;
+
+@end
+
+@interface OSSDeleteBucketLifecycleRequest : OSSRequest
+
+/**
+ bucket name
+ */
+@property (nonatomic, copy) NSString *bucketName;
+
+@end
+
+@interface OSSDeleteBucketLifecycleResult : OSSResult
+
 @end
 
 /**

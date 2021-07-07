@@ -11,6 +11,10 @@
 #import "OSSDefine.h"
 #import "OSSUtil.h"
 
+static NSString * const kOSSInvalidBucketNameMessage = @"The bucket name is invalid. \nA bucket name must: \n1) be comprised of lower-case characters, numbers or dash(-); \n2) start with lower case or numbers; \n3) be between 3-63 characters long.";
+
+static NSString * const kOSSInvalidObjectNameMessage = @"The object key is invalid. \nAn object name should be: \n1) between 1 - 1023 bytes long when encoded as UTF-8 \n2) cannot contain LF or CR or unsupported chars in XML1.0, \n3) cannot begin with \'/\' or \'\\\'.";
+
 @implementation OSSAllRequestNeededMessage
 
 - (instancetype)init
@@ -33,31 +37,23 @@
 - (OSSTask *)validateRequestParamsInOperationType:(OSSOperationType)operType {
     NSString * errorMessage = nil;
     
+    // 1.check for endpoint
     if (!self.endpoint) {
         errorMessage = @"Endpoint should not be nil";
     }
     
-    if (!self.bucketName && operType != OSSOperationTypeGetService) {
-        errorMessage = @"Bucket name should not be nil";
-    }
-    
-    if (self.bucketName && ![OSSUtil validateBucketName:self.bucketName]) {
-        errorMessage = @"Bucket name invalid";
-    }
-    
-    if (!self.objectKey &&
-        (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
-         && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
-         && operType != OSSOperationTypeGetBucketACL&& operType != OSSOperationTypeDeleteMultipleObjects
-         && operType != OSSOperationTypeListMultipartUploads
-         && operType != OSSOperationTypeGetBucketInfo)) {
-            errorMessage = @"Object key should not be nil";
+    // 2.check for bucket and object
+    if (operType != OSSOperationTypeGetService) {
+        if (![_bucketName oss_isNotEmpty]
+            || ![OSSUtil validateBucketName:_bucketName]) {
+            errorMessage = kOSSInvalidBucketNameMessage;
         }
-    
-    
-    
-    if (self.objectKey && ![OSSUtil validateObjectKey:self.objectKey]) {
-        errorMessage = @"Object key invalid";
+        if (![self operationBelongsToBucket:operType]) {
+            if (![_objectKey oss_isNotEmpty]
+                || ![OSSUtil validateObjectKey:_objectKey]) {
+                errorMessage = kOSSInvalidObjectNameMessage;
+            }
+        }
     }
     
     if (errorMessage) {
@@ -67,6 +63,33 @@
     } else {
         return [OSSTask taskWithResult:nil];
     }
+}
+
+- (BOOL)operationBelongsToBucket:(OSSOperationType)type {
+    BOOL belongsToBucket = NO;
+    switch (type) {
+        case OSSOperationTypeGetService:
+        case OSSOperationTypeCreateBucket:
+        case OSSOperationTypeDeleteBucket:
+        case OSSOperationTypeGetBucket:
+        case OSSOperationTypeGetBucketInfo:
+        case OSSOperationTypeGetBucketACL:
+        case OSSOperationTypePutBucketACL:
+        case OSSOperationTypePutBucketLogging:
+        case OSSOperationTypeGetBucketLogging:
+        case OSSOperationTypeDeleteBucketLogging:
+        case OSSOperationTypePutBucketReferer:
+        case OSSOperationTypeGetBucketReferer:
+        case OSSOperationTypePutBucketLifecycle:
+        case OSSOperationTypeGetBucketLifecycle:
+        case OSSOperationTypeDeleteBucketLifecycle:
+            belongsToBucket = YES;
+            break;
+        default:
+            break;
+    }
+    
+    return belongsToBucket;
 }
 
 @end
