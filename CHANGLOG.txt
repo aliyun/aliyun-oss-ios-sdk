@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2021/7/12
+- release 2.10.10
+1.support cname, path style and prefix path mode 
+
 2021/4/6
 - release 2.10.9
 1.bug fix GitHub#256
