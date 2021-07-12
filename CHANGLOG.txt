@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2021/4/6
+- release 2.10.9
+1.bug fix GitHub#256
+
 2019/12/23
 - release 2.10.8
 1.modify the filter rules about bucketname.

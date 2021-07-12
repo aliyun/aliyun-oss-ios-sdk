@@ -356,8 +356,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)getRelativePath:(NSString *)fullPath {
-    NSString * userName = NSUserName();
-    NSString * rootPath = NSHomeDirectoryForUser(userName);
+    NSString * rootPath = NSHomeDirectory();
     return [fullPath stringByReplacingOccurrencesOfString:rootPath withString:@""];
 }
 
@@ -1048,6 +1047,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             @"wvx": @"video/x-ms-wvx",
             @"avi": @"video/x-msvideo",
             @"movie": @"video/x-sgi-movie",
+            @"mov": @"video/quicktime",
             @"ice": @"x-conference/x-cooltalk",
             @"par ": @"text/plain-bas",
             @"yaml": @"text/yaml"
