@@ -201,6 +201,16 @@ Sets the session Id for background file transmission
 @property (nonatomic, copy) NSString * userAgentMark;
 
 /**
+ Sets the flag of using Second Level Domain style to access the endpoint. By default it's false.
+ */
+@property (nonatomic, assign) BOOL isPathStyleAccessEnable;
+
+/**
+ Sets  the flag of using custom path prefix to access the endpoint. By default it's false.
+ */
+@property (nonatomic, assign) BOOL isCustomPathPrefixEnable;
+
+/**
  Sets CName excluded list.
  */
 @property (nonatomic, strong, setter=setCnameExcludeList:) NSArray * cnameExcludeList;

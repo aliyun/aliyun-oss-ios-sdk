@@ -14,6 +14,8 @@
 		4C7B5BE92043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		4C7B5BEA2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
 		4C7B5BEB2043A15100FDD612 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = 4C7B5BE82043A15100FDD612 /* wangwang.zip */; };
+		5468C5192601D85100CF043E /* OSSConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5468C5182601D85100CF043E /* OSSConfigurationTest.m */; };
+		5477E99C260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */; };
 		5450A8DC261C3AD600BECD80 /* bigfile.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5450A8DB261C3AD600BECD80 /* bigfile.zip */; };
 		D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */ = {isa = PBXBuildFile; fileRef = D1805034212EA0F700A1E647 /* OSSHttp2Test.m */; };
 		D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D810A00A2092F76900425D19 /* OSSUtilsTests.m */; };
@@ -110,6 +112,8 @@
 		4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSTestUtils.m; sourceTree = "<group>"; };
 		4C7B5BE42041680300FDD612 /* hasky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hasky.jpeg; sourceTree = "<group>"; };
 		4C7B5BE82043A15100FDD612 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
+		5468C5182601D85100CF043E /* OSSConfigurationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSConfigurationTest.m; sourceTree = "<group>"; };
+		5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSNetworkingRequestDelegateTest.m; sourceTree = "<group>"; };
 		5450A8DB261C3AD600BECD80 /* bigfile.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = bigfile.zip; sourceTree = "<group>"; };
 		D1805034212EA0F700A1E647 /* OSSHttp2Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttp2Test.m; sourceTree = "<group>"; };
 		D810A00A2092F76900425D19 /* OSSUtilsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSUtilsTests.m; sourceTree = "<group>"; };
@@ -328,32 +332,34 @@
 		D87183B91FC572C6000DD9EC /* AliyunOSSiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				D1805034212EA0F700A1E647 /* OSSHttp2Test.m */,
-				D83D58511FC680840022761B /* OSSCredentialProviderTests.m */,
-				D83D58521FC680850022761B /* OSSModelTests.m */,
-				D83D58501FC680840022761B /* OSSRangeTests.m */,
-				D83D58531FC680850022761B /* OSSSignTests.m */,
-				D87183BA1FC572C6000DD9EC /* OSSLogTests.m */,
 				D87183BB1FC572C6000DD9EC /* AliyunOSSiOSTests.m */,
-				D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */,
-				D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */,
-				D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */,
-				D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */,
-				D87183C01FC572C6000DD9EC /* Info.plist */,
-				D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */,
-				D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */,
-				D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */,
-				D829F3B11FDE72A200A8C2DC /* OSSTestMacros.h */,
-				D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */,
 				D852773C2010536500D7B1DE /* AliyunOSSTests.h */,
 				D85277382010414D00D7B1DE /* AliyunOSSTests.m */,
-				D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */,
-				D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */,
+				D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */,
+				D87183C01FC572C6000DD9EC /* Info.plist */,
+				D829F3AD1FDE719000A8C2DC /* OSSBucketTests.m */,
+				D87183BD1FC572C6000DD9EC /* OSSCancellationTests.m */,
+				D8125E95211DAFA500DB687C /* OSSClientTests.m */,
+				5468C5182601D85100CF043E /* OSSConfigurationTest.m */,
+				D829F3F51FE23DA700A8C2DC /* OSSCrc64Tests.m */,
+				D83D58511FC680840022761B /* OSSCredentialProviderTests.m */,
+				D87183BE1FC572C6000DD9EC /* OSSExecutorTests.m */,
+				D1805034212EA0F700A1E647 /* OSSHttp2Test.m */,
+				D87183BA1FC572C6000DD9EC /* OSSLogTests.m */,
+				D83D58521FC680850022761B /* OSSModelTests.m */,
+				D829F3AF1FDE71C500A8C2DC /* OSSObjectTests.m */,
+				D83D58501FC680840022761B /* OSSRangeTests.m */,
+				D87183C11FC572C6000DD9EC /* OSSReachabilityTests.m */,
+				D83D58531FC680850022761B /* OSSSignTests.m */,
+				D87183BC1FC572C6000DD9EC /* OSSTaskTests.m */,
+				D829F3B11FDE72A200A8C2DC /* OSSTestMacros.h */,
 				4C7B5BE120411D1900FDD612 /* OSSTestUtils.h */,
 				4C7B5BE220411D1900FDD612 /* OSSTestUtils.m */,
-				D87A0E012057F54B006D2F48 /* ConcurrencyTests.m */,
 				D810A00A2092F76900425D19 /* OSSUtilsTests.m */,
-				D8125E95211DAFA500DB687C /* OSSClientTests.m */,
+				D87183BF1FC572C6000DD9EC /* OSSXMLDictionaryTests.m */,
+				D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */,
+				D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */,
+				5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -565,9 +571,11 @@
 				D87183C91FC572C6000DD9EC /* OSSReachabilityTests.m in Sources */,
 				D829F3B01FDE71C500A8C2DC /* OSSObjectTests.m in Sources */,
 				D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */,
+				5468C5192601D85100CF043E /* OSSConfigurationTest.m in Sources */,
 				D87183C31FC572C6000DD9EC /* AliyunOSSiOSTests.m in Sources */,
 				D83CEFF8201F1CEE00F917E1 /* TriggerCallbackTests.m in Sources */,
 				D85277392010414D00D7B1DE /* AliyunOSSTests.m in Sources */,
+				5477E99C260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m in Sources */,
 				4C7B5BE320411D1900FDD612 /* OSSTestUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
