@@ -15,11 +15,14 @@
     [self setupContainer];
     [self setupClient];
     [self setupTestFiles];
+    [self createBucket];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+    [self deleteBucket];
+    
 }
 
 - (void)setupClient {
@@ -66,6 +69,27 @@
         [f closeFile];
     }
     OSSLogDebug(@"main bundle: %@", mainDir);
+}
+
+- (void)createBucket {
+    OSSCreateBucketRequest *createBucket1 = [OSSCreateBucketRequest new];
+    createBucket1.bucketName = OSS_BUCKET_PUBLIC;
+    [[_client createBucket:createBucket1] waitUntilFinished];
+    
+    OSSCreateBucketRequest *createBucket2 = [OSSCreateBucketRequest new];
+    createBucket2.bucketName = OSS_BUCKET_PRIVATE;
+    createBucket2.xOssACL = @"public-read-write";
+    [[_client createBucket:createBucket2] waitUntilFinished];
+}
+
+- (void)deleteBucket {
+    OSSDeleteBucketRequest *deleteBucket1 = [OSSDeleteBucketRequest new];
+    deleteBucket1.bucketName = OSS_BUCKET_PUBLIC;
+    [[_client deleteBucket:deleteBucket1] waitUntilFinished];
+    
+    OSSDeleteBucketRequest *deleteBucket2 = [OSSDeleteBucketRequest new];
+    deleteBucket2.bucketName = OSS_BUCKET_PRIVATE;
+    [[_client deleteBucket:deleteBucket2] waitUntilFinished];
 }
 
 @end
