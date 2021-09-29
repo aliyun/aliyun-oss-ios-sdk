@@ -78,7 +78,9 @@ static NSObject *lock;
             lock = [NSObject new];
         }
         // Monitor the network. If the network type is changed, recheck the IPv6 status.
-        [OSSReachabilityManager shareInstance];
+        if (conf.isNeedListenNetworkChanges) {
+            [OSSReachabilityManager shareInstance];
+        }
 
         NSOperationQueue * queue = [NSOperationQueue new];
         // using for resumable upload and compat old interface
