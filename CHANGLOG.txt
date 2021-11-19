@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2021/11/19
+- release 2.10.11
+1.Add network monitoring configuration
+
 2021/7/12
 - release 2.10.10
 1.support cname, path style and prefix path mode 
