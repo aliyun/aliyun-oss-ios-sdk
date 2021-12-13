@@ -19,6 +19,13 @@
 #define BUCKET_NAME @"BucketName"
 #define OBJECT_KEY @"ObjectKey"
 
+
+@interface OSSClient(Test)
+
+- (NSUInteger)judgePartSizeForMultipartRequest:(OSSMultipartUploadRequest *)request fileSize:(unsigned long long)fileSize;
+
+@end
+
 @interface OSSObjectTests : XCTestCase
 {
     OSSClient *_client;
@@ -1964,6 +1971,68 @@
     [task waitUntilFinished];
     
     XCTAssertNotNil(task.error);
+}
+
+- (void)testAPI_judgePartSize {
+    NSInteger partSize = 100 * 1024;
+    NSInteger fileSize = partSize * 5001;
+    OSSMultipartUploadRequest *multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.partSize = partSize;
+    
+    NSInteger partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    NSInteger expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(5000, expectPartCount);
+
+    fileSize = partSize * 5000;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(5000, expectPartCount);
+
+    fileSize = partSize * 4999;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(4999, expectPartCount);
+
+    fileSize = partSize * 1 + 1;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(2, expectPartCount);
+    
+    fileSize = partSize * 1;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(1, expectPartCount);
+
+    fileSize = 1;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(1, expectPartCount);
+    
+    
+    fileSize = 200 * 1024 * 4999;
+    multipartUploadRequest.partSize = partSize;
+    partCount = [_client judgePartSizeForMultipartRequest:multipartUploadRequest fileSize:fileSize];
+    expectPartCount = fileSize / multipartUploadRequest.partSize;
+    expectPartCount += fileSize % multipartUploadRequest.partSize > 0 ? 1 : 0;
+    XCTAssertEqual(partCount, expectPartCount);
+    XCTAssertEqual(4999, expectPartCount);
 }
 
 @end

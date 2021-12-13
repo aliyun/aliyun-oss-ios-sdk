@@ -277,8 +277,8 @@ static NSObject *lock;
     
     if(partCount > kClientMaximumOfChunks)
     {
-        request.partSize = fileSize / kClientMaximumOfChunks;
-        partCount = kClientMaximumOfChunks;
+        request.partSize = fileSize / (kClientMaximumOfChunks - 1);
+        partCount = (fileSize / request.partSize) + ((fileSize % request.partSize == 0) ? 0 : 1);
     }
     return partCount;
 #pragma clang diagnostic pop
