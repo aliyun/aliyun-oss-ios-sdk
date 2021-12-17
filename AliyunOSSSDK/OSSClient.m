@@ -1608,10 +1608,12 @@ static NSObject *lock;
 #pragma clang diagnostic pop
             
                 NSDictionary *tPartInfo = [localPartInfos objectForKey: [@(remotePartNumber) stringValue]];
-                info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
-                
-                [uploadedPartInfos addObject:info];
-                [alreadyUploadIndex addObject:@(remotePartNumber)];
+                if (tPartInfo != nil) {
+                    info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
+                    
+                    [uploadedPartInfos addObject:info];
+                    [alreadyUploadIndex addObject:@(remotePartNumber)];
+                }
             }];
             
             if ([alreadyUploadIndex count] > 0 && request.uploadProgress && uploadFileSize) {
