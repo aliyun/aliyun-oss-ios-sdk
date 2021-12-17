@@ -32,6 +32,7 @@ static NSString * const kClientRecordNameWithCommonPrefix = @"oss_partInfos_stor
 static NSString * const kClientRecordNameWithCRC64Suffix = @"-crc64";
 static NSString * const kClientRecordNameWithSequentialSuffix = @"-sequential";
 static NSUInteger const kClientMaximumOfChunks = 5000;   //max part number
+static NSUInteger const kPartSizeAlign = 4 * 1024;   // part size byte alignment
 
 static NSString * const kClientErrorMessageForEmptyFile = @"the length of file should not be 0!";
 static NSString * const kClientErrorMessageForCancelledTask = @"This task has been cancelled!";
@@ -277,11 +278,20 @@ static NSObject *lock;
     
     if(partCount > kClientMaximumOfChunks)
     {
-        request.partSize = fileSize / kClientMaximumOfChunks;
-        partCount = kClientMaximumOfChunks;
+        NSUInteger partSize = fileSize / (kClientMaximumOfChunks - 1);
+        request.partSize = [self ceilPartSize:partSize];
+        partCount = (fileSize / request.partSize) + ((fileSize % request.partSize == 0) ? 0 : 1);
     }
     return partCount;
 #pragma clang diagnostic pop
+}
+
+- (NSUInteger)ceilPartSize:(NSUInteger)partSize {
+    if (partSize % kPartSizeAlign != 0) {
+        NSUInteger count = partSize / kPartSizeAlign;
+        partSize = (count + 1) * kPartSizeAlign;
+    }
+    return partSize;
 }
 
 - (unsigned long long)getSizeWithFilePath:(nonnull NSString *)filePath error:(NSError **)error
