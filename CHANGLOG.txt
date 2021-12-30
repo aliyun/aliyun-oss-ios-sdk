@@ -15,6 +15,11 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2021/12/30
+- release 2.10.12
+1.Fixed an exception thrown by resumableupload when the number of parts exceeds 5000
+2.Fix the problem of CRC verification failure caused by network disconnection in resumableupload
+
 2021/11/19
 - release 2.10.11
 1.Add network monitoring configuration
