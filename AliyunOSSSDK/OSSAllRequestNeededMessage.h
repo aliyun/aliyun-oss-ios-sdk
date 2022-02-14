@@ -20,7 +20,6 @@
 @property (nonatomic, strong) NSString *objectKey;
 @property (nonatomic, strong) NSString *contentType;
 @property (nonatomic, strong) NSString *contentMd5;
-@property (nonatomic, strong) NSString *range;
 @property (nonatomic, strong) NSString *date;
 @property (nonatomic, strong) NSMutableDictionary *headerParams;
 @property (nonatomic, copy) NSDictionary *params;

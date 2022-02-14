@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/OSSUtil.h>
-#import <AliyunOSSiOS/OSSIPv6Adapter.h>
 
 @interface OSSUtilsTests : XCTestCase
 
@@ -38,30 +37,6 @@
     NSString *fileName = @"testMIME.MP4";
     NSString *mime = [OSSUtil detemineMimeTypeForFilePath:fileName uploadName:nil];
     XCTAssertTrue([mime isEqualToString:@"video/mp4"]);
-}
-
-- (void)testForIpv4 {
-    OSSIPv6Adapter *adapter = [OSSIPv6Adapter getInstance];
-    BOOL isIPv4 = [adapter isIPv4Address: @"http://www.baidu.com"];
-    XCTAssertFalse(isIPv4);
-    
-    isIPv4 = [adapter isIPv4Address: @"0:0:0:0:0:0:0:1"];
-    XCTAssertFalse(isIPv4);
-    
-    isIPv4 = [adapter isIPv4Address: @"30.43.120.112"];
-    XCTAssertTrue(isIPv4);
-}
-
-- (void)testForIpv6 {
-    OSSIPv6Adapter *adapter = [OSSIPv6Adapter getInstance];
-    BOOL isIPv6 = [adapter isIPv6Address: @"http://www.baidu.com"];
-    XCTAssertFalse(isIPv6);
-    
-    isIPv6 = [adapter isIPv6Address: @"30.43.120.112"];
-    XCTAssertFalse(isIPv6);
-    
-    isIPv6 = [adapter isIPv6Address: @"0:0:0:0:0:0:0:1"];
-    XCTAssertTrue(isIPv6);
 }
 
 - (void)testPerformanceExample {
@@ -106,13 +81,6 @@
     NSString *result1 = [self getResultEndpoint:@"http://123.test:8989/path?ooob" andBucketName:bucketName];
     XCTAssertTrue([result1 isEqualToString:@"http://123.test:8989"]);
     
-    
-    NSString *result2 = [self getResultEndpoint:@"http://192.168.0.1:8081" andBucketName:bucketName];
-    XCTAssertTrue([result2 isEqualToString:@"http://192.168.0.1:8081/test-image"]);
-
-    NSString *result3 = [self getResultEndpoint:@"http://192.168.0.1" andBucketName:bucketName];
-    XCTAssertTrue([result3 isEqualToString:@"http://192.168.0.1/test-image"]);
-
     NSString *result4 = [self getResultEndpoint:@"http://oss-cn-region.aliyuncs.com" andBucketName:bucketName];
     XCTAssertTrue([result4 isEqualToString:@"http://test-image.oss-cn-region.aliyuncs.com"]);
 
@@ -127,17 +95,10 @@
     temComs.port = urlComponents.port;
        
     if ([name oss_isNotEmpty]) {
-        OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
         if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
             // eg. insert bucket to the begining of host.
             temComs.host = [NSString stringWithFormat:@"%@.%@",
                             name, temComs.host];
-            if ([temComs.scheme.lowercaseString isEqualToString:@"http"] ) {
-            NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
-            temComs.host = dnsResult;
-            }
-        } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
-                temComs.path = [NSString stringWithFormat:@"/%@",name];
         }
     }
     return temComs.string;

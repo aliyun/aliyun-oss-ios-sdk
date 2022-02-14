@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import "OSSTestMacros.h"
 
 #define SCHEME @"https://"
 #define ENDPOINT @"oss-cn-hangzhou.aliyuncs.com"
@@ -44,11 +45,12 @@
 - (void)testBuildUrlWithCname {
     OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:CNAME_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     message.isHostInCnameExcludeList = NO;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     [delegate buildInternalHttpRequest];
     NSString *url = delegate.internalRequest.URL.absoluteString;
@@ -59,54 +61,58 @@
 - (void)testBuildUrlWithoutCname {
     OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:CNAME_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     message.isHostInCnameExcludeList = YES;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     [delegate buildInternalHttpRequest];
     NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, CNAME_ENDPOINT, OBJECT_KEY];
+    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, OSS_BUCKET_PRIVATE, CNAME_ENDPOINT, OBJECT_KEY];
     XCTAssertTrue([url isEqualToString:canonicalUrl]);
 }
 
 - (void)testBuildUrlWithCnameAndPathStyleAccessEnable {
     OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:CNAME_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     message.isHostInCnameExcludeList = YES;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     delegate.isPathStyleAccessEnable = YES;
     [delegate buildInternalHttpRequest];
     NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CNAME_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CNAME_ENDPOINT, OSS_BUCKET_PRIVATE, OBJECT_KEY];
     XCTAssertTrue([url isEqualToString:canonicalUrl]);
 }
 
 - (void)testBuildUrlWithPathStyleAccessEnable {
     OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     delegate.isPathStyleAccessEnable = YES;
     [delegate buildInternalHttpRequest];
     NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, BUCKET_NAME, ENDPOINT, OBJECT_KEY];
+    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@.%@/%@", SCHEME, OSS_BUCKET_PRIVATE, ENDPOINT, OBJECT_KEY];
     XCTAssertTrue([url isEqualToString:canonicalUrl]);
     
     message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:CNAME_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     
     delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     delegate.isPathStyleAccessEnable = YES;
     [delegate buildInternalHttpRequest];
@@ -122,6 +128,7 @@
     message.objectKey = OBJECT_KEY;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     delegate.isCustomPathPrefixEnable = YES;
     [delegate buildInternalHttpRequest];
@@ -133,57 +140,19 @@
 - (void)testBuildUrlWithCustomPathPrefixEnableAndPathStyleAccessEnable {
     OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
     message.endpoint = [SCHEME stringByAppendingString:CUSTOMPATH_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
+    message.bucketName = OSS_BUCKET_PRIVATE;
     message.objectKey = OBJECT_KEY;
     message.isHostInCnameExcludeList = YES;
     
     OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
+    delegate.operType = 1;
     delegate.allNeededMessage = message;
     delegate.isCustomPathPrefixEnable = YES;
     delegate.isPathStyleAccessEnable = YES;
     [delegate buildInternalHttpRequest];
     NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CUSTOMPATH_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
+    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, CUSTOMPATH_ENDPOINT, OSS_BUCKET_PRIVATE, OBJECT_KEY];
     XCTAssertTrue([url isEqualToString:canonicalUrl]);
 }
-
-- (void)testBuildUrlWithIp {
-    OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
-    message.endpoint = [SCHEME stringByAppendingString:IP_ENDPOINT];
-    message.bucketName = BUCKET_NAME;
-    message.objectKey = OBJECT_KEY;
-    
-    OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
-    delegate.allNeededMessage = message;
-    [delegate buildInternalHttpRequest];
-    NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@/%@/%@", SCHEME, IP_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
-    XCTAssertTrue([url isEqualToString:canonicalUrl]);
-}
-
-- (void)testBuildUrlWithNullObjectKey {
-    OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
-    message.endpoint = [SCHEME stringByAppendingString:ENDPOINT];
-    message.bucketName = BUCKET_NAME;
-    
-    OSSNetworkingRequestDelegate *delegate = [OSSNetworkingRequestDelegate new];
-    delegate.allNeededMessage = message;
-    [delegate buildInternalHttpRequest];
-    NSString *url = delegate.internalRequest.URL.absoluteString;
-    NSString *canonicalUrl = [NSString stringWithFormat:@"%@%@.%@", SCHEME, BUCKET_NAME, ENDPOINT];
-    XCTAssertTrue([url isEqualToString:canonicalUrl]);
-    
-    message = [OSSAllRequestNeededMessage new];
-    message.endpoint = [SCHEME stringByAppendingString:ENDPOINT];
-    
-    delegate = [OSSNetworkingRequestDelegate new];
-    delegate.allNeededMessage = message;
-    [delegate buildInternalHttpRequest];
-    url = delegate.internalRequest.URL.absoluteString;
-    canonicalUrl = [NSString stringWithFormat:@"%@%@", SCHEME, ENDPOINT];
-    XCTAssertTrue([url isEqualToString:canonicalUrl]);
-}
-
-
 
 @end

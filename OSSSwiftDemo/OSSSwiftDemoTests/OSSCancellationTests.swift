@@ -81,18 +81,7 @@ class OSSCancellationTests: XCTestCase {
         XCTAssertTrue(cts.isCancellationRequested, "Source should be cancelled");
         XCTAssertTrue(cts.token.isCancellationRequested, "Token should be cancelled")
     }
-    
-    func testCancellationAfterDelayValidation() {
-        let cts = OSSCancellationTokenSource()
-        
-        XCTAssertFalse(cts.isCancellationRequested)
-        XCTAssertFalse(cts.token.isCancellationRequested)
-        
-        XCTAssertThrowsError(cts.cancel(afterDelay: -2), NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
-    }
-    
+
     func testCancellationAfterZeroDelay() {
         let cts = OSSCancellationTokenSource()
         
@@ -116,36 +105,6 @@ class OSSCancellationTests: XCTestCase {
         
         XCTAssertTrue(cts.isCancellationRequested);
         XCTAssertTrue(cts.token.isCancellationRequested)
-    }
-    
-    func testDispose() {
-        var cts = OSSCancellationTokenSource()
-        cts.dispose()
-        
-        XCTAssertThrowsError(cts.cancel(), NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
-        XCTAssertThrowsError(cts.isCancellationRequested, NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
-        XCTAssertThrowsError(cts.token.isCancellationRequested, NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
-        
-        cts = OSSCancellationTokenSource()
-        cts.cancel()
-        
-        XCTAssertTrue(cts.isCancellationRequested, "Source should be cancelled")
-        XCTAssertTrue(cts.token.isCancellationRequested, "Token should be cancelled")
-        
-        cts.dispose()
-        
-        XCTAssertThrowsError(cts.isCancellationRequested, NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
-        XCTAssertThrowsError(cts.token.isCancellationRequested, NSExceptionName.internalInconsistencyException.rawValue) { (error) in
-            XCTAssertNotNil(error)
-        }
     }
     
     func testDisposeMultipleTimes() {

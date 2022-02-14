@@ -685,16 +685,6 @@ class OSSTaskTests: OSSSwiftDemoTests {
         self.waitForExpectations(timeout: 10, handler: nil)
     }
     
-    func testSetResult() {
-        let tcs = OSSTaskCompletionSource<AnyObject>()
-        tcs.setResult("a" as Any as AnyObject)
-        XCTAssertThrowsError(tcs.setResult("b" as AnyObject), NSExceptionName.internalInconsistencyException.rawValue) { (e) in
-            XCTAssertNotNil(e)
-        }
-        XCTAssertTrue(tcs.task.isCompleted)
-        XCTAssertEqual(tcs.task.result as! String, "a")
-    }
-    
     func testTrySetResult() {
         let tcs = OSSTaskCompletionSource<AnyObject>()
         tcs.trySetResult("a" as Any as AnyObject)
@@ -702,18 +692,6 @@ class OSSTaskTests: OSSSwiftDemoTests {
         
         XCTAssertTrue(tcs.task.isCompleted)
         XCTAssertEqual(tcs.task.result as! String, "a")
-    }
-    
-    func testSetError() {
-        let tcs = OSSTaskCompletionSource<AnyObject>()
-        let error = NSError.init(domain: "TestDomain", code: 100500, userInfo: nil)
-        tcs.setError(error)
-        XCTAssertThrowsError(tcs.setError(error), NSExceptionName.internalInconsistencyException.rawValue) { (e) in
-            XCTAssertNotNil(e)
-        }
-        XCTAssertTrue(tcs.task.isCompleted)
-        XCTAssertTrue(tcs.task.isFaulted)
-        XCTAssertEqual(tcs.task.error! as NSError, error)
     }
     
     func testTrySetError() {
@@ -727,18 +705,6 @@ class OSSTaskTests: OSSSwiftDemoTests {
         XCTAssertEqual(tcs.task.error! as NSError, error)
     }
     
-    func testSetException() {
-        let tcs = OSSTaskCompletionSource<AnyObject>()
-        let exception = NSException.init(name: NSExceptionName(rawValue: "testExceptionName"), reason: "testExceptionReason", userInfo: nil)
-        tcs.setException(exception)
-        XCTAssertThrowsError(tcs.setException(exception), NSExceptionName.internalInconsistencyException.rawValue) { (e) in
-            XCTAssertNotNil(e)
-        }
-        XCTAssertTrue(tcs.task.isCompleted)
-        XCTAssertTrue(tcs.task.isFaulted)
-        XCTAssertEqual(tcs.task.exception, exception)
-    }
-    
     func testTrySetException() {
         let tcs = OSSTaskCompletionSource<AnyObject>()
         let exception = NSException.init(name: NSExceptionName(rawValue: "testExceptionName"), reason: "testExceptionReason", userInfo: nil)
@@ -748,16 +714,6 @@ class OSSTaskTests: OSSSwiftDemoTests {
         XCTAssertTrue(tcs.task.isCompleted)
         XCTAssertTrue(tcs.task.isFaulted)
         XCTAssertEqual(tcs.task.exception, exception)
-    }
-    
-    func testSetCancelled() {
-        let tcs = OSSTaskCompletionSource<AnyObject>()
-        tcs.cancel()
-        XCTAssertThrowsError(tcs.cancel(), NSExceptionName.internalInconsistencyException.rawValue) { (e) in
-            XCTAssertNotNil(e)
-        }
-        XCTAssertTrue(tcs.task.isCompleted)
-        XCTAssertTrue(tcs.task.isCancelled)
     }
     
     func testTrySetCancelled() {

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "OSSManager.h"
 #import "OSSTestMacros.h"
+#import "OSSTestUtils.h"
 
 @interface AppDelegate ()
 
@@ -20,11 +21,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     // 针对只有一个region下bucket的数据上传下载操作时,可以将client实例给App单例持有。
-    id<OSSCredentialProvider> credentialProvider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    
+    OSSFederationToken *token = [OSSTestUtils getSts];
+    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:token.tAccessKey secretKeyId:token.tSecretKey securityToken:token.tToken];
     OSSClientConfiguration *cfg = [[OSSClientConfiguration alloc] init];
     cfg.maxRetryCount = 3;
     cfg.timeoutIntervalForRequest = 15;
-    cfg.isHttpdnsEnable = NO;
     cfg.crc64Verifiable = YES;
     
     OSSClient *defaultClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credentialProvider clientConfiguration:cfg];

@@ -60,12 +60,6 @@ class OSSUtilsTests: XCTestCase {
         let result1 = getResultEndpoint(endpoint: "http://123.test:8989/path?ooob")
         XCTAssertTrue((result1 == "http://123.test:8989"))
        
-        let result2 = getResultEndpoint(endpoint: "http://192.168.0.1:8081")
-        XCTAssertTrue((result2 == "http://192.168.0.1:8081/\(bucketName)"))
-        
-        let result3 = getResultEndpoint(endpoint: "http://192.168.0.1")
-        XCTAssertTrue((result3 == "http://192.168.0.1/\(bucketName)"))
-        
         let result4 = getResultEndpoint(endpoint: "http://oss-cn-region.aliyuncs.com")
         XCTAssertTrue((result4 == "http://\(bucketName).oss-cn-region.aliyuncs.com"))
     }
@@ -79,15 +73,8 @@ class OSSUtilsTests: XCTestCase {
         temComs.port = urlComs?.port
         
         if (bucketName as NSString).oss_isNotEmpty() {
-            let ipAdapter = OSSIPv6Adapter.getInstance()
             if OSSUtil.isOssOriginBucketHost(temComs.host!) {
                 temComs.host = bucketName + "." + temComs.host!
-                if (temComs.scheme?.lowercased() == "http") {
-                    let dnsResult = OSSUtil.getIpByHost(temComs.host!)
-                    temComs.host = dnsResult
-                }
-            }else if(ipAdapter!.isIPv4Address(temComs.host!) || ipAdapter!.isIPv6Address(temComs.host!) ){
-                temComs.path = "/\(bucketName)"
             }
         }
         

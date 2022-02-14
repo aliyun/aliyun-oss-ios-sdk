@@ -26,7 +26,7 @@
     [super setUp];
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSString *testName = [[array1[1] substringToIndex:([array1[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
+    _privateBucketName = OSS_BUCKET_PRIVATE;
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpFederationToken];
 }
@@ -71,33 +71,12 @@
     config.enableBackgroundTransmitService = YES;
     
     OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:provider];
-    OSSCreateBucketRequest *createBucket1 = [OSSCreateBucketRequest new];
-    createBucket1.bucketName = _privateBucketName;
-    [[client createBucket:createBucket1] waitUntilFinished];
     OSSPutObjectRequest * put = [OSSPutObjectRequest new];
     put.bucketName = _privateBucketName;
     put.objectKey = OSS_IMAGE_KEY;
     put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
     [[client putObject:put] waitUntilFinished];
-    
-    OSSHeadObjectRequest *request = [OSSHeadObjectRequest new];
-    request.bucketName = _privateBucketName;
-    request.objectKey = OSS_IMAGE_KEY;
-    OSSTask *task = [client headObject:request];
-    [task waitUntilFinished];
-    
-    XCTAssertNil(task.error);
-    
-    [OSSTestUtils cleanBucket:_privateBucketName with:client];
-}
-
-- (void)testForFederationCredentialProvider
-{
-    OSSFederationCredentialProvider *provider = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken *{
-        return _token;
-    }];
-    
-    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.federationprovider.identifier" provider:provider];
+        
 }
 
 - (void)testGetStsTokenCredentialProvider
@@ -106,49 +85,5 @@
     [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.ststokencredentialprovider.identifier" provider:provider];
 }
 
-- (void)testCustomSignerCredentialProvider
-{
-    OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-        
-        OSSFederationToken *token = [OSSFederationToken new];
-        token.tAccessKey = OSS_ACCESSKEY_ID;
-        token.tSecretKey = OSS_SECRETKEY_ID;
-        
-        NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
-        return signedContent;
-    }];
-    
-    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.customsignercredentialprovider.identifier" provider:provider];
-}
-
--(void)testPlainTextAKSKPairCredentialProvider
-{
-    // invalid credentialProvider
-    OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
-    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.plainakskpaircredentialprovider.identifier" provider:provider];
-}
-
--(void)testAuthCredentialProvider
-{
-    // invalid credentialProvider
-    OSSAuthCredentialProvider *provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
-    
-    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.authcredentialprovider.identifier" provider:provider];
-}
-
-- (void)testAuthCredentialProviderWithDecoder
-{
-    id<OSSCredentialProvider> provider =
-    [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL responseDecoder:^NSData *(NSData *data) {
-        NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSData* decodeData = [str dataUsingEncoding:NSUTF8StringEncoding];
-        if (decodeData) {
-            return decodeData;
-        }
-        return data;
-    }];
-    
-    [self headObjectWithBackgroundSessionIdentifier:@"com.aliyun.testcases.authcredentialproviderwithdecoder.identifier" provider:provider];
-}
 
 @end
