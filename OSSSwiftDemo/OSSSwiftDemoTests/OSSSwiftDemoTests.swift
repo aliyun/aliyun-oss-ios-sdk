@@ -39,7 +39,8 @@ class OSSSwiftDemoTests: XCTestCase {
     
     func setupClient() -> Void {
         let configuration = OSSClientConfiguration()
-        let provider = OSSAuthCredentialProvider.init(authServerUrl: OSS_STSTOKEN_URL)
+        let sts = OSSTestUtils.getSts()
+        let provider = OSSStsTokenCredentialProvider.init(accessKeyId: sts!.tAccessKey, secretKeyId: sts!.tSecretKey, securityToken: sts!.tToken)
         
         client = OSSClient.init(endpoint: OSS_ENDPOINT,
                                 credentialProvider: provider,

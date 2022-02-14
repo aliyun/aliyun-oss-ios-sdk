@@ -71,7 +71,6 @@
     [_uploadBigFileButton addTarget:self action:@selector(uploadBigFileClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     [self setupOSS];
-    [self initDownloadURLs];
     self.progressBar.progress = 0;
 }
 
@@ -198,65 +197,12 @@
     }];
 }
 
-// 普通下载
-- (IBAction)onOssButtonNormalGet:(UIButton *)sender {
-    if (![self verifyFileName]) {
-        return;
-    }
-    
-    NSString *funcStr = @"普通下载";
-    NSString * objectKey = _ossTextFileName.text;
-    [self.oss asyncGetImage:objectKey success:^(id result) {
-        [self showMessage:funcStr inputMessage:@"success"];
-    } failure:^(NSError *error) {
-        [self showMessage:funcStr inputMessage:error.localizedDescription];
-    }];
-}
-
 // 取消普通上传/下载任务
 - (IBAction)onOssButtonNormalCancel:(UIButton *)sender {
     if (![self verifyFileName]) {
         return;
     }
     [self.oss normalRequestCancel];
-}
-
-// 图片缩放
-- (IBAction)onOssButtonResize:(UIButton *)sender {
-    if (![self verifyFileName]) {
-        return;
-    }
-    NSString * objectKey = _ossTextFileName.text;
-    int width = [_ossTextWidth.text intValue];
-    int height = [_ossTextHeight.text intValue];
-    
-    NSString *funcStr = @"图片缩放";
-    [self.oss reSize:objectKey picWidth:width picHeight:height success:^(id result) {
-        [self showMessage:funcStr inputMessage:@"success!"];
-        NSString *filePath = (NSString *)result;
-        self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
-    } failure:^(NSError *error) {
-        [self showMessage:funcStr inputMessage:error.localizedDescription];
-    }];
-}
-
-// 图片水印
-- (IBAction)onOssButtonWatermark:(UIButton *)sender {
-    if (![self verifyFileName]) {
-        return;
-    }
-    NSString * objectKey = _ossTextFileName.text;
-    NSString * waterMark = _ossTextWaterMark.text;
-    int size = [_ossTextSize.text intValue];
-    
-    NSString *funcStr = @"图片水印";
-    [self.oss textWaterMark:objectKey waterText:waterMark objectSize:size success:^(id result) {
-        [self showMessage:funcStr inputMessage:@"success!"];
-        NSString *filePath = (NSString *)result;
-        self.ossImageView.image = [[UIImage alloc] initWithContentsOfFile:filePath];
-    } failure:^(NSError *error) {
-        [self showMessage:funcStr inputMessage:error.localizedDescription];
-    }];
 }
 
 /**
@@ -281,53 +227,6 @@
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:putType message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
-}
-
-- (IBAction)customSignButtonClicked:(id)sender{
-    OSSCustomSignerCredentialProvider *provider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString *(NSString *contentToSign, NSError *__autoreleasing *error) {
-        
-        // 用户应该在此处将需要签名的字符串发送到自己的业务服务器(AK和SK都在业务服务器保存中,从业务服务器获取签名后的字符串)
-        OSSFederationToken *token = [OSSFederationToken new];
-        token.tAccessKey = OSS_ACCESSKEY_ID;
-        token.tSecretKey = OSS_SECRETKEY_ID;
-        
-        NSString *signedContent = [OSSUtil sign:contentToSign withToken:token];
-        return signedContent;
-    }];
-    
-    NSError *error;
-    OSSLogDebug(@"%@",[provider sign:@"abc" error:&error]);
-}
-
-- (IBAction)triggerCallbackClicked:(id)sender {
-    NSString *funcStr = @"上传回调";
-    
-    [self.oss triggerCallbackWithObjectKey:_ossTextFileName.text success:^(id result) {
-        [self showMessage:funcStr inputMessage:@"success"];
-    } failure:^(NSError *error) {
-        [self showMessage:funcStr inputMessage:error.localizedDescription];
-    }];
-}
-
-- (void)uploadBigFileClicked:(id)sender {
-    NSString *funcStr = @"大文件上传";
-    
-    [self.oss multipartUploadWithSuccess:^(id result) {
-        [self showMessage:funcStr inputMessage:@"success"];
-    } failure:^(NSError *error) {
-        [self showMessage:funcStr inputMessage:error.localizedDescription];
-    }];
-}
-
-- (void)initDownloadURLs {
-    OSSPlainTextAKSKPairCredentialProvider *pCredential = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
-    _mClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:pCredential];
-    OSSTask *downloadURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME withExpirationInterval:1800];
-    _downloadURLString = downloadURLTask.result;
-    
-    OSSTask *headURLTask = [_mClient presignConstrainURLWithBucketName:@"aliyun-dhc-shanghai" withObjectKey:OSS_DOWNLOAD_FILE_NAME httpMethod:@"HEAD" withExpirationInterval:1800 withParameters:nil];
-    
-    _headURLString = headURLTask.result;
 }
 
 - (IBAction)resumeDownloadClicked:(id)sender {

@@ -8,15 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		0F1C7D7023AC9425000B4E56 /* OSSUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */; };
-		5477E9A826117E0900D793F8 /* OSSConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */; };
-		5477E9AB2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */; };
+		5470531027BA2DB200A98E7D /* OSSTestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5470530F27BA2DB200A98E7D /* OSSTestUtils.swift */; };
+		5470531127BA2DBD00A98E7D /* OSSTestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5470530F27BA2DB200A98E7D /* OSSTestUtils.swift */; };
 		D8350C7B1FFF66B400D8DF46 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6D1FFF66B400D8DF46 /* test.xml */; };
 		D8350C7C1FFF66B400D8DF46 /* wangwang.zip in Resources */ = {isa = PBXBuildFile; fileRef = D8350C6E1FFF66B400D8DF46 /* wangwang.zip */; };
 		D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C761FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift */; };
 		D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C771FFF66B400D8DF46 /* AppDelegate.swift */; };
 		D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */; };
 		D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */; };
-		D83CEFF6201F1BFD00F917E1 /* TriggerCallBackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */; };
 		D842D5751FFB65A800220913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5731FFB65A800220913 /* Main.storyboard */; };
 		D842D5771FFB65A800220913 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D842D5761FFB65A800220913 /* Assets.xcassets */; };
 		D842D57A1FFB65A800220913 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D842D5781FFB65A800220913 /* LaunchScreen.storyboard */; };
@@ -25,7 +24,6 @@
 		D842D5BC1FFCC8A600220913 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */; };
 		D842D5C41FFDDA3C00220913 /* AliyunOSSiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */; };
 		D842D5C61FFDDA4300220913 /* AliyunOSSSwiftSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */; };
-		D85277402010B21A00D7B1DE /* SequentialMultipartUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */; };
 		D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */; };
 		D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */; };
 		D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF2FFC20078A160056B674 /* OSSNormalObjectTests.swift */; };
@@ -34,16 +32,11 @@
 		D8DF30012008439A0056B674 /* oracle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D8DF2FFF2008439A0056B674 /* oracle.pdf */; };
 		D8DF3003200851AF0056B674 /* OSSCheckMd5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */; };
 		D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */; };
-		D8E641662009D9040023DF48 /* OSSMultipartUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */; };
-		D8E641682009D9170023DF48 /* OSSBucketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641672009D9170023DF48 /* OSSBucketTests.swift */; };
-		D8E6416A2009D92F0023DF48 /* OSSResumableUploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */; };
 		D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */; };
 		D8E6416E2009D94F0023DF48 /* OSSTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */; };
-		D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E6416F200A31530023DF48 /* OSSProviderTests.swift */; };
 		D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */; };
 		D8E64174200A81BF0023DF48 /* OSSExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */; };
 		D8E64178200A81E90023DF48 /* OSSXMLDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */; };
-		D8F27EB0200C4CD9005A2C39 /* OSSCnameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,8 +64,7 @@
 
 /* Begin PBXFileReference section */
 		0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSUtilsTests.swift; sourceTree = "<group>"; };
-		5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSConfigurationTest.swift; sourceTree = "<group>"; };
-		5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSNetworkingRequestDelegateTest.swift; sourceTree = "<group>"; };
+		5470530F27BA2DB200A98E7D /* OSSTestUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSTestUtils.swift; sourceTree = "<group>"; };
 		D8350C6D1FFF66B400D8DF46 /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		D8350C6E1FFF66B400D8DF46 /* wangwang.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = wangwang.zip; sourceTree = "<group>"; };
 		D8350C701FFF66B400D8DF46 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -80,7 +72,6 @@
 		D8350C771FFF66B400D8DF46 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8350C781FFF66B400D8DF46 /* OSSRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSRootViewController.swift; sourceTree = "<group>"; };
 		D8350C791FFF66B400D8DF46 /* OSSNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSSNavigationController.swift; sourceTree = "<group>"; };
-		D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerCallBackTests.swift; sourceTree = "<group>"; };
 		D842D56C1FFB65A800220913 /* OSSSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSSSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5741FFB65A800220913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D842D5761FFB65A800220913 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -90,7 +81,6 @@
 		D842D5BB1FFCC8A600220913 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		D842D5C51FFDDA3C00220913 /* AliyunOSSiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D842D5C71FFDDA4300220913 /* AliyunOSSSwiftSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AliyunOSSSwiftSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequentialMultipartUploadTests.swift; sourceTree = "<group>"; };
 		D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckCRC64Tests.swift; sourceTree = "<group>"; };
 		D8DF2FF2200789BA0056B674 /* OSSSwiftDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSSSwiftDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8DF2FF4200789BA0056B674 /* OSSSwiftDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSSwiftDemoTests.swift; sourceTree = "<group>"; };
@@ -99,16 +89,11 @@
 		D8DF2FFF2008439A0056B674 /* oracle.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = oracle.pdf; sourceTree = "<group>"; };
 		D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCheckMd5Tests.swift; sourceTree = "<group>"; };
 		D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSExceptionalTests.swift; sourceTree = "<group>"; };
-		D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSMultipartUploadTests.swift; sourceTree = "<group>"; };
-		D8E641672009D9170023DF48 /* OSSBucketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSBucketTests.swift; sourceTree = "<group>"; };
-		D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSResumableUploadTests.swift; sourceTree = "<group>"; };
 		D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSLogTests.swift; sourceTree = "<group>"; };
 		D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSTaskTests.swift; sourceTree = "<group>"; };
-		D8E6416F200A31530023DF48 /* OSSProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSProviderTests.swift; sourceTree = "<group>"; };
 		D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCancellationTests.swift; sourceTree = "<group>"; };
 		D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSExecutorTests.swift; sourceTree = "<group>"; };
 		D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSXMLDictionaryTests.swift; sourceTree = "<group>"; };
-		D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSSCnameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,21 +201,13 @@
 				D8DF3002200851AF0056B674 /* OSSCheckMd5Tests.swift */,
 				D8D4DE102008BCE9000B9EBB /* OSSCheckCRC64Tests.swift */,
 				D8E641632009C0EB0023DF48 /* OSSExceptionalTests.swift */,
-				D8E641652009D9040023DF48 /* OSSMultipartUploadTests.swift */,
-				D8E641672009D9170023DF48 /* OSSBucketTests.swift */,
-				D8E641692009D92F0023DF48 /* OSSResumableUploadTests.swift */,
 				D8E6416B2009D93F0023DF48 /* OSSLogTests.swift */,
 				D8E6416D2009D94F0023DF48 /* OSSTaskTests.swift */,
-				D8E6416F200A31530023DF48 /* OSSProviderTests.swift */,
 				D8E64171200A81B00023DF48 /* OSSCancellationTests.swift */,
 				D8E64173200A81BF0023DF48 /* OSSExecutorTests.swift */,
 				D8E64177200A81E90023DF48 /* OSSXMLDictionaryTests.swift */,
-				D8F27EAF200C4CD9005A2C39 /* OSSCnameTests.swift */,
-				D852773F2010B21A00D7B1DE /* SequentialMultipartUploadTests.swift */,
-				D83CEFF5201F1BFD00F917E1 /* TriggerCallBackTests.swift */,
 				0F1C7D6F23AC9425000B4E56 /* OSSUtilsTests.swift */,
-				5477E9A726117E0900D793F8 /* OSSConfigurationTest.swift */,
-				5477E9AA2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift */,
+				5470530F27BA2DB200A98E7D /* OSSTestUtils.swift */,
 			);
 			path = OSSSwiftDemoTests;
 			sourceTree = "<group>";
@@ -347,6 +324,7 @@
 				D8350C811FFF66B400D8DF46 /* AppDelegate.swift in Sources */,
 				D8350C801FFF66B400D8DF46 /* OSSSwiftGlobalDefines.swift in Sources */,
 				D8350C831FFF66B400D8DF46 /* OSSNavigationController.swift in Sources */,
+				5470531127BA2DBD00A98E7D /* OSSTestUtils.swift in Sources */,
 				D8350C821FFF66B400D8DF46 /* OSSRootViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -355,25 +333,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E64170200A31530023DF48 /* OSSProviderTests.swift in Sources */,
 				D8E641642009C0EB0023DF48 /* OSSExceptionalTests.swift in Sources */,
-				5477E9A826117E0900D793F8 /* OSSConfigurationTest.swift in Sources */,
-				5477E9AB2611B28100D793F8 /* OSSNetworkingRequestDelegateTest.swift in Sources */,
 				D8D4DE112008BCE9000B9EBB /* OSSCheckCRC64Tests.swift in Sources */,
+				5470531027BA2DB200A98E7D /* OSSTestUtils.swift in Sources */,
 				0F1C7D7023AC9425000B4E56 /* OSSUtilsTests.swift in Sources */,
-				D83CEFF6201F1BFD00F917E1 /* TriggerCallBackTests.swift in Sources */,
-				D85277402010B21A00D7B1DE /* SequentialMultipartUploadTests.swift in Sources */,
 				D8E6416C2009D93F0023DF48 /* OSSLogTests.swift in Sources */,
 				D8E64172200A81B00023DF48 /* OSSCancellationTests.swift in Sources */,
 				D8E64178200A81E90023DF48 /* OSSXMLDictionaryTests.swift in Sources */,
-				D8E6416A2009D92F0023DF48 /* OSSResumableUploadTests.swift in Sources */,
 				D8E64174200A81BF0023DF48 /* OSSExecutorTests.swift in Sources */,
 				D8DF2FFE20078D910056B674 /* OSSSwiftGlobalDefines.swift in Sources */,
 				D8E6416E2009D94F0023DF48 /* OSSTaskTests.swift in Sources */,
-				D8F27EB0200C4CD9005A2C39 /* OSSCnameTests.swift in Sources */,
-				D8E641662009D9040023DF48 /* OSSMultipartUploadTests.swift in Sources */,
 				D8DF3003200851AF0056B674 /* OSSCheckMd5Tests.swift in Sources */,
-				D8E641682009D9170023DF48 /* OSSBucketTests.swift in Sources */,
 				D8DF2FFD20078A160056B674 /* OSSNormalObjectTests.swift in Sources */,
 				D8DF2FF5200789BA0056B674 /* OSSSwiftDemoTests.swift in Sources */,
 			);

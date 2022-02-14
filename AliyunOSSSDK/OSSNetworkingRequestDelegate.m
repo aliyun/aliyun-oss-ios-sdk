@@ -14,7 +14,6 @@
 #import "OSSDefine.h"
 #import "OSSUtil.h"
 #import "OSSLog.h"
-#import "OSSIPv6Adapter.h"
 
 @implementation OSSNetworkingRequestDelegate
 
@@ -46,7 +45,7 @@
 - (OSSTask *)validateRequestParams {
     NSString * errorMessage = nil;
     
-    if ((self.operType == OSSOperationTypeAppendObject || self.operType == OSSOperationTypePutObject || self.operType == OSSOperationTypeUploadPart)
+    if (self.operType == OSSOperationTypePutObject
         && !self.uploadingData && !self.uploadingFileURL) {
         errorMessage = @"This operation need data or file to upload but none is set";
     }
@@ -90,23 +89,16 @@
     }
     
     if ([self.allNeededMessage.bucketName oss_isNotEmpty]) {
-        OSSIPv6Adapter *ipAdapter = [OSSIPv6Adapter getInstance];
         if ([OSSUtil isOssOriginBucketHost:temComs.host]) {
             // eg. insert bucket to the begining of host.
             temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
             headerHost = temComs.host;
-            if ([temComs.scheme.lowercaseString isEqualToString:@"http"] && self.isHttpdnsEnable) {
-                NSString *dnsResult = [OSSUtil getIpByHost: temComs.host];
-                temComs.host = dnsResult;
-            }
         } else if (self.allNeededMessage.isHostInCnameExcludeList) {
             if (self.isPathStyleAccessEnable) {
                 isPathStyle = YES;
             } else {
                 temComs.host = [NSString stringWithFormat:@"%@.%@", self.allNeededMessage.bucketName, temComs.host];
             }
-        } else if ([ipAdapter isIPv4Address:temComs.host] || [ipAdapter isIPv6Address:temComs.host]) {
-            isPathStyle = YES;
         }
     }
     
@@ -162,9 +154,6 @@
     }
     if (self.allNeededMessage.date) {
         [self.internalRequest setValue:self.allNeededMessage.date forHTTPHeaderField:@"Date"];
-    }
-    if (self.allNeededMessage.range) {
-        [self.internalRequest setValue:self.allNeededMessage.range forHTTPHeaderField:@"Range"];
     }
     if (self.allNeededMessage.contentSHA1) {
         [self.internalRequest setValue:_allNeededMessage.contentSHA1 forHTTPHeaderField:@"x-oss-hash-sha1"];

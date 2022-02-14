@@ -24,7 +24,7 @@ class OSSCheckMd5Tests: OSSSwiftDemoTests {
     
     func testAPI_putObjectWithCheckingDataMd5() -> Void {
         let request = OSSPutObjectRequest()
-        let fileName = "swift"
+        let fileName = "oracle"
         let fileExtension = "pdf"
         request.bucketName = OSS_BUCKET_PRIVATE
         let fileURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension)
@@ -47,7 +47,7 @@ class OSSCheckMd5Tests: OSSSwiftDemoTests {
     
     func testAPI_putObjectWithCheckingFileMd5() -> Void {
         let request = OSSPutObjectRequest()
-        let fileName = "swift"
+        let fileName = "oracle"
         let fileExtension = "pdf"
         request.bucketName = OSS_BUCKET_PRIVATE
         let fileURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension)
@@ -70,7 +70,7 @@ class OSSCheckMd5Tests: OSSSwiftDemoTests {
     
     func testAPI_putObjectWithInvalidMd5() -> Void {
         let request = OSSPutObjectRequest()
-        let fileName = "swift"
+        let fileName = "oracle"
         let fileExtension = "pdf"
         request.bucketName = OSS_BUCKET_PRIVATE
         let fileURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension)

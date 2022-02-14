@@ -12,8 +12,6 @@
 #import "CommonCrypto/CommonHMAC.h"
 #import "OSSModel.h"
 #import "OSSLog.h"
-#import "OSSHttpdns.h"
-#import "OSSIPv6Adapter.h"
 #import "OSSReachability.h"
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -106,18 +104,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
 }
 
-+ (NSData *)constructHttpBodyFromPartInfos:(NSArray *)partInfos {
-    NSMutableString * body = [NSMutableString stringWithString:@"<CompleteMultipartUpload>\n"];
-    [partInfos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass:[OSSPartInfo class]]) {
-            OSSPartInfo * thePart = obj;
-            [body appendFormat:@"<Part>\n<PartNumber>%d</PartNumber>\n<ETag>%@</ETag>\n</Part>\n", thePart.partNum, thePart.eTag];
-        }
-    }];
-    [body appendString:@"</CompleteMultipartUpload>\n"];
-    OSSLogVerbose(@"constucted complete multipart upload body:\n%@", body);
-    return [body dataUsingEncoding:NSUTF8StringEncoding];
-}
 
 + (NSData *)constructHttpBodyForDeleteMultipleObjects:(NSArray<NSString *> *)keys quiet:(BOOL)quiet {
     NSMutableString * body = [NSMutableString stringWithString:@"<Delete>\n"];
@@ -173,17 +159,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     }
 
     return true;
-}
-
-+ (NSString *)getIpByHost:(NSString *)host {
-    if ([self isNetworkDelegateState]) {
-        OSSLogDebug(@"current network is delegate state");
-        return host;
-    }
-    NSString * ip = [[OSSHttpdns sharedInstance] asynGetIpByHost:host];
-    OSSLogDebug(@"resolved host %@ and get ip: %@", host, ip);
-
-    return ip ? [[OSSIPv6Adapter getInstance] handleIpv4Address:ip] : host;
 }
 
 + (BOOL)isNetworkDelegateState {

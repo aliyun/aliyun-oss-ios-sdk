@@ -27,40 +27,25 @@
     [super setUp];
     
     [OSSLog enableLog];
-    _bucketName = @"aliyun-oss-ios-test-http2";
-    _http2endpoint = @"https://oss-cn-shanghai.aliyuncs.com";
+    _bucketName = OSS_BUCKET_PRIVATE;
+    _http2endpoint = OSS_ENDPOINT;
     [self setUpOSSClient];
-    [self createBucket];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-    
-    [self deleteBucket];
 }
 
 - (void)setUpOSSClient
 {
     OSSClientConfiguration *config = [OSSClientConfiguration new];
     
-    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSFederationToken *token = [OSSTestUtils getSts];
+    OSSStsTokenCredentialProvider *authProv = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:token.tAccessKey secretKeyId:token.tSecretKey securityToken:token.tToken];
     _client = [[OSSClient alloc] initWithEndpoint:_http2endpoint
                                credentialProvider:authProv
                               clientConfiguration:config];
-}
-
-- (void)createBucket
-{
-    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
-    createBucket.bucketName = _bucketName;
-    
-    [[_client createBucket:createBucket] waitUntilFinished];
-}
-
-- (void)deleteBucket
-{
-    [OSSTestUtils cleanBucket:_bucketName with:_client];
 }
 
 #pragma mark - putObject
@@ -86,28 +71,6 @@
     }
     
     OSSTask *complexTask = [OSSTask taskForCompletionOfAllTasks:allTasks];
-    [complexTask waitUntilFinished];
-    XCTAssertTrue(complexTask.error == nil);
-    
-    [allTasks removeAllObjects];
-    
-    for (int i = 0; i < max; i++){
-        NSString *objectKey = @"http2-wangwang.zip";
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"wangwang" ofType:@"zip"];;
-        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
-        
-        OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
-        getRequest.bucketName = _bucketName;
-        getRequest.objectKey = objectKey;
-        NSString *diskFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"local_test%zd.zip", i]];
-        
-        getRequest.downloadToFileURL = [NSURL fileURLWithPath:diskFilePath];
-        
-        OSSTask *getTask = [_client getObject:getRequest];
-        [allTasks addObject:getTask];
-    }
-    
-    complexTask = [OSSTask taskForCompletionOfAllTasks:allTasks];
     [complexTask waitUntilFinished];
     XCTAssertTrue(complexTask.error == nil);
 }

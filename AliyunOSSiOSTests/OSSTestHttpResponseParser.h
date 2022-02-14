@@ -6,18 +6,18 @@
 //  Copyright © 2018年 aliyun. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "OSSConstants.h"
-#import "OSSTask.h"
+#import <AliyunOSSiOS/AliyunOSSiOS.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  HTTP response parser
  */
-@interface OSSHttpResponseParser : NSObject
+@interface OSSTestHttpResponseParser : OSSHttpResponseParser
 
 @property (nonatomic, copy) OSSNetworkingOnRecieveDataBlock onRecieveBlock;
+
+@property (nonatomic, strong) NSURL *downloadingFileURL;
 
 /**
  *  A Boolean value that determines whether verfifying crc64.

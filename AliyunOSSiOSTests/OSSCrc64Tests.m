@@ -31,7 +31,7 @@
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSArray *array2 = [array1[1] componentsSeparatedByString:@"_"];
     NSString *testName = [[array2[1] substringToIndex:([array2[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
+    _privateBucketName = OSS_BUCKET_PRIVATE;
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpOSSClient];
     [self setUpLocalFiles];
@@ -40,7 +40,6 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-    [OSSTestUtils cleanBucket:_privateBucketName with:_client];
 }
 
 - (void)setUpOSSClient
@@ -49,15 +48,13 @@
     // 通过ClientConfiguration配置开启全局的crc64校验
     config.crc64Verifiable = YES;
     
-    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSFederationToken *token = [OSSTestUtils getSts];
+    OSSStsTokenCredentialProvider *authProv = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:token.tAccessKey secretKeyId:token.tSecretKey securityToken:token.tToken];
     
     
     _client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
                                credentialProvider:authProv
                               clientConfiguration:config];
-    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
-    createBucket.bucketName = _privateBucketName;
-    [[_client createBucket:createBucket] waitUntilFinished];
     [OSSLog enableLog];
 }
 
@@ -121,180 +118,5 @@
         }] waitUntilFinished];
     }
 }
-
-- (void)testA_appendObject{
-    
-    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[0]];
-    OSSAppendObjectRequest * request = [OSSAppendObjectRequest new];
-    request.bucketName = _privateBucketName;
-    request.objectKey = @"appendObject";
-    request.appendPosition = 0;
-    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
-    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-    
-    __block int64_t nextAppendPosition = 0;
-    __block NSString *lastCrc64ecma;
-    OSSTask * task = [_client appendObject:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        OSSAppendObjectResult * result = task.result;
-        nextAppendPosition = result.xOssNextAppendPosition;
-        lastCrc64ecma = result.remoteCRC64ecma;
-        return nil;
-    }] waitUntilFinished];
-    
-    request.bucketName = _privateBucketName;
-    request.objectKey = @"appendObject";
-    request.appendPosition = nextAppendPosition;
-    request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
-    request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-    
-    task = [_client appendObject:request withCrc64ecma:lastCrc64ecma];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        return nil;
-    }] waitUntilFinished];
-}
-
-- (void)test_getObject
-{
-    [OSSTestUtils putTestDataWithKey:_fileNames[0] withClient:_client withBucket:_privateBucketName];
-    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
-    request.bucketName = _privateBucketName;
-    request.objectKey = _fileNames[0];
-    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-    };
-    
-    __block uint64_t localCrc64 = 0;
-    NSMutableData *receivedData = [NSMutableData data];
-    request.onRecieveData = ^(NSData *data) {
-        if (data)
-        {
-            NSMutableData *mutableData = [data mutableCopy];
-            void *bytes = mutableData.mutableBytes;
-            localCrc64 = [OSSUtil crc64ecma:localCrc64 buffer:bytes length:data.length];
-            [receivedData appendData:data];
-        }
-    };
-    
-    __block uint64_t remoteCrc64 = 0;
-    OSSTask * task = [_client getObject:request];
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        OSSGetObjectResult *result = task.result;
-        if (result.remoteCRC64ecma) {
-            NSScanner *scanner = [NSScanner scannerWithString:result.remoteCRC64ecma];
-            [scanner scanUnsignedLongLong:&remoteCrc64];
-            if (remoteCrc64 == localCrc64)
-            {
-                NSLog(@"crc64校验成功!");
-            }else
-            {
-                NSLog(@"crc64校验失败!");
-            }
-        }
-        
-        return nil;
-    }] waitUntilFinished];
-}
-
-
-- (void)test_MultipartUploadNormal {
-    NSString * objectkey = @"mul-wangwang.zip";
-    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
-    
-    multipartUploadRequest.bucketName = _privateBucketName;
-    multipartUploadRequest.objectKey = objectkey;
-    multipartUploadRequest.partSize = 1024 * 1024;
-    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-    multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
-    OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
-    
-    [[multipartTask continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        if (task.error) {
-            NSLog(@"error: %@", task.error);
-            if ([task.error.domain isEqualToString:OSSClientErrorDomain] && task.error.code == OSSClientErrorCodeCannotResumeUpload) {
-                // The upload cannot be resumed. Needs to re-initiate a upload.
-            }
-        } else {
-            NSLog(@"Upload file success");
-        }
-        return nil;
-    }] waitUntilFinished];
-
-}
-
-- (void)test_resumbleUploadCancelResumble {
-    NSString * objectkey = @"bigfile.zip";
-    __block bool cancel = NO;
-    OSSResumableUploadRequest * resumableUpload = [OSSResumableUploadRequest new];
-    resumableUpload.bucketName = _privateBucketName;
-    resumableUpload.objectKey = objectkey;
-    resumableUpload.deleteUploadIdOnCancelling = NO;
-    NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    resumableUpload.recordDirectoryPath = cachesDir;
-    resumableUpload.partSize = 100 * 1024;
-    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        if(bytesSent!=0 && totalByteSent / bytesSent >= 1000){
-            cancel = YES;
-        }
-    };
-    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"bigfile" withExtension:@"zip"];
-    OSSTask * resumeTask = [_client resumableUpload:resumableUpload];
-    [resumeTask continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNotNil(task.error);
-        NSLog(@"resumbleUpload 001 error: %@", task.error);
-        XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
-        return nil;
-    }];
-    
-    while (!cancel) {
-        [NSThread sleepForTimeInterval:0.1];
-    }
-    [resumableUpload cancel];
-    [resumeTask waitUntilFinished];
-    
-    [NSThread sleepForTimeInterval:1];
-    resumableUpload = [OSSResumableUploadRequest new];
-    resumableUpload.bucketName = _privateBucketName;
-    resumableUpload.objectKey = objectkey;
-    resumableUpload.recordDirectoryPath = cachesDir;
-    resumableUpload.partSize = 100 * 1024;
-    resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"bigfile" withExtension:@"zip"];
-    resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-        if (bytesSent != 0) {
-            XCTAssertTrue(totalByteSent / bytesSent >= 1000);
-        }
-    };
-    resumeTask = [_client resumableUpload:resumableUpload];
-    [[resumeTask continueWithBlock:^id(OSSTask *task) {
-        NSLog(@"resumbleUpload 002 error: %@", task.error);
-        XCTAssertNil(task.error);
-        NSString * recordFilePath = [self getRecordFilePath:resumableUpload];
-        XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
-        return nil;
-    }] waitUntilFinished];
-    
-}
-
-- (NSString *)getRecordFilePath:(OSSResumableUploadRequest *)resumableUpload {
-    NSString *recordPathMd5 = [OSSUtil fileMD5String:[resumableUpload.uploadingFileURL path]];
-    NSData *data = [[NSString stringWithFormat:@"%@%@%@%lu",recordPathMd5, resumableUpload.bucketName, resumableUpload.objectKey, resumableUpload.partSize] dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *recordFileName = [OSSUtil dataMD5String:data];
-    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",resumableUpload.recordDirectoryPath,recordFileName];
-    return recordFilePath;
-}
-
-
 
 @end

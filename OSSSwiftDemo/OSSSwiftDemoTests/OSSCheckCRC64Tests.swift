@@ -25,7 +25,8 @@ class OSSCheckCRC64Tests: OSSSwiftDemoTests {
     override func setupClient() {
         let configuration = OSSClientConfiguration()
         configuration.crc64Verifiable = OSS_CRC64_ENABLE;
-        let provider = OSSAuthCredentialProvider.init(authServerUrl: OSS_STSTOKEN_URL)
+        let sts = OSSTestUtils.getSts()
+        let provider = OSSStsTokenCredentialProvider.init(accessKeyId: sts!.tAccessKey, secretKeyId: sts!.tSecretKey, securityToken: sts!.tToken)
         
         client = OSSClient.init(endpoint: OSS_ENDPOINT,
                                 credentialProvider: provider,
@@ -34,7 +35,7 @@ class OSSCheckCRC64Tests: OSSSwiftDemoTests {
     
     func testAPI_putObject() -> Void {
         let request = OSSPutObjectRequest()
-        let fileName = "swift"
+        let fileName = "oracle"
         let fileExtension = "pdf"
         request.bucketName = OSS_BUCKET_PRIVATE
         request.uploadingFileURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension)!
@@ -51,53 +52,4 @@ class OSSCheckCRC64Tests: OSSSwiftDemoTests {
             return nil
         }).waitUntilFinished()
     }
-    
-    func testAPI_appendObject() -> Void {
-        var request = OSSAppendObjectRequest()
-        request.bucketName = OSS_BUCKET_PRIVATE
-        request.objectKey = OSS_APPEND_OBJECT_KEY
-        request.uploadingFileURL = Bundle.main.url(forResource: "swift", withExtension: "pdf")!
-        
-        var result: OSSAppendObjectResult? = nil
-        var task = client.appendObject(request)
-        task.continue({ (t) -> Any? in
-            XCTAssertNil(t.error)
-            result = t.result as? OSSAppendObjectResult
-            return nil
-        }).waitUntilFinished()
-        
-        request = OSSAppendObjectRequest()
-        request.bucketName = OSS_BUCKET_PRIVATE
-        request.objectKey = OSS_APPEND_OBJECT_KEY
-        request.appendPosition = (result?.xOssNextAppendPosition)!
-        request.uploadingFileURL = Bundle.main.url(forResource: "swift", withExtension: "pdf")!
-        
-        task = client.appendObject(request, withCrc64ecma: result?.remoteCRC64ecma)
-        task.waitUntilFinished()
-        XCTAssertNil(task.error)
-    }
-    
-    func testAPI_resumableUpload() {
-        
-        var result: OSSResumableUploadResult? = nil
-        
-        let fileURL = Bundle.main.url(forResource: "wangwang", withExtension: "zip")
-        let request = OSSResumableUploadRequest()
-        request.uploadingFileURL = fileURL!
-        request.partSize = 307200
-        request.bucketName = OSS_BUCKET_PUBLIC
-        request.objectKey = OSS_RESUMABLE_UPLOADKEY
-        request.uploadProgress = {(bytesSent, totalByteSent, totalBytesExpectedToSend) ->Void in
-            print("bytesSent: \(bytesSent),totalByteSent: \(totalByteSent),totalBytesExpectedToSend: \(totalBytesExpectedToSend)")
-        }
-        
-        let task = client.resumableUpload(request)
-        task.continue({ (t) -> Any? in
-            result = t.result as? OSSResumableUploadResult
-            print("===remoteCRC64ecma=== \(result?.httpResponseHeaderFields["x-oss-hash-crc64ecma"])")
-            XCTAssertNil(t.error)
-            return nil
-        }).waitUntilFinished()
-    }
-    
 }

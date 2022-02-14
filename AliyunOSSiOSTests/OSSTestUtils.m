@@ -7,52 +7,16 @@
 //
 
 #import "OSSTestUtils.h"
+#import "OSSTestHttpResponseParser.h"
+#import "OSSTestMacros.h"
+
+@interface OSSClient(Test)
+
+- (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication;
+
+@end
 
 @implementation OSSTestUtils
-+ (void)cleanBucket: (NSString *)bucket with: (OSSClient *)client {
-    //delete object
-    OSSGetBucketRequest *listObject = [OSSGetBucketRequest new];
-    listObject.bucketName = bucket;
-    listObject.maxKeys = 1000;
-    OSSTask *listObjectTask = [client getBucket:listObject];
-    [[listObjectTask continueWithBlock:^id(OSSTask * task) {
-        OSSGetBucketResult * listObjectResult = task.result;
-        for (NSDictionary *dict in listObjectResult.contents) {
-            NSString * objectKey = [dict objectForKey:@"Key"];
-            NSLog(@"delete object %@", objectKey);
-            OSSDeleteObjectRequest * deleteObj = [OSSDeleteObjectRequest new];
-            deleteObj.bucketName = bucket;
-            deleteObj.objectKey = objectKey;
-            [[client deleteObject:deleteObj] waitUntilFinished];
-        }
-        return nil;
-    }] waitUntilFinished];
-    
-    //delete multipart uploads
-    OSSListMultipartUploadsRequest *listMultipartUploads = [OSSListMultipartUploadsRequest new];
-    listMultipartUploads.bucketName = bucket;
-    listMultipartUploads.maxUploads = 1000;
-    OSSTask *listMultipartUploadsTask = [client listMultipartUploads:listMultipartUploads];
-    
-    [[listMultipartUploadsTask continueWithBlock:^id(OSSTask *task) {
-        OSSListMultipartUploadsResult * result = task.result;
-        for (NSDictionary *dict in result.uploads) {
-            NSString * uploadId = [dict objectForKey:@"UploadId"];
-            NSString * objectKey = [dict objectForKey:@"Key"];
-            NSLog(@"delete multipart uploadId %@", uploadId);
-            OSSAbortMultipartUploadRequest *abort = [OSSAbortMultipartUploadRequest new];
-            abort.bucketName = bucket;
-            abort.objectKey = objectKey;
-            abort.uploadId = uploadId;
-            [[client abortMultipartUpload:abort] waitUntilFinished];
-        }
-        return nil;
-    }] waitUntilFinished];
-    //delete bucket
-    OSSDeleteBucketRequest *deleteBucket = [OSSDeleteBucketRequest new];
-    deleteBucket.bucketName = bucket;
-    [[client deleteBucket:deleteBucket] waitUntilFinished];
-}
 
 + (void) putTestDataWithKey: (NSString *)key withClient: (OSSClient *)client withBucket: (NSString *)bucket
 {
@@ -68,6 +32,85 @@
     
     OSSTask * task = [client putObject:request];
     [task waitUntilFinished];
+}
+
++ (OSSTask *)getObjectWithKey: (NSString *)key withClient: (OSSClient *)client withBucket: (NSString *)bucket fileUrl:(NSURL *)url {
+    OSSNetworkingRequestDelegate * requestDelegate = [OSSNetworkingRequestDelegate new];
+
+    OSSTestHttpResponseParser *responseParser = [[OSSTestHttpResponseParser alloc] initForOperationType:1];
+    responseParser.downloadingFileURL = url;
+    
+    requestDelegate.responseParser = responseParser;
+    OSSAllRequestNeededMessage *allNeededMessage = [[OSSAllRequestNeededMessage alloc] init];
+    allNeededMessage.endpoint = client.endpoint;
+    allNeededMessage.httpMethod = @"GET";
+    allNeededMessage.bucketName = bucket;
+    allNeededMessage.objectKey = key;
+    allNeededMessage.date = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    
+    requestDelegate.allNeededMessage = allNeededMessage;
+    requestDelegate.operType = 1;
+
+    return [client invokeRequest:requestDelegate requireAuthentication:YES];
+}
+
++ (OSSTask *) headObjectWithKey: (NSString *)key withClient: (OSSClient *)client withBucket: (NSString *)bucket {
+    OSSNetworkingRequestDelegate * requestDelegate = [OSSNetworkingRequestDelegate new];
+
+    OSSTestHttpResponseParser *responseParser = [[OSSTestHttpResponseParser alloc] initForOperationType:2];
+    
+    requestDelegate.responseParser = responseParser;
+    OSSAllRequestNeededMessage *allNeededMessage = [[OSSAllRequestNeededMessage alloc] init];
+    allNeededMessage.endpoint = client.endpoint;
+    allNeededMessage.httpMethod = @"HEAD";
+    allNeededMessage.bucketName = bucket;
+    allNeededMessage.objectKey = key;
+    allNeededMessage.date = [[NSDate oss_clockSkewFixedDate] oss_asStringValue];
+    
+    requestDelegate.allNeededMessage = allNeededMessage;
+    requestDelegate.operType = 2;
+
+    return [client invokeRequest:requestDelegate requireAuthentication:YES];
+}
+
+
++ (OSSFederationToken *)getSts {
+    NSURL * url = [NSURL URLWithString:OSS_STSTOKEN_URL];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                    if (error) {
+                                                        [tcs setError:error];
+                                                        return;
+                                                    }
+                                                    [tcs setResult:data];
+                                                }];
+    [sessionTask resume];
+    [tcs.task waitUntilFinished];
+    if (tcs.task.error) {
+        return nil;
+    } else {
+        NSData* data = tcs.task.result;
+        NSDictionary * object = [NSJSONSerialization JSONObjectWithData:data
+                                                                options:kNilOptions
+                                                                  error:nil];
+        int statusCode = [[object objectForKey:@"StatusCode"] intValue];
+        if (statusCode == 200) {
+            OSSFederationToken * token = [OSSFederationToken new];
+            // All the entries below are mandatory.
+            token.tAccessKey = [object objectForKey:@"AccessKeyId"];
+            token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
+            token.tToken = [object objectForKey:@"SecurityToken"];
+            token.expirationTimeInGMTFormat = [object objectForKey:@"Expiration"];
+            OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"Expiration"]);
+            return token;
+        }else{
+            return nil;
+        }
+        
+    }
 }
 
 @end

@@ -43,32 +43,7 @@ typedef NS_ENUM(NSInteger, OSSNetworkingRetryType) {
  * @brief: The following constants are provided by OSSNetworking as possible operation types.
  */
 typedef NS_ENUM(NSInteger, OSSOperationType) {
-    OSSOperationTypeGetService,
-    OSSOperationTypeCreateBucket,
-    OSSOperationTypeDeleteBucket,
-    OSSOperationTypeGetBucket,
-    OSSOperationTypeGetBucketInfo,
-    OSSOperationTypeGetBucketACL,
-    OSSOperationTypeHeadObject,
-    OSSOperationTypeGetObject,
-    OSSOperationTypeGetObjectACL,
     OSSOperationTypePutObject,
-    OSSOperationTypePutObjectACL,
-    OSSOperationTypeAppendObject,
-    OSSOperationTypeDeleteObject,
-    OSSOperationTypeDeleteMultipleObjects,
-    OSSOperationTypeCopyObject,
-    OSSOperationTypeInitMultipartUpload,
-    OSSOperationTypeUploadPart,
-    OSSOperationTypeCompleteMultipartUpload,
-    OSSOperationTypeAbortMultipartUpload,
-    OSSOperationTypeListMultipart,
-    OSSOperationTypeListMultipartUploads,
-    OSSOperationTypeTriggerCallBack,
-    OSSOperationTypeImagePersist,
-    OSSOperationTypeRestoreObject,
-    OSSOperationTypePutSymlink,
-    OSSOperationTypeGetSymlink,
 };
 
 /**
