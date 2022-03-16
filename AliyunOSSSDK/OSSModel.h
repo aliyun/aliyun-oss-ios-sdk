@@ -220,8 +220,8 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, assign) BOOL crc64Verifiable;
 
-/// Monitor the network. If the network type is changed, recheck the IPv6 status.
-@property (nonatomic, assign) BOOL isNeedListenNetworkChanges;
+/// Set whether to allow UA to carry system information
+@property (nonatomic, assign) BOOL isAllowUACarrySystemInfo;
 
 @end
 
