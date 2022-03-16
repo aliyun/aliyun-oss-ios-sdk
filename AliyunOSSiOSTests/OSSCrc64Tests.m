@@ -109,9 +109,10 @@
         request.objectKey = objectKey;
         request.uploadingFileURL = fileURL;
         request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
-        
+        OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
         request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
             NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+            [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
         };
         
         OSSTask * task = [_client putObject:request];
@@ -119,6 +120,7 @@
             XCTAssertNil(task.error);
             return nil;
         }] waitUntilFinished];
+        XCTAssertTrue([progressTest completeValidateProgress]);
     }
 }
 
@@ -130,8 +132,10 @@
     request.objectKey = @"appendObject";
     request.appendPosition = 0;
     request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     __block int64_t nextAppendPosition = 0;
@@ -144,13 +148,16 @@
         lastCrc64ecma = result.remoteCRC64ecma;
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
     
     request.bucketName = _privateBucketName;
     request.objectKey = @"appendObject";
     request.appendPosition = nextAppendPosition;
     request.uploadingFileURL = [NSURL fileURLWithPath:filePath];
+    progressTest = [OSSProgressTestUtils new];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     task = [_client appendObject:request withCrc64ecma:lastCrc64ecma];
@@ -158,6 +165,7 @@
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)test_getObject
@@ -211,8 +219,10 @@
     multipartUploadRequest.bucketName = _privateBucketName;
     multipartUploadRequest.objectKey = objectkey;
     multipartUploadRequest.partSize = 1024 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * multipartTask = [_client multipartUpload:multipartUploadRequest];
@@ -229,6 +239,7 @@
         }
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 
 }
 
@@ -270,11 +281,13 @@
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.partSize = 100 * 1024;
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"bigfile" withExtension:@"zip"];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         if (bytesSent != 0) {
             XCTAssertTrue(totalByteSent / bytesSent >= 1000);
         }
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     resumeTask = [_client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
@@ -284,7 +297,7 @@
         XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }] waitUntilFinished];
-    
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (NSString *)getRecordFilePath:(OSSResumableUploadRequest *)resumableUpload {

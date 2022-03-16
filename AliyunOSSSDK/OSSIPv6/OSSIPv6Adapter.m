@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "OSSIPv6Adapter.h"
 #import "OSSIPv6PrefixResolver.h"
-#import "OSSReachabilityManager.h"
 #import "OSSLog.h"
 
 #include <arpa/inet.h>
