@@ -198,8 +198,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request.bucketName = _privateBucketName;
     request.objectKey = @"file1m";
     
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
         NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+        [progressTest updateTotalBytes:totalBytesWritten totalBytesExpected:totalBytesExpectedToWrite];
     };
     
     OSSTask * task = [testProxyClient getObject:request];
@@ -208,6 +210,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testUserAgentConfig {
@@ -224,8 +227,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request.bucketName = _privateBucketName;
     request.objectKey = @"file1m";
     
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
         NSLog(@"progress: %lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+        [progressTest updateTotalBytes:totalBytesWritten totalBytesExpected:totalBytesExpectedToWrite];
     };
     
     OSSTask * task = [testProxyClient getObject:request];
@@ -234,6 +239,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
     
     OSSClientConfiguration * conf1 = [OSSClientConfiguration new];
     
@@ -245,8 +251,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request1.bucketName = _privateBucketName;
     request1.objectKey = @"file1m";
     
+    progressTest = [OSSProgressTestUtils new];
     request1.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
         NSLog(@"progress: %lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+        [progressTest updateTotalBytes:totalBytesWritten totalBytesExpected:totalBytesExpectedToWrite];
     };
     
     OSSTask * task1 = [testProxyClient getObject:request1];
@@ -255,6 +263,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
     
 }
 
@@ -289,8 +298,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request.uploadingData = [readFile readDataToEndOfFile];
     request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"1 -------------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     OSSTask * task = [client1 putObject:request];
@@ -306,7 +317,8 @@ id<OSSCredentialProvider> credential, authCredential;
               result.httpResponseHeaderFields);
         return nil;
     }] waitUntilFinished];
-    
+    XCTAssertTrue([progressTest completeValidateProgress]);
+
     request = [OSSPutObjectRequest new];
     request.bucketName = _privateBucketName;
     request.objectKey = @"file1m";
@@ -314,8 +326,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request.uploadingData = [readFile readDataToEndOfFile];
     request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    progressTest = [OSSProgressTestUtils new];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"2 --------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     task = [client2 putObject:request];
@@ -331,6 +345,7 @@ id<OSSCredentialProvider> credential, authCredential;
               result.httpResponseHeaderFields);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testClientInitWithNoneSchemeEndpoint {
@@ -354,8 +369,10 @@ id<OSSCredentialProvider> credential, authCredential;
     request.uploadingData = [readFile readDataToEndOfFile];
     request.contentMd5 = [OSSUtil base64Md5ForData:request.uploadingData];
     request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"1 -------------------- %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     OSSTask * task = [client1 putObject:request];
@@ -371,6 +388,7 @@ id<OSSCredentialProvider> credential, authCredential;
               result.httpResponseHeaderFields);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testMultipartUploadNormal {
@@ -380,8 +398,10 @@ id<OSSCredentialProvider> credential, authCredential;
     multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
     multipartUploadRequest.contentType = @"application/octet-stream";
     multipartUploadRequest.partSize = 1024 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
 
     multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
@@ -400,6 +420,7 @@ id<OSSCredentialProvider> credential, authCredential;
         }
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testMultipartUploadCancel {
@@ -411,6 +432,7 @@ id<OSSCredentialProvider> credential, authCredential;
     multipartUploadRequest.partSize = 256 * 1024;
     multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        XCTAssertTrue(totalByteSent <= totalBytesExpectedToSend);
     };
     NSString * docDir = [NSString oss_documentDirectory];
     multipartUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
@@ -437,8 +459,10 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 256 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
@@ -461,6 +485,7 @@ id<OSSCredentialProvider> credential, authCredential;
     
     BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testResumableUploadSetACL {
@@ -472,8 +497,10 @@ id<OSSCredentialProvider> credential, authCredential;
     NSString *cachesDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     resumableUpload.recordDirectoryPath = cachesDir;
     resumableUpload.partSize = 100 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     resumableUpload.completeMetaHeader = @{@"x-oss-object-acl": @"public-read-write"};
     NSString * docDir = [NSString oss_documentDirectory];
@@ -494,6 +521,7 @@ id<OSSCredentialProvider> credential, authCredential;
         return nil;
     }] waitUntilFinished];
     
+    XCTAssertTrue([progressTest completeValidateProgress]);
     BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
     
@@ -523,8 +551,10 @@ id<OSSCredentialProvider> credential, authCredential;
                                     @"var1": @"value1",
                                     @"var2": @"value2"
                                     };
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     NSString * docDir = [NSString oss_documentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
@@ -546,7 +576,7 @@ id<OSSCredentialProvider> credential, authCredential;
         }
         return nil;
     }] waitUntilFinished];
-    
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 
@@ -563,6 +593,7 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 256 * 1024;
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        XCTAssertTrue(totalByteSent <= totalBytesExpectedToSend);
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
     };
     NSString * docDir = [NSString oss_documentDirectory];
@@ -644,8 +675,10 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 256 * 1024;
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file5m"]];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
@@ -655,6 +688,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testResumbleUploadCancelResumble {
@@ -673,6 +707,7 @@ id<OSSCredentialProvider> credential, authCredential;
         if(totalByteSent >= totalBytesExpectedToSend /2){
             cancel = YES;
         }
+        XCTAssertTrue(totalByteSent <= totalBytesExpectedToSend);
     };
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
@@ -698,9 +733,11 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 100 * 1024;
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         XCTAssertGreaterThan(totalByteSent, totalBytesExpectedToSend / 3);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     resumeTask = [client resumableUpload:resumableUpload];
     [[resumeTask continueWithBlock:^id(OSSTask *task) {
@@ -710,7 +747,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }] waitUntilFinished];
-    
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testResumableUploadSmallFile {
@@ -722,8 +759,10 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 1024 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     NSString * docDir = [NSString oss_documentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1k"]];
@@ -738,6 +777,7 @@ id<OSSCredentialProvider> credential, authCredential;
     
     BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testResumableUploadResumeUpload {
@@ -765,6 +805,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertEqual(OSSClientErrorCodeTaskCancelled, task.error.code);
         return nil;
     }] waitUntilFinished];
+
     
     resumableUpload = [OSSResumableUploadRequest new];
     resumableUpload.bucketName = _privateBucketName;
@@ -787,7 +828,6 @@ id<OSSCredentialProvider> credential, authCredential;
         return nil;
     }] waitUntilFinished];
     
-    
     BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
 }
@@ -802,8 +842,10 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
     resumableUpload.partSize = 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     NSString * docDir = [NSString oss_documentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file10m"]];
@@ -814,6 +856,7 @@ id<OSSCredentialProvider> credential, authCredential;
         NSLog(@"task.error: %@", task.error);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 - (void)testResumableUploadWithNotSetRecordPath{
@@ -822,8 +865,10 @@ id<OSSCredentialProvider> credential, authCredential;
     resumableUpload.objectKey = OSS_MULTIPART_UPLOADKEY;
     resumableUpload.contentType = @"application/octet-stream";
     resumableUpload.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
     resumableUpload.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
     resumableUpload.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
@@ -833,6 +878,7 @@ id<OSSCredentialProvider> credential, authCredential;
         XCTAssertTrue(![[NSFileManager defaultManager] fileExistsAtPath:recordFilePath]);
         return nil;
     }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
 #pragma mark concurrent
