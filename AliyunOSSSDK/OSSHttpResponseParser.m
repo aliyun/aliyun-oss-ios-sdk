@@ -194,7 +194,8 @@
                     getServiceResult.marker = [parseDict objectForKey:OSSMarkerXMLTOKEN];
                     getServiceResult.maxKeys = [[parseDict objectForKey:OSSMaxKeysXMLTOKEN] intValue];
                     getServiceResult.isTruncated = [[parseDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
-                    
+                    getServiceResult.nextMarker = [parseDict objectForKey:OSSNextMarkerXMLTOKEN];
+
                     id bucketObject = [[parseDict objectForKey:OSSBucketsXMLTOKEN] objectForKey:OSSBucketXMLTOKEN];
                     if ([bucketObject isKindOfClass:[NSArray class]]) {
                         getServiceResult.buckets = bucketObject;

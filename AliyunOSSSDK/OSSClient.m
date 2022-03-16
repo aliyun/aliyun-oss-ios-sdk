@@ -14,7 +14,6 @@
 #import "OSSBolts.h"
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
-#import "OSSReachabilityManager.h"
 #import "OSSIPv6Adapter.h"
 
 #import "OSSNetworkingRequestDelegate.h"
@@ -77,10 +76,6 @@ static NSObject *lock;
     if (self = [super init]) {
         if (!lock) {
             lock = [NSObject new];
-        }
-        // Monitor the network. If the network type is changed, recheck the IPv6 status.
-        if (conf.isNeedListenNetworkChanges) {
-            [OSSReachabilityManager shareInstance];
         }
 
         NSOperationQueue * queue = [NSOperationQueue new];
@@ -1608,12 +1603,16 @@ static NSObject *lock;
 #pragma clang diagnostic pop
             
                 NSDictionary *tPartInfo = [localPartInfos objectForKey: [@(remotePartNumber) stringValue]];
-                if (tPartInfo != nil) {
+                if (request.crcFlag == OSSRequestCRCOpen) {
+                    if (tPartInfo == nil) {
+                        uploadedLength -= remotePartSize;
+                        return;
+                    }
                     info.crc64 = [tPartInfo[@"crc64"] unsignedLongLongValue];
-                    
-                    [uploadedPartInfos addObject:info];
-                    [alreadyUploadIndex addObject:@(remotePartNumber)];
                 }
+
+                [uploadedPartInfos addObject:info];
+                [alreadyUploadIndex addObject:@(remotePartNumber)];
             }];
             
             if ([alreadyUploadIndex count] > 0 && request.uploadProgress && uploadFileSize) {
