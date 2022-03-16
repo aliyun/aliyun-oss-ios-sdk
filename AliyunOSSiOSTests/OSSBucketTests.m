@@ -102,6 +102,16 @@
         XCTAssertNil(task.error);
         return nil;
     }] waitUntilFinished];
+    
+    OSSGetServiceResult *result = nil;
+    do {
+        request = [OSSGetServiceRequest new];
+        request.maxKeys = 2;
+        request.marker = result.nextMarker;
+        task = [_client getService:request];
+        [task waitUntilFinished];
+        result = task.result;
+    } while (result.isTruncated);
 }
 
 - (void)testAPI_deleteBucket
