@@ -223,6 +223,9 @@ Sets the session Id for background file transmission
 /// Set whether to allow UA to carry system information
 @property (nonatomic, assign) BOOL isAllowUACarrySystemInfo;
 
+/// Set whether to allow the redirection with a modified request
+@property (nonatomic, assign) BOOL isFollowRedirectsEnable;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>

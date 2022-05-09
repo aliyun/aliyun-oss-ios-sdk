@@ -27,6 +27,7 @@
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
+@property (nonatomic, assign) BOOL enableFollowRedirects;
 @end
 
 
