@@ -431,6 +431,17 @@
     
 }
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                     willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+                                     newRequest:(NSURLRequest *)request
+                              completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
+    if (self.configuration.enableFollowRedirects) {
+        completionHandler(request);
+    } else {
+        completionHandler(nil);
+    }
+}
+
 #pragma mark - NSURLSessionDataDelegate Methods
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
