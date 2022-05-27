@@ -164,6 +164,7 @@
         } else {
             if (self.cachedToken.expirationTimeInGMTFormat) {
                 NSDateFormatter * fm = [NSDateFormatter new];
+                fm.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
                 [fm setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
                 self.cachedToken.expirationTimeInMilliSecond = [[fm dateFromString:self.cachedToken.expirationTimeInGMTFormat] timeIntervalSince1970] * 1000;
                 self.cachedToken.expirationTimeInGMTFormat = nil;
