@@ -15,6 +15,12 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2022/5/01
+- release 2.10.14
+1.Add redirection switch
+2.Modify the default value of httpDNS. true -> false
+3.fix iOS 15.4 NSDateFormatter return nil
+
 2021/12/30
 - release 2.10.13
 1.Fix the resumableupload progress error
