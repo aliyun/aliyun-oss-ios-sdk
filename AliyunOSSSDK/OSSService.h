@@ -31,6 +31,8 @@
 #import "OSSGetSymlinkResult.h"
 #import "OSSRestoreObjectRequest.h"
 #import "OSSRestoreObjectResult.h"
+#import "OSSGetBucketV2Request.h"
+#import "OSSGetBucketV2Result.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"

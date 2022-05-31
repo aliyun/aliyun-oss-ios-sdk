@@ -26,6 +26,7 @@
 #import "OSSPutSymlinkRequest.h"
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
+#import "OSSGetBucketV2Request.h""
 
 static NSString * const kClientRecordNameWithCommonPrefix = @"oss_partInfos_storage_name";
 static NSString * const kClientRecordNameWithCRC64Suffix = @"-crc64";
@@ -491,6 +492,23 @@ static NSObject *lock;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucket;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)getBucketV2:(OSSGetBucketV2Request *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetBucketV2];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetBucketV2;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }

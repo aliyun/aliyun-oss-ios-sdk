@@ -35,6 +35,7 @@
 @class OSSPutSymlinkRequest;
 @class OSSGetSymlinkRequest;
 @class OSSRestoreObjectRequest;
+@class OSSGetBucketV2Request;
 
 @class OSSTask;
 @class OSSExecutor;
@@ -132,6 +133,12 @@ NS_ASSUME_NONNULL_BEGIN
  Lists all objects in a bucket. It could be specified with filters such as prefix, marker, delimeter and max-keys.
  */
 - (OSSTask *)getBucket:(OSSGetBucketRequest *)request;
+
+/**
+ The corresponding RESTFul API: GetBucketV2
+ Lists all objects in a bucket. It could be specified with filters such as prefix, marker, delimeter and max-keys.
+ */
+- (OSSTask *)getBucketV2:(OSSGetBucketV2Request *)request;
 
 /**
  The corresponding RESTFul API: GetBucketInfo

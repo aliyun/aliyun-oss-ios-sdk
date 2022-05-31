@@ -14,6 +14,8 @@
 @interface OSSBucketTests : XCTestCase
 {
     OSSClient *_client;
+    NSString *bucketName;
+    int fileCount;
 }
 
 @end
@@ -156,6 +158,133 @@
     }] waitUntilFinished];
     
     [OSSTestUtils cleanBucket:@"oss-ios-bucket-list-multipart-uploads-test" with:_client];
+}
+
+- (void)testGetBucketV2 {
+    int fileCount = 50;
+    int delimiterFileCount = 10;
+    NSString *bucketName = @"oss-ios-bucket-get-bucket-test";
+    NSString *delimiterPrefix = @"delimiterFile";
+    NSString *prefix = @"file";
+    OSSCreateBucketRequest *createRq = [OSSCreateBucketRequest new];
+    createRq.bucketName = bucketName;
+    [[_client createBucket:createRq] waitUntilFinished];
+    
+    for (int i = 0; i < fileCount; i++) {
+        OSSPutObjectRequest *putRq = [OSSPutObjectRequest new];
+        putRq.bucketName = bucketName;
+        putRq.objectKey = [NSString stringWithFormat:@"%@%d", prefix, i];
+        if (fileCount - i <= delimiterFileCount) {
+            putRq.objectKey = [NSString stringWithFormat:@"%@%d", delimiterPrefix, i];
+        }
+        putRq.uploadingData = [self createRandomData:1024];
+        [[_client putObject:putRq] waitUntilFinished];
+    }
+    
+    OSSGetBucketV2Request *request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue(result.contents.count == fileCount);
+        return nil;
+    }] waitUntilFinished];
+    
+    
+    __block int count = 0;
+    __block BOOL is;
+    __block NSString *nextContinuationToken;
+    do {
+        request = [OSSGetBucketV2Request new];
+        request.bucketName = bucketName;
+        request.maxKeys = 20;
+        request.continuationToken = nextContinuationToken;
+        [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+            XCTAssertNil(task.error);
+            OSSGetBucketV2Result *result = task.result;
+            XCTAssertTrue(result.contents.count <= request.maxKeys);
+            XCTAssertTrue(result.keyCount <= request.maxKeys);
+            is = result.isTruncated;
+            count += result.keyCount;
+            nextContinuationToken = result.nextContinuationToken;
+            return nil;
+        }] waitUntilFinished];
+    } while(is);
+    XCTAssertTrue(count == fileCount);
+    
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.prefix = prefix;
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue(result.keyCount == fileCount - delimiterFileCount);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.delimiter = @"f";
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue(result.contents.count == delimiterFileCount);
+        XCTAssertTrue(result.commonPrefixes.count == 1);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.delimiter = @"i";
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue(result.commonPrefixes.count == 2);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.startAfter = @"file10";
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue(result.contents.count == 37);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.encodingType = @"url";
+    request.prefix = @"+=";
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        XCTAssertTrue([result.prefix isEqual:[OSSUtil encodeURL:request.prefix]]);
+        return nil;
+    }] waitUntilFinished];
+    
+    request = [OSSGetBucketV2Request new];
+    request.bucketName = bucketName;
+    request.fetchOwner = true;
+    [[[_client getBucketV2:request] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetBucketV2Result *result = task.result;
+        for (NSDictionary *content in result.contents) {
+            XCTAssertNotNil(content[@"Owner"]);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    [OSSTestUtils cleanBucket:bucketName with:_client];
+}
+
+- (NSData *)createRandomData:(NSInteger)size {
+    void * bytes = malloc(size);
+    NSData * data = [NSData dataWithBytes:bytes length:size];
+    free(bytes);
+    return data;
 }
 
 @end
