@@ -536,4 +536,37 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
 
 @end
 
+@implementation OSSTask(OSS)
+
+- (BOOL)isSuccessful {
+    if (self.cancelled || self.faulted) {
+        return false;
+    }
+    return true;
+}
+
+- (NSError *)toError {
+    if (self.error) {
+        return self.error;
+    } else if (self.exception) {
+        return [NSError errorWithDomain:OSSClientErrorDomain
+                                   code:OSSClientErrorCodeExcpetionCatched
+                               userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", self.exception]}];
+    }
+    return nil;
+}
+
+- (OSSTask *)completed:(OSSCompleteBlock)block {
+    return [self continueWithExecutor:[OSSExecutor defaultExecutor] successBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        if ([task isSuccessful]) {
+            block(YES, nil, task.result);
+        } else {
+            block(NO, [task toError], nil);
+        }
+        return nil;
+    } cancellationToken:nil];
+}
+
+@end
+
 NS_ASSUME_NONNULL_END

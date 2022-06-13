@@ -423,6 +423,51 @@ id<OSSCredentialProvider> credential, authCredential;
     XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
+- (void)testMultipartUploadNormal1 {
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = _privateBucketName;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
+    };
+
+    multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    OSSTask * multipartTask = [client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        if ([task isSuccessful]) {
+            BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[multipartUploadRequest.uploadingFileURL path]];
+            XCTAssertTrue(isEqual);
+        } else {
+            NSError *error = [task toError];
+            NSLog(@"error: %@", error);
+            if ([error.domain isEqualToString:OSSClientErrorDomain] && error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // The upload cannot be resumed. Needs to re-initiate a upload.
+            }
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    [multipartTask completed:^id _Nullable(BOOL isSuccess, NSError * _Nullable error, OSSResult * _Nullable result) {
+        if (isSuccess) {
+            BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[multipartUploadRequest.uploadingFileURL path]];
+            XCTAssertTrue(isEqual);
+        } else {
+            NSLog(@"error: %@", error);
+            if ([error.domain isEqualToString:OSSClientErrorDomain] && error.code == OSSClientErrorCodeCannotResumeUpload) {
+                // The upload cannot be resumed. Needs to re-initiate a upload.
+            }
+        }
+    }];
+    
+    XCTAssertTrue([progressTest completeValidateProgress]);
+}
 - (void)testMultipartUploadCancel {
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     multipartUploadRequest.bucketName = _privateBucketName;
