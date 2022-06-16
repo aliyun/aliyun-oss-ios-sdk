@@ -85,7 +85,8 @@ typedef NS_ENUM(NSInteger, OSSClientErrorCODE) {
     OSSClientErrorCodeInvalidCRC,
     OSSClientErrorCodeCannotResumeUpload,
     OSSClientErrorCodeExcpetionCatched,
-    OSSClientErrorCodeNotKnown
+    OSSClientErrorCodeNotKnown,
+    OSSClientErrorCodeFileCantRead
 };
 
 typedef NS_ENUM(NSInteger, OSSXMLDictionaryAttributesMode)
