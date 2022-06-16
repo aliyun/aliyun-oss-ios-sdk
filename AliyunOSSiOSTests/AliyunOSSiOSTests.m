@@ -435,6 +435,46 @@ id<OSSCredentialProvider> credential, authCredential;
     XCTAssertTrue([progressTest completeValidateProgress]);
 }
 
+- (void)testMultipartUploadWithException {
+    SEL select = @selector(upload:uploadIndex:uploadPart:count:uploadedLength:fileSize:);
+    Method originM = class_getInstanceMethod([OSSClient class], select);
+    Method newM = class_getInstanceMethod([self class], select);
+    method_exchangeImplementations(originM, newM);
+    OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
+    multipartUploadRequest.completeMetaHeader = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+    multipartUploadRequest.bucketName = _privateBucketName;
+    multipartUploadRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
+    multipartUploadRequest.contentType = @"application/octet-stream";
+    multipartUploadRequest.partSize = 1024 * 1024;
+    OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
+    multipartUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+        [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
+    };
+
+    multipartUploadRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    OSSTask * multipartTask = [client multipartUpload:multipartUploadRequest];
+    
+    [[multipartTask continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(task.error.code, OSSClientErrorCodeExcpetionCatched);
+        return nil;
+    }] waitUntilFinished];
+    XCTAssertTrue([progressTest completeValidateProgress]);
+    method_exchangeImplementations(originM, newM);
+}
+
+- (OSSTask *)upload:(OSSMultipartUploadRequest *)request
+        uploadIndex:(NSMutableArray *)alreadyUploadIndex
+         uploadPart:(NSMutableArray *)alreadyUploadPart
+              count:(NSUInteger)partCout
+     uploadedLength:(NSUInteger *)uploadedLength
+           fileSize:(unsigned long long)uploadFileSize {
+    [NSException raise:NSInvalidArgumentException
+                format:@"test exception convert to error"];
+    return nil;
+}
+
 - (void)testMultipartUploadCancel {
     OSSMultipartUploadRequest * multipartUploadRequest = [OSSMultipartUploadRequest new];
     multipartUploadRequest.bucketName = _privateBucketName;
