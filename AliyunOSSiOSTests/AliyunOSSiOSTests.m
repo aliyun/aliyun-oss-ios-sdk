@@ -12,6 +12,18 @@
 #import <AliyunOSSiOS/OSSHttpdns.h>
 #import "OSSTestMacros.h"
 #import "OSSTestUtils.h"
+#import <objc/runtime.h>
+
+@interface OSSClient(Test)
+
+- (OSSTask *)upload:(OSSMultipartUploadRequest *)request
+        uploadIndex:(NSMutableArray *)alreadyUploadIndex
+         uploadPart:(NSMutableArray *)alreadyUploadPart
+              count:(NSUInteger)partCout
+     uploadedLength:(NSUInteger *)uploadedLength
+           fileSize:(unsigned long long)uploadFileSize;
+
+@end
 
 @interface oss_ios_sdk_newTests : XCTestCase
 {
@@ -879,6 +891,25 @@ id<OSSCredentialProvider> credential, authCredential;
         return nil;
     }] waitUntilFinished];
     XCTAssertTrue([progressTest completeValidateProgress]);
+}
+
+- (void)testUploadPartSeekError {
+    OSSMultipartUploadRequest *request = [OSSMultipartUploadRequest new];
+    request.bucketName = _privateBucketName;
+    request.partSize = -1024 * 1024;
+    request.objectKey = OSS_MULTIPART_UPLOADKEY;
+    request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
+    NSMutableArray *uploadIndex = @[].mutableCopy;
+    NSMutableArray *uploadPart = @[].mutableCopy;
+    NSUInteger uploadedLength = 0;
+    OSSTask *task = [client upload:request
+                       uploadIndex:uploadIndex
+                        uploadPart:uploadPart
+                             count:10
+                    uploadedLength:&uploadedLength
+                          fileSize:1];
+    [task waitUntilFinished];
+    XCTAssertNotNil(task.error);
 }
 
 #pragma mark concurrent

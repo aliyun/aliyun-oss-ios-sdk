@@ -1387,8 +1387,30 @@ static NSObject *lock;
         }
         @autoreleasepool
         {
-            [fileHande seekToFileOffset: request.partSize * (idx - 1)];
-            uploadPartData = [fileHande readDataOfLength:realPartLength];
+            
+            if (@available(iOS 13.0, *)) {
+                NSError *error = nil;
+                [fileHande seekToOffset:request.partSize * (idx - 1) error:&error];
+                if (error) {
+                    hasError = YES;
+                    errorTask = [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                           code:OSSClientErrorCodeFileCantRead
+                                                                       userInfo:[error userInfo]]];
+                    break;
+                }
+                error = nil;
+                uploadPartData = [fileHande readDataUpToLength:realPartLength error:&error];
+                if (error) {
+                    hasError = YES;
+                    errorTask = [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                                           code:OSSClientErrorCodeFileCantRead
+                                                                       userInfo:[error userInfo]]];
+                    break;
+                }
+            } else {
+                [fileHande seekToFileOffset: request.partSize * (idx - 1)];
+                uploadPartData = [fileHande readDataOfLength:realPartLength];
+            }
             
             NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
                 OSSTask *uploadPartErrorTask = nil;
