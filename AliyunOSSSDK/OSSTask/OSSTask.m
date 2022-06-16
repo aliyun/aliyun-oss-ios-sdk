@@ -399,7 +399,10 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
         @try {
             result = block(self);
         } @catch (NSException *exception) {
-            tcs.exception = exception;
+            NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                 code:OSSClientErrorCodeExcpetionCatched
+                                             userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", exception]}];
+            tcs.error = error;
             OSSLogError(@"exception name: %@",[exception name]);
             OSSLogError(@"exception reason: %@",[exception reason]);
             return;
@@ -411,7 +414,10 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
                 if (cancellationToken.cancellationRequested || task.cancelled) {
                     [tcs cancel];
                 } else if (task.exception) {
-                    tcs.exception = task.exception;
+                    NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                         code:OSSClientErrorCodeExcpetionCatched
+                                                     userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", task.exception]}];
+                    tcs.error = error;
                 } else if (task.error) {
                     tcs.error = task.error;
                 } else {
