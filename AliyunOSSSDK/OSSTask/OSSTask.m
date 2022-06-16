@@ -10,6 +10,8 @@
 
 #import "OSSTask.h"
 #import "OSSLog.h"
+#import "OSSConstants.h"
+#import "OSSDefine.h"
 
 #import <libkern/OSAtomic.h>
 
@@ -532,6 +534,43 @@ NSString *const OSSTaskMultipleExceptionsUserInfoKey = @"exceptions";
             cancelled ? @"YES" : @"NO",
             faulted ? @"YES" : @"NO",
             resultDescription];
+}
+
+@end
+
+@implementation OSSTask(OSS)
+
+- (BOOL)isSuccessful {
+    if (self.cancelled || self.faulted) {
+        return false;
+    }
+    return true;
+}
+
+- (NSError *)toError {
+    if (self.cancelled) {
+        return [NSError errorWithDomain:OSSClientErrorDomain
+                                   code:OSSClientErrorCodeTaskCancelled
+                               userInfo:@{OSSErrorMessageTOKEN: @"This task is cancelled"}];
+    } else if (self.error) {
+        return self.error;
+    } else if (self.exception) {
+        return [NSError errorWithDomain:OSSClientErrorDomain
+                                   code:OSSClientErrorCodeExcpetionCatched
+                               userInfo:@{OSSErrorMessageTOKEN: [NSString stringWithFormat:@"Catch exception - %@", self.exception]}];
+    }
+    return nil;
+}
+
+- (OSSTask *)completed:(OSSCompleteBlock)block {
+    return [self continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        if ([task isSuccessful]) {
+            block(YES, nil, task.result);
+        } else {
+            block(NO, [task toError], nil);
+        }
+        return nil;
+    }];
 }
 
 @end

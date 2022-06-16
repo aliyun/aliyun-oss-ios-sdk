@@ -278,4 +278,18 @@ typedef __nullable id(^OSSContinuationBlock)(OSSTask<ResultType> *task);
 
 @end
 
+@class OSSResult;
+
+@interface OSSTask(OSS)
+
+typedef void(^OSSCompleteBlock)(BOOL isSuccess, NSError * _Nullable error, OSSResult * _Nullable result);
+
+- (BOOL)isSuccessful;
+
+- (NSError *)toError;
+
+- (OSSTask *)completed:(OSSCompleteBlock)block;
+
+@end
+
 NS_ASSUME_NONNULL_END
