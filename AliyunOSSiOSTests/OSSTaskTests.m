@@ -258,6 +258,26 @@
     [task waitUntilFinished];
 }
 
+- (void)testReturnErrorTaskFromContinuationWithException {
+    OSSTaskCompletionSource *tcs = [OSSTaskCompletionSource taskCompletionSource];
+    OSSTask *task = [[tcs.task continueWithBlock:^id(OSSTask *t) {
+        XCTAssertEqualObjects(@"foo", t.result);
+        NSArray *arr = @[];
+        [arr objectAtIndex:1];
+        NSError *originalError = [NSError errorWithDomain:@"Bolts" code:24 userInfo:nil];
+        return [OSSTask taskWithError:originalError];
+    }] continueWithBlock:^id(OSSTask *t) {
+        XCTAssertNotNil(t.error);
+        XCTAssertEqual(OSSClientErrorCodeExcpetionCatched, t.error.code);
+        return nil;
+    }];
+    [[OSSTask taskWithDelay:0] continueWithBlock:^id(OSSTask *t) {
+        tcs.result = @"foo";
+        return nil;
+    }];
+    [task waitUntilFinished];
+}
+
 - (void)testPassOnError {
     NSError *originalError = [NSError errorWithDomain:@"Bolts" code:30 userInfo:nil];
     [[[[[[[[OSSTask taskWithError:originalError] continueWithSuccessBlock:^id(OSSTask *t) {
