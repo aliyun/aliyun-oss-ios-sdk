@@ -15,6 +15,13 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2022/7/06
+- release 2.10.15
+1.Modify the method that is discarded when obtaining fragment data
+2.Add task callback success judgment
+3.Modify to convert exception to error
+4.Delete expired flag of OSSStsTokenCredentialProvider
+
 2022/5/01
 - release 2.10.14
 1.Add redirection switch
