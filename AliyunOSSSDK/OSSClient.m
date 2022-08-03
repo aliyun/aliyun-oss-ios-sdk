@@ -1330,7 +1330,7 @@ static NSObject *lock;
 - (OSSTask *)upload:(OSSMultipartUploadRequest *)request
         uploadIndex:(NSMutableArray *)alreadyUploadIndex
          uploadPart:(NSMutableArray *)alreadyUploadPart
-              count:(NSUInteger)partCout
+              count:(NSUInteger)partCount
      uploadedLength:(NSUInteger *)uploadedLength
            fileSize:(unsigned long long)uploadFileSize
 {
@@ -1361,7 +1361,7 @@ static NSObject *lock;
     NSInteger realPartLength = request.partSize;
     __block BOOL hasError = NO;
     
-    for (NSUInteger idx = 1; idx <= partCout; idx++)
+    for (NSUInteger idx = 1; idx <= partCount; idx++)
     {
         if (request.isCancelled)
         {
@@ -1379,7 +1379,7 @@ static NSObject *lock;
             [NSThread sleepForTimeInterval: 0.15f];
         }
         
-        if (idx == partCout) {
+        if (idx == partCount) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
             realPartLength = uploadFileSize - request.partSize * (idx - 1);
@@ -1748,7 +1748,7 @@ static NSObject *lock;
 - (OSSTask *)sequentialUpload:(OSSMultipartUploadRequest *)request
                   uploadIndex:(NSMutableArray *)alreadyUploadIndex
                    uploadPart:(NSMutableArray *)alreadyUploadPart
-                        count:(NSUInteger)partCout
+                        count:(NSUInteger)partCount
                uploadedLength:(NSUInteger *)uploadedLength
                      fileSize:(unsigned long long)uploadFileSize
 {
@@ -1772,7 +1772,7 @@ static NSObject *lock;
     
     NSUInteger realPartLength = request.partSize;
     
-    for (int i = 1; i <= partCout; i++) {
+    for (int i = 1; i <= partCount; i++) {
         if (errorTask) {
             break;
         }
@@ -1788,7 +1788,7 @@ static NSObject *lock;
         
         realPartLength = request.partSize;
         [fileHande seekToFileOffset:request.partSize * (i - 1)];
-        if (i == partCout) {
+        if (i == partCount) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
             realPartLength = uploadFileSize - request.partSize * (i - 1);
