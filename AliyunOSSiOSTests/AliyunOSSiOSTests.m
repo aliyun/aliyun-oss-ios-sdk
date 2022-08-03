@@ -19,7 +19,7 @@
 - (OSSTask *)upload:(OSSMultipartUploadRequest *)request
         uploadIndex:(NSMutableArray *)alreadyUploadIndex
          uploadPart:(NSMutableArray *)alreadyUploadPart
-              count:(NSUInteger)partCout
+              count:(NSUInteger)partCount
      uploadedLength:(NSUInteger *)uploadedLength
            fileSize:(unsigned long long)uploadFileSize;
 
@@ -467,7 +467,7 @@ id<OSSCredentialProvider> credential, authCredential;
 - (OSSTask *)upload:(OSSMultipartUploadRequest *)request
         uploadIndex:(NSMutableArray *)alreadyUploadIndex
          uploadPart:(NSMutableArray *)alreadyUploadPart
-              count:(NSUInteger)partCout
+              count:(NSUInteger)partCount
      uploadedLength:(NSUInteger *)uploadedLength
            fileSize:(unsigned long long)uploadFileSize {
     [NSException raise:NSInvalidArgumentException
