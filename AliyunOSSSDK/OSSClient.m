@@ -26,6 +26,9 @@
 #import "OSSPutSymlinkRequest.h"
 #import "OSSGetSymlinkRequest.h"
 #import "OSSRestoreObjectRequest.h"
+#import "OSSGetObjectTaggingRequest.h"
+#import "OSSPutObjectTaggingRequest.h"
+#import "OSSDeleteObjectTaggingRequest.h"
 
 static NSString * const kClientRecordNameWithCommonPrefix = @"oss_partInfos_storage_name";
 static NSString * const kClientRecordNameWithCRC64Suffix = @"-crc64";
@@ -896,6 +899,61 @@ static NSObject *lock;
     
     return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
 }
+
+- (OSSTask *)getObjectTagging:(OSSGetObjectTaggingRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeGetObjectTagging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodGET;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeGetObjectTagging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)putObjectTagging:(OSSPutObjectTaggingRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypePutObjectTagging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodPUT;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    NSString *xmlString = [[request entityToDictionary] oss_XMLString];
+    requestDelegate.uploadingData = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
+    requestDelegate.operType = OSSOperationTypePutObjectTagging;
+
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+- (OSSTask *)deleteObjectTagging:(OSSDeleteObjectTaggingRequest *)request {
+    OSSNetworkingRequestDelegate * requestDelegate = request.requestDelegate;
+    requestDelegate.responseParser = [[OSSHttpResponseParser alloc] initForOperationType:OSSOperationTypeDeleteObjectTagging];
+    
+    OSSAllRequestNeededMessage *neededMsg = [[OSSAllRequestNeededMessage alloc] init];
+    neededMsg.endpoint = self.endpoint;
+    neededMsg.httpMethod = OSSHTTPMethodDELETE;
+    neededMsg.bucketName = request.bucketName;
+    neededMsg.objectKey = request.objectKey;
+    neededMsg.params = request.requestParams;
+    requestDelegate.allNeededMessage = neededMsg;
+    
+    requestDelegate.operType = OSSOperationTypeDeleteObjectTagging;
+    
+    return [self invokeRequest:requestDelegate requireAuthentication:request.isAuthenticationRequired];
+}
+
+
 
 @end
 
