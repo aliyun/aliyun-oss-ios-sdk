@@ -35,6 +35,9 @@
 @class OSSPutSymlinkRequest;
 @class OSSGetSymlinkRequest;
 @class OSSRestoreObjectRequest;
+@class OSSGetObjectTaggingRequest;
+@class OSSDeleteObjectTaggingRequest;
+@class OSSPutObjectTaggingRequest;
 
 @class OSSTask;
 @class OSSExecutor;
@@ -271,6 +274,54 @@ NS_ASSUME_NONNULL_BEGIN
  * for more information,please refer to https://help.aliyun.com/document_detail/52930.html
  */
 - (OSSTask *)restoreObject:(OSSRestoreObjectRequest *)request;
+
+/**
+ * You can call this operation to query the tags of an object.
+ *
+ * @param request
+ *          A OSSGetObjectTaggingRequest instance which specifies the bucket
+ *            name and object key.
+ *
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSGetObjectTaggingResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/114878.html
+ */
+- (OSSTask *)getObjectTagging:(OSSGetObjectTaggingRequest *)request;
+
+/**
+ * You can call this operation to add tags to an object or update the tags added to
+ *  the bucket. The object tagging feature uses a key-value pair to tag an object.
+ *
+ * @param request
+ *          A OSSPutObjectTaggingRequest instance which specifies the bucket
+ *            name、object key and tags.
+ *
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSPutObjectTaggingResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/114855.html
+ */
+- (OSSTask *)putObjectTagging:(OSSPutObjectTaggingRequest *)request;
+
+/**
+ * You can call this operation to delete the tags of a specified object.
+ *
+ * @param request
+ *          A OSSDeleteObjectTaggingRequest instance which specifies the bucket
+ *            name and object key.
+ *
+ * @return An instance of OSSTask. On successful execution, `task.result` will
+ *         contain an instance of `OSSDeleteObjectTaggingResult`,otherwise will contain
+ *         an instance of NSError.
+ *
+ * for more information,please refer to https://help.aliyun.com/document_detail/114879.html
+ */
+- (OSSTask *)deleteObjectTagging:(OSSDeleteObjectTaggingRequest *)request;
+
+
 
 @end
 

@@ -804,6 +804,99 @@
     [OSSTestUtils cleanBucket:bucketName with:_client];
 }
 
+#pragma mark - Tagging
+
+- (void)testAPI_put_tagging {
+    NSDictionary *tags = @{@"key1":@"value1", @"key2":@"value2"};
+    OSSPutObjectTaggingRequest *putTaggingRequest = [OSSPutObjectTaggingRequest new];
+    putTaggingRequest.bucketName = _privateBucketName;
+    putTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    putTaggingRequest.tags = tags;
+    [[[_client putObjectTagging:putTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetObjectTaggingRequest *getTaggingRequest = [OSSGetObjectTaggingRequest new];
+    getTaggingRequest.bucketName = _privateBucketName;
+    getTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client getObjectTagging:getTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectTaggingResult *result = task.result;
+        for (NSString *key in [tags allKeys]) {
+            XCTAssertTrue([tags[key] isEqualToString:result.tags[key]]);
+        }
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteObjectTaggingRequest *deleteTaggingRequest = [OSSDeleteObjectTaggingRequest new];
+    deleteTaggingRequest.bucketName = _privateBucketName;
+    deleteTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client deleteObjectTagging:deleteTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    getTaggingRequest = [OSSGetObjectTaggingRequest new];
+    getTaggingRequest.bucketName = _privateBucketName;
+    getTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client getObjectTagging:getTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectTaggingResult *result = task.result;
+        XCTAssertTrue([[result.tags allKeys] count] == 0);
+        return nil;
+    }] waitUntilFinished];
+}
+
+- (void)testAPI_null_tagging {
+    OSSPutObjectTaggingRequest *putTaggingRequest = [OSSPutObjectTaggingRequest new];
+    putTaggingRequest.bucketName = _privateBucketName;
+    putTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client putObjectTagging:putTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSGetObjectTaggingRequest *getTaggingRequest = [OSSGetObjectTaggingRequest new];
+    getTaggingRequest.bucketName = _privateBucketName;
+    getTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client getObjectTagging:getTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        OSSGetObjectTaggingResult *result = task.result;
+        XCTAssertTrue([[result.tags allKeys] count] == 0);
+        return nil;
+    }] waitUntilFinished];
+    
+    OSSDeleteObjectTaggingRequest *deleteTaggingRequest = [OSSDeleteObjectTaggingRequest new];
+    deleteTaggingRequest.bucketName = _privateBucketName;
+    deleteTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client deleteObjectTagging:deleteTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+}
+
+- (void)testAPI_deleteNotExistObjectTagging {
+    OSSDeleteObjectTaggingRequest *deleteTaggingRequest = [OSSDeleteObjectTaggingRequest new];
+    deleteTaggingRequest.bucketName = _privateBucketName;
+    deleteTaggingRequest.objectKey = OSS_IMAGE_KEY;
+    [[[_client deleteObjectTagging:deleteTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNil(task.error);
+        return nil;
+    }] waitUntilFinished];
+    
+    deleteTaggingRequest = [OSSDeleteObjectTaggingRequest new];
+    deleteTaggingRequest.bucketName = _privateBucketName;
+    deleteTaggingRequest.objectKey = @"existObject";
+    [[[_client deleteObjectTagging:deleteTaggingRequest] continueWithBlock:^id _Nullable(OSSTask * _Nonnull task) {
+        XCTAssertNotNil(task.error);
+        XCTAssertEqual(task.error.code, -404);
+        return nil;
+    }] waitUntilFinished];
+}
+
+
 #pragma mark - others
 
 - (void)testAPI_get_Bucket_list_Objects
