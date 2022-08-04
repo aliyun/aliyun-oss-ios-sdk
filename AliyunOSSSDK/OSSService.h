@@ -31,6 +31,12 @@
 #import "OSSGetSymlinkResult.h"
 #import "OSSRestoreObjectRequest.h"
 #import "OSSRestoreObjectResult.h"
+#import "OSSGetObjectTaggingRequest.h"
+#import "OSSGetObjectTaggingResult.h"
+#import "OSSPutObjectTaggingRequest.h"
+#import "OSSPutObjectTaggingResult.h"
+#import "OSSDeleteObjectTaggingRequest.h"
+#import "OSSDeleteObjectTaggingResult.h"
 
 #import "OSSClient.h"
 #import "OSSModel.h"

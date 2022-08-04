@@ -69,6 +69,9 @@ typedef NS_ENUM(NSInteger, OSSOperationType) {
     OSSOperationTypeRestoreObject,
     OSSOperationTypePutSymlink,
     OSSOperationTypeGetSymlink,
+    OSSOperationTypeGetObjectTagging,
+    OSSOperationTypePutObjectTagging,
+    OSSOperationTypeDeleteObjectTagging,
 };
 
 /**

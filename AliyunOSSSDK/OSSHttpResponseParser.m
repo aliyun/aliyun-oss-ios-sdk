@@ -20,6 +20,9 @@
 #import "OSSRestoreObjectResult.h"
 #import "OSSPutSymlinkResult.h"
 #import "OSSGetSymlinkResult.h"
+#import "OSSGetObjectTaggingResult.h"
+#import "OSSPutObjectTaggingResult.h"
+#import "OSSDeleteObjectTaggingResult.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -644,6 +647,51 @@
                 [self parseResponseHeader:_response toResultObject:getSymlinkResult];
             }
             return getSymlinkResult;
+        }
+        case OSSOperationTypeGetObjectTagging: {
+            OSSGetObjectTaggingResult *result = [OSSGetObjectTaggingResult new];
+            NSMutableDictionary *tags = [NSMutableDictionary dictionary];
+            if (_collectingData)
+            {
+                NSDictionary * parseDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                NSDictionary *tagSet = [parseDict objectForKey:@"TagSet"];
+                if (tagSet) {
+                    if ([tagSet[@"Tag"] isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary * tag in tagSet[@"Tag"]) {
+                            NSString *key = tag[@"Key"];
+                            NSString *value = tag[@"Value"];
+                            if (key && value) {
+                                [tags setObject:value forKey:key];
+                            }
+                        }
+                    } else if ([tagSet[@"Tag"] isKindOfClass:[NSDictionary class]]) {
+                        NSString *key = tagSet[@"Tag"][@"Key"];
+                        NSString *value = tagSet[@"Tag"][@"Value"];
+                        if (key && value) {
+                            [tags setObject:value forKey:key];
+                        }
+                    }
+                }
+            }
+            result.tags = tags;
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:result];
+            }
+            return result;
+        }
+        case OSSOperationTypePutObjectTagging: {
+            OSSPutObjectTaggingResult *result = [OSSPutObjectTaggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:result];
+            }
+            return result;
+        }
+        case OSSOperationTypeDeleteObjectTagging: {
+            OSSDeleteObjectTaggingResult *result = [OSSDeleteObjectTaggingResult new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:result];
+            }
+            return result;
         }
         default: {
             OSSLogError(@"unknown operation type");
