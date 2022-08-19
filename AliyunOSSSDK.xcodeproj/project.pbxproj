@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		5423CD292845F647005B4BCE /* OSSGetBucketV2Request.h in Headers */ = {isa = PBXBuildFile; fileRef = 5423CD272845F647005B4BCE /* OSSGetBucketV2Request.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5423CD2A2845F647005B4BCE /* OSSGetBucketV2Request.h in Headers */ = {isa = PBXBuildFile; fileRef = 5423CD272845F647005B4BCE /* OSSGetBucketV2Request.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5423CD2B2845F647005B4BCE /* OSSGetBucketV2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 5423CD282845F647005B4BCE /* OSSGetBucketV2Request.m */; };
+		5423CD2C2845F647005B4BCE /* OSSGetBucketV2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 5423CD282845F647005B4BCE /* OSSGetBucketV2Request.m */; };
+		5423CD2F2845F66E005B4BCE /* OSSGetBucketV2Result.h in Headers */ = {isa = PBXBuildFile; fileRef = 5423CD2D2845F66E005B4BCE /* OSSGetBucketV2Result.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5423CD302845F66E005B4BCE /* OSSGetBucketV2Result.h in Headers */ = {isa = PBXBuildFile; fileRef = 5423CD2D2845F66E005B4BCE /* OSSGetBucketV2Result.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5423CD312845F66E005B4BCE /* OSSGetBucketV2Result.m in Sources */ = {isa = PBXBuildFile; fileRef = 5423CD2E2845F66E005B4BCE /* OSSGetBucketV2Result.m */; };
+		5423CD322845F66E005B4BCE /* OSSGetBucketV2Result.m in Sources */ = {isa = PBXBuildFile; fileRef = 5423CD2E2845F66E005B4BCE /* OSSGetBucketV2Result.m */; };
 		D80C81F51FC824E2008E3900 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */; };
 		D80C81F71FC824FF008E3900 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F61FC824FF008E3900 /* CoreTelephony.framework */; };
 		D80C81FB1FC82541008E3900 /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183091FC56358000DD9EC /* OSSModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -223,6 +231,10 @@
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		5423CD272845F647005B4BCE /* OSSGetBucketV2Request.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSGetBucketV2Request.h; sourceTree = "<group>"; };
+		5423CD282845F647005B4BCE /* OSSGetBucketV2Request.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSGetBucketV2Request.m; sourceTree = "<group>"; };
+		5423CD2D2845F66E005B4BCE /* OSSGetBucketV2Result.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSGetBucketV2Result.h; sourceTree = "<group>"; };
+		5423CD2E2845F66E005B4BCE /* OSSGetBucketV2Result.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSGetBucketV2Result.m; sourceTree = "<group>"; };
 		D80C81EC1FC824A8008E3900 /* AliyunOSSOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AliyunOSSOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F61FC824FF008E3900 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
@@ -464,6 +476,10 @@
 				D827B4162111A6E4003A24F6 /* OSSPutSymlinkRequest.m */,
 				D827B42D2111ADE9003A24F6 /* OSSPutSymlinkResult.h */,
 				D827B42E2111ADE9003A24F6 /* OSSPutSymlinkResult.m */,
+				5423CD272845F647005B4BCE /* OSSGetBucketV2Request.h */,
+				5423CD282845F647005B4BCE /* OSSGetBucketV2Request.m */,
+				5423CD2D2845F66E005B4BCE /* OSSGetBucketV2Result.h */,
+				5423CD2E2845F66E005B4BCE /* OSSGetBucketV2Result.m */,
 				D85277E92015BBAD00D7B1DE /* OSSRequest.h */,
 				D85277EA2015BBAD00D7B1DE /* OSSRequest.m */,
 				D827B4212111A71B003A24F6 /* OSSRestoreObjectRequest.h */,
@@ -547,6 +563,7 @@
 				D8C41B211FCC2FD20091699B /* OSSClient.h in Headers */,
 				D8C41B231FCC2FD20091699B /* OSSHttpdns.h in Headers */,
 				D8C41B241FCC2FD20091699B /* OSSNetworking.h in Headers */,
+				5423CD292845F647005B4BCE /* OSSGetBucketV2Request.h in Headers */,
 				D8C41B251FCC2FD20091699B /* OSSIPv6Adapter.h in Headers */,
 				D8C41B2A1FCC2FD20091699B /* OSSIPv6PrefixResolver.h in Headers */,
 				D8C41B2B1FCC2FD20091699B /* OSSDefine.h in Headers */,
@@ -581,6 +598,7 @@
 				D827B41D2111A6FA003A24F6 /* OSSGetSymlinkRequest.h in Headers */,
 				D827B4352111ADF7003A24F6 /* OSSGetSymlinkResult.h in Headers */,
 				D8C2951220F46A79008A08AA /* OSSGetBucketInfoRequest.h in Headers */,
+				5423CD2F2845F66E005B4BCE /* OSSGetBucketV2Result.h in Headers */,
 				D8C2951820F46A95008A08AA /* OSSGetBucketInfoResult.h in Headers */,
 				D827B40B21107169003A24F6 /* NSDate+OSS.h in Headers */,
 				D8C41B411FCC2FD20091699B /* OSSFileLogger.h in Headers */,
@@ -604,6 +622,7 @@
 				D80C82131FC82596008E3900 /* OSSIPv6Adapter.h in Headers */,
 				D80C82051FC82567008E3900 /* OSSService.h in Headers */,
 				D80C82041FC82562008E3900 /* OSSLog.h in Headers */,
+				5423CD2A2845F647005B4BCE /* OSSGetBucketV2Request.h in Headers */,
 				D80C82151FC8259C008E3900 /* OSSIPv6PrefixResolver.h in Headers */,
 				D80C82061FC8256D008E3900 /* OSSLogMacros.h in Headers */,
 				D80C82081FC82571008E3900 /* OSSReachability.h in Headers */,
@@ -638,6 +657,7 @@
 				D827B4362111ADF7003A24F6 /* OSSGetSymlinkResult.h in Headers */,
 				D8C2951320F46A79008A08AA /* OSSGetBucketInfoRequest.h in Headers */,
 				D8C2951920F46A95008A08AA /* OSSGetBucketInfoResult.h in Headers */,
+				5423CD302845F66E005B4BCE /* OSSGetBucketV2Result.h in Headers */,
 				D80C88E8201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */,
 				D80C82011FC82559008E3900 /* OSSHttpdns.h in Headers */,
 				D827B40C21107169003A24F6 /* NSDate+OSS.h in Headers */,
@@ -809,6 +829,7 @@
 				D8C41AF71FCC2F920091699B /* OSSIPv6Adapter.m in Sources */,
 				D827B4192111A6E4003A24F6 /* OSSPutSymlinkRequest.m in Sources */,
 				D8C41AFA1FCC2F920091699B /* OSSCompat.m in Sources */,
+				5423CD2B2845F647005B4BCE /* OSSGetBucketV2Request.m in Sources */,
 				D8C41AFC1FCC2F920091699B /* OSSCancellationTokenRegistration.m in Sources */,
 				D8C41AFD1FCC2F920091699B /* OSSBolts.m in Sources */,
 				D8C41AFF1FCC2F920091699B /* OSSTaskCompletionSource.m in Sources */,
@@ -823,6 +844,7 @@
 				D8C41B0A1FCC2F920091699B /* OSSXMLDictionary.m in Sources */,
 				D827B41F2111A6FA003A24F6 /* OSSGetSymlinkRequest.m in Sources */,
 				D852780C2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
+				5423CD312845F66E005B4BCE /* OSSGetBucketV2Result.m in Sources */,
 				D85277ED2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D827B4312111ADE9003A24F6 /* OSSPutSymlinkResult.m in Sources */,
 				D827B41321114E4B003A24F6 /* NSMutableDictionary+OSS.m in Sources */,
@@ -861,6 +883,7 @@
 				D8C41AB81FCC284F0091699B /* OSSIPv6Adapter.m in Sources */,
 				D827B41A2111A6E4003A24F6 /* OSSPutSymlinkRequest.m in Sources */,
 				D8C41ABB1FCC284F0091699B /* OSSCompat.m in Sources */,
+				5423CD2C2845F647005B4BCE /* OSSGetBucketV2Request.m in Sources */,
 				D8C41ABD1FCC284F0091699B /* OSSCancellationTokenRegistration.m in Sources */,
 				D8C41ABE1FCC284F0091699B /* OSSBolts.m in Sources */,
 				D8C41AC01FCC284F0091699B /* OSSTaskCompletionSource.m in Sources */,
@@ -875,6 +898,7 @@
 				D8C41ACB1FCC28500091699B /* OSSXMLDictionary.m in Sources */,
 				D827B4202111A6FA003A24F6 /* OSSGetSymlinkRequest.m in Sources */,
 				D852780D2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
+				5423CD322845F66E005B4BCE /* OSSGetBucketV2Result.m in Sources */,
 				D85277EE2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D827B4322111ADE9003A24F6 /* OSSPutSymlinkResult.m in Sources */,
 				D827B41421114E4B003A24F6 /* NSMutableDictionary+OSS.m in Sources */,

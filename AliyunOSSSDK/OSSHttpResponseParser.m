@@ -20,6 +20,7 @@
 #import "OSSRestoreObjectResult.h"
 #import "OSSPutSymlinkResult.h"
 #import "OSSGetSymlinkResult.h"
+#import "OSSGetBucketV2Result.h"
 
 
 @implementation OSSHttpResponseParser {
@@ -296,6 +297,53 @@
                     }
                     
                     getBucketResult.commentPrefixes = commentPrefixesArr;
+                }
+            }
+            return getBucketResult;
+        }
+            
+        case OSSOperationTypeGetBucketV2:
+        {
+            OSSGetBucketV2Result * getBucketResult = [OSSGetBucketV2Result new];
+            if (_response) {
+                [self parseResponseHeader:_response toResultObject:getBucketResult];
+            }
+            if (_collectingData) {
+                NSDictionary * parsedDict = [NSDictionary oss_dictionaryWithXMLData:_collectingData];
+                OSSLogVerbose(@"Get bucket dict: %@", parsedDict);
+                
+                if (parsedDict) {
+                    getBucketResult.bucketName = [parsedDict objectForKey:OSSNameXMLTOKEN];
+                    getBucketResult.prefix = [parsedDict objectForKey:OSSPrefixXMLTOKEN];
+                    getBucketResult.maxKeys = (int32_t)[[parsedDict objectForKey:OSSMaxKeysXMLTOKEN] integerValue];
+                    getBucketResult.keyCount = (int32_t)[[parsedDict objectForKey:OSSKeyCountXMLTOKEN] integerValue];
+                    getBucketResult.delimiter = [parsedDict objectForKey:OSSDelimiterXMLTOKEN];
+                    getBucketResult.isTruncated = [[parsedDict objectForKey:OSSIsTruncatedXMLTOKEN] boolValue];
+                    getBucketResult.nextContinuationToken = [parsedDict objectForKey:OSSNextContinuationTokenXMLTOKEN];
+                    
+                    id contentObject = [parsedDict objectForKey:OSSContentsXMLTOKEN];
+                    if ([contentObject isKindOfClass:[NSArray class]]) {
+                        getBucketResult.contents = contentObject;
+                    } else if ([contentObject isKindOfClass:[NSDictionary class]]) {
+                        NSArray * arr = [NSArray arrayWithObject:contentObject];
+                        getBucketResult.contents = arr;
+                    } else {
+                        getBucketResult.contents = nil;
+                    }
+                    
+                    NSMutableArray * commonPrefixesArr = [NSMutableArray new];
+                    id commonPrefixes = [parsedDict objectForKey:OSSCommonPrefixesXMLTOKEN];
+                    if ([commonPrefixes isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary * prefix in commonPrefixes) {
+                            [commonPrefixesArr addObject:[prefix objectForKey:@"Prefix"]];
+                        }
+                    } else if ([commonPrefixes isKindOfClass:[NSDictionary class]]) {
+                        [commonPrefixesArr addObject:[(NSDictionary *)commonPrefixes objectForKey:@"Prefix"]];
+                    } else {
+                        commonPrefixesArr = nil;
+                    }
+                    
+                    getBucketResult.commonPrefixes = commonPrefixesArr;
                 }
             }
             return getBucketResult;

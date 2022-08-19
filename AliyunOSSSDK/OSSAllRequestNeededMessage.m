@@ -46,7 +46,8 @@
     }
     
     if (!self.objectKey &&
-        (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeCreateBucket
+        (operType != OSSOperationTypeGetBucket && operType != OSSOperationTypeGetBucketV2
+         && operType != OSSOperationTypeCreateBucket
          && operType != OSSOperationTypeDeleteBucket && operType != OSSOperationTypeGetService
          && operType != OSSOperationTypeGetBucketACL&& operType != OSSOperationTypeDeleteMultipleObjects
          && operType != OSSOperationTypeListMultipartUploads
