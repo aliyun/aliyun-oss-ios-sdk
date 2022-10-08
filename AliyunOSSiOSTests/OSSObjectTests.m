@@ -10,6 +10,7 @@
 #import "OSSTestMacros.h"
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
 #import "OSSTestUtils.h"
+#import <AliyunOSSiOS/OSSDefine.h>
 
 #define SCHEME @"https://"
 #define ENDPOINT @"oss-cn-hangzhou.aliyuncs.com"
@@ -1748,6 +1749,110 @@
     NSString *urlString = [NSString stringWithFormat:@"http://%@/%@/%@", IP_ENDPOINT, BUCKET_NAME, OBJECT_KEY];
     XCTAssertTrue([tk.result hasPrefix:urlString]);
 }
+
+- (void)testAPI_presignURLToPutObject {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[3]];
+    NSString *bucketName = _privateBucketName;
+    NSString *objectKey = OBJECT_KEY;
+    NSString *method = @"PUT";
+    NSString *contentType = @"image/png";
+    NSString *contentMd5 = [OSSUtil base64Md5ForFilePath:filePath];
+
+    OSSTask *task = [_client presignConstrainURLWithBucketName:bucketName
+                                                 withObjectKey:objectKey
+                                                    httpMethod:method
+                                        withExpirationInterval:30 * 60
+                                                withParameters:@{}
+                                                   contentType:contentType
+                                                    contentMd5:contentMd5];
+
+    NSString *url = task.result;
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = method;
+    [request setValue:contentType forHTTPHeaderField:OSSHttpHeaderContentType];
+    [request setValue:contentMd5 forHTTPHeaderField:OSSHttpHeaderContentMD5];
+    NSURLSession *session = [NSURLSession sharedSession];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSessionTask *sesstionTask = [session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:filePath] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSHTTPURLResponse *httpResoponse = (NSHTTPURLResponse *)response;
+        if (!error && httpResoponse.statusCode == 200) {
+            NSLog(@"上传成功");
+            [tcs setError:error];
+        } else {
+            NSLog(@"上传失败 \n%@ \n%@", error, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            [tcs setResult:data];
+        }
+    }];
+    [sesstionTask resume];
+    [tcs.task waitUntilFinished];
+    
+    BOOL isEqual = [self checkMd5WithBucketName:_privateBucketName
+                                      objectKey:OBJECT_KEY
+                                  localFilePath:filePath];
+    XCTAssertTrue(isEqual);
+}
+
+- (void)testAPI_presignURLWithHeaderTypeToPutObject {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[3]];
+    NSString *bucketName = _privateBucketName;
+    NSString *objectKey = OBJECT_KEY;
+    NSString *method = @"PUT";
+    NSString *contentType = @"image/png";
+    NSString *contentMd5 = [OSSUtil base64Md5ForFilePath:filePath];
+    NSDictionary *headers = @{@"x-oss-meta-text-key": @"test-value",
+                              OSSHttpHeaderContentType: contentType,
+                              OSSHttpHeaderContentMD5: contentMd5};
+
+    OSSTask *task = [_client presignConstrainURLWithBucketName:bucketName
+                                                 withObjectKey:objectKey
+                                                    httpMethod:method
+                                        withExpirationInterval:30 * 60
+                                                withParameters:@{}
+                                                   withHeaders:headers];
+
+    NSString *url = task.result;
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = method;
+    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    [request setValue:contentMd5 forHTTPHeaderField:OSSHttpHeaderContentMD5];
+    [request setValue:@"test-value" forHTTPHeaderField:@"x-oss-meta-text-key"];
+    NSURLSession *session = [NSURLSession sharedSession];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSessionTask *sesstionTask = [session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:filePath] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSHTTPURLResponse *httpResoponse = (NSHTTPURLResponse *)response;
+        if (!error && httpResoponse.statusCode == 200) {
+            NSLog(@"上传成功");
+            [tcs setError:error];
+        } else {
+            NSLog(@"上传失败 \n%@ \n%@", error, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            [tcs setResult:data];
+        }
+    }];
+    [sesstionTask resume];
+    [tcs.task waitUntilFinished];
+    
+    OSSHeadObjectRequest * head = [OSSHeadObjectRequest new];
+    head.bucketName = _privateBucketName;
+    head.objectKey = OBJECT_KEY;
+    [[[_client headObject:head] continueWithBlock:^id(OSSTask *task) {
+        XCTAssertNil(task.error);
+        OSSHeadObjectResult * headResult = task.result;
+        [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            if (![key isEqualToString:OSSHttpHeaderContentMD5]) {
+                XCTAssertTrue([[headResult.objectMeta objectForKey:key] isEqualToString:obj]);
+            }
+        }];
+        return nil;
+    }] waitUntilFinished];
+    
+    BOOL isEqual = [self checkMd5WithBucketName:_privateBucketName
+                                      objectKey:OBJECT_KEY
+                                  localFilePath:filePath];
+    XCTAssertTrue(isEqual);
+}
+
 
 #pragma mark - utils
 
