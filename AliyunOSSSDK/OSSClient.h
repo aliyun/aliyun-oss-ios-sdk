@@ -437,6 +437,37 @@ NS_ASSUME_NONNULL_BEGIN
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters;
 
+
+/// Generates a signed URL for the object and anyone has this URL will get the specified permission on the object.
+/// @param bucketName object's bucket name
+/// @param objectKey Object name
+/// @param method http method.currently only support get and head.
+/// @param interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
+/// @param parameters it could specify allowed HTTP methods
+/// @param contentType Content-Type to url sign
+/// @param contentMd5 Content-MD5 to url sign
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
+                                   contentType:(nullable NSString *)contentType
+                                    contentMd5:(nullable NSString *)contentMd5;
+
+/// Generates a signed URL for the object and anyone has this URL will get the specified permission on the object.
+/// @param bucketName object's bucket name
+/// @param objectKey Object name
+/// @param method http method.currently only support get and head.
+/// @param interval Expiration time in seconds. The URL could be specified with the expiration time to limit the access window on the object.
+/// @param parameters it could specify allowed HTTP methods
+/// @param headers Content Type, Content-MD5, and all HTTP headers prefixed with 'x-oss-*'
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
+                                   withHeaders:(nullable NSDictionary *)headers;
+
 /**
  If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
  @bucketName Object's bucket name
