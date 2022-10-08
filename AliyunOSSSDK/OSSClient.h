@@ -386,6 +386,15 @@ NS_ASSUME_NONNULL_BEGIN
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters;
 
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
+                                   contentType:(nullable NSString *)contentType
+                                    contentMd5:(nullable NSString *)contentMd5
+                                   withHeaders:(nullable NSDictionary *)headers;
+
 /**
  If the object's ACL is public read or public read-write, use this API to generate a signed url for sharing.
  @bucketName Object's bucket name

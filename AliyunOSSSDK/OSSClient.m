@@ -1896,15 +1896,51 @@ static NSObject *lock;
                                  withObjectKey:(NSString *)objectKey
                                     httpMethod:(NSString *)method
                         withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters {
+    return [self presignConstrainURLWithBucketName:bucketName
+                                     withObjectKey:objectKey
+                                        httpMethod:method
+                            withExpirationInterval:interval
+                                    withParameters:parameters
+                                       contentType:nil
+                                        contentMd5:nil
+                                       withHeaders:@{}];
+}
+
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters
+                                   contentType:(NSString *)contentType
+                                    contentMd5:(NSString *)contentMd5
+                                   withHeaders:(NSDictionary *)headers
 {
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
-        
+        NSString * xossHeader = @"";
+        NSString * patchContentType = contentType == nil ? @"" : contentType;
+        NSString * patchContentMd5 = contentMd5 == nil ? @"" : contentMd5;
+
         NSMutableDictionary * params = [NSMutableDictionary dictionary];
         if (parameters.count > 0) {
             [params addEntriesFromDictionary:parameters];
+        }
+        
+        if (headers) {
+            NSMutableArray * params = [[NSMutableArray alloc] init];
+            NSArray * sortedKey = [[headers allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [obj1 compare:obj2];
+            }];
+            for (NSString * key in sortedKey) {
+                if ([key hasPrefix:@"x-oss-"]) {
+                    [params addObject:[NSString stringWithFormat:@"%@:%@", key, [headers objectForKey:key]]];
+                }
+            }
+            if ([params count]) {
+                xossHeader = [NSString stringWithFormat:@"%@\n", [params componentsJoinedByString:@"\n"]];
+            }
         }
         
         NSString * wholeSign = nil;
@@ -1925,15 +1961,15 @@ static NSObject *lock;
         {
             [params oss_setObject:token.tToken forKey:@"security-token"];
             resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
-            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@", method, expires, resource];
-            wholeSign = [OSSUtil sign:string2sign withToken:token];
+            NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, patchContentMd5, patchContentType, expires, xossHeader, resource];
+            wholeSign = [OSSUtil sign:stringToSign withToken:token];
         } else {
             NSString * subresource = [OSSUtil populateSubresourceStringFromParameter:params];
             if ([subresource length] > 0) {
                 resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
             }
-            NSString * string2sign = [NSString stringWithFormat:@"%@\n\n\n%@\n%@",  method, expires, resource];
-            wholeSign = [self.credentialProvider sign:string2sign error:&error];
+            NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, patchContentMd5, patchContentType, expires, xossHeader, resource];
+            wholeSign = [self.credentialProvider sign:stringToSign error:&error];
             if (error) {
                 return [OSSTask taskWithError:error];
             }
