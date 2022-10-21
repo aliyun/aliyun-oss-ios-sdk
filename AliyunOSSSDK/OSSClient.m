@@ -1281,6 +1281,7 @@ static NSObject *lock;
 {
     BOOL isTruncated = NO;
     int nextPartNumberMarker = 0;
+    NSUInteger bUploadedLength = 0;
     
     do {
         OSSListPartsRequest * listParts = [OSSListPartsRequest new];
@@ -1311,27 +1312,19 @@ static NSObject *lock;
             nextPartNumberMarker = res.nextPartNumberMarker;
             OSSLogVerbose(@"resumableUpload listpart ok");
             if (res.parts.count > 0) {
-                [uploadedParts addObjectsFromArray:res.parts];
+                for (NSDictionary *part in res.parts) {
+                    unsigned long long iPartSize = 0;
+                    NSString *partSizeString = [part objectForKey:OSSSizeXMLTOKEN];
+                    NSScanner *scanner = [NSScanner scannerWithString:partSizeString];
+                    [scanner scanUnsignedLongLong:&iPartSize];
+                    if (partSize == iPartSize) {
+                        [uploadedParts addObject:part];
+                        bUploadedLength += iPartSize;
+                    }
+                }
             }
         }
     } while (isTruncated);
-    
-    __block NSUInteger firstPartSize = 0;
-    __block NSUInteger bUploadedLength = 0;
-    [uploadedParts enumerateObjectsUsingBlock:^(NSDictionary *part, NSUInteger idx, BOOL * _Nonnull stop) {
-        unsigned long long iPartSize = 0;
-        NSString *partSizeString = [part objectForKey:OSSSizeXMLTOKEN];
-        NSScanner *scanner = [NSScanner scannerWithString:partSizeString];
-        [scanner scanUnsignedLongLong:&iPartSize];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshorten-64-to-32"
-        bUploadedLength += iPartSize;
-        if (idx == 0)
-        {
-            firstPartSize = iPartSize;
-        }
-#pragma clang diagnostic pop
-    }];
     *uploadedLength = bUploadedLength;
     
     if (totalSize < bUploadedLength)
@@ -1339,13 +1332,6 @@ static NSObject *lock;
         NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
                                              code:OSSClientErrorCodeCannotResumeUpload
                                          userInfo:@{OSSErrorMessageTOKEN: @"The uploading file is inconsistent with before"}];
-        return [OSSTask taskWithError: error];
-    }
-    else if (firstPartSize != 0 && firstPartSize != partSize && totalSize != firstPartSize)
-    {
-        NSError *error = [NSError errorWithDomain:OSSClientErrorDomain
-                                             code:OSSClientErrorCodeCannotResumeUpload
-                                         userInfo:@{OSSErrorMessageTOKEN: @"The part size setting is inconsistent with before"}];
         return [OSSTask taskWithError: error];
     }
     return nil;
