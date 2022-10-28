@@ -15,6 +15,12 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2022/10/28
+- release 2.10.16
+1.add api of tagging
+2.The presignURL interface adds content type, content-md5, and header parameters
+3.Fix the error when ResumableUpload checks the partSize
+
 2022/7/06
 - release 2.10.15
 1.Modify the method that is discarded when obtaining fragment data
