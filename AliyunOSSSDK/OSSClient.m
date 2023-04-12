@@ -297,7 +297,7 @@ static NSObject *lock;
     return attributes.fileSize;
 }
 
-- (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential
+- (NSString *)readUploadIdForRequest:(OSSResumableUploadRequest *)request recordFilePath:(NSString **)recordFilePath sequential:(BOOL)sequential error:(NSError **)error
 {
     NSString *uploadId = nil;
     NSString *record = [NSString stringWithFormat:@"%@%@%@%lu", request.md5String, request.bucketName, request.objectKey, (unsigned long)request.partSize];
@@ -309,7 +309,7 @@ static NSObject *lock;
     }
     
     NSData *data = [record dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *recordFileName = [OSSUtil dataMD5String:data];
+    NSString *recordFileName = [OSSUtil dataMD5String:data error:error];
     *recordFilePath = [request.recordDirectoryPath stringByAppendingPathComponent: recordFileName];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath: *recordFilePath]) {
@@ -1147,7 +1147,11 @@ static NSObject *lock;
         }
         
         NSData *data = [nameInfoString dataUsingEncoding:NSUTF8StringEncoding];
-        NSString *recordFileName = [OSSUtil dataMD5String:data];
+        NSError *error = nil;
+        NSString *recordFileName = [OSSUtil dataMD5String:data error:&error];
+        if (error) {
+            return [OSSTask taskWithError:error];
+        }
         NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@",resumableRequest.recordDirectoryPath,recordFileName];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *partInfosFilePath = [[[NSString oss_documentDirectory] stringByAppendingPathComponent:kClientRecordNameWithCommonPrefix] stringByAppendingPathComponent:resumableRequest.uploadId];
@@ -1620,10 +1624,18 @@ static NSObject *lock;
         if (resumable) {
             OSSResumableUploadRequest *resumableRequest = (OSSResumableUploadRequest *)request;
             NSString *recordDirectoryPath = resumableRequest.recordDirectoryPath;
-            request.md5String = [OSSUtil fileMD5String:request.uploadingFileURL.path];
+            error = nil;
+            request.md5String = [OSSUtil fileMD5String:request.uploadingFileURL.path error:&error];
+            if (error) {
+                return [OSSTask taskWithError:error];
+            }
             if ([recordDirectoryPath oss_isNotEmpty])
             {
-                uploadId = [self readUploadIdForRequest:resumableRequest recordFilePath:&recordFilePath sequential:sequential];
+                error = nil;
+                uploadId = [self readUploadIdForRequest:resumableRequest recordFilePath:&recordFilePath sequential:sequential error:&error];
+                if (error) {
+                    return [OSSTask taskWithError:error];
+                }
                 OSSLogVerbose(@"local uploadId: %@,recordFilePath: %@",uploadId, recordFilePath);
             }
             

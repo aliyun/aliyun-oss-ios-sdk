@@ -13,6 +13,7 @@
 #import "OSSModel.h"
 #import "OSSLog.h"
 #import "OSSHttpdns.h"
+#import "OSSDefine.h"
 #import "OSSIPv6Adapter.h"
 #import "OSSReachability.h"
 #import <CoreTelephony/CTCarrier.h>
@@ -264,6 +265,39 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
 }
 
++ (NSData *)fileMD5:(NSString*)path error:(NSError **)error {
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
+    if(handle == nil) {
+        return nil;
+    }
+    CC_MD5_CTX md5;
+    CC_MD5_Init(&md5);
+    BOOL done = NO;
+    while(!done) {
+        @autoreleasepool{
+            NSData *fileData;
+            if (@available(iOS 13.0, *)) {
+                fileData = [handle readDataUpToLength:CHUNK_SIZE error:error];
+            } else {
+                @try {
+                    fileData = [handle readDataOfLength: CHUNK_SIZE];
+                } @catch(NSException *exception) {
+                    *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                                 code:OSSClientErrorCodeFileCantRead
+                                             userInfo:@{OSSErrorMessageTOKEN: [exception description]}];
+                }
+            }
+            CC_MD5_Update(&md5, [fileData bytes], (CC_LONG)[fileData length]);
+            if([fileData length] == 0) {
+                done = YES;
+            }
+        }
+    }
+    unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
+    CC_MD5_Final(digestResult, &md5);
+    return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
+}
+
 + (NSString *)convertMd5Bytes2String:(unsigned char *)md5Bytes {
     return [NSString stringWithFormat:
             @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
@@ -272,6 +306,42 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             md5Bytes[8], md5Bytes[9], md5Bytes[10], md5Bytes[11],
             md5Bytes[12], md5Bytes[13], md5Bytes[14], md5Bytes[15]
             ];
+}
+
++ (NSString *)convertMd5Bytes2StringWithData:(NSData *)data error:(NSError **)error {
+    if (!data || [data length] == 0) {
+        *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                     code:OSSClientErrorCodeInvalidArgument
+                                 userInfo:@{OSSErrorMessageTOKEN: @"data is null or data length is 0"}];
+        return nil;
+    }
+    NSMutableString *string = [[NSMutableString alloc] initWithCapacity:[data length]];
+    
+    [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
+        unsigned char *dataBytes = (unsigned char*)bytes;
+        for (NSInteger i = 0; i < byteRange.length; i++) {
+            NSString *hexStr = [NSString stringWithFormat:@"%02X", dataBytes[i]];
+            [string appendString:hexStr];
+        }
+    }];
+    
+    return string;
+}
+
++ (NSString *)dataMD5String:(NSData *)data error:(NSError **)error {
+    return [self convertMd5Bytes2StringWithData:data error:error];
+}
+
++ (NSString *)fileMD5String:(NSString *)path error:(NSError **)error {
+    BOOL isDirectory = NO;
+    BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+    if (isDirectory || !isExist) {
+        OSSLogWarn(@"a file doesn't exists at a specified path(%@)", path);
+        return nil;
+    }
+
+    NSData *data = [self fileMD5:path error:error];
+    return [self convertMd5Bytes2StringWithData:data error:error];
 }
 
 + (NSString *)dataMD5String:(NSData *)data {
