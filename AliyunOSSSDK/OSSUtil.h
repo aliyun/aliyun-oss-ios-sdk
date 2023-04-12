@@ -37,6 +37,8 @@
 + (NSString *)base64Md5ForFilePath:(NSString *)filePath;
 + (NSString *)base64Md5ForFileURL:(NSURL *)fileURL;
 + (NSString *)base64ForData:(uint8_t *)input length:(int32_t)length;
++ (NSString *)dataMD5String:(NSData *)data error:(NSError **)error;
++ (NSString *)fileMD5String:(NSString *)path error:(NSError **)error;
 
 + (NSString *)populateSubresourceStringFromParameter:(NSDictionary *)parameters;
 + (NSString *)populateQueryStringFromParameter:(NSDictionary *)parameters;
