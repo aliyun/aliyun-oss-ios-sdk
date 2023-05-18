@@ -6,7 +6,7 @@
 //  Copyright © 2021 aliyun. All rights reserved.
 //
 
-#import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import "OSSRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
