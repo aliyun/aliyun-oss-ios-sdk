@@ -75,11 +75,6 @@
 }
 
 - (OSSTask *)sendRequest:(OSSNetworkingRequestDelegate *)request {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        OSSLogVerbose(@"NetWorkConnectedMsg : %@",[OSSUtil buildNetWorkConnectedMsg]);
-        NSString *operator = [OSSUtil buildOperatorMsg];
-        if(operator) OSSLogVerbose(@"Operator : %@",[OSSUtil buildOperatorMsg]);
-    });
     OSSLogVerbose(@"send request --------");
     if (self.configuration.proxyHost && self.configuration.proxyPort) {
         request.isAccessViaProxy = YES;
