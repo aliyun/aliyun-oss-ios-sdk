@@ -1082,44 +1082,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     return YES;
 }
 
-+ (NSString*)buildNetWorkConnectedMsg{
-    NSString *tempMessage = @"[network_state]: disconnected";
-    OSSReachability *reach=[OSSReachability reachabilityWithHostName:@"www.apple.com"];
-    if(reach){
-        switch([reach currentReachabilityStatus]){
-            case OSSReachableViaWWAN:
-                tempMessage = @"[network_state]: connected";
-                break;
-            case OSSReachableViaWiFi:
-                tempMessage = @"[network_state]: connected";
-                break;
-            default:
-                tempMessage = @"[network_state]: disconnected";
-                break;
-                
-        }
-    }
-    return tempMessage;
-}
-+ (NSString*)buildOperatorMsg{
-    NSString *currentCountry;
-#if TARGET_OS_IOS
-    CTTelephonyNetworkInfo *telephonyInfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [telephonyInfo subscriberCellularProvider];
-    if(carrier){
-        currentCountry = [carrier carrierName];
-        if(currentCountry){
-            currentCountry = [@"[operator]: " stringByAppendingString:currentCountry];
-        }
-    }
-#endif
-    if (!currentCountry) {
-        currentCountry = @"Unknown";
-    }
-    
-    return currentCountry;
-}
-
 + (uint64_t)crc64ecma:(uint64_t)crc1 buffer:(void *)buffer length:(size_t)len
 {
     return aos_crc64(crc1, buffer, len);
