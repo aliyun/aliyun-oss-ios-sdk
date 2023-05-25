@@ -115,12 +115,12 @@ id<OSSCredentialProvider> credential, authCredential;
 - (id<OSSCredentialProvider>)newStsTokenCredentialProvider {
     
     // Assuming the following is the returned data from app servers
-    // {"accessKeyId":"STS.iA645eTOXEqP3cg3VeHf",
-    // "accessKeySecret":"rV3VQrpFQ4BsyHSAvi5NVLpPIVffDJv4LojUBZCf",
+    // {"accessKeyId":"STS.iA64*****",
+    // "accessKeySecret":"rV3VQ******",
     // "expiration":"2015-11-03T09:52:59Z[;",
-    // "federatedUser":"335450541522398178:alice-001",
-    // "requestId":"C0E01B94-332E-4582-87F9-B857C807EE52",
-    // "securityToken":"CAES7QIIARKAAZPlqaN9ILiQZPS+JDkS/GSZN45RLx4YS/p3OgaUC+oJl3XSlbJ7StKpQp1Q3KtZVCeAKAYY6HYSFOa6rU0bltFXAPyW+jvlijGKLezJs0AcIvP5a4ki6yHWovkbPYNnFSOhOmCGMmXKIkhrRSHMGYJRj8AIUvICAbDhzryeNHvUGhhTVFMuaUE2NDVlVE9YRXFQM2NnM1ZlSGYiEjMzNTQ1MDU0MTUyMjM5ODE3OCoJYWxpY2UtMDAxMOG/g7v6KToGUnNhTUQ1QloKATEaVQoFQWxsb3cSHwoMQWN0aW9uRXF1YWxzEgZBY3Rpb24aBwoFb3NzOioSKwoOUmVzb3VyY2VFcXVhbHMSCFJlc291cmNlGg8KDWFjczpvc3M6KjoqOipKEDEwNzI2MDc4NDc4NjM4ODhSAFoPQXNzdW1lZFJvbGVVc2VyYABqEjMzNTQ1MDU0MTUyMjM5ODE3OHIHeHljLTAwMQ=="}
+    // "federatedUser":"335*****:alice-001",
+    // "requestId":"C0E01B94-*****",
+    // "securityToken":"CAES7QIIARKAA*****=="}
     
     NSURL * url = [NSURL URLWithString:OSS_STSTOKEN_URL];
     NSURLRequest * request = [NSURLRequest requestWithURL:url];
