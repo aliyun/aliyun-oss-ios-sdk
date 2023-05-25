@@ -319,6 +319,8 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
         })
     }
     
+    var client: OSSClient?
+    
     func putObject(image: UIImage) -> Void {
         let request = OSSPutObjectRequest()
         request.uploadingData = UIImagePNGRepresentation(image)!
@@ -328,10 +330,47 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
             print("bytesSent:\(bytesSent),totalBytesSent:\(totalBytesSent),totalBytesExpectedToSend:\(totalBytesExpectedToSend)");
         };
         
-        let provider = OSSAuthCredentialProvider(authServerUrl: OSS_STSTOKEN_URL)
-        let client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
-        let task = client.putObject(request)
-        task.continue({ (t) -> Any? in
+        if client == nil {
+            var first = 0
+            let provider = OSSFederationTokenCredentialProvider {
+                let tcs = TaskCompletionSource()
+                DispatchQueue(label: "test").async {
+                    if first == 1 {
+                        tcs.trySetError(NSError(domain: "", code: 1))
+                    } else if first > 1 {
+                        Thread.sleep(forTimeInterval: 10)
+                    }
+                    first += 1
+                    let token = OSSFederationToken()
+                    token.tAccessKey = "tAccessKey"
+                    token.tSecretKey = "tSecretKey"
+                    token.tToken = "tToken"
+                    token.expirationTimeInGMTFormat = "2023-05-24T02:05:08Z"
+                    print("\(NSDate.oss_clockSkewFixed())")
+                    // or tcs.trySetError(<#T##error: Error##Error#>)
+                    tcs.trySetResult(token)
+                }
+                tcs.wait(timeout: 5)
+                if let error = tcs.task.error {
+                    let nsError = error as NSError
+                    if nsError.code == OSSClientErrorCODE.codeNotKnown.rawValue,
+                       let errorMessage = nsError.userInfo[OSSErrorMessageTOKEN] as? String,
+                       errorMessage == "TaskCompletionSource wait timeout." {
+                        // 超时错误
+                    }
+                    throw error
+                } else if let result = tcs.task.result as? OSSFederationToken {
+                    return result
+                }
+                throw NSError(domain: OSSClientErrorDomain,
+                              code: OSSClientErrorCODE.codeSignFailed.rawValue,
+                              userInfo: [OSSErrorMessageTOKEN : "Can not get FederationToken."])
+            }
+            
+            self.client = OSSClient(endpoint: OSS_ENDPOINT, credentialProvider: provider)
+        }
+        let task = self.client?.putObject(request)
+        task?.continue({ (t) -> Any? in
             self.showResult(task: t)
         }).waitUntilFinished()
     }
@@ -485,3 +524,80 @@ class OSSRootViewController: UIViewController, URLSessionDelegate, URLSessionDat
     }
 }
 
+public class OSSFederationTokenCredentialProvider: OSSFederationCredentialProvider {
+    private static let aboutToExpiratedTime: TimeInterval = 5 * 60
+    private static let expiratedTime: TimeInterval = 30
+    
+    var token: OSSFederationToken?
+    private var tokenGetter: () throws -> OSSFederationToken
+    
+    public init(tokenGetter: @escaping () throws -> OSSFederationToken) {
+        self.tokenGetter = tokenGetter
+        super.init()
+    }
+    
+    public override func getToken() throws -> OSSFederationToken {
+        objc_sync_enter(self)
+        do {
+            defer {
+                objc_sync_exit(self)
+            }
+            if var token = self.token {
+                if let expirationTimeInGMTFormat = token.expirationTimeInGMTFormat {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.timeZone = TimeZone(identifier: "GMT")
+                    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                    if let data = dateFormatter.date(from: expirationTimeInGMTFormat) {
+                        token.expirationTimeInMilliSecond = Int64(data.timeIntervalSince1970 * 1000)
+                    }
+                }
+                let expirationDate = Date(timeIntervalSince1970: TimeInterval(token.expirationTimeInMilliSecond / 1000))
+                var interval = expirationDate.timeIntervalSince(NSDate.oss_clockSkewFixed())
+                
+                // Token is about to expire. When the validity period is less than `aboutToExpiratedTime`, request a new token
+                if interval < OSSFederationTokenCredentialProvider.aboutToExpiratedTime {
+                    do {
+                        token = try self.tokenGetter()
+                        self.token = token
+                    } catch {
+                        interval = expirationDate.timeIntervalSince(NSDate.oss_clockSkewFixed())
+                        // When the request for a token fails, if the validity period is greater than `expiratedTime`, it will continue to be used; Otherwise, the error will be thrown
+                        if interval < OSSFederationTokenCredentialProvider.expiratedTime {
+                            throw error
+                        }
+                    }
+                }
+                return token
+            } else {
+                let token = try self.tokenGetter()
+                self.token = token
+                return token
+            }
+        } catch {
+            throw NSError(domain: OSSClientErrorDomain,
+                          code: OSSClientErrorCODE.codeSignFailed.rawValue,
+                          userInfo: [OSSErrorMessageTOKEN : error])
+        }
+    }
+}
+
+public class TaskCompletionSource: OSSTaskCompletionSource<AnyObject> {
+    
+    public func wait(timeout: TimeInterval) {
+        let timer = DispatchSource.makeTimerSource()
+        timer.schedule(deadline: .now() + timeout)
+        timer.setEventHandler {
+            if !self.task.isCompleted {
+                let error = NSError(domain: OSSClientErrorDomain,
+                                    code: OSSClientErrorCODE.codeNotKnown.rawValue,
+                                    userInfo: [OSSErrorMessageTOKEN : "TaskCompletionSource wait timeout."])
+                self.trySetError(error)
+            }
+            timer.cancel()
+        }
+        timer.resume()
+        task.waitUntilFinished()
+        timer.cancel()
+    }
+}
