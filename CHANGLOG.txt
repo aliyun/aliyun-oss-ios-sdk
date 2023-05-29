@@ -15,6 +15,12 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2023/5/29
+- release 2.10.17
+1.Fixed issues with circular references in some compilers
+2.Delete behavior of get connected status and carrier name
+3.Fix exception of method fileMD5
+
 2022/10/28
 - release 2.10.16
 1.add api of tagging
