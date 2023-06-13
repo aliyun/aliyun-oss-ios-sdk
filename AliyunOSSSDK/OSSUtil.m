@@ -329,6 +329,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (NSString *)dataMD5String:(NSData *)data error:(NSError **)error {
+    data = [self fileMD5:path error:error];
     return [self convertMd5Bytes2StringWithData:data error:error];
 }
 

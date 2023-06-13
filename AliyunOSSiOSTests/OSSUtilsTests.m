@@ -143,6 +143,48 @@
     return temComs.string;
 }
  
+- (void)test_methodDataMD5String {
+    NSData *data = [@"objectKey" dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *md5 = @"01C5B2F19CD97A7F8EF0E89E018356C4";
+    
+    NSError *error;
+    NSString *figureMd5 = [OSSUtil dataMD5String:data error:&error];
+    XCTAssertNil(error);
+    XCTAssertTrue([md5 isEqualToString:figureMd5]);
+    
+    NSString *oldMethodfigureMd5 = [OSSUtil dataMD5String:data];
+    XCTAssertTrue([oldMethodfigureMd5 isEqualToString:figureMd5]);
+    
+    
+    data = [@"document/document/document/document/document/document/document/document/document/document/document/objectKey" dataUsingEncoding:NSUTF8StringEncoding];
+    md5 = @"666CCA65279EB5E95D2AC797E1A63701";
+    
+    error = nil;
+    figureMd5 = [OSSUtil dataMD5String:data error:&error];
+    XCTAssertNil(error);
+    XCTAssertTrue([md5 isEqualToString:figureMd5]);
+    
+    oldMethodfigureMd5 = [OSSUtil dataMD5String:data];
+    XCTAssertTrue([oldMethodfigureMd5 isEqualToString:figureMd5]);
+    
+    
+    error = nil;
+    [OSSUtil dataMD5String:nil error:&error];
+    XCTAssertNotNil(error);
+}
+
+- (void)test_methodFileMD5String {
+    NSString *file = [[NSBundle mainBundle] pathForResource:@"hasky" ofType:@"jpeg"];
+    NSString *md5 = @"E1CB762FDDAF4F93FB5B2487B03C6FEA";
+    
+    NSError *error = nil;
+    NSString *figureMd5 = [OSSUtil fileMD5String:file error:&error];
+    XCTAssertNil(error);
+    XCTAssertTrue([md5 isEqualToString:figureMd5]);
+    
+    NSString *oldMethodfigureMd5 = [OSSUtil fileMD5String:file];
+    XCTAssertTrue([oldMethodfigureMd5 isEqualToString:figureMd5]);
+}
 
 
 @end
