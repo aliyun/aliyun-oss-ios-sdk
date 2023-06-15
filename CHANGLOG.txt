@@ -16,6 +16,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 Update Logs:
 
 2023/5/29
+- release 2.10.18
+1.Perform MD5 conversion on breakpoint continuation file names
+
+2023/5/29
 - release 2.10.17
 1.Fixed issues with circular references in some compilers
 2.Delete behavior of get connected status and carrier name
