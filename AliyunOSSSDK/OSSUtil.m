@@ -1216,9 +1216,6 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             if(fileData.length == 0) {
                 break;
             }
-            // Malloc a buffer to hold hash.
-            digest = malloc(CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char));
-            memset(digest, 0x0, CC_SHA1_DIGEST_LENGTH);
 
             CC_SHA1_Update(&sha1, fileData.bytes, (CC_LONG)[fileData length]);
         }
