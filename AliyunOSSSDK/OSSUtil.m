@@ -260,6 +260,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             }
         }
     }
+    [handle closeFile];
     unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
     CC_MD5_Final(digestResult, &md5);
     return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
@@ -1220,6 +1221,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             CC_SHA1_Update(&sha1, fileData.bytes, (CC_LONG)[fileData length]);
         }
     }
+    [handle closeFile];
     
     // Malloc a buffer to hold hash.
     digest = malloc(CC_SHA1_DIGEST_LENGTH * sizeof(unsigned char));
