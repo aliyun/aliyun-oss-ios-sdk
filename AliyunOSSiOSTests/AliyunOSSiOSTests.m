@@ -1336,6 +1336,9 @@ id<OSSCredentialProvider> credential, authCredential;
     XCTAssertFalse([OSSUtil validateBucketName:@"abc-abc-"]);
     
     XCTAssertFalse([OSSUtil validateObjectKey:@"/abc"]);
+    XCTAssertFalse([OSSUtil validateObjectKey:@"?abc" strict:YES]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"abc" strict:YES]);
+    XCTAssertTrue([OSSUtil validateObjectKey:@"?abc" strict:NO]);
     XCTAssertFalse([OSSUtil validateObjectKey:@"\\abc"]);
     XCTAssertFalse([OSSUtil validateObjectKey:@"\\中文"]);
     XCTAssertTrue([OSSUtil validateObjectKey:@"abc"]);
