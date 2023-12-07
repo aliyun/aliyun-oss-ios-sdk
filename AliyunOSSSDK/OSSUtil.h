@@ -26,6 +26,7 @@
 + (NSData *)constructHttpBodyForCreateBucketWithLocation:(NSString *)location __attribute__((deprecated("deprecated!")));
 + (BOOL)validateBucketName:(NSString *)bucketName;
 + (BOOL)validateObjectKey:(NSString *)objectKey;
++ (BOOL)validateObjectKey:(NSString *)objectKey strict:(BOOL)strict;
 + (BOOL)isOssOriginBucketHost:(NSString *)host;
 + (NSString *)getIpByHost:(NSString *)host;
 + (BOOL)isNetworkDelegateState;
