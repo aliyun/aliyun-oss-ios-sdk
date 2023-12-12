@@ -1988,6 +1988,12 @@ static NSObject *lock;
                                    withHeaders:(NSDictionary *)headers
 {
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
+        if (objectKey && ![OSSUtil validateObjectKey:objectKey strict:self.clientConfiguration.isVerifyObjectStrictEnable]) {
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                              code:OSSClientErrorCodeInvalidArgument
+                                                          userInfo:@{OSSErrorMessageTOKEN: @"Object key invalid"}]];
+        }
+        
         NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
         NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
         NSString * xossHeader = @"";
@@ -2114,6 +2120,12 @@ static NSObject *lock;
                              withParameters:(NSDictionary *)parameters {
     
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
+        if (objectKey && ![OSSUtil validateObjectKey:objectKey strict:self.clientConfiguration.isVerifyObjectStrictEnable]) {
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                              code:OSSClientErrorCodeInvalidArgument
+                                                          userInfo:@{OSSErrorMessageTOKEN: @"Object key invalid"}]];
+        }
+        
         BOOL isPathStyle = false;
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
         NSString * host = endpointURL.host;

@@ -204,6 +204,9 @@ Sets the session Id for background file transmission
  */
 @property (nonatomic, assign) BOOL isPathStyleAccessEnable;
 
+/// Sets the flag of verifying object name strictly.
+@property (nonatomic, assign) BOOL isVerifyObjectStrictEnable;
+
 /**
  Sets  the flag of using custom path prefix to access the endpoint. By default it's false.
  */

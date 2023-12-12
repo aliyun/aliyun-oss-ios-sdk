@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2023/12/7
+- release 2.10.19
+1.support to verify object name strictly.
+
 2023/5/29
 - release 2.10.18
 1.Perform MD5 conversion on breakpoint continuation file names

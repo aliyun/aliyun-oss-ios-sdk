@@ -149,4 +149,139 @@
     }] waitUntilFinished];
 }
 
+- (void)testAPI_verifyStrict
+{
+    NSURL * fileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    NSString *objectKey = @"?测\r试-中.~,+\"'*&￥#@%！（文）+字符|？/.zip";
+    NSString *bucketName = [NSString stringWithFormat:@"verifystrict-%ld", @([[NSDate date] timeIntervalSince1970]).integerValue];
+    
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                               credentialProvider:authProv
+                              clientConfiguration:config];
+    XCTAssertTrue(config.isVerifyObjectStrictEnable);
+    
+    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
+    createBucket.bucketName = bucketName;
+    [[client createBucket:createBucket] waitUntilFinished];
+    
+    OSSPutObjectRequest * putRequest = [OSSPutObjectRequest new];
+    putRequest.bucketName = bucketName;
+    putRequest.objectKey = objectKey;
+    putRequest.uploadingFileURL = fileURL;
+    OSSTask *task = [client putObject:putRequest];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+
+    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+    request.bucketName = bucketName;
+    request.objectKey = objectKey;
+    task = [client getObject:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+
+    config = [OSSClientConfiguration new];
+    config.isVerifyObjectStrictEnable = NO;
+    client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                               credentialProvider:authProv
+                              clientConfiguration:config];
+    XCTAssertFalse(config.isVerifyObjectStrictEnable);
+    
+    putRequest = [OSSPutObjectRequest new];
+    putRequest.bucketName = bucketName;
+    putRequest.objectKey = objectKey;
+    putRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putRequest];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+
+    request = [OSSGetObjectRequest new];
+    request.bucketName = bucketName;
+    request.objectKey = objectKey;
+    task = [client getObject:request];
+    [task waitUntilFinished];
+    
+    XCTAssertNil(task.error);
+}
+
+- (void)testAPI_verifyStrictWithPresign {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *authProv = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                               credentialProvider:authProv
+                              clientConfiguration:config];
+    XCTAssertTrue(config.isVerifyObjectStrictEnable);
+    
+    NSString *bucketName = @"verifyStrictWithPresign";
+    NSTimeInterval expiration = 60;
+    NSString *objectKey = @"123";
+    OSSTask *task = [client presignConstrainURLWithBucketName:bucketName
+                                                withObjectKey:objectKey
+                                       withExpirationInterval:expiration];
+    XCTAssertNil(task.error);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNil(task.error);
+    
+    objectKey = @"?123";
+    task = [client presignConstrainURLWithBucketName:bucketName
+                                       withObjectKey:objectKey
+                              withExpirationInterval:expiration];
+    XCTAssertNotNil(task.error);
+    XCTAssertTrue([task.error.userInfo[@"ErrorMessage"] isEqualToString:@"Object key invalid"]);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNotNil(task.error);
+    XCTAssertTrue([task.error.userInfo[@"ErrorMessage"] isEqualToString:@"Object key invalid"]);
+    
+    objectKey = @"?";
+    task = [client presignConstrainURLWithBucketName:bucketName
+                                       withObjectKey:objectKey
+                              withExpirationInterval:expiration];
+    XCTAssertNotNil(task.error);
+    XCTAssertTrue([task.error.userInfo[@"ErrorMessage"] isEqualToString:@"Object key invalid"]);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNotNil(task.error);
+    XCTAssertTrue([task.error.userInfo[@"ErrorMessage"] isEqualToString:@"Object key invalid"]);
+    
+    
+    config = [OSSClientConfiguration new];
+    config.isVerifyObjectStrictEnable = false;
+    client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                               credentialProvider:authProv
+                              clientConfiguration:config];
+    XCTAssertFalse(config.isVerifyObjectStrictEnable);
+    objectKey = @"123";
+    task = [client presignConstrainURLWithBucketName:bucketName
+                                                withObjectKey:objectKey
+                                       withExpirationInterval:expiration];
+    XCTAssertNil(task.error);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNil(task.error);
+    
+    objectKey = @"?123";
+    task = [client presignConstrainURLWithBucketName:bucketName
+                                       withObjectKey:objectKey
+                              withExpirationInterval:expiration];
+    XCTAssertNil(task.error);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNil(task.error);
+    
+    objectKey = @"?";
+    task = [client presignConstrainURLWithBucketName:bucketName
+                                       withObjectKey:objectKey
+                              withExpirationInterval:expiration];
+    XCTAssertNil(task.error);
+    task = [client presignPublicURLWithBucketName:bucketName
+                                    withObjectKey:objectKey];
+    XCTAssertNil(task.error);    
+}
+
 @end

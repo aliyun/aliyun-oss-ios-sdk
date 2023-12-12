@@ -156,6 +156,10 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 }
 
 + (BOOL)validateObjectKey:(NSString *)objectKey {
+    return [self validateObjectKey:objectKey strict:false];
+}
+
++ (BOOL)validateObjectKey:(NSString *)objectKey strict:(BOOL)strict {
     if (objectKey == nil) {
         return false;
     }
@@ -170,6 +174,9 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
     unichar firstChar = [objectKey characterAtIndex:0];
     if (firstChar == '/' || firstChar == '\\') {
+        return false;
+    }
+    if (strict && firstChar == '?') {
         return false;
     }
 
