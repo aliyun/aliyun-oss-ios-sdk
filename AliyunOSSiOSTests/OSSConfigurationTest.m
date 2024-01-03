@@ -8,7 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import <AliyunOSSiOS/OSSServiceSignature.h>
+#import <AliyunOSSiOS/NSData+OSS.h>
 #import "OSSTestMacros.h"
+#import "OSSTestUtils.h"
 
 @interface OSSConfigurationTest : XCTestCase {
     NSString *host;
@@ -282,6 +285,259 @@
     task = [client presignPublicURLWithBucketName:bucketName
                                     withObjectKey:objectKey];
     XCTAssertNil(task.error);    
+}
+
+- (void)testAPI_signerV1 {
+    NSString *bucketName = [@"test-signerv1-" stringByAppendingFormat:@"%@", @((NSInteger)[NSDate new].timeIntervalSince1970)];
+    NSString *objectKey = @"signerV1";
+    NSURL * fileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.signVersion = OSSSignVersionV1;
+    
+    // OSSPlainTextAKSKPairCredentialProvider
+    id<OSSCredentialProvider> credentialProvider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID
+                                                                                                                    secretKey:OSS_SECRETKEY_ID];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:endpoint
+                                         credentialProvider:credentialProvider
+                                        clientConfiguration:config];
+    
+    OSSCreateBucketRequest *createBucketRequest = [OSSCreateBucketRequest new];
+    createBucketRequest.bucketName = bucketName;
+    OSSTask *task = [client createBucket:createBucketRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    OSSPutObjectRequest *putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    OSSGetObjectRequest *get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    // OSSStsTokenCredentialProvider
+    OSSFederationToken *federationToken = [OSSTestUtils getOssFederationToken];
+    credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:federationToken.tAccessKey
+                                                                        secretKeyId:federationToken.tSecretKey
+                                                                      securityToken:federationToken.tToken];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    
+    // OSSFederationCredentialProvider
+    credentialProvider = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * _Nullable{
+        return [OSSTestUtils getOssFederationToken];
+    }];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    
+    // OSSCustomSignerCredentialProvider
+    credentialProvider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString * _Nullable(NSString * _Nonnull contentToSign, NSError *__autoreleasing  _Nullable * _Nullable error) {
+        NSString *signature = [OSSUtil calBase64Sha1WithData:contentToSign withSecret:OSS_SECRETKEY_ID];
+        XCTAssertNotNil(signature);
+        return [NSString stringWithFormat:@"OSS %@:%@", OSS_ACCESSKEY_ID, signature];
+    }];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    [OSSTestUtils cleanBucket:bucketName with:client];
+}
+
+- (void)testAPI_signerV4 {
+    NSString *bucketName = [@"test-signerv4-" stringByAppendingFormat:@"%@", @((NSInteger)[NSDate new].timeIntervalSince1970)];
+    NSString *objectKey = @"signerV4";
+    NSURL * fileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    NSString *endpoint = OSS_ENDPOINT;
+
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    config.signVersion = OSSSignVersionV4;
+    
+    // OSSPlainTextAKSKPairCredentialProvider
+    id<OSSCredentialProvider> credentialProvider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID
+                                                                                                                    secretKey:OSS_SECRETKEY_ID];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:endpoint
+                                         credentialProvider:credentialProvider
+                                        clientConfiguration:config];
+    client.region = OSS_REGION;
+    
+    OSSCreateBucketRequest *createBucketRequest = [OSSCreateBucketRequest new];
+    createBucketRequest.bucketName = bucketName;
+    OSSTask *task = [client createBucket:createBucketRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    OSSPutObjectRequest *putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    OSSGetObjectRequest *get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    // OSSStsTokenCredentialProvider
+    OSSFederationToken *federationToken = [OSSTestUtils getOssFederationToken];
+    credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:federationToken.tAccessKey
+                                                                        secretKeyId:federationToken.tSecretKey
+                                                                      securityToken:federationToken.tToken];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    client.region = OSS_REGION;
+    
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    
+    // OSSFederationCredentialProvider
+    credentialProvider = [[OSSFederationCredentialProvider alloc] initWithFederationTokenGetter:^OSSFederationToken * _Nullable{
+        return [OSSTestUtils getOssFederationToken];
+    }];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    client.region = OSS_REGION;
+
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    
+    // OSSCustomSignerCredentialProvider
+    credentialProvider = [[OSSCustomSignerCredentialProvider alloc] initWithImplementedSigner:^NSString * _Nullable(NSString * _Nonnull contentToSign, NSError *__autoreleasing  _Nullable * _Nullable error) {
+        NSData *jsonData = [contentToSign dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *content = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:error];
+        NSString *date = content[OSSContentDate];
+        NSString *region = content[OSSContentRegion];
+        NSString *product = content[OSSContentProduct];
+        NSString *stringToSign = content[OSSContentStringToSign];
+        id<OSSServiceSignature> serviceSignature = [HmacSHA256Signature new];
+        NSData *signingSecret = [[@"aliyun_v4" stringByAppendingString:OSS_SECRETKEY_ID] dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *signingDate = [serviceSignature computeHash:signingSecret
+                                                       data:[date dataUsingEncoding:NSUTF8StringEncoding]];
+        NSData *signingRegion = [serviceSignature computeHash:signingDate
+                                                         data:[region dataUsingEncoding:NSUTF8StringEncoding]];
+        NSData *signingService = [serviceSignature computeHash:signingRegion
+                                                          data:[product dataUsingEncoding:NSUTF8StringEncoding]];
+        NSData *signingKey =[serviceSignature computeHash:signingService
+                                                     data:[@"aliyun_v4_request" dataUsingEncoding:NSUTF8StringEncoding]];
+        NSData *result = [serviceSignature computeHash:signingKey
+                                                  data:[stringToSign dataUsingEncoding:NSUTF8StringEncoding]];
+        NSString *signature = [result hexString];
+        NSString *credential = [NSString stringWithFormat:@"Credential=%@/%@/%@/%@/aliyun_v4_request", OSS_ACCESSKEY_ID, date, region, product];
+        NSString *signedHeaders = @"";
+        NSString *sign = [NSString stringWithFormat:@",Signature=%@", signature];
+        return [NSString stringWithFormat:@"OSS4-HMAC-SHA256 %@%@%@", credential, signedHeaders, sign];
+    }];
+    client = [[OSSClient alloc] initWithEndpoint:endpoint
+                              credentialProvider:credentialProvider
+                             clientConfiguration:config];
+    client.region = OSS_REGION;
+
+    putObjectRequest = [OSSPutObjectRequest new];
+    putObjectRequest.bucketName = bucketName;
+    putObjectRequest.objectKey = objectKey;
+    putObjectRequest.uploadingFileURL = fileURL;
+    task = [client putObject:putObjectRequest];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+
+    get = [OSSGetObjectRequest new];
+    get.bucketName = bucketName;
+    get.objectKey = objectKey;
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error);
+    
+    [OSSTestUtils cleanBucket:bucketName with:client];
 }
 
 @end

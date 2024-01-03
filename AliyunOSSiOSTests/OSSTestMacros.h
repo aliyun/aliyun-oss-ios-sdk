@@ -16,6 +16,7 @@
 #define OSS_BUCKET_PRIVATE              @"private-bucket"                           // bucket名称
 #define OSS_ENDPOINT                    @"http://oss-cn-region.aliyuncs.com"      // 访问的阿里云endpoint
 #define OSS_IMG_ENDPOINT                @"http://img-cn-region.aliyuncs.com"      // 旧版本图片服务的endpoint
+#define OSS_REGION                      @"cn-hangzhou"      // 访问的阿里云endpoint
 #define OSS_MULTIPART_UPLOADKEY         @"multipart_key"                            // 分片上传的object key
 #define OSS_RESUMABLE_UPLOADKEY         @"resumable_key"                            // 断点续传的object key
 #define OSS_CALLBACK_URL                @"http://oss-demo.aliyuncs.com:23450"       // 对象上传成功时回调的业务服务器地址

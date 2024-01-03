@@ -8,6 +8,7 @@
 
 #import "OSSTestUtils.h"
 #import <XCTest/XCTest.h>
+#import "OSSTestMacros.h"
 
 @implementation OSSTestUtils
 + (void)cleanBucket: (NSString *)bucket with: (OSSClient *)client {
@@ -69,6 +70,45 @@
     
     OSSTask * task = [client putObject:request];
     [task waitUntilFinished];
+}
+
++ (OSSFederationToken *)getOssFederationToken {
+    NSURL * url = [NSURL URLWithString:OSS_STSTOKEN_URL];
+    NSURLRequest * request = [NSURLRequest requestWithURL:url];
+    OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request
+                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                    if (error) {
+                                                        [tcs setError:error];
+                                                        return;
+                                                    }
+                                                    [tcs setResult:data];
+                                                }];
+    [sessionTask resume];
+    [tcs.task waitUntilFinished];
+    if (tcs.task.error) {
+        return nil;
+    } else {
+        NSData* data = tcs.task.result;
+        NSDictionary * object = [NSJSONSerialization JSONObjectWithData:data
+                                                                options:kNilOptions
+                                                                  error:nil];
+        int statusCode = [[object objectForKey:@"StatusCode"] intValue];
+        if (statusCode == 200) {
+            OSSFederationToken * token = [OSSFederationToken new];
+            // All the entries below are mandatory.
+            token.tAccessKey = [object objectForKey:@"AccessKeyId"];
+            token.tSecretKey = [object objectForKey:@"AccessKeySecret"];
+            token.tToken = [object objectForKey:@"SecurityToken"];
+            token.expirationTimeInGMTFormat = [object objectForKey:@"Expiration"];
+            OSSLogDebug(@"token: %@ %@ %@ %@", token.tAccessKey, token.tSecretKey, token.tToken, [object objectForKey:@"Expiration"]);
+            return token;
+        }else{
+            return nil;
+        }
+        
+    }
 }
 
 @end
