@@ -14,6 +14,7 @@
 @class OSSFederationToken;
 @class OSSTask;
 @class OSSClientConfiguration;
+@class OSSSignerParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,6 +57,9 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
  Token's expiration time in GMT format string.
  */
 @property (atomic, strong, nullable) NSString *expirationTimeInGMTFormat;
+
+- (BOOL)useSecurityToken;
+
 @end
 
 /**
@@ -228,6 +232,8 @@ Sets the session Id for background file transmission
 /// Set whether to allow the redirection with a modified request
 @property (nonatomic, assign) BOOL isFollowRedirectsEnable;
 
+@property (nonatomic, assign) OSSSignVersion signVersion;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
@@ -239,6 +245,9 @@ Sets the session Id for background file transmission
  */
 @interface OSSSignerInterceptor : NSObject <OSSRequestInterceptor>
 @property (nonatomic, strong) id<OSSCredentialProvider> credentialProvider;
+@property (nonatomic, assign) OSSSignVersion version;
+@property (nonatomic, copy) NSString *region;
+@property (nonatomic, copy) NSString *cloudBoxId;
 
 - (instancetype)initWithCredentialProvider:(id<OSSCredentialProvider>)credentialProvider;
 @end

@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/OSSUtil.h>
 #import <AliyunOSSiOS/OSSIPv6Adapter.h>
+#import <AliyunOSSiOS/OSSServiceSignature.h>
+#import <AliyunOSSiOS/NSData+OSS.h>
 
 @interface OSSUtilsTests : XCTestCase
 
@@ -184,6 +186,14 @@
     
     NSString *oldMethodfigureMd5 = [OSSUtil fileMD5String:file];
     XCTAssertTrue([oldMethodfigureMd5 isEqualToString:figureMd5]);
+}
+
+- (void)test_methodCalculateSha256 {
+    NSData *se = [[HmacSHA256Signature new] computeHash:[@"signingKey" dataUsingEncoding:NSUTF8StringEncoding]
+                                                   data:[@"stringToSign" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *dataSha256 = [se calculateSha256];
+    
+    XCTAssertTrue([[dataSha256 hexString] isEqualToString:@"1e618d7a5cfcac0dcf62cf5f98c69297c43606ee4ee497ce4813f098a83968b3"]);
 }
 
 

@@ -73,12 +73,33 @@
 #define OSSHttpHeaderObjectACL                  @"x-oss-object-acl"
 #define OSSHttpHeaderCopySource                 @"x-oss-copy-source"
 #define OSSHttpHeaderSymlinkTarget              @"x-oss-symlink-target"
+#define OSSHttpHeaderDate                       @"Date"
+#define OSSHttpHeaderSecurityToken              @"x-oss-security-token"
+#define OSSHttpHeaderAuthorization              @"Authorization"
+#define OSSHttpHeaderHost                       @"Host"
+#define OSSHttpHeaderContentSha256              @"x-oss-content-sha256"
+
+#define OSSRequestParameterExpires              @"Expires"
+#define OSSRequestParameterAccessKeyId          @"OSSAccessKeyId"
+#define OSSRequestParameterSignature            @"Signature"
 
 #define OSSHttpQueryProcess                     @"x-oss-process"
+#define OSSPrefix                               @"x-oss-"
 
 #define OSSDefaultRetryCount                    3
 #define OSSDefaultMaxConcurrentNum              5
 #define OSSDefaultTimeoutForRequestInSecond     15
 #define OSSDefaultTimeoutForResourceInSecond    7 * 24 * 60 * 60
+
+#define OSSAuthorizationPrefix                  @"OSS "
+
+#define OSSProductDefault                       @"oss"
+#define OSSProductCloudBox                      @"oss-cloudbox"
+
+#define OSSContentStringToSign                     @"stringToSign"
+#define OSSContentDate                             @"date"
+#define OSSContentAlgorithm                        @"algorithm"
+#define OSSContentRegion                           @"region"
+#define OSSContentProduct                          @"product"
 
 #endif /* OSSDefine_h */
