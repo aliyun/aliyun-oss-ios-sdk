@@ -26,7 +26,7 @@
 
 static char *const OSSReachabilityQueueIdentifier = "com.alibaba.oss.network.ReachabilityQueue";
 static dispatch_queue_t reachabilityQueue;
-static NSString *const CHECK_HOSTNAME = @"www.taobao.com";
+static NSString *const CHECK_HOSTNAME = @"www.aliyun.com";
 
 @implementation OSSReachabilityManager {
     SCNetworkReachabilityRef            _reachabilityRef;
