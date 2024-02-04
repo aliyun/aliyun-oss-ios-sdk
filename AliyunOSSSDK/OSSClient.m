@@ -1850,9 +1850,10 @@ static NSObject *lock;
             realPartLength = uploadFileSize - request.partSize * (i - 1);
 #pragma clang diagnostic pop
         }
-        NSData *uploadPartData = [fileHande readDataOfLength:realPartLength];
         
         @autoreleasepool {
+            NSData *uploadPartData = [fileHande readDataOfLength:realPartLength];
+
             OSSUploadPartRequest * uploadPart = [OSSUploadPartRequest new];
             uploadPart.bucketName = request.bucketName;
             uploadPart.objectkey = request.objectKey;
