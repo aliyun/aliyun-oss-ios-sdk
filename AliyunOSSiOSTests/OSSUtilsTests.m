@@ -186,5 +186,12 @@
     XCTAssertTrue([oldMethodfigureMd5 isEqualToString:figureMd5]);
 }
 
+- (void)test_sha1WithFilePath {
+    NSString *file = [[NSBundle mainBundle] pathForResource:@"hasky" ofType:@"jpeg"];
+    NSString *sh1 = @"94692b2712cbaf4d75d44c1f4719776d66bea2b4";
+    
+    NSString *figureSHA1 = [OSSUtil sha1WithFilePath:file];
+    XCTAssertTrue([sh1 isEqualToString:figureSHA1]);
+}
 
 @end
