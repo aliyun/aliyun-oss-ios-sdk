@@ -260,6 +260,11 @@ int32_t const CHUNK_SIZE = 8 * 1024;
             }
         }
     }
+    if (@available(iOS 13.0, *)) {
+        [handle closeAndReturnError:nil];
+    } else {
+        [handle closeFile];
+    }
     unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
     CC_MD5_Final(digestResult, &md5);
     return [NSData dataWithBytes:(const void *)digestResult length:CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
@@ -292,6 +297,11 @@ int32_t const CHUNK_SIZE = 8 * 1024;
                 done = YES;
             }
         }
+    }
+    if (@available(iOS 13.0, *)) {
+        [handle closeAndReturnError:error];
+    } else {
+        [handle closeFile];
     }
     unsigned char digestResult[CC_MD5_DIGEST_LENGTH * sizeof(unsigned char)];
     CC_MD5_Final(digestResult, &md5);
@@ -1222,6 +1232,11 @@ int32_t const CHUNK_SIZE = 8 * 1024;
 
             CC_SHA1_Update(&sha1, fileData.bytes, (CC_LONG)[fileData length]);
         }
+    }
+    if (@available(iOS 13.0, *)) {
+        [handle closeAndReturnError:nil];
+    } else {
+        [handle closeFile];
     }
     
     // Malloc a buffer to hold hash.
