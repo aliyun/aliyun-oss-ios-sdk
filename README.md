@@ -28,7 +28,7 @@ $ cd aliyun-oss-ios-sdk
 # Run the packaging script
 $ sh ./buildiOSFramework.sh
 
-# Enter the generated packaging directory  where the AliyunOSSiOS.framework will be generated
+# Enter the generated packaging directory  where the AliyunOSSiOS.xcframework will be generated
 $ cd Products && ls
 ```
 

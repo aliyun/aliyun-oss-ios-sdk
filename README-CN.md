@@ -28,7 +28,7 @@ $ cd aliyun-oss-ios-sdk
 # 执行打包脚本
 $ sh ./buildiOSFramework.sh
 
-# 进入打包生成目录，AliyunOSSiOS.framework生成在该目录下
+# 进入打包生成目录，AliyunOSSiOS.xcframework生成在该目录下
 $ cd Products && ls
 ```
 
