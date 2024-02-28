@@ -32,6 +32,8 @@
 		54A2FDE1289B6879005410F8 /* OSSPutObjectTaggingResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDDE289B6879005410F8 /* OSSPutObjectTaggingResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDE2289B6879005410F8 /* OSSPutObjectTaggingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */; };
 		54A2FDE3289B6879005410F8 /* OSSPutObjectTaggingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */; };
+		54D119292B8ED629000B2923 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 54D119282B8ED629000B2923 /* PrivacyInfo.xcprivacy */; };
+		54D1192A2B8ED629000B2923 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 54D119282B8ED629000B2923 /* PrivacyInfo.xcprivacy */; };
 		D80C81F51FC824E2008E3900 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */; };
 		D80C81F71FC824FF008E3900 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F61FC824FF008E3900 /* CoreTelephony.framework */; };
 		D80C81FB1FC82541008E3900 /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183091FC56358000DD9EC /* OSSModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -259,6 +261,7 @@
 		54A2FDD9289B6863005410F8 /* OSSPutObjectTaggingRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSPutObjectTaggingRequest.m; sourceTree = "<group>"; };
 		54A2FDDE289B6879005410F8 /* OSSPutObjectTaggingResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSPutObjectTaggingResult.h; sourceTree = "<group>"; };
 		54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSPutObjectTaggingResult.m; sourceTree = "<group>"; };
+		54D119282B8ED629000B2923 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D80C81EC1FC824A8008E3900 /* AliyunOSSOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AliyunOSSOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F61FC824FF008E3900 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
@@ -528,6 +531,7 @@
 				D871833A1FC56358000DD9EC /* OSSUtil.m */,
 				D871830F1FC56358000DD9EC /* OSSXMLDictionary.h */,
 				D871832D1FC56358000DD9EC /* OSSXMLDictionary.m */,
+				54D119282B8ED629000B2923 /* PrivacyInfo.xcprivacy */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -827,6 +831,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54D119292B8ED629000B2923 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +839,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54D1192A2B8ED629000B2923 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
