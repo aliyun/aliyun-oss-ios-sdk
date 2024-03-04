@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSString * backgroundSessionIdentifier;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForRequest;
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
+@property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
 @property (nonatomic, assign) BOOL enableFollowRedirects;

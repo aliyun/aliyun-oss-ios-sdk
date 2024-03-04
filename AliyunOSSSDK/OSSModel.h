@@ -228,6 +228,9 @@ Sets the session Id for background file transmission
 /// The maximum concurrent part requests for a single part task. Default value is 5.
 @property (nonatomic, assign) uint32_t maxConcurrentPartRequestCount;
 
+/// The maximum number of simultaneous persistent connections per host.
+@property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>

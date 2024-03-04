@@ -303,6 +303,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.isAllowUACarrySystemInfo = YES;
         self.isFollowRedirectsEnable = YES;
         self.maxConcurrentPartRequestCount = OSSDefaultMaxConcurrentPartRequestCount;
+        self.HTTPMaximumConnectionsPerHost = OSSDefaultHTTPMaximumConnectionsPerHost;
     }
     return self;
 }
