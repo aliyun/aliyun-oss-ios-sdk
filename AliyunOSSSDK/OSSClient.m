@@ -118,6 +118,7 @@ static NSObject *lock;
             netConf.proxyPort = conf.proxyPort;
             netConf.maxConcurrentRequestCount = conf.maxConcurrentRequestCount;
             netConf.enableFollowRedirects = conf.isFollowRedirectsEnable;
+            netConf.HTTPMaximumConnectionsPerHost = conf.HTTPMaximumConnectionsPerHost;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
     }
@@ -1383,7 +1384,7 @@ static NSObject *lock;
            fileSize:(unsigned long long)uploadFileSize
 {
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue setMaxConcurrentOperationCount: 5];
+    [queue setMaxConcurrentOperationCount: _clientConfiguration.maxConcurrentPartRequestCount];
     
     NSObject *localLock = [[NSObject alloc] init];
     
@@ -1422,8 +1423,8 @@ static NSObject *lock;
             continue;
         }
         
-        // while operationCount >= 5,the loop will stay here
-        while (queue.operationCount >= 5) {
+        // while operationCount >= maxConcurrentPartRequestCount,the loop will stay here
+        while (queue.operationCount >= _clientConfiguration.maxConcurrentPartRequestCount) {
             [NSThread sleepForTimeInterval: 0.15f];
         }
         

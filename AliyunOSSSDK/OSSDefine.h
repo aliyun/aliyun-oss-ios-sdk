@@ -78,6 +78,8 @@
 
 #define OSSDefaultRetryCount                    3
 #define OSSDefaultMaxConcurrentNum              5
+#define OSSDefaultMaxConcurrentPartRequestCount 5
+#define OSSDefaultHTTPMaximumConnectionsPerHost 6
 #define OSSDefaultTimeoutForRequestInSecond     15
 #define OSSDefaultTimeoutForResourceInSecond    7 * 24 * 60 * 60
 

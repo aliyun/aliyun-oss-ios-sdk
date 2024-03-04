@@ -43,7 +43,10 @@
         if (configuration.timeoutIntervalForResource > 0) {
             conf.timeoutIntervalForResource = configuration.timeoutIntervalForResource;
         }
-        
+        if (configuration.HTTPMaximumConnectionsPerHost > 0) {
+            conf.HTTPMaximumConnectionsPerHost = configuration.HTTPMaximumConnectionsPerHost;
+        }
+
         if (configuration.proxyHost && configuration.proxyPort) {
             // Create an NSURLSessionConfiguration that uses the proxy
             NSDictionary *proxyDict = @{
