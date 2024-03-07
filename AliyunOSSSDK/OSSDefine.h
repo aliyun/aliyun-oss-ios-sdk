@@ -81,5 +81,6 @@
 #define OSSDefaultTimeoutForRequestInSecond     15
 #define OSSDefaultTimeoutForResourceInSecond    7 * 24 * 60 * 60
 #define OSSDefaultThreadNum                     5
+#define OSSDefaultHTTPMaximumConnectionsPerHost 6
 
 #endif /* OSSDefine_h */

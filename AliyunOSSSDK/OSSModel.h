@@ -225,6 +225,9 @@ Sets the session Id for background file transmission
 /// Set whether to allow the redirection with a modified request
 @property (nonatomic, assign) BOOL isFollowRedirectsEnable;
 
+/// The maximum number of simultaneous persistent connections per host.
+@property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
