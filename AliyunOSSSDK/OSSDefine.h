@@ -80,5 +80,6 @@
 #define OSSDefaultMaxConcurrentNum              5
 #define OSSDefaultTimeoutForRequestInSecond     15
 #define OSSDefaultTimeoutForResourceInSecond    7 * 24 * 60 * 60
+#define OSSDefaultThreadNum                     5
 
 #endif /* OSSDefine_h */

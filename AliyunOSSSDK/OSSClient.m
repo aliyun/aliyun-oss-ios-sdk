@@ -1382,8 +1382,9 @@ static NSObject *lock;
      uploadedLength:(NSUInteger *)uploadedLength
            fileSize:(unsigned long long)uploadFileSize
 {
+    uint32_t threadNum = request.threadNum > 0 ? request.threadNum : OSSDefaultThreadNum;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue setMaxConcurrentOperationCount: 5];
+    [queue setMaxConcurrentOperationCount: threadNum];
     
     NSObject *localLock = [[NSObject alloc] init];
     
@@ -1422,8 +1423,8 @@ static NSObject *lock;
             continue;
         }
         
-        // while operationCount >= 5,the loop will stay here
-        while (queue.operationCount >= 5) {
+        // while operationCount >= threadNum,the loop will stay here
+        while (queue.operationCount >= threadNum) {
             [NSThread sleepForTimeInterval: 0.15f];
         }
         
