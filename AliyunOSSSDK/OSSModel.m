@@ -821,6 +821,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 - (instancetype)init {
     if (self = [super init]) {
         self.partSize = 256 * 1024;
+        self.threadNum = OSSDefaultThreadNum;
     }
     return self;
 }

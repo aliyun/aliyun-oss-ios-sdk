@@ -1410,6 +1410,8 @@ The result class of listing uploaded parts.
  */
 @property (nonatomic, copy) NSString *md5String;
 
+/// The concurrent number of shard uploads
+@property (nonatomic, assign) uint32_t threadNum;
 
 - (void)cancel;
 @end
