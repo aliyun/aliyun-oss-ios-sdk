@@ -15,6 +15,11 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2024/3/26
+- release 2.10.20
+1.Add configuration of HTTPMaximumConnectionsPerHost
+2.Increase the concurrency configuration for shard uploads
+
 2024/3/5
 - release 2.10.19
 1.Modify buildiOSFramework.sh file for building xcframework
