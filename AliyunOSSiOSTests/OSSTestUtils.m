@@ -71,6 +71,10 @@
     [task waitUntilFinished];
 }
 
++ (NSString *)getBucketName {
+    return [NSString stringWithFormat:@"bucket-%ld", @([NSDate date].timeIntervalSince1970).integerValue];
+}
+
 @end
 
 @interface OSSProgressTestUtils()

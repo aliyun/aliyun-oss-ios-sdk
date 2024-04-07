@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
 #import "OSSTestMacros.h"
+#import "OSSTestUtils.h"
 
 @interface OSSConfigurationTest : XCTestCase {
     NSString *host;
@@ -147,6 +148,59 @@
         XCTAssertTrue([task.error.userInfo[@"NSErrorFailingURLStringKey"] isEqualToString:[cnameEndpoint stringByAppendingString:@"/"]]);
         return task;
     }] waitUntilFinished];
+}
+
+- (void)testAllowNetworkMetricInfo {
+    OSSClientConfiguration *config = [OSSClientConfiguration new];
+    OSSAuthCredentialProvider *credentialProvider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+    OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credentialProvider clientConfiguration:config];
+    
+    NSString *privateBucketName = [OSSTestUtils getBucketName];
+    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
+    createBucket.bucketName = privateBucketName;
+    OSSTask *task = [client createBucket:createBucket];
+    [task waitUntilFinished];
+    XCTAssertNil(((OSSResult *)task.result).metrics);
+
+    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+    put.bucketName = privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    task = [client putObject:put];
+    [task waitUntilFinished];
+    XCTAssertNil(((OSSResult *)task.result).metrics);
+    
+    OSSGetObjectRequest *get = [OSSGetObjectRequest new];
+    get.bucketName = privateBucketName;
+    get.objectKey = @"error";
+    get.onRecieveData = ^(NSData * _Nonnull data) {
+    };
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNil(task.error.userInfo[OSSNetworkTaskMetrics]);
+    
+    config = [OSSClientConfiguration new];
+    config.isAllowNetworkMetricInfo = YES;
+    client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credentialProvider clientConfiguration:config];
+    
+    put = [OSSPutObjectRequest new];
+    put.bucketName = privateBucketName;
+    put.objectKey = OSS_IMAGE_KEY;
+    put.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
+    task = [client putObject:put];
+    [task waitUntilFinished];
+    XCTAssertNotNil(((OSSResult *)task.result).metrics);
+    
+    get = [OSSGetObjectRequest new];
+    get.bucketName = privateBucketName;
+    get.objectKey = @"error";
+    get.onRecieveData = ^(NSData * _Nonnull data) {
+    };
+    task = [client getObject:get];
+    [task waitUntilFinished];
+    XCTAssertNotNil(task.error.userInfo[OSSNetworkTaskMetrics]);
+    
+    [OSSTestUtils cleanBucket:privateBucketName with:client];
 }
 
 @end
