@@ -39,4 +39,7 @@
  */
 @property (nonatomic, copy) NSString *localCRC64ecma;
 
+/// statistics information for the task.
+@property (nonatomic, strong) NSURLSessionTaskMetrics *metrics API_AVAILABLE(macos(10.12), ios(10.0));
+
 @end
