@@ -1421,6 +1421,8 @@ The result class of listing uploaded parts.
 /// The concurrent number of shard uploads
 @property (nonatomic, assign) uint32_t threadNum;
 
+@property (nonatomic, assign) OSSTerminationMode terminationMode;
+
 - (void)cancel;
 @end
 
