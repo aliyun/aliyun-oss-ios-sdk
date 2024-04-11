@@ -115,6 +115,11 @@ typedef NS_ENUM(NSInteger, OSSBucketStorageClass)
     OSSBucketStorageClassArchive
 };
 
+typedef NS_ENUM(NSInteger, OSSTerminationMode) {
+    OSSTerminationModeAll = 0,
+    OSSTerminationModeHasError
+};
+
 typedef NSString * OSSXMLDictionaryAttributeName NS_EXTENSIBLE_STRING_ENUM;
 
 OBJC_EXTERN OSSXMLDictionaryAttributeName const OSSXMLDictionaryAttributesKey;
