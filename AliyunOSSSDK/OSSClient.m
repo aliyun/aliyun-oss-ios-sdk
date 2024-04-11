@@ -1419,6 +1419,11 @@ static NSObject *lock;
             break;
         }
         
+        if (request.terminationMode == OSSTerminationModeHasError && hasError) {
+            [queue cancelAllOperations];
+            break;
+        }
+        
         if ([alreadyUploadIndex containsObject:@(idx)])
         {
             continue;
