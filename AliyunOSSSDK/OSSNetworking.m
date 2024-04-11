@@ -67,6 +67,9 @@
 
         self.isUsingBackgroundSession = configuration.enableBackgroundTransmitService;
         _sessionDelagateManager = [OSSSyncMutableDictionary new];
+        if (configuration.enableResetRetryCount) {
+            [_sessionDelagateManager addObserverForResetCurrentRetryCount];
+        }
 
         NSOperationQueue * operationQueue = [NSOperationQueue new];
         if (configuration.maxConcurrentRequestCount > 0) {

@@ -29,6 +29,7 @@
 @property (nonatomic, strong) NSNumber * proxyPort;
 @property (nonatomic, assign) BOOL enableFollowRedirects;
 @property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
+@property (nonatomic, assign) BOOL enableResetRetryCount;
 @end
 
 

@@ -37,6 +37,7 @@ typedef OSSFederationToken * _Nullable (^OSSGetFederationTokenBlock) (void);
 - (NSArray *)allKeys;
 - (void)setObject:(id)anObject forKey:(id <NSCopying>)aKey;
 - (void)removeObjectForKey:(id)aKey;
+- (void)addObserverForResetCurrentRetryCount;
 @end
 
 /**
@@ -229,6 +230,9 @@ Sets the session Id for background file transmission
 /// The default value is NSURLSessionConfiguration's default value
 /// https://developer.apple.com/documentation/foundation/urlsessionconfiguration/1407597-httpmaximumconnectionsperhost
 @property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
+
+/// Set whether to allow retry attempts when the app switches to the background
+@property (nonatomic, assign) BOOL isAllowResetRetryCount;
 
 @end
 
