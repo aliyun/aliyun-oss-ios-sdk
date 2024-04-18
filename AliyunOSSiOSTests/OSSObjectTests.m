@@ -1000,6 +1000,75 @@
     XCTAssertNotNil(error);
 }
 
+- (void)testAPI_doesObjectExistAndEqualLocalFile {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[3]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    
+    [OSSTestUtils putTestDataWithKey:_fileNames[3]
+                          withClient:_client
+                          withBucket:_privateBucketName];
+    NSError * error = nil;
+    BOOL isExist = [_client doesObjectExistInBucket:_privateBucketName
+                                          objectKey:_fileNames[3]
+                                       localFileURL:fileURL
+                                              error:&error];
+    XCTAssertEqual(isExist, YES);
+    XCTAssertNil(error);
+}
+
+- (void)testAPI_doesObjectEqualLocalFileWithNoExistObject {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[3]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    NSError * error = nil;
+    BOOL isExist = [_client doesObjectExistInBucket:_privateBucketName
+                                          objectKey:@"wrong-key"
+                                       localFileURL:fileURL
+                                              error:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNil(error);
+}
+
+- (void)testAPI_doesObjectExistAndEqualLocalFileWithError {
+    NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[3]];
+    NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+    NSError * error = nil;
+    // invalid credentialProvider
+    id<OSSCredentialProvider> c = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak"
+                                                                                 secretKeyId:@"sk"
+                                                                               securityToken:@"token"];
+    OSSClient * tClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:c];
+    BOOL isExist = [tClient doesObjectExistInBucket:_privateBucketName 
+                                          objectKey:_fileNames[3]
+                                       localFileURL:fileURL
+                                              error:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNotNil(error);
+    XCTAssertTrue(error.code == -403);
+
+    // different files
+    filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[2]];
+    fileURL = [NSURL fileURLWithPath:filePath];
+    [OSSTestUtils putTestDataWithKey:_fileNames[3]
+                          withClient:_client
+                          withBucket:_privateBucketName];
+    error = nil;
+    isExist = [_client doesObjectExistInBucket:_privateBucketName
+                                     objectKey:_fileNames[3]
+                                  localFileURL:fileURL
+                                         error:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNil(error);
+    
+    // error file path
+    error = nil;
+    isExist = [_client doesObjectExistInBucket:_privateBucketName
+                                     objectKey:_fileNames[3]
+                                  localFileURL:[NSURL URLWithString:@"/bin/a"]
+                                         error:&error];
+    XCTAssertEqual(isExist, NO);
+    XCTAssertNotNil(error);
+}
+
 - (void)testAPI_copyAndDeleteObject
 {
     [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_privateBucketName];
