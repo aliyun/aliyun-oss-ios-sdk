@@ -15,6 +15,7 @@
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSIPv6Adapter.h"
+#import "OSSInputStreamHelper.h"
 
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
@@ -2192,6 +2193,50 @@ static NSObject *lock;
             }
             return NO;
         }
+    }
+}
+
+- (BOOL)doesObjectExistInBucket:(NSString *)bucketName
+                      objectKey:(NSString *)objectKey
+                   localFileURL:(NSURL *)localFileURL
+                          error:(NSError **)error {
+    OSSHeadObjectRequest *headRequest = [OSSHeadObjectRequest new];
+    headRequest.bucketName = bucketName;
+    headRequest.objectKey = objectKey;
+        
+    OSSTask *task = [self headObject:headRequest];
+    [task waitUntilFinished];
+    if (!task.error) {
+        OSSHeadObjectResult *headResult = task.result;
+        OSSInputStreamHelper *inputStreamHelper = [[OSSInputStreamHelper alloc] initWithURL:localFileURL];
+        [inputStreamHelper syncReadBuffers];
+        
+        uint64_t clientCrc64 = inputStreamHelper.crc64;
+        uint64_t remoteCrc64 = 0;
+        NSString *remoteCRC64ecma = headResult.remoteCRC64ecma;
+        NSScanner *scanner = [NSScanner scannerWithString:remoteCRC64ecma];
+        if (clientCrc64 != 0 && [scanner scanUnsignedLongLong:&remoteCrc64]) {
+            if (remoteCrc64 == clientCrc64) {
+                return YES;
+            } else {
+                OSSLogDebug(@"CRC verification failed: %llu %llu", clientCrc64, remoteCrc64);
+                return NO;
+            }
+        } else {
+            NSString *message = [NSString stringWithFormat:@"Unable to obtain CRC value. client crc: %llu, remote crc: %@", inputStreamHelper.crc64, remoteCRC64ecma];
+            OSSLogError(@"%@", message);
+            *error = [NSError errorWithDomain:OSSClientErrorDomain
+                                         code:OSSClientErrorCodeInvalidCRC
+                                     userInfo:@{OSSErrorMessageTOKEN: message}];
+            return NO;
+        }
+    } else if (([task.error.domain isEqualToString:OSSServerErrorDomain] &&
+               task.error.code == -404) ||
+               [task.error.userInfo[@"Code"] isEqualToString:@"NoSuchKey"]) {
+        return NO;
+    } else {
+        *error = task.error;
+        return NO;
     }
 }
 
