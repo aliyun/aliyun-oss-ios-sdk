@@ -230,6 +230,9 @@ Sets the session Id for background file transmission
 /// https://developer.apple.com/documentation/foundation/urlsessionconfiguration/1407597-httpmaximumconnectionsperhost
 @property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
 
+/// Set whether to allow metric information
+@property (nonatomic, assign) BOOL isAllowNetworkMetricInfo;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
