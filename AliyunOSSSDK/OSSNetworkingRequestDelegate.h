@@ -50,6 +50,8 @@
 
 @property (atomic, strong) NSURLSessionDataTask *currentSessionTask;
 
+@property (nonatomic, strong) NSURLSessionTaskMetrics *metrics API_AVAILABLE(macos(10.12), ios(10.0));
+
 @property (nonatomic, copy) OSSNetworkingUploadProgressBlock uploadProgress;
 @property (nonatomic, copy) OSSNetworkingDownloadProgressBlock downloadProgress;
 @property (nonatomic, copy) OSSNetworkingRetryBlock retryCallback;

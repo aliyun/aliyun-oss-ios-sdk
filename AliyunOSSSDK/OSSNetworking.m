@@ -95,7 +95,15 @@
         // 1.判断是否出错，如果出错的话，直接设置错误信息
         if (error)
         {
-            [taskCompletionSource setError:error];
+            if (weakRequest.metrics) {
+                NSMutableDictionary *userInfo = error.userInfo ? [NSMutableDictionary dictionaryWithDictionary:error.userInfo] : [NSMutableDictionary dictionary];
+                [userInfo oss_setObject:weakRequest.metrics forKey:OSSNetworkTaskMetrics];
+                [taskCompletionSource setError:[NSError errorWithDomain:error.domain
+                                                                   code:error.code
+                                                               userInfo:userInfo]];
+            } else {
+                [taskCompletionSource setError:error];
+            }
         }else
         {
             [self checkForCrc64WithResult:responseObject
@@ -379,7 +387,9 @@
             
             [self dataTaskWithDelegate:delegate];
         } else {
-            delegate.completionHandler([delegate.responseParser constructResultObject], nil);
+            OSSResult *result = [delegate.responseParser constructResultObject];
+            result.metrics = delegate.metrics;
+            delegate.completionHandler(result, nil);
         }
         return nil;
     }];
@@ -437,6 +447,14 @@
         completionHandler(request);
     } else {
         completionHandler(nil);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics {
+    if (self.configuration.enableNetworkMetricInfo) {
+        OSSNetworkingRequestDelegate *delegate = [self.sessionDelagateManager objectForKey:@(task.taskIdentifier)];
+        delegate.metrics = metrics;
+        OSSLogDebug(@"%@", metrics);
     }
 }
 

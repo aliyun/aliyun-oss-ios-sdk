@@ -304,6 +304,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.isFollowRedirectsEnable = YES;
         // When the value <= 0, do not set HTTPMaximumConnectionsPerHost and use the default value of NSURLSessionConfiguration
         self.HTTPMaximumConnectionsPerHost = 0;
+        self.isAllowNetworkMetricInfo = NO;
     }
     return self;
 }
