@@ -515,6 +515,21 @@ NS_ASSUME_NONNULL_BEGIN
                       objectKey:(NSString *)objectKey
                           error:(const NSError **)error;
 
+/**
+ Check if the file exists and is consistent with the local file
+ @bucketName Object's bucket name
+ @objectKey Object name
+ @localFileURL Local file path
+ 
+ return YES                     Object exists
+ return NO && *error = nil      Object does not exist
+ return NO && *error != nil     Error occured.
+ */
+- (BOOL)doesObjectExistInBucket:(NSString *)bucketName
+                      objectKey:(NSString *)objectKey
+                   localFileURL:(NSURL *)localFileURL
+                          error:(NSError **)error;
+
 @end
 
 
