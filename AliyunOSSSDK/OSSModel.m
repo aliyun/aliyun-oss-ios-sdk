@@ -14,9 +14,11 @@
 #import "OSSXMLDictionary.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIDevice.h>
+#import <UIKit/UIApplication.h>
 #endif
 
 #import "OSSAllRequestNeededMessage.h"
+#import "OSSNetworkingRequestDelegate.h"
 
 @implementation NSDictionary (OSS)
 
@@ -48,6 +50,22 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)addObserverForResetCurrentRetryCount {
+#if TARGET_OS_IOS
+    NSString *notificationName = UIApplicationWillEnterForegroundNotification;
+    // When App switches to active status, refresh the IPv6-only check.
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self
+                      selector:@selector(appWillEnterForeground)
+                          name:notificationName
+                        object:nil];
+#endif
+}
+
 - (NSArray *)allKeys {
     __block NSArray *allKeys = nil;
     dispatch_sync(self.dispatchQueue, ^{
@@ -75,6 +93,15 @@
 - (void)removeObjectForKey:(id)aKey {
     dispatch_sync(self.dispatchQueue, ^{
         [self.dictionary removeObjectForKey:aKey];
+    });
+}
+
+- (void)appWillEnterForeground {
+    dispatch_sync(self.dispatchQueue, ^{
+        for (NSString *key in self.dictionary.allKeys) {
+            OSSNetworkingRequestDelegate *delegate = self.dictionary[key];
+            delegate.currentRetryCount = 0;
+        }
     });
 }
 
@@ -304,6 +331,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.isFollowRedirectsEnable = YES;
         // When the value <= 0, do not set HTTPMaximumConnectionsPerHost and use the default value of NSURLSessionConfiguration
         self.HTTPMaximumConnectionsPerHost = 0;
+        self.isAllowResetRetryCount = NO;
         self.isAllowNetworkMetricInfo = NO;
     }
     return self;
