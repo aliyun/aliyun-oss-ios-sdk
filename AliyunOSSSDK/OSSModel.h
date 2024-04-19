@@ -234,6 +234,9 @@ Sets the session Id for background file transmission
 /// Set whether to allow retry attempts when the app switches to the background
 @property (nonatomic, assign) BOOL isAllowResetRetryCount;
 
+/// Set whether to allow metric information
+@property (nonatomic, assign) BOOL isAllowNetworkMetricInfo;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
@@ -1421,6 +1424,8 @@ The result class of listing uploaded parts.
 
 /// The concurrent number of shard uploads
 @property (nonatomic, assign) uint32_t threadNum;
+
+@property (nonatomic, assign) OSSTerminationMode terminationMode;
 
 - (void)cancel;
 @end

@@ -332,6 +332,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         // When the value <= 0, do not set HTTPMaximumConnectionsPerHost and use the default value of NSURLSessionConfiguration
         self.HTTPMaximumConnectionsPerHost = 0;
         self.isAllowResetRetryCount = NO;
+        self.isAllowNetworkMetricInfo = NO;
     }
     return self;
 }
@@ -852,6 +853,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
     if (self = [super init]) {
         self.partSize = 256 * 1024;
         self.threadNum = OSSDefaultThreadNum;
+        self.terminationMode = OSSTerminationModeAll;
     }
     return self;
 }

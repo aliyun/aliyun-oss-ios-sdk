@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
+		5440E3CD2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */; };
+		5440E3CE2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */; };
 		54A2FDC2289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDC3289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDC4289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDC1289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m */; };
@@ -247,6 +249,7 @@
 		216256EF1CF1B1580086458F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteObjectTaggingRequest.h; sourceTree = "<group>"; };
 		54A2FDC1289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSDeleteObjectTaggingRequest.m; sourceTree = "<group>"; };
 		54A2FDC6289B6803005410F8 /* OSSDeleteObjectTaggingResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteObjectTaggingResult.h; sourceTree = "<group>"; };
@@ -528,6 +531,7 @@
 				D871833A1FC56358000DD9EC /* OSSUtil.m */,
 				D871830F1FC56358000DD9EC /* OSSXMLDictionary.h */,
 				D871832D1FC56358000DD9EC /* OSSXMLDictionary.m */,
+				5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */,
 			);
 			path = AliyunOSSSDK;
 			sourceTree = "<group>";
@@ -827,6 +831,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5440E3CD2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +839,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5440E3CE2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -120,6 +120,7 @@ static NSObject *lock;
             netConf.enableFollowRedirects = conf.isFollowRedirectsEnable;
             netConf.HTTPMaximumConnectionsPerHost = conf.HTTPMaximumConnectionsPerHost;
             netConf.enableResetRetryCount = conf.isAllowResetRetryCount;
+            netConf.enableNetworkMetricInfo = conf.isAllowNetworkMetricInfo;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
     }
@@ -1416,6 +1417,11 @@ static NSObject *lock;
     {
         if (request.isCancelled)
         {
+            [queue cancelAllOperations];
+            break;
+        }
+        
+        if (request.terminationMode == OSSTerminationModeHasError && hasError) {
             [queue cancelAllOperations];
             break;
         }
