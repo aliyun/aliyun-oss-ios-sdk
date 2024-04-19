@@ -119,6 +119,7 @@ static NSObject *lock;
             netConf.maxConcurrentRequestCount = conf.maxConcurrentRequestCount;
             netConf.enableFollowRedirects = conf.isFollowRedirectsEnable;
             netConf.HTTPMaximumConnectionsPerHost = conf.HTTPMaximumConnectionsPerHost;
+            netConf.enableResetRetryCount = conf.isAllowResetRetryCount;
             netConf.enableNetworkMetricInfo = conf.isAllowNetworkMetricInfo;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
