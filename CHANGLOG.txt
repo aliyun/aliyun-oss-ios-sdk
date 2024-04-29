@@ -15,6 +15,13 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2024/4/29
+- release 2.10.21
+1.Add the configuration of reset retry count when the app switches to the background
+2.Add information collection function
+3.Add resumable upload termination mode configuration
+4.Add privacy info file
+
 2024/3/26
 - release 2.10.20
 1.Add configuration of HTTPMaximumConnectionsPerHost
