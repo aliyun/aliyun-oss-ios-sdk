@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2024/6/28
+- release 2.10.22
+1.Modify the nullability type of the request and result attributes
+
 2024/4/29
 - release 2.10.21
 1.Add the configuration of reset retry count when the app switches to the background
