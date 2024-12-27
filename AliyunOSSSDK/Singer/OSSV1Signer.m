@@ -39,8 +39,15 @@
         }
     } else if ([credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
         federationToken = [(OSSStsTokenCredentialProvider *)credentialProvider getToken];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    } else if ([credentialProvider isKindOfClass:[OSSPlainTextAKSKPairCredentialProvider class]]) {
+        federationToken = [[OSSFederationToken alloc] init];
+        federationToken.tAccessKey = ((OSSPlainTextAKSKPairCredentialProvider *)credentialProvider).accessKey;
+        federationToken.tSecretKey = ((OSSPlainTextAKSKPairCredentialProvider *)credentialProvider).secretKey;
     }
-    
+#pragma clang diagnostic pop
+
     NSString *canonicalResource = self.signerParams.resourcePath;
     NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + self.signerParams.expiration) stringValue];
     if (federationToken.useSecurityToken) {

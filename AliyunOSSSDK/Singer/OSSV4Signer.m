@@ -244,9 +244,6 @@
 }
 
 - (OSSTask *)sign:(OSSAllRequestNeededMessage *)requestMessage {
-    if (!requestMessage.isAuthenticationRequired) {
-        return [OSSTask taskWithResult:nil];
-    }
     
     id<OSSCredentialProvider> credentialProvider = self.signerParams.credentialProvider;
     if ([credentialProvider isKindOfClass:[OSSCustomSignerCredentialProvider class]]) {

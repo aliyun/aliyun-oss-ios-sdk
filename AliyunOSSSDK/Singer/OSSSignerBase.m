@@ -53,10 +53,6 @@
 }
 
 - (OSSTask *)sign:(OSSAllRequestNeededMessage *)requestMessage {
-    if (!requestMessage.isAuthenticationRequired) {
-        return [OSSTask taskWithResult:nil];
-    }
-    
     id<OSSCredentialProvider> credentialProvider = self.signerParams.credentialProvider;
     OSSFederationToken *federationToken;
     NSError *error;
