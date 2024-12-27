@@ -130,7 +130,6 @@ static NSObject *lock;
 }
 
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
-    request.allNeededMessage.isAuthenticationRequired = requireAuthentication;
     /* if content-type haven't been set, we set one */
     if (!request.allNeededMessage.contentType.oss_isNotEmpty
         && ([request.allNeededMessage.httpMethod isEqualToString:@"POST"] || [request.allNeededMessage.httpMethod isEqualToString:@"PUT"])) {
@@ -148,18 +147,20 @@ static NSObject *lock;
 
     id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:self.clientConfiguration];
     [request.interceptors addObject:uaSetting];
-    
-    if (self.clientConfiguration.signVersion == OSSSignVersionV4 && self.region == nil) {
-        return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                          code:OSSClientErrorCodeInvalidArgument
-                                                      userInfo:@{OSSErrorMessageTOKEN: @"Region haven't been set!"}]];
-    }
 
-    OSSSignerInterceptor *signer = [[OSSSignerInterceptor alloc] initWithCredentialProvider:self.credentialProvider];
-    signer.version = self.clientConfiguration.signVersion;
-    signer.region = self.region;
-    signer.cloudBoxId = self.cloudBoxId;
-    [request.interceptors addObject:signer];
+    if (requireAuthentication) {
+        if (self.clientConfiguration.signVersion == OSSSignVersionV4 && self.region == nil) {
+            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                              code:OSSClientErrorCodeInvalidArgument
+                                                          userInfo:@{OSSErrorMessageTOKEN: @"Region haven't been set!"}]];
+        }
+        
+        OSSSignerInterceptor *signer = [[OSSSignerInterceptor alloc] initWithCredentialProvider:self.credentialProvider];
+        signer.version = self.clientConfiguration.signVersion;
+        signer.region = self.region;
+        signer.cloudBoxId = self.cloudBoxId;
+        [request.interceptors addObject:signer];
+    }
 
     request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
     request.isPathStyleAccessEnable = self.clientConfiguration.isPathStyleAccessEnable;
@@ -2076,7 +2077,6 @@ static NSObject *lock;
         message.isHostInCnameExcludeList = isHostInCnameExcludeList;
         message.isUseUrlSignature = true;
         message.additionalHeaderNames = additionalHeaderNames;
-        message.isAuthenticationRequired = true;
         
         
         OSSSignerParams *signerParams = [[OSSSignerParams alloc] init];
