@@ -42,7 +42,7 @@
 
 - (void)testAPI_creatBucket
 {
-    NSString *bucket = @"oss-ios-create-bucket-test";
+    NSString *bucket = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = bucket;
     req.xOssACL = @"public-read";
@@ -58,7 +58,7 @@
 }
 
 - (void)testAPI_getBucketInfo {
-    NSString *bucketName = @"oss-ios-get-bucket-info-test";
+    NSString *bucketName = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = bucketName;
     [[_client createBucket:req] waitUntilFinished];
@@ -77,12 +77,13 @@
 
 - (void)testAPI_getBucketACL
 {
+    NSString *bucketName = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
-    req.bucketName = @"oss-ios-get-bucket-acl-test";
+    req.bucketName = bucketName;
     [[_client createBucket:req] waitUntilFinished];
     
     OSSGetBucketACLRequest * request = [OSSGetBucketACLRequest new];
-    request.bucketName = @"oss-ios-get-bucket-acl-test";
+    request.bucketName = bucketName;
     OSSTask * task = [_client getBucketACL:request];
     [[task continueWithBlock:^id(OSSTask *task) {
         XCTAssertNil(task.error);
@@ -91,7 +92,7 @@
         return nil;
     }] waitUntilFinished];
     
-    [OSSTestUtils cleanBucket:@"oss-ios-get-bucket-acl-test" with:_client];
+    [OSSTestUtils cleanBucket:bucketName with:_client];
 }
 
 - (void)testAPI_getService
@@ -116,7 +117,7 @@
 
 - (void)testAPI_deleteBucket
 {
-    NSString * bucket = @"oss-ios-delete-bucket-test";
+    NSString *bucket = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = bucket;
     req.xOssACL = @"public-read";
@@ -139,12 +140,13 @@
 
 - (void)testListMultipartUploads
 {
+    NSString *bucket = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
-    req.bucketName = @"oss-ios-bucket-list-multipart-uploads-test";
+    req.bucketName = bucket;
     [[_client createBucket:req] waitUntilFinished];
     
     OSSListMultipartUploadsRequest *listreq = [OSSListMultipartUploadsRequest new];
-    listreq.bucketName = @"oss-ios-bucket-list-multipart-uploads-test";
+    listreq.bucketName = bucket;
     listreq.maxUploads = 1000;
     OSSTask *task = [_client listMultipartUploads:listreq];
     
@@ -155,7 +157,7 @@
         return nil;
     }] waitUntilFinished];
     
-    [OSSTestUtils cleanBucket:@"oss-ios-bucket-list-multipart-uploads-test" with:_client];
+    [OSSTestUtils cleanBucket:bucket with:_client];
 }
 
 @end

@@ -57,7 +57,7 @@
 }
 
 + (NSString *)getBucketName {
-    return [NSString stringWithFormat:@"bucket-%ld", @([NSDate date].timeIntervalSince1970).integerValue];
+    return [NSString stringWithFormat:@"bucket-%ld", @([NSDate date].timeIntervalSince1970 * 1000).integerValue];
 }
 
 + (void) putTestDataWithKey: (NSString *)key withClient: (OSSClient *)client withBucket: (NSString *)bucket
