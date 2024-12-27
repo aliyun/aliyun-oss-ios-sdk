@@ -135,4 +135,10 @@ OBJC_EXTERN NSString * const OSSHTTPMethodPOST;
 OBJC_EXTERN NSString * const OSSHTTPMethodDELETE;
 
 
+typedef NS_ENUM(NSInteger, OSSSignVersion)
+{
+    OSSSignVersionV1,
+    OSSSignVersionV4
+};
+
 NS_ASSUME_NONNULL_END

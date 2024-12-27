@@ -16,4 +16,7 @@
 + (NSDate *)oss_dateFromString:(NSString *)string;
 + (NSDate *)oss_clockSkewFixedDate;
 - (NSString *)oss_asStringValue;
++ (NSDate *)oss_dateFromString:(NSString *)string
+                    dateFormat:(NSString *)dateFormat;
+- (NSString *)oss_asStringValueWithDateFormat:(NSString *)dateFormat;
 @end

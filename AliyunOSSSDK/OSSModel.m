@@ -12,6 +12,8 @@
 #import "OSSNetworking.h"
 #import "OSSLog.h"
 #import "OSSXMLDictionary.h"
+#import "OSSSignerParams.h"
+#import "OSSSignerBase.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIApplication.h>
@@ -114,6 +116,10 @@
     return [NSString stringWithFormat:@"OSSFederationToken<%p>:{AccessKeyId: %@\nAccessKeySecret: %@\nSecurityToken: %@\nExpiration: %@}", self, _tAccessKey, _tSecretKey, _tToken, _expirationTimeInGMTFormat];
 }
 
+- (BOOL)useSecurityToken {
+    return self.tToken != nil;
+}
+
 @end
 
 @implementation OSSPlainTextAKSKPairCredentialProvider
@@ -200,7 +206,7 @@
 
             NSDate * expirationDate = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)(self.cachedToken.expirationTimeInMilliSecond / 1000)];
             NSTimeInterval interval = [expirationDate timeIntervalSinceDate:[NSDate oss_clockSkewFixedDate]];
-            /* if this token will be expired after less than 2min, we abort it in case of when request arrived oss server,
+            /* if this token will be expired after less than 5 min, we abort it in case of when request arrived oss server,
                it's expired already. */
             if (interval < 5 * 60) {
                 OSSLogDebug(@"get federation token, but after %lf second it would be expired", interval);
@@ -333,6 +339,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.HTTPMaximumConnectionsPerHost = 0;
         self.isAllowResetRetryCount = NO;
         self.isAllowNetworkMetricInfo = NO;
+        self.signVersion = OSSSignVersionV1;
     }
     return self;
 }
@@ -364,124 +371,23 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
 
 - (OSSTask *)interceptRequestMessage:(OSSAllRequestNeededMessage *)requestMessage {
     OSSLogVerbose(@"signing intercepting - ");
-    NSError * error = nil;
-
-    /****************************************************************
-    * define a constant array to contain all specified subresource */
-    static NSArray * OSSSubResourceARRAY = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        OSSSubResourceARRAY = @[@"acl", @"uploadId", @"partNumber", @"uploads", @"logging", @"website", @"location",
-                                @"lifecycle", @"referer", @"cors", @"delete", @"append", @"position", @"security-token", @"x-oss-process", @"sequential",@"bucketInfo",@"symlink", @"restore", @"tagging"];
-    });
-    /****************************************************************/
-
-    /* initial each part of content to sign */
-    NSString * method = requestMessage.httpMethod;
-    NSString * contentType = @"";
-    NSString * contentMd5 = @"";
-    NSString * date = requestMessage.date;
-    NSString * xossHeader = @"";
-    NSString * resource = @"";
-
-    OSSFederationToken * federationToken = nil;
-
-    if (requestMessage.contentType) {
-        contentType = requestMessage.contentType;
-    }
-    if (requestMessage.contentMd5) {
-        contentMd5 = requestMessage.contentMd5;
-    }
-
-    /* if credential provider is a federation token provider, it need to specially handle */
-    if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
-        federationToken = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
-        if (error) {
-            return [OSSTask taskWithError:error];
-        }
-        [requestMessage.headerParams oss_setObject:federationToken.tToken forKey:@"x-oss-security-token"];
-    } else if ([self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-        federationToken = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
-        [requestMessage.headerParams oss_setObject:federationToken.tToken forKey:@"x-oss-security-token"];
-    }
-    
-    [requestMessage.headerParams oss_setObject:requestMessage.contentSHA1 forKey:OSSHttpHeaderHashSHA1];
-        
-    /* construct CanonicalizedOSSHeaders */
-    if (requestMessage.headerParams) {
-        NSMutableArray * params = [[NSMutableArray alloc] init];
-        NSArray * sortedKey = [[requestMessage.headerParams allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1 compare:obj2];
-        }];
-        for (NSString * key in sortedKey) {
-            if ([key hasPrefix:@"x-oss-"]) {
-                [params addObject:[NSString stringWithFormat:@"%@:%@", key, [requestMessage.headerParams objectForKey:key]]];
-            }
-        }
-        if ([params count]) {
-            xossHeader = [NSString stringWithFormat:@"%@\n", [params componentsJoinedByString:@"\n"]];
-        }
-    }
-
-    /* construct CanonicalizedResource */
-    resource = @"/";
+    NSString *resource = @"/";
     if (requestMessage.bucketName) {
         resource = [NSString stringWithFormat:@"/%@/", requestMessage.bucketName];
     }
     if (requestMessage.objectKey) {
         resource = [resource oss_stringByAppendingPathComponentForURL:requestMessage.objectKey];
     }
-    if (requestMessage.params) {
-        NSMutableArray * querys = [[NSMutableArray alloc] init];
-        NSArray * sortedKey = [[requestMessage.params allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1 compare:obj2];
-        }];
-        for (NSString * key in sortedKey) {
-            NSString * value = [requestMessage.params objectForKey:key];
-
-            if (![OSSSubResourceARRAY containsObject:key]) { // notice it's based on content compare
-                continue;
-            }
-
-            if ([value isEqualToString:@""]) {
-                [querys addObject:[NSString stringWithFormat:@"%@", key]];
-            } else {
-                [querys addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
-            }
-        }
-        if ([querys count]) {
-            resource = [resource stringByAppendingString:[NSString stringWithFormat:@"?%@",[querys componentsJoinedByString:@"&"]]];
-        }
-    }
-
-    /* now, join every part of content and sign */
-    NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, contentMd5, contentType, date, xossHeader, resource];
-    OSSLogDebug(@"string to sign: %@", stringToSign);
-    if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
-        || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]])
-    {
-        NSString * signature = [OSSUtil sign:stringToSign withToken:federationToken];
-        [requestMessage.headerParams oss_setObject:signature forKey:@"Authorization"];
-    }else if ([self.credentialProvider isKindOfClass:[OSSCustomSignerCredentialProvider class]])
-    {
-        OSSCustomSignerCredentialProvider *provider = (OSSCustomSignerCredentialProvider *)self.credentialProvider;
-        
-        NSError *customSignError;
-        NSString * signature = [provider sign:stringToSign error:&customSignError];
-        if (customSignError) {
-            OSSLogError(@"OSSCustomSignerError: %@", customSignError)
-            return [OSSTask taskWithError: customSignError];
-        }
-        [requestMessage.headerParams oss_setObject:signature forKey:@"Authorization"];
-    }else
-    {
-        NSString * signature = [self.credentialProvider sign:stringToSign error:&error];
-        if (error) {
-            return [OSSTask taskWithError:error];
-        }
-        [requestMessage.headerParams oss_setObject:signature forKey:@"Authorization"];
-    }
-    return [OSSTask taskWithResult:nil];
+    OSSSignerParams *signerParams = [[OSSSignerParams alloc] init];
+    signerParams.region = self.region;
+    signerParams.cloudBoxId = self.cloudBoxId;
+    signerParams.resourcePath = resource;
+    signerParams.credentialProvider = self.credentialProvider;
+    
+    id<OSSRequestSigner> requestSigner = [OSSSignerBase createRequestSignerWithSignerVersion:self.version
+                                                                                signerParams:signerParams];
+    
+    return [requestSigner sign:requestMessage];
 }
 
 @end
