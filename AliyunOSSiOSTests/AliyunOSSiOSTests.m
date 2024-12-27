@@ -45,7 +45,9 @@ id<OSSCredentialProvider> credential, authCredential;
     // Put setup code here. This method is called before the invocation of each test method in the class.
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSString *testName = [[array1[1] substringToIndex:([array1[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
+    OSSLogDebug(@"bucket name before: %@", _privateBucketName)
+    _privateBucketName = [OSSTestUtils getBucketName];
+    OSSLogDebug(@"bucket name after: %@", _privateBucketName)
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         fileNameArray = @[@"file1k", @"file10k", @"file100k", @"file1m", @"file5m", @"file10m", @"fileDirA/", @"fileDirB/"];

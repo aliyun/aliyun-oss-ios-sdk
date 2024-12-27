@@ -31,7 +31,7 @@
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSArray *array2 = [array1[1] componentsSeparatedByString:@"_"];
     NSString *testName = [[array2[1] substringToIndex:([array2[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
+    _privateBucketName = [OSSTestUtils getBucketName];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpOSSClient];
     [self setUpLocalFiles];

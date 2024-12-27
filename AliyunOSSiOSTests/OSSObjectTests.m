@@ -47,8 +47,8 @@
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSArray *array2 = [array1[1] componentsSeparatedByString:@"_"];
     NSString *testName = [[array2[1] substringToIndex:([array2[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-private-" stringByAppendingString:testName];
-    _publicBucketName = [@"oss-ios-public-" stringByAppendingString:testName];
+    _privateBucketName = [@"oss-ios-private-" stringByAppendingString:[OSSTestUtils getBucketName]];
+    _publicBucketName = [@"oss-ios-public-" stringByAppendingString:[OSSTestUtils getBucketName]];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     [self setUpOSSClient];
     [self setUpLocalFiles];
@@ -762,7 +762,7 @@
 }
 
 - (void)testAPI_restoreObject {
-    NSString *bucketName = @"aliyun-oss-ios-restore-object-test";
+    NSString *bucketName = [OSSTestUtils getBucketName];
     NSString *objectName = @"test-restore-objectName";
     
     OSSCreateBucketRequest *createBucketRequest = [OSSCreateBucketRequest new];
@@ -902,7 +902,7 @@
 
 - (void)testAPI_get_Bucket_list_Objects
 {
-    NSString * bucket = @"oss-ios-get-bucket-list-object-test";
+    NSString * bucket = [OSSTestUtils getBucketName];
     OSSCreateBucketRequest *req = [OSSCreateBucketRequest new];
     req.bucketName = bucket;
     [[_client createBucket:req] waitUntilFinished];

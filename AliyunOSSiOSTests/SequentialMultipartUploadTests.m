@@ -7,8 +7,11 @@
 //
 
 #import "AliyunOSSTests.h"
+#import "OSSTestUtils.h"
 
 @interface SequentialMultipartUploadTests : AliyunOSSTests
+
+@property (nonatomic, copy) NSString *bucketName;
 
 @end
 
@@ -17,18 +20,26 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    self.bucketName = [OSSTestUtils getBucketName];
+    
+    OSSCreateBucketRequest *createBucket = [OSSCreateBucketRequest new];
+    createBucket.bucketName = self.bucketName;
+    [[self.client createBucket:createBucket] waitUntilFinished];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+    
+    [OSSTestUtils cleanBucket:self.bucketName with:self.client];
 }
 
 - (void)testAPI_sequentialMultipartUpload_crcClosed {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
@@ -47,7 +58,7 @@
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
@@ -64,7 +75,7 @@
 
 - (void)testAPI_sequentialMultipartUpload_cancel_withoutDeleteRecord {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
@@ -88,7 +99,7 @@
 
 - (void)testAPI_sequentialMultipartUpload_cancel_deleteRecord {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.recordDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
@@ -112,7 +123,7 @@
 
 - (void)testAPI_sequentialMultipartUpload_cancel_and_resume_crcClosed {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
@@ -134,7 +145,7 @@
     }] waitUntilFinished];
     
     OSSResumableUploadRequest *resumedRequest = [OSSResumableUploadRequest new];
-    resumedRequest.bucketName = OSS_BUCKET_PUBLIC;
+    resumedRequest.bucketName = self.bucketName;
     resumedRequest.objectKey = @"sequential-multipart";
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;
@@ -151,7 +162,7 @@
 
 - (void)testAPI_sequentialMultipartUpload_cancel_and_resume_crcOpened {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = NO;
@@ -174,7 +185,7 @@
     }] waitUntilFinished];
     
     OSSResumableUploadRequest *resumedRequest = [OSSResumableUploadRequest new];
-    resumedRequest.bucketName = OSS_BUCKET_PUBLIC;
+    resumedRequest.bucketName = self.bucketName;
     resumedRequest.objectKey = @"sequential-multipart";
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;
@@ -192,7 +203,7 @@
 
 - (void)testAPI_sequentialMultipartUpload_cancel_and_resume_lastCrcOpened {
     OSSResumableUploadRequest *request = [OSSResumableUploadRequest new];
-    request.bucketName = OSS_BUCKET_PUBLIC;
+    request.bucketName = self.bucketName;
     request.objectKey = @"sequential-multipart";
     request.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     request.deleteUploadIdOnCancelling = YES;
@@ -215,7 +226,7 @@
     }] waitUntilFinished];
     
     OSSResumableUploadRequest *resumedRequest = [OSSResumableUploadRequest new];
-    resumedRequest.bucketName = OSS_BUCKET_PUBLIC;
+    resumedRequest.bucketName = self.bucketName;
     resumedRequest.objectKey = @"sequential-multipart";
     resumedRequest.uploadingFileURL = [[NSBundle mainBundle] URLForResource:@"wangwang" withExtension:@"zip"];
     resumedRequest.deleteUploadIdOnCancelling = NO;

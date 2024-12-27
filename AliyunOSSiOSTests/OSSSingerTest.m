@@ -62,7 +62,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -117,7 +116,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -178,7 +176,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -251,7 +248,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -310,7 +306,6 @@
     [signHeaders addObject:@"ZAbc"];
 
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -341,7 +336,6 @@
     [signHeaders addObject:@"x-oss-no-exist"];
 
     requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -397,7 +391,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -464,7 +457,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -526,7 +518,6 @@
     parameters[@"param2"] = @"";
     
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -586,7 +577,6 @@
     [signHeaders addObject:@"ZAbc"];
 
     OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
@@ -624,7 +614,6 @@
     [signHeaders addObject:@"x-oss-no-exist"];
 
     requestMessage = [OSSAllRequestNeededMessage new];
-    requestMessage.isAuthenticationRequired = YES;
     requestMessage.httpMethod = @"PUT";
     requestMessage.bucketName = bucket;
     requestMessage.objectKey = key;
