@@ -46,4 +46,23 @@ static NSTimeInterval _clockSkew = 0.0;
     return [dateFormatter stringFromDate:self];
 }
 
++ (NSDate *)oss_dateFromString:(NSString *)string
+                    dateFormat:(NSString *)dateFormat {
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+    dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = dateFormat;
+    
+    return [dateFormatter dateFromString:string];
+}
+
+- (NSString *)oss_asStringValueWithDateFormat:(NSString *)dateFormat {
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+    dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = dateFormat;
+    
+    return [dateFormatter stringFromDate:self];
+}
+
 @end

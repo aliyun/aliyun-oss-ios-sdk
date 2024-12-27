@@ -44,6 +44,13 @@
             }
             break;
             
+        case 400:
+            if ([[[error userInfo] objectForKey:@"Code"] isEqualToString:@"InvalidArgument"] &&
+                [[[error userInfo] objectForKey:@"Message"] isEqualToString:@"Invalid signing date in Authorization header."]) {
+                return OSSNetworkingRetryTypeShouldCorrectClockSkewAndRetry;
+            }
+            break;
+            
         default:
             break;
     }

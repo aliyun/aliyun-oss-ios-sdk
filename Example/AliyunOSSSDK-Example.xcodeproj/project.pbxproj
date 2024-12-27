@@ -17,6 +17,7 @@
 		5468C5192601D85100CF043E /* OSSConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5468C5182601D85100CF043E /* OSSConfigurationTest.m */; };
 		5477E99C260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */; };
 		5450A8DC261C3AD600BECD80 /* bigfile.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5450A8DB261C3AD600BECD80 /* bigfile.zip */; };
+		54877AF52B43B69F00F8CEB1 /* OSSSingerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AF42B43B69F00F8CEB1 /* OSSSingerTest.m */; };
 		D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */ = {isa = PBXBuildFile; fileRef = D1805034212EA0F700A1E647 /* OSSHttp2Test.m */; };
 		D810A00B2092F76900425D19 /* OSSUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D810A00A2092F76900425D19 /* OSSUtilsTests.m */; };
 		D8125E96211DAFA500DB687C /* OSSClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8125E95211DAFA500DB687C /* OSSClientTests.m */; };
@@ -115,6 +116,7 @@
 		5468C5182601D85100CF043E /* OSSConfigurationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSConfigurationTest.m; sourceTree = "<group>"; };
 		5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSNetworkingRequestDelegateTest.m; sourceTree = "<group>"; };
 		5450A8DB261C3AD600BECD80 /* bigfile.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = bigfile.zip; sourceTree = "<group>"; };
+		54877AF42B43B69F00F8CEB1 /* OSSSingerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSSingerTest.m; sourceTree = "<group>"; };
 		D1805034212EA0F700A1E647 /* OSSHttp2Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSHttp2Test.m; sourceTree = "<group>"; };
 		D810A00A2092F76900425D19 /* OSSUtilsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSUtilsTests.m; sourceTree = "<group>"; };
 		D8125E95211DAFA500DB687C /* OSSClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSClientTests.m; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 				D852773A2010439A00D7B1DE /* SequentialMultipartUploadTests.m */,
 				D83CEFF7201F1CEE00F917E1 /* TriggerCallbackTests.m */,
 				5477E99B260D797B00D793F8 /* OSSNetworkingRequestDelegateTest.m */,
+				54877AF42B43B69F00F8CEB1 /* OSSSingerTest.m */,
 			);
 			name = AliyunOSSiOSTests;
 			path = ../AliyunOSSiOSTests;
@@ -565,6 +568,7 @@
 				D83D585A1FC682070022761B /* OSSRangeTests.m in Sources */,
 				D87183C41FC572C6000DD9EC /* OSSTaskTests.m in Sources */,
 				D87183C51FC572C6000DD9EC /* OSSCancellationTests.m in Sources */,
+				54877AF52B43B69F00F8CEB1 /* OSSSingerTest.m in Sources */,
 				D829F3AE1FDE719000A8C2DC /* OSSBucketTests.m in Sources */,
 				D829F3F61FE23DA700A8C2DC /* OSSCrc64Tests.m in Sources */,
 				D1805035212EA0F700A1E647 /* OSSHttp2Test.m in Sources */,

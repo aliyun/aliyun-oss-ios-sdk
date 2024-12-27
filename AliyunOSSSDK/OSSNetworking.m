@@ -367,7 +367,6 @@
                         OSSLogError(@"Date header does not exist, unable to fix the clock skew");
                     }
                     
-                    [delegate.interceptors insertObject:[OSSTimeSkewedFixingInterceptor new] atIndex:0];
                     break;
                 }
 

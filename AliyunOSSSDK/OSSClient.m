@@ -15,6 +15,8 @@
 #import "OSSNetworking.h"
 #import "OSSXMLDictionary.h"
 #import "OSSIPv6Adapter.h"
+#import "OSSSignerParams.h"
+#import "OSSSignerBase.h"
 
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSAllRequestNeededMessage.h"
@@ -128,6 +130,7 @@ static NSObject *lock;
 }
 
 - (OSSTask *)invokeRequest:(OSSNetworkingRequestDelegate *)request requireAuthentication:(BOOL)requireAuthentication {
+    request.allNeededMessage.isAuthenticationRequired = requireAuthentication;
     /* if content-type haven't been set, we set one */
     if (!request.allNeededMessage.contentType.oss_isNotEmpty
         && ([request.allNeededMessage.httpMethod isEqualToString:@"POST"] || [request.allNeededMessage.httpMethod isEqualToString:@"PUT"])) {
@@ -145,12 +148,18 @@ static NSObject *lock;
 
     id<OSSRequestInterceptor> uaSetting = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:self.clientConfiguration];
     [request.interceptors addObject:uaSetting];
-
-    /* check if the authentication is required */
-    if (requireAuthentication) {
-        id<OSSRequestInterceptor> signer = [[OSSSignerInterceptor alloc] initWithCredentialProvider:self.credentialProvider];
-        [request.interceptors addObject:signer];
+    
+    if (self.clientConfiguration.signVersion == OSSSignVersionV4 && self.region == nil) {
+        return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
+                                                          code:OSSClientErrorCodeInvalidArgument
+                                                      userInfo:@{OSSErrorMessageTOKEN: @"Region haven't been set!"}]];
     }
+
+    OSSSignerInterceptor *signer = [[OSSSignerInterceptor alloc] initWithCredentialProvider:self.credentialProvider];
+    signer.version = self.clientConfiguration.signVersion;
+    signer.region = self.region;
+    signer.cloudBoxId = self.cloudBoxId;
+    [request.interceptors addObject:signer];
 
     request.isHttpdnsEnable = self.clientConfiguration.isHttpdnsEnable;
     request.isPathStyleAccessEnable = self.clientConfiguration.isPathStyleAccessEnable;
@@ -1995,88 +2004,48 @@ static NSObject *lock;
                                     httpMethod:(NSString *)method
                         withExpirationInterval:(NSTimeInterval)interval
                                 withParameters:(NSDictionary *)parameters
+                                   withHeaders:(NSDictionary *)headers {
+    return [self presignConstrainURLWithBucketName:bucketName
+                                     withObjectKey:objectKey
+                                        httpMethod:method
+                            withExpirationInterval:interval
+                                    withParameters:parameters
+                                       withHeaders:headers
+                         withAdditionalHeaderNames:nil];
+}
+
+- (OSSTask *)presignConstrainURLWithBucketName:(NSString *)bucketName
+                                 withObjectKey:(NSString *)objectKey
+                                    httpMethod:(NSString *)method
+                        withExpirationInterval:(NSTimeInterval)interval
+                                withParameters:(NSDictionary *)parameters
                                    withHeaders:(NSDictionary *)headers
+                     withAdditionalHeaderNames:(NSSet<NSString *> *)additionalHeaderNames
 {
     return [[OSSTask taskWithResult:nil] continueWithBlock:^id(OSSTask *task) {
-        NSString * resource = [NSString stringWithFormat:@"/%@/%@", bucketName, objectKey];
-        NSString * expires = [@((int64_t)[[NSDate oss_clockSkewFixedDate] timeIntervalSince1970] + interval) stringValue];
-        NSString * xossHeader = @"";
+        
+        NSString *resource = @"/";
+        if (bucketName != nil) {
+            resource = [NSString stringWithFormat:@"/%@/", bucketName];
+        }
+        if (objectKey != nil) {
+            resource = [resource oss_stringByAppendingPathComponentForURL:objectKey];
+        }
         NSString * contentType = headers[OSSHttpHeaderContentType];
         NSString * contentMd5 = headers[OSSHttpHeaderContentMD5];
         NSString * patchContentType = contentType == nil ? @"" : contentType;
         NSString * patchContentMd5 = contentMd5 == nil ? @"" : contentMd5;
-
-        NSMutableDictionary * params = [NSMutableDictionary dictionary];
-        if (parameters.count > 0) {
-            [params addEntriesFromDictionary:parameters];
-        }
         
-        if (headers) {
-            NSMutableArray * params = [[NSMutableArray alloc] init];
-            NSArray * sortedKey = [[headers allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [obj1 compare:obj2];
-            }];
-            for (NSString * key in sortedKey) {
-                if ([key hasPrefix:@"x-oss-"]) {
-                    [params addObject:[NSString stringWithFormat:@"%@:%@", key, [headers objectForKey:key]]];
-                }
-            }
-            if ([params count]) {
-                xossHeader = [NSString stringWithFormat:@"%@\n", [params componentsJoinedByString:@"\n"]];
-            }
-        }
-        
-        NSString * wholeSign = nil;
-        OSSFederationToken *token = nil;
-        NSError *error = nil;
-        
-        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]) {
-            token = [(OSSFederationCredentialProvider *)self.credentialProvider getToken:&error];
-            if (error) {
-                return [OSSTask taskWithError:error];
-            }
-        } else if ([self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]]) {
-            token = [(OSSStsTokenCredentialProvider *)self.credentialProvider getToken];
-        }
-        
-        if ([self.credentialProvider isKindOfClass:[OSSFederationCredentialProvider class]]
-            || [self.credentialProvider isKindOfClass:[OSSStsTokenCredentialProvider class]])
-        {
-            [params oss_setObject:token.tToken forKey:@"security-token"];
-            resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
-            NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, patchContentMd5, patchContentType, expires, xossHeader, resource];
-            wholeSign = [OSSUtil sign:stringToSign withToken:token];
-        } else {
-            NSString * subresource = [OSSUtil populateSubresourceStringFromParameter:params];
-            if ([subresource length] > 0) {
-                resource = [NSString stringWithFormat:@"%@?%@", resource, [OSSUtil populateSubresourceStringFromParameter:params]];
-            }
-            NSString * stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", method, patchContentMd5, patchContentType, expires, xossHeader, resource];
-            wholeSign = [self.credentialProvider sign:stringToSign error:&error];
-            if (error) {
-                return [OSSTask taskWithError:error];
-            }
-        }
-        
-        NSArray * splitResult = [wholeSign componentsSeparatedByString:@":"];
-        if ([splitResult count] != 2
-            || ![((NSString *)[splitResult objectAtIndex:0]) hasPrefix:@"OSS "]) {
-            return [OSSTask taskWithError:[NSError errorWithDomain:OSSClientErrorDomain
-                                                              code:OSSClientErrorCodeSignFailed
-                                                          userInfo:@{OSSErrorMessageTOKEN: @"the returned signature is invalid"}]];
-        }
-        NSString * accessKey = [(NSString *)[splitResult objectAtIndex:0] substringFromIndex:4];
-        NSString * signature = [splitResult objectAtIndex:1];
-        
-        BOOL isPathStyle = false;
         NSURL * endpointURL = [NSURL URLWithString:self.endpoint];
         NSString * host = endpointURL.host;
+        BOOL isPathStyle = false;
         NSString * port = @"";
         NSString * path = @"";
         NSString * pathStylePath = @"";
+        Boolean isHostInCnameExcludeList = [OSSUtil isIncludeCnameExcludeList:self.clientConfiguration.cnameExcludeList host:host];
         if ([OSSUtil isOssOriginBucketHost:host]) {
             host = [NSString stringWithFormat:@"%@.%@", bucketName, host];
-        } else if ([OSSUtil isIncludeCnameExcludeList:self.clientConfiguration.cnameExcludeList host:host]) {
+        } else if (isHostInCnameExcludeList) {
             if (self.clientConfiguration.isPathStyleAccessEnable) {
                 isPathStyle = true;
             } else {
@@ -2096,9 +2065,34 @@ static NSObject *lock;
             pathStylePath = [@"/" stringByAppendingString:bucketName];
         }
         
-        [params oss_setObject:signature forKey:@"Signature"];
-        [params oss_setObject:accessKey forKey:@"OSSAccessKeyId"];
-        [params oss_setObject:expires forKey:@"Expires"];
+        OSSAllRequestNeededMessage *message = [OSSAllRequestNeededMessage new];
+        message.bucketName = bucketName;
+        message.objectKey = objectKey;
+        message.httpMethod = method;
+        message.contentMd5 = contentMd5;
+        message.contentType = contentType;
+        message.headerParams = headers.mutableCopy;
+        message.params = parameters;
+        message.isHostInCnameExcludeList = isHostInCnameExcludeList;
+        message.isUseUrlSignature = true;
+        message.additionalHeaderNames = additionalHeaderNames;
+        message.isAuthenticationRequired = true;
+        
+        
+        OSSSignerParams *signerParams = [[OSSSignerParams alloc] init];
+        signerParams.region = self.region;
+        signerParams.cloudBoxId = self.cloudBoxId;
+        signerParams.resourcePath = resource;
+        signerParams.credentialProvider = self.credentialProvider;
+        signerParams.expiration = interval;
+        
+        id<OSSRequestPresigner> requestSigner = [OSSSignerBase createRequestPresignerWithSignerVersion:self.clientConfiguration.signVersion
+                                                                                          signerParams:signerParams];
+        OSSTask *signTask = [requestSigner presign:message];
+        if (signTask.error) {
+            return signTask;
+        }
+        
         NSString * stringURL = [NSString stringWithFormat:@"%@://%@%@%@%@/%@?%@",
                                 endpointURL.scheme,
                                 host,
@@ -2106,7 +2100,7 @@ static NSObject *lock;
                                 path,
                                 pathStylePath,
                                 [OSSUtil encodeURL:objectKey],
-                                [OSSUtil populateQueryStringFromParameter:params]];
+                                [OSSUtil populateQueryStringFromParameter:message.params]];
         return [OSSTask taskWithResult:stringURL];
     }];
 }
