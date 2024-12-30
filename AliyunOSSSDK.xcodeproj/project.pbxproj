@@ -529,7 +529,7 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		54877AF72B45535D00F8CEB1 /* Singer */ = {
+		54877AF72B45535D00F8CEB1 /* Signer */ = {
 			isa = PBXGroup;
 			children = (
 				54877AF82B45535D00F8CEB1 /* OSSServiceSignature.h */,
@@ -545,7 +545,7 @@
 				54877AF92B45535D00F8CEB1 /* OSSV4Signer.h */,
 				54877B002B45535D00F8CEB1 /* OSSV4Signer.m */,
 			);
-			path = Singer;
+			path = Signer;
 			sourceTree = "<group>";
 		};
 		D842D59D1FFCB82E00220913 /* Supporting Files */ = {
@@ -563,7 +563,7 @@
 		D87183061FC56358000DD9EC /* AliyunOSSSDK */ = {
 			isa = PBXGroup;
 			children = (
-				54877AF72B45535D00F8CEB1 /* Singer */,
+				54877AF72B45535D00F8CEB1 /* Signer */,
 				D8C5E5401FCE915000613BA5 /* aos_crc64.c */,
 				D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */,
 				D827B40921107169003A24F6 /* NSDate+OSS.h */,
