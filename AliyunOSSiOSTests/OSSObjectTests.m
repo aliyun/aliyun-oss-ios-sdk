@@ -133,6 +133,49 @@
 
 #pragma mark - putObject
 
+- (void)testAPI_putObjectFromFileWithAdditionalHeaderNamesBySignV4 {
+    for (NSUInteger pIdx = 0; pIdx < _fileNames.count; pIdx++)
+    {
+        NSString *objectKey = _fileNames[pIdx];
+        NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
+        NSURL * fileURL = [NSURL fileURLWithPath:filePath];
+        
+        OSSClientConfiguration *config = [OSSClientConfiguration new];
+        config.signVersion = OSSSignVersionV4;
+        OSSAuthCredentialProvider *provider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:OSS_STSTOKEN_URL];
+        OSSClient *client = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT
+                                             credentialProvider:provider
+                                            clientConfiguration:config];
+        client.region = OSS_REGION;
+        
+        OSSPutObjectRequest * request = [OSSPutObjectRequest new];
+        request.bucketName = _privateBucketName;
+        request.objectKey = objectKey;
+        request.uploadingFileURL = fileURL;
+        request.objectMeta = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"value1", @"x-oss-meta-name1", nil];
+        request.objectMeta = @{@"key1": @"value1",
+                               @"key2": @"value2"};
+        request.additionalHeaderNames = [[NSSet alloc] initWithObjects:@"key1", @"key2", nil];
+        
+        OSSProgressTestUtils *progressTest = [OSSProgressTestUtils new];
+        request.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+            NSLog(@"bytesSent: %lld, totalByteSent: %lld, totalBytesExpectedToSend: %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+            [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
+        };
+        
+        OSSTask * task = [client putObject:request];
+        [[task continueWithBlock:^id(OSSTask *task) {
+            XCTAssertNil(task.error);
+            BOOL isEqual = [self checkMd5WithBucketName:_privateBucketName
+                                              objectKey:objectKey
+                                          localFilePath:filePath];
+            XCTAssertTrue(isEqual);
+            return nil;
+        }] waitUntilFinished];
+        XCTAssertTrue([progressTest completeValidateProgress]);
+    }
+}
+
 - (void)testAPI_putObjectFromNSData
 {
     NSString *filePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:_fileNames[0]];

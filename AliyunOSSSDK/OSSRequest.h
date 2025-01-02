@@ -28,6 +28,8 @@
  */
 @property (nonatomic, assign) OSSRequestCRCFlag crcFlag;
 
+@property (nonatomic, strong) NSSet<NSString *> *additionalHeaderNames;
+
 /**
  Cancels the request
  */

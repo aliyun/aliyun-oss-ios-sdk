@@ -471,6 +471,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.headerParams = headerParams;
     neededMsg.contentMd5 = md5String;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeCreateBucket;
@@ -487,6 +488,7 @@ static NSObject *lock;
     neededMsg.endpoint = self.endpoint;
     neededMsg.httpMethod = OSSHTTPMethodDELETE;
     neededMsg.bucketName = request.bucketName;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeDeleteBucket;
@@ -504,6 +506,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodGET;
     neededMsg.bucketName = request.bucketName;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucket;
@@ -521,6 +524,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodGET;
     neededMsg.bucketName = request.bucketName;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucketInfo;
@@ -538,6 +542,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodGET;
     neededMsg.bucketName = request.bucketName;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetBucketACL;
@@ -559,6 +564,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodHEAD;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeHeadObject;
@@ -597,6 +603,7 @@ static NSObject *lock;
     neededMsg.range = rangeString;
     neededMsg.params = params;
     neededMsg.headerParams = request.headerFields;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObject;
@@ -618,6 +625,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectName;
     neededMsg.params = params;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObjectACL;
@@ -674,6 +682,7 @@ static NSObject *lock;
     neededMsg.contentType = request.contentType;
     neededMsg.headerParams = headerParams;
     neededMsg.contentSHA1 = request.contentSHA1;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypePutObject;
@@ -701,6 +710,7 @@ static NSObject *lock;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = params;
     neededMsg.headerParams = headerParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypePutObjectACL;
@@ -759,6 +769,7 @@ static NSObject *lock;
     neededMsg.headerParams = headerParams;
     neededMsg.params = params;
     neededMsg.contentSHA1 = request.contentSHA1;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeAppendObject;
@@ -776,6 +787,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodDELETE;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeDeleteObject;
@@ -807,6 +819,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.contentMd5 = md5String;
     neededMsg.params = params;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeDeleteMultipleObjects;
@@ -847,6 +860,7 @@ static NSObject *lock;
     neededMsg.contentMd5 = request.contentMd5;
     neededMsg.headerParams = headerParams;
     neededMsg.contentSHA1 = request.contentSHA1;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeCopyObject;
@@ -872,6 +886,7 @@ static NSObject *lock;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
     neededMsg.headerParams = headerFields;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypePutSymlink;
@@ -889,6 +904,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetSymlink;
@@ -906,6 +922,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeRestoreObject;
@@ -923,6 +940,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeGetObjectTagging;
@@ -940,6 +958,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     NSString *xmlString = [[request entityToDictionary] oss_XMLString];
@@ -959,6 +978,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = request.requestParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeDeleteObjectTagging;
@@ -984,6 +1004,7 @@ static NSObject *lock;
     neededMsg.httpMethod = OSSHTTPMethodGET;
     neededMsg.bucketName = request.bucketName;
     neededMsg.params = params;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeListMultipartUploads;
@@ -1015,6 +1036,7 @@ static NSObject *lock;
     neededMsg.contentType = request.contentType;
     neededMsg.params = params;
     neededMsg.headerParams = headerParams;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeInitMultipartUpload;
@@ -1057,6 +1079,7 @@ static NSObject *lock;
     neededMsg.contentMd5 = request.contentMd5;
     neededMsg.params = params;
     neededMsg.contentSHA1 = request.contentSHA1;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeUploadPart;
@@ -1093,6 +1116,7 @@ static NSObject *lock;
     neededMsg.headerParams = headerParams;
     neededMsg.params = params;
     neededMsg.contentSHA1 = request.contentSHA1;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeCompleteMultipartUpload;
@@ -1115,6 +1139,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = params;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeListMultipart;
@@ -1134,6 +1159,7 @@ static NSObject *lock;
     neededMsg.bucketName = request.bucketName;
     neededMsg.objectKey = request.objectKey;
     neededMsg.params = params;
+    neededMsg.additionalHeaderNames = request.additionalHeaderNames;
     requestDelegate.allNeededMessage = neededMsg;
     
     requestDelegate.operType = OSSOperationTypeAbortMultipartUpload;
@@ -1189,6 +1215,7 @@ static NSObject *lock;
         OSSAbortMultipartUploadRequest * abort = [OSSAbortMultipartUploadRequest new];
         abort.bucketName = request.bucketName;
         abort.objectKey = request.objectKey;
+        abort.additionalHeaderNames = request.additionalHeaderNames;
         if (request.uploadId) {
             abort.uploadId = request.uploadId;
         } else {
@@ -1202,6 +1229,7 @@ static NSObject *lock;
         abort.bucketName = request.bucketName;
         abort.objectKey = request.objectKey;
         abort.uploadId = request.uploadId;
+        abort.additionalHeaderNames = request.additionalHeaderNames;
         errorTask = [self abortMultipartUpload:abort];
     }
     
@@ -1221,6 +1249,7 @@ static NSObject *lock;
     complete.partInfos = partInfos;
     complete.crcFlag = request.crcFlag;
     complete.contentSHA1 = request.contentSHA1;
+    complete.additionalHeaderNames = request.additionalHeaderNames;
     
     if (request.completeMetaHeader != nil) {
         complete.completeMetaHeader = request.completeMetaHeader;
@@ -1726,6 +1755,7 @@ static NSObject *lock;
             initRequest.objectMeta = request.completeMetaHeader;
             initRequest.sequential = sequential;
             initRequest.crcFlag = request.crcFlag;
+            initRequest.additionalHeaderNames = request.additionalHeaderNames;
             
             OSSTask *task = [self processResumableInitMultipartUpload:initRequest
                                                        recordFilePath:recordFilePath];
