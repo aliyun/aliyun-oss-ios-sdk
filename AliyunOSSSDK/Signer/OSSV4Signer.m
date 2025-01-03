@@ -55,7 +55,7 @@
     if ([self hasDefaultSignedHeaders:header]) {
         return YES;
     }
-    return [self.additionalSignedHeaders containsObject:header];
+    return [self.additionalSignedHeaders containsObject:header.lowercaseString];
 }
 
 - (BOOL)hasAdditionalSignedHeaders {
@@ -95,6 +95,7 @@
     [self initRequestDateTime];
     NSString *date = [self getDateTime];
     request.date = date;
+    [request.headerParams oss_setObject:date forKey:OSSHttpHeaderDateEx];
     [request.headerParams oss_setObject:date forKey:OSSHttpHeaderDate];
 }
 
@@ -113,20 +114,25 @@
     [canonicalString appendString:NewLine];
     
     //Canonical URI + "\n"
-    NSMutableCharacterSet *characterSet = NSCharacterSet.newlineCharacterSet.mutableCopy;
-    [characterSet addCharactersInString:@"!*\"'();:@&=+$,?#[]|%"];
-    [canonicalString appendString:[resourcePath stringByAddingPercentEncodingWithAllowedCharacters:[characterSet invertedSet]]];
+    [canonicalString appendString:[OSSUtil encodeResourcePath:resourcePath]];
     [canonicalString appendString:NewLine];
     
     //Canonical Query String + "\n" +
     NSMutableArray * params = [NSMutableArray new];
-    NSArray *allParamsKey = [request.params.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    
+    NSMutableDictionary *encodedParams = @{}.mutableCopy;
+    for (NSString *key in request.params.allKeys) {
+        NSString *encodedValue = [OSSUtil encodeQuery:[request.params[key] oss_trim]];
+        NSString *encodedKey = [OSSUtil encodeQuery:key];
+        [encodedParams oss_setObject:encodedValue forKey:encodedKey];
+    }
+    NSArray *allParamsKey = [encodedParams.allKeys sortedArrayUsingSelector:@selector(compare:)];
     for (NSString *key in allParamsKey) {
-        NSString *value = [[request.params[key] oss_trim] oss_urlEncodedString];
+        NSString *value = encodedParams[key];
         if ([value oss_isNotEmpty]) {
-            [params addObject:[NSString stringWithFormat:@"%@=%@", [key oss_urlEncodedString], value]];
+            [params addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
         } else {
-            [params addObject:[NSString stringWithFormat:@"%@", [key oss_urlEncodedString]]];
+            [params addObject:[NSString stringWithFormat:@"%@", key]];
         }
     }
     [canonicalString appendString:[params componentsJoinedByString:@"&"]];
@@ -141,10 +147,14 @@
     if (request.contentMd5) {
         headerParams[OSSHttpHeaderContentMD5.lowercaseString] = request.contentMd5;
     }
-    NSArray *allHeaderKey = [headerParams.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableDictionary *lowercaseHeaders = @{}.mutableCopy;
+    for (NSString *key in headerParams.allKeys) {
+        [lowercaseHeaders oss_setObject:headerParams[key] forKey:key.lowercaseString];
+    }
+    NSArray *allHeaderKey = [lowercaseHeaders.allKeys sortedArrayUsingSelector:@selector(compare:)];
     for (NSString *key in allHeaderKey) {
         NSString *keyStr = [key oss_trim];
-        NSString *valueStr = [headerParams[key] oss_trim];
+        NSString *valueStr = [lowercaseHeaders[key] oss_trim];
         if ([self hasSignedHeaders:keyStr] && [valueStr oss_isNotEmpty]) {
             [headers addObject:[NSString stringWithFormat:@"%@:%@%@", keyStr, valueStr, NewLine]];
         }
