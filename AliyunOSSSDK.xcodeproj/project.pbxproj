@@ -10,6 +10,30 @@
 		4CEF14F81F5522A1007010B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216256EF1CF1B1580086458F /* SystemConfiguration.framework */; };
 		5440E3CD2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */; };
 		5440E3CE2BC2380E0051E360 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */; };
+		54877B042B45535D00F8CEB1 /* OSSServiceSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AF82B45535D00F8CEB1 /* OSSServiceSignature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B052B45535D00F8CEB1 /* OSSServiceSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AF82B45535D00F8CEB1 /* OSSServiceSignature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B062B45535D00F8CEB1 /* OSSV4Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AF92B45535D00F8CEB1 /* OSSV4Signer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B072B45535D00F8CEB1 /* OSSV4Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AF92B45535D00F8CEB1 /* OSSV4Signer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B082B45535D00F8CEB1 /* OSSSignerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AFA2B45535D00F8CEB1 /* OSSSignerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B092B45535D00F8CEB1 /* OSSSignerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AFA2B45535D00F8CEB1 /* OSSSignerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B0A2B45535D00F8CEB1 /* OSSSignerParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AFB2B45535D00F8CEB1 /* OSSSignerParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B0B2B45535D00F8CEB1 /* OSSSignerParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877AFB2B45535D00F8CEB1 /* OSSSignerParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54877B0C2B45535D00F8CEB1 /* OSSSignUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFC2B45535D00F8CEB1 /* OSSSignUtils.m */; };
+		54877B0D2B45535D00F8CEB1 /* OSSSignUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFC2B45535D00F8CEB1 /* OSSSignUtils.m */; };
+		54877B0E2B45535D00F8CEB1 /* OSSV1Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFD2B45535D00F8CEB1 /* OSSV1Signer.m */; };
+		54877B0F2B45535D00F8CEB1 /* OSSV1Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFD2B45535D00F8CEB1 /* OSSV1Signer.m */; };
+		54877B102B45535D00F8CEB1 /* OSSSignerParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFE2B45535D00F8CEB1 /* OSSSignerParams.m */; };
+		54877B112B45535D00F8CEB1 /* OSSSignerParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFE2B45535D00F8CEB1 /* OSSSignerParams.m */; };
+		54877B122B45535E00F8CEB1 /* OSSSignerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFF2B45535D00F8CEB1 /* OSSSignerBase.m */; };
+		54877B132B45535E00F8CEB1 /* OSSSignerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877AFF2B45535D00F8CEB1 /* OSSSignerBase.m */; };
+		54877B142B45535E00F8CEB1 /* OSSV4Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877B002B45535D00F8CEB1 /* OSSV4Signer.m */; };
+		54877B152B45535E00F8CEB1 /* OSSV4Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877B002B45535D00F8CEB1 /* OSSV4Signer.m */; };
+		54877B162B45535E00F8CEB1 /* OSSServiceSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877B012B45535D00F8CEB1 /* OSSServiceSignature.m */; };
+		54877B172B45535E00F8CEB1 /* OSSServiceSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877B012B45535D00F8CEB1 /* OSSServiceSignature.m */; };
+		54877B182B45535E00F8CEB1 /* OSSSignUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877B022B45535D00F8CEB1 /* OSSSignUtils.h */; };
+		54877B192B45535E00F8CEB1 /* OSSSignUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877B022B45535D00F8CEB1 /* OSSSignUtils.h */; };
+		54877B1A2B45535E00F8CEB1 /* OSSV1Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877B032B45535D00F8CEB1 /* OSSV1Signer.h */; };
+		54877B1B2B45535E00F8CEB1 /* OSSV1Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54877B032B45535D00F8CEB1 /* OSSV1Signer.h */; };
 		54A2FDC2289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDC3289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDC4289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDC1289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m */; };
@@ -34,6 +58,29 @@
 		54A2FDE1289B6879005410F8 /* OSSPutObjectTaggingResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 54A2FDDE289B6879005410F8 /* OSSPutObjectTaggingResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54A2FDE2289B6879005410F8 /* OSSPutObjectTaggingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */; };
 		54A2FDE3289B6879005410F8 /* OSSPutObjectTaggingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */; };
+		54DE672F2B3A9DE700DF97FB /* OSSSignerParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE672B2B3A9DE000DF97FB /* OSSSignerParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE67302B3A9DE700DF97FB /* OSSSignerParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE672C2B3A9DE000DF97FB /* OSSSignerParams.m */; };
+		54DE67312B3A9DE700DF97FB /* OSSSignerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67272B3A806D00DF97FB /* OSSSignerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE67322B3A9DE700DF97FB /* OSSSignerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67282B3A806D00DF97FB /* OSSSignerBase.m */; };
+		54DE67352B3AA27C00DF97FB /* OSSV4Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67332B3AA27C00DF97FB /* OSSV4Signer.h */; };
+		54DE67362B3AA27C00DF97FB /* OSSV4Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67332B3AA27C00DF97FB /* OSSV4Signer.h */; };
+		54DE67382B3AA27C00DF97FB /* OSSV4Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67342B3AA27C00DF97FB /* OSSV4Signer.m */; };
+		54DE673B2B3AA28400DF97FB /* OSSV1Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67392B3AA28400DF97FB /* OSSV1Signer.h */; };
+		54DE673C2B3AA28400DF97FB /* OSSV1Signer.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67392B3AA28400DF97FB /* OSSV1Signer.h */; };
+		54DE673E2B3AA28400DF97FB /* OSSV1Signer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE673A2B3AA28400DF97FB /* OSSV1Signer.m */; };
+		54DE67412B3AB24600DF97FB /* OSSSignUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE673F2B3AB24600DF97FB /* OSSSignUtils.h */; };
+		54DE67422B3AB24600DF97FB /* OSSSignUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE673F2B3AB24600DF97FB /* OSSSignUtils.h */; };
+		54DE67442B3AB24600DF97FB /* OSSSignUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67402B3AB24600DF97FB /* OSSSignUtils.m */; };
+		54DE67482B3ABBF000DF97FB /* OSSServiceSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67452B3ABBF000DF97FB /* OSSServiceSignature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE674A2B3ABBF000DF97FB /* OSSServiceSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67462B3ABBF000DF97FB /* OSSServiceSignature.m */; };
+		54DE67762B3D4EE600DF97FB /* NSSet+OSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67742B3D4EE600DF97FB /* NSSet+OSS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE67772B3D4EE600DF97FB /* NSSet+OSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE67742B3D4EE600DF97FB /* NSSet+OSS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE67782B3D4EE600DF97FB /* NSSet+OSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67752B3D4EE600DF97FB /* NSSet+OSS.m */; };
+		54DE67792B3D4EE600DF97FB /* NSSet+OSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE67752B3D4EE600DF97FB /* NSSet+OSS.m */; };
+		54DE677C2B3D56C300DF97FB /* NSData+OSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE677A2B3D56C300DF97FB /* NSData+OSS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE677D2B3D56C300DF97FB /* NSData+OSS.h in Headers */ = {isa = PBXBuildFile; fileRef = 54DE677A2B3D56C300DF97FB /* NSData+OSS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		54DE677E2B3D56C300DF97FB /* NSData+OSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE677B2B3D56C300DF97FB /* NSData+OSS.m */; };
+		54DE677F2B3D56C300DF97FB /* NSData+OSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DE677B2B3D56C300DF97FB /* NSData+OSS.m */; };
 		D80C81F51FC824E2008E3900 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */; };
 		D80C81F71FC824FF008E3900 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D80C81F61FC824FF008E3900 /* CoreTelephony.framework */; };
 		D80C81FB1FC82541008E3900 /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D87183091FC56358000DD9EC /* OSSModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -250,6 +297,18 @@
 		4C7D8BB61F8CC70F005D3040 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C7D8BB81F8CC741005D3040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		5440E3CC2BC2380E0051E360 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		54877AF82B45535D00F8CEB1 /* OSSServiceSignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSServiceSignature.h; sourceTree = "<group>"; };
+		54877AF92B45535D00F8CEB1 /* OSSV4Signer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSV4Signer.h; sourceTree = "<group>"; };
+		54877AFA2B45535D00F8CEB1 /* OSSSignerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSSignerBase.h; sourceTree = "<group>"; };
+		54877AFB2B45535D00F8CEB1 /* OSSSignerParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSSignerParams.h; sourceTree = "<group>"; };
+		54877AFC2B45535D00F8CEB1 /* OSSSignUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSSignUtils.m; sourceTree = "<group>"; };
+		54877AFD2B45535D00F8CEB1 /* OSSV1Signer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSV1Signer.m; sourceTree = "<group>"; };
+		54877AFE2B45535D00F8CEB1 /* OSSSignerParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSSignerParams.m; sourceTree = "<group>"; };
+		54877AFF2B45535D00F8CEB1 /* OSSSignerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSSignerBase.m; sourceTree = "<group>"; };
+		54877B002B45535D00F8CEB1 /* OSSV4Signer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSV4Signer.m; sourceTree = "<group>"; };
+		54877B012B45535D00F8CEB1 /* OSSServiceSignature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSSServiceSignature.m; sourceTree = "<group>"; };
+		54877B022B45535D00F8CEB1 /* OSSSignUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSSignUtils.h; sourceTree = "<group>"; };
+		54877B032B45535D00F8CEB1 /* OSSV1Signer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSSV1Signer.h; sourceTree = "<group>"; };
 		54A2FDC0289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteObjectTaggingRequest.h; sourceTree = "<group>"; };
 		54A2FDC1289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSDeleteObjectTaggingRequest.m; sourceTree = "<group>"; };
 		54A2FDC6289B6803005410F8 /* OSSDeleteObjectTaggingResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSDeleteObjectTaggingResult.h; sourceTree = "<group>"; };
@@ -262,6 +321,22 @@
 		54A2FDD9289B6863005410F8 /* OSSPutObjectTaggingRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSPutObjectTaggingRequest.m; sourceTree = "<group>"; };
 		54A2FDDE289B6879005410F8 /* OSSPutObjectTaggingResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSPutObjectTaggingResult.h; sourceTree = "<group>"; };
 		54A2FDDF289B6879005410F8 /* OSSPutObjectTaggingResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSPutObjectTaggingResult.m; sourceTree = "<group>"; };
+		54DE67272B3A806D00DF97FB /* OSSSignerBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSSignerBase.h; sourceTree = "<group>"; };
+		54DE67282B3A806D00DF97FB /* OSSSignerBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSSignerBase.m; sourceTree = "<group>"; };
+		54DE672B2B3A9DE000DF97FB /* OSSSignerParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSSignerParams.h; sourceTree = "<group>"; };
+		54DE672C2B3A9DE000DF97FB /* OSSSignerParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSSignerParams.m; sourceTree = "<group>"; };
+		54DE67332B3AA27C00DF97FB /* OSSV4Signer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSV4Signer.h; sourceTree = "<group>"; };
+		54DE67342B3AA27C00DF97FB /* OSSV4Signer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSV4Signer.m; sourceTree = "<group>"; };
+		54DE67392B3AA28400DF97FB /* OSSV1Signer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSV1Signer.h; sourceTree = "<group>"; };
+		54DE673A2B3AA28400DF97FB /* OSSV1Signer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSV1Signer.m; sourceTree = "<group>"; };
+		54DE673F2B3AB24600DF97FB /* OSSSignUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSSignUtils.h; sourceTree = "<group>"; };
+		54DE67402B3AB24600DF97FB /* OSSSignUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSSignUtils.m; sourceTree = "<group>"; };
+		54DE67452B3ABBF000DF97FB /* OSSServiceSignature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSServiceSignature.h; sourceTree = "<group>"; };
+		54DE67462B3ABBF000DF97FB /* OSSServiceSignature.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSServiceSignature.m; sourceTree = "<group>"; };
+		54DE67742B3D4EE600DF97FB /* NSSet+OSS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSet+OSS.h"; sourceTree = "<group>"; };
+		54DE67752B3D4EE600DF97FB /* NSSet+OSS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSSet+OSS.m"; sourceTree = "<group>"; };
+		54DE677A2B3D56C300DF97FB /* NSData+OSS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+OSS.h"; sourceTree = "<group>"; };
+		54DE677B2B3D56C300DF97FB /* NSData+OSS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+OSS.m"; sourceTree = "<group>"; };
 		D80C81EC1FC824A8008E3900 /* AliyunOSSOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AliyunOSSOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80C81F41FC824D5008E3900 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		D80C81F61FC824FF008E3900 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
@@ -421,6 +496,7 @@
 				D87183061FC56358000DD9EC /* AliyunOSSSDK */,
 				21028BBD1BA9ABF500C2A6BA /* Products */,
 				124FC752CC2150C34DBACDBC /* Frameworks */,
+				54877AF62B45533400F8CEB1 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -432,6 +508,44 @@
 				D842D5911FFCA8F300220913 /* AliyunOSSSwiftSDK.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		54877AF62B45533400F8CEB1 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				54DE673A2B3AA28400DF97FB /* OSSV1Signer.m */,
+				54DE67402B3AB24600DF97FB /* OSSSignUtils.m */,
+				54DE67282B3A806D00DF97FB /* OSSSignerBase.m */,
+				54DE67342B3AA27C00DF97FB /* OSSV4Signer.m */,
+				54DE672C2B3A9DE000DF97FB /* OSSSignerParams.m */,
+				54DE67462B3ABBF000DF97FB /* OSSServiceSignature.m */,
+				54DE67392B3AA28400DF97FB /* OSSV1Signer.h */,
+				54DE672B2B3A9DE000DF97FB /* OSSSignerParams.h */,
+				54DE67452B3ABBF000DF97FB /* OSSServiceSignature.h */,
+				54DE673F2B3AB24600DF97FB /* OSSSignUtils.h */,
+				54DE67272B3A806D00DF97FB /* OSSSignerBase.h */,
+				54DE67332B3AA27C00DF97FB /* OSSV4Signer.h */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		54877AF72B45535D00F8CEB1 /* Signer */ = {
+			isa = PBXGroup;
+			children = (
+				54877AF82B45535D00F8CEB1 /* OSSServiceSignature.h */,
+				54877B012B45535D00F8CEB1 /* OSSServiceSignature.m */,
+				54877AFA2B45535D00F8CEB1 /* OSSSignerBase.h */,
+				54877AFF2B45535D00F8CEB1 /* OSSSignerBase.m */,
+				54877AFB2B45535D00F8CEB1 /* OSSSignerParams.h */,
+				54877AFE2B45535D00F8CEB1 /* OSSSignerParams.m */,
+				54877B022B45535D00F8CEB1 /* OSSSignUtils.h */,
+				54877AFC2B45535D00F8CEB1 /* OSSSignUtils.m */,
+				54877B032B45535D00F8CEB1 /* OSSV1Signer.h */,
+				54877AFD2B45535D00F8CEB1 /* OSSV1Signer.m */,
+				54877AF92B45535D00F8CEB1 /* OSSV4Signer.h */,
+				54877B002B45535D00F8CEB1 /* OSSV4Signer.m */,
+			);
+			path = Signer;
 			sourceTree = "<group>";
 		};
 		D842D59D1FFCB82E00220913 /* Supporting Files */ = {
@@ -449,10 +563,15 @@
 		D87183061FC56358000DD9EC /* AliyunOSSSDK */ = {
 			isa = PBXGroup;
 			children = (
+				54877AF72B45535D00F8CEB1 /* Signer */,
 				D8C5E5401FCE915000613BA5 /* aos_crc64.c */,
 				D8C5E53F1FCE914F00613BA5 /* aos_crc64.h */,
 				D827B40921107169003A24F6 /* NSDate+OSS.h */,
 				D827B40A21107169003A24F6 /* NSDate+OSS.m */,
+				54DE67742B3D4EE600DF97FB /* NSSet+OSS.h */,
+				54DE67752B3D4EE600DF97FB /* NSSet+OSS.m */,
+				54DE677A2B3D56C300DF97FB /* NSData+OSS.h */,
+				54DE677B2B3D56C300DF97FB /* NSData+OSS.m */,
 				D8C5E54B1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h */,
 				D8C5E54C1FCEB57600613BA5 /* NSMutableData+OSS_CRC.m */,
 				D827B40F21114E4B003A24F6 /* NSMutableDictionary+OSS.h */,
@@ -599,13 +718,17 @@
 				D8C41B211FCC2FD20091699B /* OSSClient.h in Headers */,
 				D8C41B231FCC2FD20091699B /* OSSHttpdns.h in Headers */,
 				D8C41B241FCC2FD20091699B /* OSSNetworking.h in Headers */,
+				54877B082B45535D00F8CEB1 /* OSSSignerBase.h in Headers */,
 				D8C41B251FCC2FD20091699B /* OSSIPv6Adapter.h in Headers */,
 				D8C41B2A1FCC2FD20091699B /* OSSIPv6PrefixResolver.h in Headers */,
 				D8C41B2B1FCC2FD20091699B /* OSSDefine.h in Headers */,
 				D8C41B2D1FCC2FD20091699B /* OSSLog.h in Headers */,
+				54DE67762B3D4EE600DF97FB /* NSSet+OSS.h in Headers */,
+				54DE673B2B3AA28400DF97FB /* OSSV1Signer.h in Headers */,
 				D8C41B301FCC2FD20091699B /* OSSCancellationTokenSource.h in Headers */,
 				D8C41B341FCC2FD20091699B /* OSSExecutor.h in Headers */,
 				D8C41B351FCC2FD20091699B /* OSSCancellationTokenRegistration.h in Headers */,
+				54877B042B45535D00F8CEB1 /* OSSServiceSignature.h in Headers */,
 				54A2FDDA289B6863005410F8 /* OSSPutObjectTaggingRequest.h in Headers */,
 				D8C41B361FCC2FD20091699B /* OSSBolts.h in Headers */,
 				54A2FDC2289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */,
@@ -618,6 +741,7 @@
 				D85277EB2015BBAD00D7B1DE /* OSSRequest.h in Headers */,
 				D85277F82015CB3500D7B1DE /* OSSAllRequestNeededMessage.h in Headers */,
 				D85278102015DF4900D7B1DE /* OSSConstants.h in Headers */,
+				54DE677C2B3D56C300DF97FB /* NSData+OSS.h in Headers */,
 				D85278042015D58400D7B1DE /* OSSHttpResponseParser.h in Headers */,
 				D85277F12015BD5A00D7B1DE /* OSSNetworkingRequestDelegate.h in Headers */,
 				D852780A2015D59000D7B1DE /* OSSURLRequestRetryHandler.h in Headers */,
@@ -625,14 +749,18 @@
 				54A2FDE0289B6879005410F8 /* OSSPutObjectTaggingResult.h in Headers */,
 				D8C41B3E1FCC2FD20091699B /* OSSNSLogger.h in Headers */,
 				D842D5A81FFCBA2800220913 /* AliyunOSSiOS.h in Headers */,
+				54877B0A2B45535D00F8CEB1 /* OSSSignerParams.h in Headers */,
 				D8C41B3F1FCC2FD20091699B /* OSSReachability.h in Headers */,
 				D80C88CF201AC21200F379D8 /* OSSResult.h in Headers */,
+				54DE67412B3AB24600DF97FB /* OSSSignUtils.h in Headers */,
 				D80C88C9201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
 				D80C88ED201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */,
+				54877B062B45535D00F8CEB1 /* OSSV4Signer.h in Headers */,
 				D80C88E7201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */,
 				D80C88D5201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
 				D827B4292111A853003A24F6 /* OSSRestoreObjectResult.h in Headers */,
 				D827B4172111A6E4003A24F6 /* OSSPutSymlinkRequest.h in Headers */,
+				54877B1A2B45535E00F8CEB1 /* OSSV1Signer.h in Headers */,
 				D827B42F2111ADE9003A24F6 /* OSSPutSymlinkResult.h in Headers */,
 				D827B4232111A71B003A24F6 /* OSSRestoreObjectRequest.h in Headers */,
 				D827B41D2111A6FA003A24F6 /* OSSGetSymlinkRequest.h in Headers */,
@@ -641,11 +769,13 @@
 				D8C2951820F46A95008A08AA /* OSSGetBucketInfoResult.h in Headers */,
 				D827B40B21107169003A24F6 /* NSDate+OSS.h in Headers */,
 				D8C41B411FCC2FD20091699B /* OSSFileLogger.h in Headers */,
+				54DE67352B3AA27C00DF97FB /* OSSV4Signer.h in Headers */,
 				D827B41121114E4B003A24F6 /* NSMutableDictionary+OSS.h in Headers */,
 				D8C5E54D1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
 				D8C41B441FCC2FD20091699B /* OSSDDLog.h in Headers */,
 				D8C41B451FCC2FD20091699B /* OSSCocoaLumberjack.h in Headers */,
 				D8C5E5411FCE915000613BA5 /* aos_crc64.h in Headers */,
+				54877B182B45535E00F8CEB1 /* OSSSignUtils.h in Headers */,
 				D8C41B491FCC2FD20091699B /* OSSService.h in Headers */,
 				54A2FDC8289B6803005410F8 /* OSSDeleteObjectTaggingResult.h in Headers */,
 			);
@@ -662,53 +792,67 @@
 				D80C82131FC82596008E3900 /* OSSIPv6Adapter.h in Headers */,
 				D80C82051FC82567008E3900 /* OSSService.h in Headers */,
 				D80C82041FC82562008E3900 /* OSSLog.h in Headers */,
+				54877B092B45535D00F8CEB1 /* OSSSignerBase.h in Headers */,
 				D80C82151FC8259C008E3900 /* OSSIPv6PrefixResolver.h in Headers */,
 				D80C82061FC8256D008E3900 /* OSSLogMacros.h in Headers */,
 				D80C82081FC82571008E3900 /* OSSReachability.h in Headers */,
 				D80C82101FC82588008E3900 /* OSSTask.h in Headers */,
+				54DE67772B3D4EE600DF97FB /* NSSet+OSS.h in Headers */,
+				54DE673C2B3AA28400DF97FB /* OSSV1Signer.h in Headers */,
 				D80C82121FC8258F008E3900 /* OSSCancellationToken.h in Headers */,
 				D80C820C1FC8257F008E3900 /* OSSCancellationTokenSource.h in Headers */,
 				D80C820E1FC82584008E3900 /* OSSCancellationTokenRegistration.h in Headers */,
+				54877B052B45535D00F8CEB1 /* OSSServiceSignature.h in Headers */,
 				54A2FDDB289B6863005410F8 /* OSSPutObjectTaggingRequest.h in Headers */,
 				D80C82111FC8258B008E3900 /* OSSTaskCompletionSource.h in Headers */,
 				54A2FDC3289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.h in Headers */,
 				D829F3AA1FD8CFBE00A8C2DC /* OSSInputStreamHelper.h in Headers */,
 				D80C820F1FC82586008E3900 /* OSSBolts.h in Headers */,
 				D80C820D1FC82581008E3900 /* OSSExecutor.h in Headers */,
+				54DE672F2B3A9DE700DF97FB /* OSSSignerParams.h in Headers */,
 				54A2FDCF289B682E005410F8 /* OSSGetObjectTaggingRequest.h in Headers */,
 				D80C820B1FC82579008E3900 /* OSSCocoaLumberjack.h in Headers */,
 				54A2FDD5289B6847005410F8 /* OSSGetObjectTaggingResult.h in Headers */,
 				D85277EC2015BBAD00D7B1DE /* OSSRequest.h in Headers */,
 				D85277F92015CB3500D7B1DE /* OSSAllRequestNeededMessage.h in Headers */,
 				D85278112015DF4900D7B1DE /* OSSConstants.h in Headers */,
+				54DE677D2B3D56C300DF97FB /* NSData+OSS.h in Headers */,
 				D85278052015D58400D7B1DE /* OSSHttpResponseParser.h in Headers */,
+				54DE67482B3ABBF000DF97FB /* OSSServiceSignature.h in Headers */,
 				D85277F22015BD5A00D7B1DE /* OSSNetworkingRequestDelegate.h in Headers */,
 				D852780B2015D59000D7B1DE /* OSSURLRequestRetryHandler.h in Headers */,
 				D80C820A1FC82577008E3900 /* OSSDDLog.h in Headers */,
 				54A2FDE1289B6879005410F8 /* OSSPutObjectTaggingResult.h in Headers */,
 				D80C82091FC82574008E3900 /* OSSFileLogger.h in Headers */,
 				D80C82071FC8256F008E3900 /* OSSNSLogger.h in Headers */,
+				54877B0B2B45535D00F8CEB1 /* OSSSignerParams.h in Headers */,
 				D80C82031FC8255F008E3900 /* OSSDefine.h in Headers */,
 				D80C88D0201AC21200F379D8 /* OSSResult.h in Headers */,
+				54DE67422B3AB24600DF97FB /* OSSSignUtils.h in Headers */,
 				D80C88CA201AC1B400F379D8 /* OSSGetObjectACLRequest.h in Headers */,
 				D80C88D6201AC33000F379D8 /* OSSGetObjectACLResult.h in Headers */,
+				54877B072B45535D00F8CEB1 /* OSSV4Signer.h in Headers */,
 				D80C88EE201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.h in Headers */,
 				D827B42A2111A853003A24F6 /* OSSRestoreObjectResult.h in Headers */,
 				D827B4182111A6E4003A24F6 /* OSSPutSymlinkRequest.h in Headers */,
 				D827B4302111ADE9003A24F6 /* OSSPutSymlinkResult.h in Headers */,
+				54877B1B2B45535E00F8CEB1 /* OSSV1Signer.h in Headers */,
 				D827B4242111A71B003A24F6 /* OSSRestoreObjectRequest.h in Headers */,
 				D827B41E2111A6FA003A24F6 /* OSSGetSymlinkRequest.h in Headers */,
 				D827B4362111ADF7003A24F6 /* OSSGetSymlinkResult.h in Headers */,
+				54DE67312B3A9DE700DF97FB /* OSSSignerBase.h in Headers */,
 				D8C2951320F46A79008A08AA /* OSSGetBucketInfoRequest.h in Headers */,
 				D8C2951920F46A95008A08AA /* OSSGetBucketInfoResult.h in Headers */,
 				D80C88E8201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.h in Headers */,
 				D80C82011FC82559008E3900 /* OSSHttpdns.h in Headers */,
 				D827B40C21107169003A24F6 /* NSDate+OSS.h in Headers */,
+				54DE67362B3AA27C00DF97FB /* OSSV4Signer.h in Headers */,
 				D842D5A91FFCBA2800220913 /* AliyunOSSiOS.h in Headers */,
 				D827B41221114E4B003A24F6 /* NSMutableDictionary+OSS.h in Headers */,
 				D8C5E54E1FCEB57600613BA5 /* NSMutableData+OSS_CRC.h in Headers */,
 				D80C81FD1FC82549008E3900 /* OSSUtil.h in Headers */,
 				D8C5E5421FCE915000613BA5 /* aos_crc64.h in Headers */,
+				54877B192B45535E00F8CEB1 /* OSSSignUtils.h in Headers */,
 				D80C81FC1FC82546008E3900 /* OSSCompat.h in Headers */,
 				54A2FDC9289B6803005410F8 /* OSSDeleteObjectTaggingResult.h in Headers */,
 			);
@@ -865,13 +1009,17 @@
 				D8C41AE71FCC2F920091699B /* OSSHttpdns.m in Sources */,
 				D8C41AE91FCC2F920091699B /* OSSClient.m in Sources */,
 				54A2FDCA289B6803005410F8 /* OSSDeleteObjectTaggingResult.m in Sources */,
+				54877B0E2B45535D00F8CEB1 /* OSSV1Signer.m in Sources */,
 				D80C88D7201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
+				54DE67782B3D4EE600DF97FB /* NSSet+OSS.m in Sources */,
 				D827B40D21107169003A24F6 /* NSDate+OSS.m in Sources */,
+				54877B142B45535E00F8CEB1 /* OSSV4Signer.m in Sources */,
 				D8C41AEC1FCC2F920091699B /* OSSLog.m in Sources */,
 				D827B4252111A71B003A24F6 /* OSSRestoreObjectRequest.m in Sources */,
 				D8C41AF01FCC2F920091699B /* OSSModel.m in Sources */,
 				D8C41AF51FCC2F920091699B /* OSSIPv6PrefixResolver.m in Sources */,
 				D85278062015D58400D7B1DE /* OSSHttpResponseParser.m in Sources */,
+				54DE677E2B3D56C300DF97FB /* NSData+OSS.m in Sources */,
 				D80C88EF201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */,
 				D8C41AF71FCC2F920091699B /* OSSIPv6Adapter.m in Sources */,
 				D827B4192111A6E4003A24F6 /* OSSPutSymlinkRequest.m in Sources */,
@@ -879,6 +1027,7 @@
 				D8C41AFC1FCC2F920091699B /* OSSCancellationTokenRegistration.m in Sources */,
 				D8C41AFD1FCC2F920091699B /* OSSBolts.m in Sources */,
 				D8C41AFF1FCC2F920091699B /* OSSTaskCompletionSource.m in Sources */,
+				54877B0C2B45535D00F8CEB1 /* OSSSignUtils.m in Sources */,
 				54A2FDD6289B6847005410F8 /* OSSGetObjectTaggingResult.m in Sources */,
 				D8C2951420F46A79008A08AA /* OSSGetBucketInfoRequest.m in Sources */,
 				D827B42B2111A853003A24F6 /* OSSRestoreObjectResult.m in Sources */,
@@ -891,10 +1040,13 @@
 				D80C88D1201AC21200F379D8 /* OSSResult.m in Sources */,
 				D8C41B0A1FCC2F920091699B /* OSSXMLDictionary.m in Sources */,
 				D827B41F2111A6FA003A24F6 /* OSSGetSymlinkRequest.m in Sources */,
+				54877B122B45535E00F8CEB1 /* OSSSignerBase.m in Sources */,
 				54A2FDC4289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m in Sources */,
+				54877B162B45535E00F8CEB1 /* OSSServiceSignature.m in Sources */,
 				D852780C2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
 				D85277ED2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D827B4312111ADE9003A24F6 /* OSSPutSymlinkResult.m in Sources */,
+				54877B102B45535D00F8CEB1 /* OSSSignerParams.m in Sources */,
 				D827B41321114E4B003A24F6 /* NSMutableDictionary+OSS.m in Sources */,
 				D85278122015DF4900D7B1DE /* OSSConstants.m in Sources */,
 				D80C88CB201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */,
@@ -916,27 +1068,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				D85277F42015BD5A00D7B1DE /* OSSNetworkingRequestDelegate.m in Sources */,
+				54DE673E2B3AA28400DF97FB /* OSSV1Signer.m in Sources */,
 				D8C5E5441FCE915000613BA5 /* aos_crc64.c in Sources */,
 				D8C41AA71FCC284F0091699B /* OSSNetworking.m in Sources */,
 				D827B4382111ADF7003A24F6 /* OSSGetSymlinkResult.m in Sources */,
 				D80C88EA201B06CF00F379D8 /* OSSDeleteMultipleObjectsRequest.m in Sources */,
 				D8C41AA81FCC284F0091699B /* OSSHttpdns.m in Sources */,
 				D8C41AAA1FCC284F0091699B /* OSSClient.m in Sources */,
+				54DE67442B3AB24600DF97FB /* OSSSignUtils.m in Sources */,
 				54A2FDCB289B6803005410F8 /* OSSDeleteObjectTaggingResult.m in Sources */,
+				54877B0F2B45535D00F8CEB1 /* OSSV1Signer.m in Sources */,
 				D80C88D8201AC33000F379D8 /* OSSGetObjectACLResult.m in Sources */,
+				54DE67792B3D4EE600DF97FB /* NSSet+OSS.m in Sources */,
 				D827B40E21107169003A24F6 /* NSDate+OSS.m in Sources */,
 				D8C41AAD1FCC284F0091699B /* OSSLog.m in Sources */,
+				54877B152B45535E00F8CEB1 /* OSSV4Signer.m in Sources */,
+				54DE67382B3AA27C00DF97FB /* OSSV4Signer.m in Sources */,
 				D827B4262111A71B003A24F6 /* OSSRestoreObjectRequest.m in Sources */,
 				D8C41AB11FCC284F0091699B /* OSSModel.m in Sources */,
 				D8C41AB61FCC284F0091699B /* OSSIPv6PrefixResolver.m in Sources */,
 				D85278072015D58400D7B1DE /* OSSHttpResponseParser.m in Sources */,
 				D80C88F0201B06E200F379D8 /* OSSDeleteMultipleObjectsResult.m in Sources */,
+				54DE677F2B3D56C300DF97FB /* NSData+OSS.m in Sources */,
 				D8C41AB81FCC284F0091699B /* OSSIPv6Adapter.m in Sources */,
+				54DE67302B3A9DE700DF97FB /* OSSSignerParams.m in Sources */,
 				D827B41A2111A6E4003A24F6 /* OSSPutSymlinkRequest.m in Sources */,
 				D8C41ABB1FCC284F0091699B /* OSSCompat.m in Sources */,
 				D8C41ABD1FCC284F0091699B /* OSSCancellationTokenRegistration.m in Sources */,
 				D8C41ABE1FCC284F0091699B /* OSSBolts.m in Sources */,
 				D8C41AC01FCC284F0091699B /* OSSTaskCompletionSource.m in Sources */,
+				54877B0D2B45535D00F8CEB1 /* OSSSignUtils.m in Sources */,
 				54A2FDD7289B6847005410F8 /* OSSGetObjectTaggingResult.m in Sources */,
 				D8C2951520F46A79008A08AA /* OSSGetBucketInfoRequest.m in Sources */,
 				D827B42C2111A853003A24F6 /* OSSRestoreObjectResult.m in Sources */,
@@ -950,20 +1111,25 @@
 				D8C41ACB1FCC28500091699B /* OSSXMLDictionary.m in Sources */,
 				D827B4202111A6FA003A24F6 /* OSSGetSymlinkRequest.m in Sources */,
 				54A2FDC5289B67D4005410F8 /* OSSDeleteObjectTaggingRequest.m in Sources */,
+				54877B132B45535E00F8CEB1 /* OSSSignerBase.m in Sources */,
 				D852780D2015D59000D7B1DE /* OSSURLRequestRetryHandler.m in Sources */,
+				54877B172B45535E00F8CEB1 /* OSSServiceSignature.m in Sources */,
 				D85277EE2015BBAD00D7B1DE /* OSSRequest.m in Sources */,
 				D827B4322111ADE9003A24F6 /* OSSPutSymlinkResult.m in Sources */,
 				D827B41421114E4B003A24F6 /* NSMutableDictionary+OSS.m in Sources */,
+				54877B112B45535D00F8CEB1 /* OSSSignerParams.m in Sources */,
 				D85278132015DF4900D7B1DE /* OSSConstants.m in Sources */,
 				D80C88CC201AC1B400F379D8 /* OSSGetObjectACLRequest.m in Sources */,
 				D8C41ACF1FCC28500091699B /* OSSDDLog.m in Sources */,
 				D8C2951B20F46A95008A08AA /* OSSGetBucketInfoResult.m in Sources */,
+				54DE674A2B3ABBF000DF97FB /* OSSServiceSignature.m in Sources */,
 				D8C41AD11FCC28500091699B /* OSSReachability.m in Sources */,
 				54A2FDDD289B6863005410F8 /* OSSPutObjectTaggingRequest.m in Sources */,
 				D8C41AD21FCC28500091699B /* OSSNSLogger.m in Sources */,
 				D85277FB2015CB3500D7B1DE /* OSSAllRequestNeededMessage.m in Sources */,
 				D829F3AC1FD8CFBE00A8C2DC /* OSSInputStreamHelper.m in Sources */,
 				D8C41AD51FCC28500091699B /* OSSFileLogger.m in Sources */,
+				54DE67322B3A9DE700DF97FB /* OSSSignerBase.m in Sources */,
 				D8C41AD71FCC28500091699B /* OSSUtil.m in Sources */,
 				54A2FDE3289B6879005410F8 /* OSSPutObjectTaggingResult.m in Sources */,
 			);
@@ -1256,7 +1422,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6ND67KCL32;
+				DEVELOPMENT_TEAM = 6Y8X94H2F5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1266,7 +1432,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.swift.oss.AliyunOSSSwift-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.swift.oss.AliyunOSSSwift-iOS-ws";
 				PRODUCT_NAME = AliyunOSSSwiftSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1297,7 +1463,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.swift.oss.AliyunOSSSwift-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.aliyun.swift.oss.AliyunOSSSwift-iOS-";
 				PRODUCT_NAME = AliyunOSSSwiftSDK;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;

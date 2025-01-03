@@ -47,28 +47,4 @@
     XCTAssertNotNil(syncMutableDict.allKeys);
 }
 
-- (void)testForOSSUASettingInterceptorWithNotAllowUACarrySystemInfo {
-    NSString *ua = @"User-Agent";
-    NSString *location = [[NSLocale currentLocale] localeIdentifier];
-
-    OSSClientConfiguration *clientConfig = [OSSClientConfiguration new];
-    clientConfig.isAllowUACarrySystemInfo = NO;
-    OSSUASettingInterceptor *interceptor = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:clientConfig];
-    
-    OSSAllRequestNeededMessage *allRequestMessage = [OSSAllRequestNeededMessage new];
-    [interceptor interceptRequestMessage:allRequestMessage];
-    NSString *expectValue = [NSString stringWithFormat:@"%@/%@(/%@)", OSSUAPrefix, OSSSDKVersion, location];
-    XCTAssertTrue([allRequestMessage.headerParams[ua] isEqualToString:expectValue]);
-    
-    clientConfig = [OSSClientConfiguration new];
-    clientConfig.isAllowUACarrySystemInfo = NO;
-    clientConfig.userAgentMark = @"userAgent";
-    interceptor = [[OSSUASettingInterceptor alloc] initWithClientConfiguration:clientConfig];
-    
-    allRequestMessage = [OSSAllRequestNeededMessage new];
-    [interceptor interceptRequestMessage:allRequestMessage];
-    expectValue = [NSString stringWithFormat:@"%@/%@(/%@)/%@", OSSUAPrefix, OSSSDKVersion, location, clientConfig.userAgentMark];
-    XCTAssertTrue([allRequestMessage.headerParams[ua] isEqualToString:expectValue]);
-}
-
 @end

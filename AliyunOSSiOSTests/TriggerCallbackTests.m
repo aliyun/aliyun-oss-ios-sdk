@@ -21,7 +21,7 @@
     [super setUp];
     NSArray *array1 = [self.name componentsSeparatedByString:@" "];
     NSString *testName = [[array1[1] substringToIndex:([array1[1] length] -1)] lowercaseString];
-    _privateBucketName = [@"oss-ios-" stringByAppendingString:testName];
+    _privateBucketName = [OSSTestUtils getBucketName];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     OSSPlainTextAKSKPairCredentialProvider *provider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:OSS_ACCESSKEY_ID secretKey:OSS_SECRETKEY_ID];
     self.client = [[OSSClient alloc] initWithEndpoint:@"http://oss-cn-shenzhen.aliyuncs.com" credentialProvider:provider];

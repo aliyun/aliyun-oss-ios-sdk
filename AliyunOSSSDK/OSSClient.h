@@ -73,6 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) OSSClientConfiguration * clientConfiguration;
 
+/// OSS services Region
+@property (nonatomic, copy) NSString *region;
+
+/// cloudBoxId OSS cloud box id
+@property (nonatomic, copy) NSString *cloudBoxId;
+
 /**
  oss operation task queue
  */

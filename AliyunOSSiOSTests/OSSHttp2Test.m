@@ -27,7 +27,7 @@
     [super setUp];
     
     [OSSLog enableLog];
-    _bucketName = @"aliyun-oss-ios-test-http2";
+    _bucketName = [OSSTestUtils getBucketName];
     _http2endpoint = @"https://oss-cn-shanghai.aliyuncs.com";
     [self setUpOSSClient];
     [self createBucket];

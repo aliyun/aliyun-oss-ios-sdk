@@ -26,7 +26,8 @@
 @property (nonatomic, copy) NSDictionary *params;
 @property (nonatomic, copy) NSString *contentSHA1;
 @property (nonatomic, assign) BOOL isHostInCnameExcludeList;
-
+@property (nonatomic, assign) BOOL isUseUrlSignature;
+@property (nonatomic, copy) NSSet<NSString *> *additionalHeaderNames;
 
 - (OSSTask *)validateRequestParamsInOperationType:(OSSOperationType)operType;
 
