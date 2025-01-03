@@ -75,6 +75,7 @@
 #define OSSHttpHeaderCopySource                 @"x-oss-copy-source"
 #define OSSHttpHeaderSymlinkTarget              @"x-oss-symlink-target"
 #define OSSHttpHeaderDate                       @"Date"
+#define OSSHttpHeaderDateEx                     @"x-oss-date"
 #define OSSHttpHeaderSecurityToken              @"x-oss-security-token"
 #define OSSHttpHeaderAuthorization              @"Authorization"
 #define OSSHttpHeaderHost                       @"Host"

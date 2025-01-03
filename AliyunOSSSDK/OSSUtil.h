@@ -21,6 +21,8 @@
 + (NSString *)calBase64Sha1WithData:(NSString *)data withSecret:(NSString *)key;
 + (NSString *)calBase64WithData:(uint8_t *)data;
 + (NSString *)encodeURL:(NSString *)url;
++ (NSString *)encodeResourcePath:(NSString *)resourcePath;
++ (NSString *)encodeQuery:(NSString *)query;
 + (NSData *)constructHttpBodyFromPartInfos:(NSArray *)partInfos;
 + (NSData *)constructHttpBodyForDeleteMultipleObjects:(NSArray<NSString *> *)keys quiet:(BOOL)quiet;
 + (NSData *)constructHttpBodyForCreateBucketWithLocation:(NSString *)location __attribute__((deprecated("deprecated!")));
