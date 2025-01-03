@@ -39,7 +39,7 @@
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702743657.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -80,7 +80,7 @@
                                                                          signerParams:signerParam];
     [signer sign:requestMessage];
     
-    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,Signature=ce55e10e546688b0f2d388823029de98a79fbec965a1bf33af6d1bc9f4924086";
+    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,Signature=e21d18daa82167720f9b1047ae7e7f1ce7cb77a31e8203a7d5f4624fa0284afe";
     XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
 }
 
@@ -93,7 +93,7 @@
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702784856.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -134,7 +134,7 @@
                                                                          signerParams:signerParam];
     [signer sign:requestMessage];
     
-    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,Signature=1e41b26716487a1d8c671b8c5fa6041893473cd12d82c1e60830511f5077bf08";
+    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231217/cn-hangzhou/oss/aliyun_v4_request,Signature=b94a3f999cf85bcdc00d332fbd3734ba03e48382c36fa4d5af5df817395bd9ea";
     XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
 }
 
@@ -153,7 +153,7 @@
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702784856.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -194,7 +194,7 @@
                                                                          signerParams:signerParam];
     [signer sign:requestMessage];
     
-    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,Signature=1e41b26716487a1d8c671b8c5fa6041893473cd12d82c1e60830511f5077bf08";
+    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231217/cn-hangzhou/oss/aliyun_v4_request,Signature=b94a3f999cf85bcdc00d332fbd3734ba03e48382c36fa4d5af5df817395bd9ea";
     XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
     
     
@@ -273,13 +273,13 @@
 - (void)test_signerV4WithAdditionalHeaders {
     OSSSignVersion version = OSSSignVersionV4;
     
-    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak" secretKeyId:@"sk" securityToken:@"token"];
+    id<OSSCredentialProvider> credentialProvider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"ak" secretKey:@"sk"];
     
     NSString *bucket = @"bucket";
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702747512.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -325,7 +325,96 @@
                                                                          signerParams:signerParam];
     [signer sign:requestMessage];
     
-    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,AdditionalHeaders=abc;zabc,Signature=efcf972876edadf27b15c3d80fa74849370ea6bc2b0b1aa5851b8c30dc156300";
+    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,AdditionalHeaders=abc;zabc,Signature=4a4183c187c07c8947db7620deb0a6b38d9fbdd34187b6dbaccb316fa251212f";
+    XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
+    
+    // 2
+    signHeaders = [NSMutableSet new];
+    [signHeaders addObject:@"abc"];
+    [signHeaders addObject:@"ZAbc"];
+    [signHeaders addObject:@"x-oss-head1"];
+    [signHeaders addObject:@"x-oss-no-exist"];
+
+    requestMessage = [OSSAllRequestNeededMessage new];
+    requestMessage.httpMethod = @"PUT";
+    requestMessage.bucketName = bucket;
+    requestMessage.objectKey = key;
+    requestMessage.headerParams = headers;
+    requestMessage.params = parameters;
+    requestMessage.additionalHeaderNames = signHeaders;
+    
+    resource = [@"/" stringByAppendingString:((bucket != nil) ? [bucket stringByAppendingString:@"/"] : @"")];
+    resource = [resource stringByAppendingString:(key != nil ? key : @"")];
+    signerParam = [OSSSignerParams new];
+    signerParam.credentialProvider = credentialProvider;
+    signerParam.resourcePath = resource;
+    signerParam.product = product;
+    signerParam.region = region;
+    
+    signer = [OSSSignerBase createRequestSignerWithSignerVersion:version
+                                                    signerParams:signerParam];
+    [signer sign:requestMessage];
+    
+    NSLog(@"%@", requestMessage.headerParams);
+    XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
+}
+
+- (void)test_signerV4WithAdditionalHeadersByToken {
+    OSSSignVersion version = OSSSignVersionV4;
+    
+    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak" secretKeyId:@"sk" securityToken:@"token"];
+    
+    NSString *bucket = @"bucket";
+    NSString *key = @"1234+-/123/1.txt";
+    NSString *region = @"cn-hangzhou";
+    NSString *product = @"oss";
+    NSTimeInterval t = 1702747512.0L;
+    [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
+    
+    NSMutableDictionary *headers = @{}.mutableCopy;
+    NSMutableDictionary *parameters = @{}.mutableCopy;
+    NSMutableSet<NSString *> *signHeaders = [NSMutableSet new];
+
+    headers[@"x-oss-head1"] = @"value";
+    headers[@"abc"] = @"value";
+    headers[@"ZAbc"] = @"value";
+    headers[@"XYZ"] = @"value";
+    headers[@"XYZ"] = @"value";
+    headers[@"content-type"] = @"text/plain";
+    headers[@"x-oss-content-sha256"] = @"UNSIGNED-PAYLOAD";
+    
+    parameters[@"param1"] = @"value1";
+    parameters[@"|param1"] = @"value2";
+    parameters[@"+param1"] = @"value3";
+    parameters[@"|param1"] = @"value4";
+    parameters[@"+param2"] = @"";
+    parameters[@"|param2"] = @"";
+    parameters[@"param2"] = @"";
+    
+    [signHeaders addObject:@"abc"];
+    [signHeaders addObject:@"ZAbc"];
+
+    OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
+    requestMessage.httpMethod = @"PUT";
+    requestMessage.bucketName = bucket;
+    requestMessage.objectKey = key;
+    requestMessage.headerParams = headers;
+    requestMessage.params = parameters;
+    requestMessage.additionalHeaderNames = signHeaders;
+    
+    NSString *resource = [@"/" stringByAppendingString:((bucket != nil) ? [bucket stringByAppendingString:@"/"] : @"")];
+    resource = [resource stringByAppendingString:(key != nil ? key : @"")];
+    OSSSignerParams *signerParam = [OSSSignerParams new];
+    signerParam.credentialProvider = credentialProvider;
+    signerParam.resourcePath = resource;
+    signerParam.product = product;
+    signerParam.region = region;
+    
+    id<OSSRequestSigner> signer = [OSSSignerBase createRequestSignerWithSignerVersion:version
+                                                                         signerParams:signerParam];
+    [signer sign:requestMessage];
+    
+    NSString *authPat = @"OSS4-HMAC-SHA256 Credential=ak/20231216/cn-hangzhou/oss/aliyun_v4_request,AdditionalHeaders=abc;zabc,Signature=203120400fdac93fd2f87640e5071f19de7c4561090e8a5fcffbe7d1ef89e073";
     XCTAssertTrue([authPat isEqualToString:requestMessage.headerParams[OSSHttpHeaderAuthorization]]);
     
     // 2
@@ -368,7 +457,7 @@
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702781677.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -379,8 +468,7 @@
     headers[@"ZAbc"] = @"value";
     headers[@"XYZ"] = @"value";
     headers[@"XYZ"] = @"value";
-    headers[@"content-type"] = @"text/plain";
-    headers[@"x-oss-content-sha256"] = @"UNSIGNED-PAYLOAD";
+    headers[@"content-type"] = @"application/octet-stream";
     
     parameters[@"param1"] = @"value1";
     parameters[@"|param1"] = @"value2";
@@ -412,10 +500,10 @@
     [signer presign:requestMessage];
     
     XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
-    XCTAssertTrue([@"20231216T162057Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"20231217T025437Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
     XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
-    XCTAssertTrue([@"ak/20231216/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
-    XCTAssertTrue([@"b6f0296b6a9ec01e89296e300652fa886c47951d2fa654b860c470e8ebb193d0" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"a39966c61718be0d5b14e668088b3fa07601033f6518ac7b523100014269c0fe" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
     XCTAssertNil(requestMessage.params[@"x-oss-additional-headers"]);
 }
 
@@ -434,7 +522,7 @@
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702785388.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -445,8 +533,7 @@
     headers[@"ZAbc"] = @"value";
     headers[@"XYZ"] = @"value";
     headers[@"XYZ"] = @"value";
-    headers[@"content-type"] = @"text/plain";
-    headers[@"x-oss-content-sha256"] = @"UNSIGNED-PAYLOAD";
+    headers[@"content-type"] = @"application/octet-stream";
     
     parameters[@"param1"] = @"value1";
     parameters[@"|param1"] = @"value2";
@@ -478,10 +565,10 @@
     [signer presign:requestMessage];
     
     XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
-    XCTAssertTrue([@"20231216T162057Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"20231217T035628Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
     XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
-    XCTAssertTrue([@"ak/20231216/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
-    XCTAssertTrue([@"8a7383424297ae9d6daa7b4f818513ba5615e2e9b23734e556d812ea8aed2017" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"3817ac9d206cd6dfc90f1c09c00be45005602e55898f26f5ddb06d7892e1f8b5" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
     XCTAssertNil(requestMessage.params[@"x-oss-additional-headers"]);
 }
 
@@ -541,16 +628,16 @@
     XCTAssertEqual(task.error.code, OSSClientErrorCodeSignFailed);
 }
 
-- (void)test_singerWithSignerV4PresignToken {
+- (void)test_presignWithAdditionalHeaders {
     OSSSignVersion version = OSSSignVersionV4;
     
-    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak" secretKeyId:@"sk" securityToken:@"token"];
+    id<OSSCredentialProvider> credentialProvider = [[OSSPlainTextAKSKPairCredentialProvider alloc] initWithPlainTextAccessKey:@"ak" secretKey:@"sk"];
     
     NSString *bucket = @"bucket";
     NSString *key = @"1234+-/123/1.txt";
     NSString *region = @"cn-hangzhou";
     NSString *product = @"oss";
-    NSTimeInterval t = 1702743657.018L;
+    NSTimeInterval t = 1702783809.0L;
     [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
     
     NSMutableDictionary *headers = @{}.mutableCopy;
@@ -562,8 +649,7 @@
     headers[@"ZAbc"] = @"value";
     headers[@"XYZ"] = @"value";
     headers[@"XYZ"] = @"value";
-    headers[@"content-type"] = @"text/plain";
-    headers[@"x-oss-content-sha256"] = @"UNSIGNED-PAYLOAD";
+    headers[@"content-type"] = @"application/octet-stream";
     
     parameters[@"param1"] = @"value1";
     parameters[@"|param1"] = @"value2";
@@ -600,10 +686,10 @@
     [signer presign:requestMessage];
     
     XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
-    XCTAssertTrue([@"20231216T162057Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"20231217T033009Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
     XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
-    XCTAssertTrue([@"ak/20231216/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
-    XCTAssertTrue([@"e701fe88e85a733651fa9cd46e3ade7855c5535703b526e00906886ca62b3db8" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"6bd984bfe531afb6db1f7550983a741b103a8c58e5e14f83ea474c2322dfa2b7" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
     XCTAssertTrue([requestMessage.params[@"x-oss-additional-headers"] isEqualToString:@"abc;zabc"]);
     
     // 2
@@ -636,10 +722,111 @@
     [signer presign:requestMessage];
     
     XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
-    XCTAssertTrue([@"20231216T162057Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"20231217T033009Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
     XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
-    XCTAssertTrue([@"ak/20231216/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
-    XCTAssertTrue([@"e701fe88e85a733651fa9cd46e3ade7855c5535703b526e00906886ca62b3db8" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"6bd984bfe531afb6db1f7550983a741b103a8c58e5e14f83ea474c2322dfa2b7" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([requestMessage.params[@"x-oss-additional-headers"] isEqualToString:@"abc;zabc"]);
+}
+
+- (void)test_presignWithAdditionalHeadersByToken {
+    OSSSignVersion version = OSSSignVersionV4;
+    
+    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak" secretKeyId:@"sk" securityToken:@"token"];
+    
+    NSString *bucket = @"bucket";
+    NSString *key = @"1234+-/123/1.txt";
+    NSString *region = @"cn-hangzhou";
+    NSString *product = @"oss";
+    NSTimeInterval t = 1702783809.0L;
+    [NSDate oss_setClockSkew:[NSDate new].timeIntervalSince1970 - t];
+    
+    NSMutableDictionary *headers = @{}.mutableCopy;
+    NSMutableDictionary *parameters = @{}.mutableCopy;
+    NSMutableSet<NSString *> *signHeaders = [NSMutableSet new];
+
+    headers[@"x-oss-head1"] = @"value";
+    headers[@"abc"] = @"value";
+    headers[@"ZAbc"] = @"value";
+    headers[@"XYZ"] = @"value";
+    headers[@"XYZ"] = @"value";
+    headers[@"content-type"] = @"application/octet-stream";
+    
+    parameters[@"param1"] = @"value1";
+    parameters[@"|param1"] = @"value2";
+    parameters[@"+param1"] = @"value3";
+    parameters[@"|param1"] = @"value4";
+    parameters[@"+param2"] = @"";
+    parameters[@"|param2"] = @"";
+    parameters[@"param2"] = @"";
+    
+    [signHeaders addObject:@"abc"];
+    [signHeaders addObject:@"ZAbc"];
+
+    OSSAllRequestNeededMessage *requestMessage = [OSSAllRequestNeededMessage new];
+    requestMessage.httpMethod = @"PUT";
+    requestMessage.bucketName = bucket;
+    requestMessage.objectKey = key;
+    requestMessage.headerParams = headers;
+    requestMessage.params = parameters;
+    requestMessage.additionalHeaderNames = signHeaders;
+    requestMessage.isUseUrlSignature = YES;
+    
+    NSString *resource = [@"/" stringByAppendingString:((bucket != nil) ? [bucket stringByAppendingString:@"/"] : @"")];
+    resource = [resource stringByAppendingString:(key != nil ? key : @"")];
+    OSSSignerParams *signerParam = [OSSSignerParams new];
+    signerParam.credentialProvider = credentialProvider;
+    signerParam.resourcePath = resource;
+    signerParam.product = product;
+    signerParam.region = region;
+    signerParam.expiration = 599;
+    signerParam.additionalHeaderNames = signHeaders;
+
+    id<OSSRequestPresigner> signer = [OSSSignerBase createRequestPresignerWithSignerVersion:version
+                                                                               signerParams:signerParam];
+    [signer presign:requestMessage];
+    
+    XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
+    XCTAssertTrue([@"20231217T033009Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"2143a96a0e0e02889309ac8f8db57e79ffc275a0c9ebe3af676c8a1ce5635eca" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
+    XCTAssertTrue([requestMessage.params[@"x-oss-additional-headers"] isEqualToString:@"abc;zabc"]);
+    
+    // 2
+    signHeaders = [NSMutableSet new];
+    [signHeaders addObject:@"abc"];
+    [signHeaders addObject:@"ZAbc"];
+    [signHeaders addObject:@"x-oss-head1"];
+    [signHeaders addObject:@"x-oss-no-exist"];
+
+    requestMessage = [OSSAllRequestNeededMessage new];
+    requestMessage.httpMethod = @"PUT";
+    requestMessage.bucketName = bucket;
+    requestMessage.objectKey = key;
+    requestMessage.headerParams = headers;
+    requestMessage.params = parameters;
+    requestMessage.additionalHeaderNames = signHeaders;
+    
+    resource = [@"/" stringByAppendingString:((bucket != nil) ? [bucket stringByAppendingString:@"/"] : @"")];
+    resource = [resource stringByAppendingString:(key != nil ? key : @"")];
+    signerParam = [OSSSignerParams new];
+    signerParam.credentialProvider = credentialProvider;
+    signerParam.resourcePath = resource;
+    signerParam.product = product;
+    signerParam.region = region;
+    signerParam.expiration = 599;
+    signerParam.additionalHeaderNames = signHeaders;
+    
+    signer = [OSSSignerBase createRequestPresignerWithSignerVersion:version
+                                                       signerParams:signerParam];
+    [signer presign:requestMessage];
+    
+    XCTAssertTrue([@"OSS4-HMAC-SHA256" isEqualToString:requestMessage.params[@"x-oss-signature-version"]]);
+    XCTAssertTrue([@"20231217T033009Z" isEqualToString:requestMessage.params[@"x-oss-date"]]);
+    XCTAssertTrue([@"599" isEqualToString:requestMessage.params[@"x-oss-expires"]]);
+    XCTAssertTrue([@"ak/20231217/cn-hangzhou/oss/aliyun_v4_request" isEqualToString:requestMessage.params[@"x-oss-credential"]]);
+    XCTAssertTrue([@"2143a96a0e0e02889309ac8f8db57e79ffc275a0c9ebe3af676c8a1ce5635eca" isEqualToString:requestMessage.params[@"x-oss-signature"]]);
     XCTAssertTrue([requestMessage.params[@"x-oss-additional-headers"] isEqualToString:@"abc;zabc"]);
 }
 
