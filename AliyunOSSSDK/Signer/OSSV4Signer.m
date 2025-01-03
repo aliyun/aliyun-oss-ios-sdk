@@ -115,7 +115,7 @@
     //Canonical URI + "\n"
     NSMutableCharacterSet *characterSet = NSCharacterSet.newlineCharacterSet.mutableCopy;
     [characterSet addCharactersInString:@"!*\"'();:@&=+$,?#[]|%"];
-    [canonicalString appendString:[resourcePath stringByAddingPercentEncodingWithAllowedCharacters:[characterSet invertedSet]]];
+    [canonicalString appendString:[OSSUtil encodeResourcePath:resourcePath]];
     [canonicalString appendString:NewLine];
     
     //Canonical Query String + "\n" +

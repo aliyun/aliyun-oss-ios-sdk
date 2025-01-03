@@ -320,7 +320,7 @@
 
 - (void)testAPI_signerV4 {
     NSString *bucketName = [@"test-signerv4-" stringByAppendingFormat:@"%@", @((NSInteger)[NSDate new].timeIntervalSince1970)];
-    NSString *objectKey = @"signerV4";
+    NSString *objectKey = @"signerV4/!@#$%^&*()_=\\|';:><[.-+]{}?\"~`";
     NSURL * fileURL = [[NSBundle mainBundle] URLForResource:@"hasky" withExtension:@"jpeg"];
     NSString *endpoint = OSS_ENDPOINT;
 
