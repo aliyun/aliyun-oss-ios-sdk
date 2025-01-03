@@ -15,6 +15,10 @@ pod dependency：   pod 'AliyunOSSiOS'
 
 Update Logs:
 
+2025/1/3
+- release 2.11.0
+1.Add v4 version signature function
+
 2024/6/28
 - release 2.10.22
 1.Modify the nullability type of the request and result attributes
