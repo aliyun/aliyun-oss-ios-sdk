@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jrl-LR-ALf">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -34,7 +32,7 @@
                                     <constraint firstAttribute="height" constant="21" id="wwT-gV-YHu"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" systemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="unZ-gL-zRz">
@@ -49,7 +47,7 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="t4u-Fb-tgd"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1J-IR-M9e">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1J-IR-M9e">
                                 <rect key="frame" x="258" y="265.5" width="44" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="dNz-Wc-Bau"/>
@@ -59,8 +57,8 @@
                                     <action selector="onOssButtonSelectPic:" destination="jrl-LR-ALf" eventType="touchUpInside" id="QzJ-O5-Nhw"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JdC-4m-t1M">
-                                <rect key="frame" x="307" y="265" width="48" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JdC-4m-t1M">
+                                <rect key="frame" x="307" y="265.5" width="48" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="RGZ-eF-nPo"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="31" id="SA5-0a-h5T"/>
@@ -70,7 +68,7 @@
                                     <action selector="onOssButtonCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="chR-b0-xSq"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yzB-vT-XdQ">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yzB-vT-XdQ">
                                 <rect key="frame" x="20" y="311" width="84" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="MMf-JE-bPv"/>
@@ -81,7 +79,7 @@
                                     <action selector="customSignButtonClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="BZS-wt-u3g"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-gy-LrS">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbY-gy-LrS">
                                 <rect key="frame" x="114" y="311" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="5hx-e4-y0K"/>
@@ -92,7 +90,7 @@
                                     <action selector="onOssButtonNormalPut:" destination="jrl-LR-ALf" eventType="touchUpInside" id="TzU-Tk-gre"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jgi-Is-fxv">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jgi-Is-fxv">
                                 <rect key="frame" x="154" y="311" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="AbX-d0-NJ6"/>
@@ -103,7 +101,7 @@
                                     <action selector="onOssButtonNormalGet:" destination="jrl-LR-ALf" eventType="touchUpInside" id="thO-Um-26k"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ng6-dg-j7g">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ng6-dg-j7g">
                                 <rect key="frame" x="194" y="311" width="48" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="mt4-Xa-yGT"/>
@@ -114,8 +112,8 @@
                                     <action selector="onOssButtonNormalCancel:" destination="jrl-LR-ALf" eventType="touchUpInside" id="rS3-b3-LLO"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="752" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略宽度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HPe-Fv-2H5">
-                                <rect key="frame" x="20" y="361" width="78.5" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="752" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="width" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HPe-Fv-2H5">
+                                <rect key="frame" x="20" y="361" width="63.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="h1H-yG-u59"/>
                                 </constraints>
@@ -125,8 +123,8 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="Ga0-PZ-KlF"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="缩略高度" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2l1-kO-u42">
-                                <rect key="frame" x="108.5" y="361" width="78.5" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="height" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2l1-kO-u42">
+                                <rect key="frame" x="93.5" y="361" width="69" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="28r-7t-KBV"/>
                                 </constraints>
@@ -136,8 +134,8 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="BS8-ne-9iX"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWd-Av-N8U">
-                                <rect key="frame" x="195" y="361" width="109" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWd-Av-N8U">
+                                <rect key="frame" x="192" y="361" width="112" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="62" id="PK5-nG-DcZ"/>
                                     <constraint firstAttribute="height" constant="30" id="rby-zv-wbA"/>
@@ -147,8 +145,8 @@
                                     <action selector="onOssButtonResize:" destination="jrl-LR-ALf" eventType="touchUpInside" id="CqO-eT-NyW"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入水印文字" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L6N-s3-fvF">
-                                <rect key="frame" x="20" y="411" width="121" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="watermark text" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L6N-s3-fvF">
+                                <rect key="frame" x="20" y="411" width="125" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="i9M-hy-jTj"/>
                                 </constraints>
@@ -158,8 +156,8 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="Bfn-1B-Vet"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="文字大小" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fC0-Fv-DOy">
-                                <rect key="frame" x="151" y="411" width="78.5" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="text size" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fC0-Fv-DOy">
+                                <rect key="frame" x="155" y="411" width="82" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="x0U-i5-EcC"/>
                                 </constraints>
@@ -169,7 +167,7 @@
                                     <outlet property="delegate" destination="jrl-LR-ALf" id="ecc-ZX-KXk"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNm-Gl-Hkx">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNm-Gl-Hkx">
                                 <rect key="frame" x="268.5" y="411" width="75" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="NSP-Dd-ZiB"/>
@@ -180,7 +178,7 @@
                                     <action selector="onOssButtonWatermark:" destination="jrl-LR-ALf" eventType="touchUpInside" id="ox5-l2-HdY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQ0-Oe-x2O">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQ0-Oe-x2O">
                                 <rect key="frame" x="20" y="461" width="105" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="Kwa-4q-ebS"/>
@@ -191,7 +189,7 @@
                                     <action selector="triggerCallbackClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="eVa-JC-Y1j"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ijz-zY-azF">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ijz-zY-azF">
                                 <rect key="frame" x="135" y="461" width="120" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="qU0-Sf-RDS"/>
@@ -216,7 +214,7 @@
                                     <constraint firstAttribute="width" constant="300" id="vmf-T0-I70"/>
                                 </constraints>
                             </progressView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQQ-TR-u2F">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQQ-TR-u2F">
                                 <rect key="frame" x="37.5" y="546" width="67" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="tRF-r4-b2J"/>
@@ -227,7 +225,7 @@
                                     <action selector="resumeDownloadClicked:" destination="jrl-LR-ALf" eventType="touchUpInside" id="sFq-K0-aUo"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ieb-SJ-uyF">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ieb-SJ-uyF">
                                 <rect key="frame" x="283.5" y="546" width="54" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="6k5-4W-mHS"/>
@@ -259,7 +257,7 @@
                             <constraint firstItem="Jgi-Is-fxv" firstAttribute="centerY" secondItem="yzB-vT-XdQ" secondAttribute="centerY" id="K00-sA-y18"/>
                             <constraint firstItem="oSW-1o-zHG" firstAttribute="top" secondItem="L08-sz-ndx" secondAttribute="bottom" constant="10" id="L9D-ov-kvZ"/>
                             <constraint firstItem="JdC-4m-t1M" firstAttribute="leading" secondItem="A1J-IR-M9e" secondAttribute="trailing" constant="5" id="LMH-rx-eig"/>
-                            <constraint firstItem="ng6-dg-j7g" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Jgi-Is-fxv" secondAttribute="trailing" symbolic="YES" id="TJi-X6-53X"/>
+                            <constraint firstItem="ng6-dg-j7g" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Jgi-Is-fxv" secondAttribute="trailing" constant="8" symbolic="YES" id="TJi-X6-53X"/>
                             <constraint firstItem="NMq-er-YK5" firstAttribute="leading" secondItem="Mo3-C7-4iC" secondAttribute="leading" constant="20" id="V8W-dp-3cC"/>
                             <constraint firstItem="T2X-8V-im7" firstAttribute="top" secondItem="fQ0-Oe-x2O" secondAttribute="bottom" constant="30" id="a1i-Sj-aO6"/>
                             <constraint firstItem="PNm-Gl-Hkx" firstAttribute="centerY" secondItem="L6N-s3-fvF" secondAttribute="centerY" id="bVK-PN-lSC"/>
@@ -274,7 +272,7 @@
                             <constraint firstItem="unZ-gL-zRz" firstAttribute="centerY" secondItem="NMq-er-YK5" secondAttribute="centerY" id="len-9p-eTy"/>
                             <constraint firstAttribute="trailing" secondItem="JdC-4m-t1M" secondAttribute="trailing" constant="20" id="m4v-vm-5Iv"/>
                             <constraint firstItem="bbY-gy-LrS" firstAttribute="centerY" secondItem="yzB-vT-XdQ" secondAttribute="centerY" id="m9b-vx-2gg"/>
-                            <constraint firstItem="ZWd-Av-N8U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2l1-kO-u42" secondAttribute="trailing" symbolic="YES" id="o5F-7i-Vqe"/>
+                            <constraint firstItem="ZWd-Av-N8U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2l1-kO-u42" secondAttribute="trailing" constant="8" symbolic="YES" id="o5F-7i-Vqe"/>
                             <constraint firstItem="Jgi-Is-fxv" firstAttribute="leading" secondItem="bbY-gy-LrS" secondAttribute="trailing" constant="10" id="oiX-c0-ghe"/>
                             <constraint firstItem="bbY-gy-LrS" firstAttribute="leading" secondItem="yzB-vT-XdQ" secondAttribute="trailing" constant="10" id="qou-sP-NGx"/>
                             <constraint firstAttribute="trailing" secondItem="ng6-dg-j7g" secondAttribute="trailing" constant="133" id="rB7-nb-IPQ"/>
@@ -315,4 +313,9 @@
             <point key="canvasLocation" x="138.40000000000001" y="204.64767616191907"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
