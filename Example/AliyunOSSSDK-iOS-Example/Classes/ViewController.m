@@ -134,7 +134,7 @@
 
 - (BOOL)verifyFileName {
     if (_ossTextFileName.text == nil || [_ossTextFileName.text length] == 0) {
-        [self showMessage:@"填写错误" inputMessage:@"文件名不能为空！"];
+        [self showMessage:@"error" inputMessage:@"The file name cannot be empty!"];
         return NO;
     }
     return YES;
@@ -142,10 +142,10 @@
 
 - (IBAction)onOssButtonSelectPic:(UIButton *)sender {
     
-    NSString * title = @"选择";
-    NSString * cancelButtonTitle = @"取消";
-    NSString * picButtonTitle = @"拍照";
-    NSString * photoButtonTitle = @"从相册选择";
+    NSString * title = @"select";
+    NSString * cancelButtonTitle = @"cancel";
+    NSString * picButtonTitle = @"take pictures";
+    NSString * photoButtonTitle = @"select from the album";
     
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -189,7 +189,7 @@
         return;
     }
     
-    NSString *funcStr = @"普通上传";
+    NSString *funcStr = @"upload";
     NSString * objectKey = _ossTextFileName.text;
     [self.oss asyncPutImage:objectKey localFilePath:uploadFilePath success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
@@ -204,7 +204,7 @@
         return;
     }
     
-    NSString *funcStr = @"普通下载";
+    NSString *funcStr = @"download";
     NSString * objectKey = _ossTextFileName.text;
     [self.oss asyncGetImage:objectKey success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
@@ -230,7 +230,7 @@
     int width = [_ossTextWidth.text intValue];
     int height = [_ossTextHeight.text intValue];
     
-    NSString *funcStr = @"图片缩放";
+    NSString *funcStr = @"picture zoom";
     [self.oss reSize:objectKey picWidth:width picHeight:height success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success!"];
         NSString *filePath = (NSString *)result;
@@ -249,7 +249,7 @@
     NSString * waterMark = _ossTextWaterMark.text;
     int size = [_ossTextSize.text intValue];
     
-    NSString *funcStr = @"图片水印";
+    NSString *funcStr = @"image watermark";
     [self.oss textWaterMark:objectKey waterText:waterMark objectSize:size success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success!"];
         NSString *filePath = (NSString *)result;
@@ -277,7 +277,7 @@
 
 - (void)showMessage:(NSString *)putType
        inputMessage:(NSString*)message {
-    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:putType message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
@@ -300,7 +300,7 @@
 }
 
 - (IBAction)triggerCallbackClicked:(id)sender {
-    NSString *funcStr = @"上传回调";
+    NSString *funcStr = @"upload callbacl";
     
     [self.oss triggerCallbackWithObjectKey:_ossTextFileName.text success:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
@@ -310,7 +310,7 @@
 }
 
 - (void)uploadBigFileClicked:(id)sender {
-    NSString *funcStr = @"大文件上传";
+    NSString *funcStr = @"large file upload";
     
     [self.oss multipartUploadWithSuccess:^(id result) {
         [self showMessage:funcStr inputMessage:@"success"];
@@ -352,7 +352,7 @@
         sSelf.checkpoint = error.userInfo[@"checkpoint"];
     };
     _downloadRequest.success = ^(NSDictionary *result) {
-        NSLog(@"下载成功");
+        NSLog(@"download successful");
     };
     _downloadRequest.checkpoint = self.checkpoint;
     
