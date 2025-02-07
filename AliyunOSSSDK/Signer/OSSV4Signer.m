@@ -205,7 +205,7 @@
     NSString *build = [OSS4HMacSHA256 stringByAppendingString:NewLine];
     build = [[build stringByAppendingString:[self getDateTime]] stringByAppendingString:NewLine];
     build = [[build stringByAppendingString:[self buildScope]] stringByAppendingString:NewLine];
-    build = [build stringByAppendingString:[[[canonicalString dataUsingEncoding:NSUTF8StringEncoding] calculateSha256] hexString]];
+    build = [build stringByAppendingString:[[[canonicalString dataUsingEncoding:NSUTF8StringEncoding] oss_calculateSha256] oss_hexString]];
     return build;
 }
 
@@ -223,7 +223,7 @@
                 stringToSign:(NSString *)stringToSign {
     NSData *result = [[HmacSHA256Signature new] computeHash:signingKey
                                                        data:[stringToSign dataUsingEncoding:NSUTF8StringEncoding]];
-    return [result hexString];
+    return [result oss_hexString];
 }
 
 - (NSString *)buildAuthorization:(NSString *)signature

@@ -11,7 +11,7 @@
 
 @implementation NSData (OSS)
 
-- (NSString *)hexString {
+- (NSString *)oss_hexString {
     NSMutableString *hexString = [NSMutableString string];
     Byte *byte = (Byte *)[self bytes];
     for (int i = 0; i<[self length]; i++) {
@@ -21,7 +21,7 @@
     return hexString;
 }
 
-- (NSData *)calculateSha256 {
+- (NSData *)oss_calculateSha256 {
     unsigned char *digest = NULL;
     
     digest = malloc(CC_SHA256_DIGEST_LENGTH * sizeof(unsigned char));

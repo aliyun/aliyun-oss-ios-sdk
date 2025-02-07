@@ -830,25 +830,4 @@
     XCTAssertTrue([requestMessage.params[@"x-oss-additional-headers"] isEqualToString:@"abc;zabc"]);
 }
 
-- (void)testAA {
-    
-//    id<OSSCredentialProvider> credentialProvider = [[OSSStsTokenCredentialProvider alloc] initWithAccessKeyId:@"ak" secretKeyId:@"secretKey" securityToken:@"token"];
-//    OSSFederationToken *token = [OSSFederationToken new];
-//    token.tSecretKey = @"secretKey";
-//
-//    OSSSignerParams *signerParam = [OSSSignerParams new];
-//    signerParam.credentialProvider = credentialProvider;
-//    signerParam.resourcePath = @"";
-//    signerParam.product = @"oss";
-//    signerParam.region = @"cn-hangzhou";
-//
-//    OSSV4Signer *signer = [[OSSV4Signer alloc] init];
-//    [signer initRequestDateTime];
-//    NSLog(@"oss: %@", [[signer buildSigningKey:token] hexString]);
-    
-    HmacSHA256Signature *s = [HmacSHA256Signature new];
-    NSData *d = [s computeHash:[@"key" dataUsingEncoding:NSUTF8StringEncoding] data:[@"data" dataUsingEncoding:NSUTF8StringEncoding]];
-    NSLog(@"oss: %@", [d hexString]);
-}
-
 @end
