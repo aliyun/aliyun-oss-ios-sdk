@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSSet (OSS)
 
-- (NSString *)componentsJoinedByString:(NSString *)separator;
+- (NSString *)oss_componentsJoinedByString:(NSString *)separator;
 
 @end
 

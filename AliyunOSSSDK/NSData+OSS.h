@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (OSS)
 
-- (NSString *)hexString;
-- (NSData *)calculateSha256;
+- (NSString *)oss_hexString;
+- (NSData *)oss_calculateSha256;
 
 @end
 

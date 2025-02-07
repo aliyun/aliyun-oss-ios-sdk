@@ -199,9 +199,9 @@
 - (void)test_methodCalculateSha256 {
     NSData *se = [[HmacSHA256Signature new] computeHash:[@"signingKey" dataUsingEncoding:NSUTF8StringEncoding]
                                                    data:[@"stringToSign" dataUsingEncoding:NSUTF8StringEncoding]];
-    NSData *dataSha256 = [se calculateSha256];
+    NSData *dataSha256 = [se oss_calculateSha256];
     
-    XCTAssertTrue([[dataSha256 hexString] isEqualToString:@"1e618d7a5cfcac0dcf62cf5f98c69297c43606ee4ee497ce4813f098a83968b3"]);
+    XCTAssertTrue([[dataSha256 oss_hexString] isEqualToString:@"1e618d7a5cfcac0dcf62cf5f98c69297c43606ee4ee497ce4813f098a83968b3"]);
 }
 
 @end
