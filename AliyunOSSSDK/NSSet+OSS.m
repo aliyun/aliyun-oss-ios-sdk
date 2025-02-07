@@ -10,7 +10,7 @@
 
 @implementation NSSet (OSS)
 
-- (NSString *)componentsJoinedByString:(NSString *)separator {
+- (NSString *)oss_componentsJoinedByString:(NSString *)separator {
     NSMutableString *builder = [NSMutableString new];
     int i = 0;
     

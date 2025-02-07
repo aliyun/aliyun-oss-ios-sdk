@@ -429,7 +429,7 @@
                                                      data:[@"aliyun_v4_request" dataUsingEncoding:NSUTF8StringEncoding]];
         NSData *result = [serviceSignature computeHash:signingKey
                                                   data:[stringToSign dataUsingEncoding:NSUTF8StringEncoding]];
-        NSString *signature = [result hexString];
+        NSString *signature = [result oss_hexString];
         NSString *credential = [NSString stringWithFormat:@"Credential=%@/%@/%@/%@/aliyun_v4_request", OSS_ACCESSKEY_ID, date, region, product];
         NSString *signedHeaders = @"";
         NSString *sign = [NSString stringWithFormat:@",Signature=%@", signature];
