@@ -2,6 +2,11 @@
 
 ## [README of Chinese](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README-CN.md)
 
+## About OSS SDK for iOS V2
+>- OSS SDK for iOS V2 ([alibabacloud-oss-swift-sdk-v2](https://github.com/aliyun/alibabacloud-oss-swift-sdk-v2)) beta version has been released, it is a major rewrite of OSS SDK for iOS V1 (aliyun-oss-ios-sdk).
+>- V2 simplifies underlying operations such as identification authentication, automatic retry of failed requests, and error handling. It provides flexible parameter configuration methods and rich advanced operations, such as paginator and transmission managers. This comprehensively improves development efficiency and experience.
+
+
 ## Introduction
 
 This document mainly describes how to install and use the OSS iOS SDK. This document assumes that you have already activated the Alibaba Cloud OSS service and created an *AccessKeyID* and an *AccessKeySecret*. In the document, *ID* refers to the *AccessKeyID* and *KEY* indicates the *AccessKeySecret*. If you have not yet activated or do not know about the OSS service, log on to the [OSS Product Homepage](http://www.aliyun.com/product/oss) for more help.
