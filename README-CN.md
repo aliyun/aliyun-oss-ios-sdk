@@ -2,6 +2,11 @@
 
 ## [README of English](https://github.com/aliyun/aliyun-oss-ios-sdk/blob/master/README.md)
 
+## 关于 OSS SDK for iOS V2
+>- OSS SDK for iOS V2([alibabacloud-oss-swift-sdk-v2](https://github.com/aliyun/alibabacloud-oss-swift-sdk-v2)) 测试版已发布, 是对V1（aliyun-oss-ios-sdk）代码库的重大改写。
+>- V2是一个全新的版本，简化了底层操作例如身份验证、自动请求重试及错误处理等；提供了灵活友好的参数配置以及丰富的高级接口，例如分页器、传输管理器等，全面提升了开发效率和体验。
+
+
 ## 简介
 
 本文档主要介绍OSS iOS SDK的安装和使用。本文档假设您已经开通了阿里云OSS 服务，并创建了Access Key ID 和Access Key Secret。文中的ID 指的是Access Key ID，KEY 指的是Access Key Secret。如果您还没有开通或者还不了解OSS，请登录[OSS产品主页](http://www.aliyun.com/product/oss)获取更多的帮助。
