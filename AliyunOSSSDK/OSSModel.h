@@ -91,8 +91,8 @@ TODOTODO
 @interface OSSCustomSignerCredentialProvider : NSObject <OSSCredentialProvider>
 @property (nonatomic, copy, readonly,) NSString * _Nonnull (^ _Nonnull signContent)( NSString * _Nonnull , NSError * _Nullable *_Nullable);
 
-+ (instancetype _Nullable)new NS_UNAVAILABLE;
-- (instancetype _Nullable)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  * During the task execution, this API is called for signing
