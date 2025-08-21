@@ -340,6 +340,9 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.isAllowResetRetryCount = NO;
         self.isAllowNetworkMetricInfo = NO;
         self.signVersion = OSSSignVersionV1;
+        if (@available(iOS 17.0, *)) {
+            self.useProxyInNetWork = NO;
+        }
     }
     return self;
 }

@@ -27,6 +27,7 @@
 @property (nonatomic, assign) NSTimeInterval timeoutIntervalForResource;
 @property (nonatomic, strong) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
+@property (nonatomic, assign) BOOL useProxyInNetWork API_AVAILABLE(macos(14.0), ios(17.0), watchos(10.0), tvos(17.0));
 @property (nonatomic, assign) BOOL enableFollowRedirects;
 @property (nonatomic, assign) BOOL enableNetworkMetricInfo;
 @property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;

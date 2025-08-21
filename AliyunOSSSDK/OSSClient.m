@@ -123,6 +123,7 @@ static NSObject *lock;
             netConf.HTTPMaximumConnectionsPerHost = conf.HTTPMaximumConnectionsPerHost;
             netConf.enableResetRetryCount = conf.isAllowResetRetryCount;
             netConf.enableNetworkMetricInfo = conf.isAllowNetworkMetricInfo;
+            netConf.useProxyInNetWork = conf.useProxyInNetWork;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
     }

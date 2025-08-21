@@ -17,6 +17,7 @@
 #import "OSSNetworkingRequestDelegate.h"
 #import "OSSURLRequestRetryHandler.h"
 #import "OSSHttpResponseParser.h"
+#import <Network/NSURLSession+Network.h>
 
 @implementation OSSNetworkingConfiguration
 @end
@@ -50,15 +51,25 @@
         if (configuration.proxyHost && configuration.proxyPort) {
             // Create an NSURLSessionConfiguration that uses the proxy
             NSDictionary *proxyDict = @{
-                                        @"HTTPEnable"  : [NSNumber numberWithInt:1],
-                                        (NSString *)kCFStreamPropertyHTTPProxyHost  : configuration.proxyHost,
-                                        (NSString *)kCFStreamPropertyHTTPProxyPort  : configuration.proxyPort,
-
-                                        @"HTTPSEnable" : [NSNumber numberWithInt:1],
-                                        (NSString *)kCFStreamPropertyHTTPSProxyHost : configuration.proxyHost,
-                                        (NSString *)kCFStreamPropertyHTTPSProxyPort : configuration.proxyPort,
-                                        };
+                @"HTTPEnable"  : [NSNumber numberWithInt:1],
+                (NSString *)kCFStreamPropertyHTTPProxyHost  : configuration.proxyHost,
+                (NSString *)kCFStreamPropertyHTTPProxyPort  : configuration.proxyPort,
+                
+                @"HTTPSEnable" : [NSNumber numberWithInt:1],
+                (NSString *)kCFStreamPropertyHTTPSProxyHost : configuration.proxyHost,
+                (NSString *)kCFStreamPropertyHTTPSProxyPort : configuration.proxyPort,
+            };
             conf.connectionProxyDictionary = proxyDict;
+            if (@available(iOS 17.0, macOS 14.0, watchOS 10.0, tvOS 17.0, *)) {
+                if (configuration.useProxyInNetWork) {
+                    const char *proxyHost = [configuration.proxyHost UTF8String];
+                    const char *proxyPort = [[NSString stringWithFormat:@"%@", configuration.proxyPort] UTF8String];
+                    nw_endpoint_t endpoint = nw_endpoint_create_host(proxyHost, proxyPort);
+                    nw_proxy_config_t proxyConfig = nw_proxy_config_create_http_connect(endpoint, nil);
+                    conf.proxyConfigurations = @[proxyConfig];
+                    conf.connectionProxyDictionary = nil;
+                }
+            }
         }
 
         _session = [NSURLSession sessionWithConfiguration:conf
