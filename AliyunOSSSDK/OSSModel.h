@@ -199,6 +199,9 @@ Sets the session Id for background file transmission
 @property (nonatomic, copy) NSString * proxyHost;
 @property (nonatomic, strong) NSNumber * proxyPort;
 
+/// Using proxy settings in the Network framework, avalibale macos(14.0), ios(17.0), watchos(10.0), tvos(17.0)
+@property (nonatomic, assign) BOOL useProxyInNetWork;
+
 /**
  Sets UA
  */
