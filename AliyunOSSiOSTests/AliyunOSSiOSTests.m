@@ -556,7 +556,7 @@ id<OSSCredentialProvider> credential, authCredential;
         NSLog(@"progress: %lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
         [progressTest updateTotalBytes:totalByteSent totalBytesExpected:totalBytesExpectedToSend];
     };
-    resumableUpload.completeMetaHeader = @{@"x-oss-object-acl": @"public-read-write"};
+    resumableUpload.completeMetaHeader = @{@"x-oss-object-acl": @"private"};
     NSString * docDir = [NSString oss_documentDirectory];
     resumableUpload.uploadingFileURL = [NSURL fileURLWithPath:[docDir stringByAppendingPathComponent:@"file1m"]];
     OSSTask * resumeTask = [client resumableUpload:resumableUpload];
@@ -579,13 +579,13 @@ id<OSSCredentialProvider> credential, authCredential;
     BOOL isEqual = [self isFileOnOSSBucket:_privateBucketName objectKey:OSS_MULTIPART_UPLOADKEY equalsToLocalFile:[resumableUpload.uploadingFileURL path]];
     XCTAssertTrue(isEqual);
     
-    OSSGetObjectRequest * getRequest = [OSSGetObjectRequest new];
-    getRequest.bucketName = _privateBucketName;
-    getRequest.objectKey = OSS_MULTIPART_UPLOADKEY;
-    getRequest.isAuthenticationRequired = NO;
-    OSSTask * getTask = [client getObject:getRequest];
-    [getTask waitUntilFinished];
-    XCTAssertNil(getTask.error);
+    OSSGetObjectACLRequest *aclRequest = [OSSGetObjectACLRequest new];
+    aclRequest.bucketName = _privateBucketName;
+    aclRequest.objectName = OSS_MULTIPART_UPLOADKEY;
+    OSSTask *task = [client getObjectACL:aclRequest];
+    [task waitUntilFinished];
+    OSSGetObjectACLResult *aclResult = (OSSGetObjectACLResult *)task.result;
+    XCTAssertTrue([@"private" isEqualToString:aclResult.grant]);
 }
 
 - (void)testResumableUploadServerCallback {

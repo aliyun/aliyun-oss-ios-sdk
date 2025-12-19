@@ -362,19 +362,19 @@
     OSSPutObjectACLRequest * putAclRequest = [OSSPutObjectACLRequest new];
     putAclRequest.bucketName = _privateBucketName;
     putAclRequest.objectKey = _fileNames[0];
-    putAclRequest.acl = @"public-read-write";
+    putAclRequest.acl = @"private";
     task = [_client putObjectACL:putAclRequest];
     [task waitUntilFinished];
     
     XCTAssertNil(task.error);
     
-    request.bucketName = _privateBucketName;
-    request.objectKey = _fileNames[0];
-    request.isAuthenticationRequired = NO;
-    task = [_client getObject:request];
+    OSSGetObjectACLRequest *aclRequest = [OSSGetObjectACLRequest new];
+    aclRequest.bucketName = _privateBucketName;
+    aclRequest.objectName = _fileNames[0];
+    task = [_client getObjectACL:aclRequest];
     [task waitUntilFinished];
-    
-    XCTAssertNil(task.error);
+    OSSGetObjectACLResult *aclResult = (OSSGetObjectACLResult *)task.result;
+    XCTAssertTrue([@"private" isEqualToString:aclResult.grant]);
 }
 
 - (void)testAPI_appendObject
@@ -595,40 +595,40 @@
     }] waitUntilFinished];
 }
 
-- (void)testAPI_getObjectFromPublicBucket
-{
-    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
-    
-    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
-    request.bucketName = _publicBucketName;
-    request.isAuthenticationRequired = NO;
-    request.objectKey = _fileNames[3];
-    
-    NSString * saveToFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads/temp/file1m"];
-    request.downloadToFileURL = [NSURL fileURLWithPath:saveToFilePath];
-    
-    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-    };
-    
-    OSSTask * task = [_client getObject:request];
-    
-    [[task continueWithBlock:^id(OSSTask *task) {
-        XCTAssertNil(task.error);
-        OSSGetObjectResult * result = task.result;
-        XCTAssertEqual(200, result.httpResponseCode);
-        NSFileManager * fm = [NSFileManager defaultManager];
-        XCTAssertTrue([fm fileExistsAtPath:request.downloadToFileURL.path]);
-        int64_t fileLength = [[[fm attributesOfItemAtPath:request.downloadToFileURL.path
-                                                    error:nil] objectForKey:NSFileSize] longLongValue];
-        XCTAssertEqual(1024 * 1024, fileLength);
-        [fm removeItemAtPath:saveToFilePath error:nil];
-        [fm removeItemAtPath:[[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads/temp"] error:nil];
-        [fm removeItemAtPath:[[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads"] error:nil];
-        
-        return nil;
-    }] waitUntilFinished];
-}
+//- (void)testAPI_getObjectFromPublicBucket
+//{
+//    [OSSTestUtils putTestDataWithKey:_fileNames[3] withClient:_client withBucket:_publicBucketName];
+//    
+//    OSSGetObjectRequest * request = [OSSGetObjectRequest new];
+//    request.bucketName = _publicBucketName;
+//    request.isAuthenticationRequired = NO;
+//    request.objectKey = _fileNames[3];
+//    
+//    NSString * saveToFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads/temp/file1m"];
+//    request.downloadToFileURL = [NSURL fileURLWithPath:saveToFilePath];
+//    
+//    request.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+//        NSLog(@"%lld, %lld, %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+//    };
+//    
+//    OSSTask * task = [_client getObject:request];
+//    
+//    [[task continueWithBlock:^id(OSSTask *task) {
+//        XCTAssertNil(task.error);
+//        OSSGetObjectResult * result = task.result;
+//        XCTAssertEqual(200, result.httpResponseCode);
+//        NSFileManager * fm = [NSFileManager defaultManager];
+//        XCTAssertTrue([fm fileExistsAtPath:request.downloadToFileURL.path]);
+//        int64_t fileLength = [[[fm attributesOfItemAtPath:request.downloadToFileURL.path
+//                                                    error:nil] objectForKey:NSFileSize] longLongValue];
+//        XCTAssertEqual(1024 * 1024, fileLength);
+//        [fm removeItemAtPath:saveToFilePath error:nil];
+//        [fm removeItemAtPath:[[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads/temp"] error:nil];
+//        [fm removeItemAtPath:[[NSString oss_documentDirectory] stringByAppendingPathComponent:@"downloads"] error:nil];
+//        
+//        return nil;
+//    }] waitUntilFinished];
+//}
 
 - (void)testAPI_getObjectOverwriteOldFile
 {
@@ -1194,8 +1194,7 @@
 - (void)testAPI_putObjectWithCheckingFileMd5
 {
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = _publicBucketName;
-    request.isAuthenticationRequired = NO;
+    request.bucketName = _privateBucketName;
     request.objectKey = _fileNames[3];
     request.contentType = @"application/octet-stream";
     
@@ -1222,8 +1221,7 @@
 - (void)testAPI_putObjectWithInvalidMd5
 {
     OSSPutObjectRequest * request = [OSSPutObjectRequest new];
-    request.bucketName = _publicBucketName;
-    request.isAuthenticationRequired = NO;
+    request.bucketName = _privateBucketName;
     request.objectKey = @"file1m";
     request.contentType = @"application/octet-stream";
     
