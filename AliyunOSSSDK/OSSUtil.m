@@ -81,7 +81,7 @@ int32_t const CHUNK_SIZE = 8 * 1024;
     //保持和android处理方式一致，添加+ -> %20，* -> %2A，%7E -> ~, "%2F" -> /
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[url UTF8String];
-    NSUInteger sourceLen = strlen((const char *)source);
+    NSUInteger sourceLen = [url lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
     for (int i = 0; i < sourceLen; ++i) {
         const unsigned char thisChar = source[i];
         if (thisChar == ' ') {
