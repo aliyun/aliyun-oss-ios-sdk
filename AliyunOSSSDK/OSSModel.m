@@ -341,6 +341,7 @@ NSString * const BACKGROUND_SESSION_IDENTIFIER = @"com.aliyun.oss.backgroundsess
         self.isAllowNetworkMetricInfo = NO;
         self.signVersion = OSSSignVersionV1;
         self.useProxyInNetWork = NO;
+        self.isSkipTSLVerify = NO;
     }
     return self;
 }

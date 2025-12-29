@@ -124,6 +124,7 @@ static NSObject *lock;
             netConf.enableResetRetryCount = conf.isAllowResetRetryCount;
             netConf.enableNetworkMetricInfo = conf.isAllowNetworkMetricInfo;
             netConf.useProxyInNetWork = conf.useProxyInNetWork;
+            netConf.isSkipTSLVerify = conf.isSkipTSLVerify;
         }
         self.networking = [[OSSNetworking alloc] initWithConfiguration:netConf];
     }

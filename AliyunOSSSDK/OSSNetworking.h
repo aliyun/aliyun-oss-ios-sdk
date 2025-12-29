@@ -32,6 +32,7 @@
 @property (nonatomic, assign) BOOL enableNetworkMetricInfo;
 @property (nonatomic, assign) uint32_t HTTPMaximumConnectionsPerHost;
 @property (nonatomic, assign) BOOL enableResetRetryCount;
+@property (nonatomic, assign) BOOL isSkipTSLVerify;
 @end
 
 
