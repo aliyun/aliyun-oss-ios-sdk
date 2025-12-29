@@ -246,6 +246,8 @@ Sets the session Id for background file transmission
 
 @property (nonatomic, assign) OSSSignVersion signVersion;
 
+@property (nonatomic, assign) BOOL isSkipTSLVerify;
+
 @end
 
 @protocol OSSRequestInterceptor <NSObject>
